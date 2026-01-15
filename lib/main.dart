@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/settings.dart';
 import 'hydrus.dart';
 
 void main() {
@@ -32,9 +33,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String text = 'Text';
 
-  Client client = Client('86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
-
   void searchForFiles(List<String> tags) async {
+    Client client = await createClientWithSettings();
     var searchResponse = await client.getSearchFiles(tags);
     setState(() {
       text = searchResponse;
@@ -47,6 +47,15 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('Hydrus Client'),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (_) => SettingsPage()),
+            ),
+            icon: Icon(Icons.settings),
+          ),
+        ],
       ),
       body: Column(
         children: [

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
@@ -6,15 +7,15 @@ Future<void> main() async {
 
   Client client = Client('86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
 
-  var tags = ['creator:呵呜阿花', 'title:白丝秦喵喵。'];
-  print(
-    await client.getSearchFiles(tags)
-  );
-
-  // TODO довести до ума, как и что оно должно сохранять (см. ниже)
-  var response = await client.getFile(166084067);
-  var file = File('test_image.jpg');
-  await file.writeAsBytes(response.bodyBytes);
+  // var tags = ['creator:呵呜阿花', 'title:白丝秦喵喵。'];
+  // print(
+  //   await client.getSearchFiles(tags)
+  // );
+  //
+  // // TODO довести до ума, как и что оно должно сохранять
+  // Uint8List response = await client.getFile(166084067);
+  // var file = File('test_image.jpg');
+  // await file.writeAsBytes(response);
 }
 
 
@@ -22,27 +23,49 @@ class Client {
   static const int version = 81;
 
   String apiUrl = 'localhost';
-  String accessKey;
+  String? accessKey;
   int port = 45869;
 
-  Client(this.accessKey, [this.apiUrl = 'localhost', this.port = 45869]);
+  Client([this.accessKey, this.apiUrl = 'localhost', this.port = 45869]);
 
   // MARK: REQUEST
 
   Future<String> request(String method, String path, [Map<String, dynamic>? params]) async {
+    var response = await getResponse(method, path, params);
+    return response.body;
+  }
+
+  Future<Uint8List> requestBytes(String method, String path, [Map<String, dynamic>? params]) async {
+    var response = await getResponse(method, path, params);
+    return response.bodyBytes;
+  }
+
+  Future<http.Response> getResponse(String method, String path, Map<String, dynamic>? params) async {
+    http.Response response;
+    switch (method) {
+      case 'get':
+        response = await get(path, params);
+      case 'post':
+        throw UnimplementedError();
+      default:
+        throw Exception('No such http method "$method"');
+    }
+    return response;
+  }
+
+  Future<http.Response> get(String path, [Map<String, dynamic>? params]) async {
 
     http.Response response;
-
     try {
       response = await http.get(
           Uri.http('$apiUrl:$port', path, params?.map((k,v) => MapEntry(k,'$v'))),
-          headers: { 'Hydrus-Client-API-Access-Key' : accessKey, }
+          headers: { 'Hydrus-Client-API-Access-Key' : accessKey ?? '' }
       );
     } on SocketException catch (e, s) {
       throw Error.throwWithStackTrace(mapSocketException(e), s);
     }
 
-    return response.body;
+    return response;
   }
 
   // Documentation: https://hydrusnetwork.github.io/hydrus/developer_api.html
@@ -62,6 +85,10 @@ class Client {
     };
 
     return request('get', 'request_new_permissions', params);
+  }
+
+  Future<String> getVerifyAccessKey() {
+    return request('get', 'verify_access_key');
   }
 
   // MARK: SEARCHING AND FETCHING FILES
@@ -94,28 +121,24 @@ class Client {
     return request('get', '/get_files/search_files', params);
   }
 
-  Future<http.Response> getFile(dynamic fileIdOrHash, [bool? download]) async {
+  Future<Uint8List> getFile(dynamic fileIdOrHash, [bool? download]) async {
+
     Map<String, dynamic> params = {};
-    if (fileIdOrHash.toString().length == 64) {
+    if (fileIdOrHash.toString().length == 64) {  // may not not be SHA256?
       params['hash'] = fileIdOrHash;
     }
     else {
       params['file_id'] = fileIdOrHash;
     }
 
-    var response = await http.get(
-        Uri.http('$apiUrl:$port', '/get_files/file', params.map((k,v) => MapEntry(k,'$v'))),
-        headers: { 'Hydrus-Client-API-Access-Key' : accessKey, }
-    );
+    var response = requestBytes('get', '/get_files/file', params);
 
     return response;
   }
 }
 
+// MARK: METHODS
 
-// TODO навести порядок:
-// - объединить в отдельный класс с тем, что (см. выше.)
-// - или лучше создать универсальный request
 String encodeTags(List<String> tagList) {
 
   // Replace special symbols with Unicode escape sequences (like \uxxxx)
@@ -131,6 +154,12 @@ String encodeTags(List<String> tagList) {
   return Uri.encodeComponent(jsonString);
 }
 
+List<dynamic> parseUrl(String url) {
+  Uri uri = Uri.parse(url);
+  return [uri.host, uri.port];
+}
+
+// MARK: DICTIONARIES
 
 class BasicPermissions {
   static const importAndEditURLs = 0;
@@ -181,7 +210,7 @@ class FileSortType {
 }
 
 
-// EXCEPTIONS
+// MARK: EXCEPTIONS
 
 sealed class HydrusException implements Exception {
   final String message;
