@@ -1,9 +1,9 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'hydrus.dart';
+import 'hydrus_api/hydrus.dart';
+import 'hydrus_api/hydrus_ui.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -44,38 +44,41 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Text('Get key'),
           ),
           Divider(color: Colors.transparent),
-          OutlinedButton(
-            onPressed: () async {
-              Client client = await createClientWithSettings();
-              String response = await client.getVerifyAccessKey();
-              // TODO распарсить прежде чем вывести
-              // error: {"error": "Did not find an entry for that access key!", "exception_type": "InsufficientCredentialsException", "status_code": 403, "version": 81, "hydrus_version": 645}
-              // success: {"name": "My app", "permits_everything": true, "basic_permissions": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], "human_description": "API Permissions (My app): can do anything", "version": 81, "hydrus_version": 645}
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(response, style: TextStyle(color: Colors.black)),
-                  duration: const Duration(milliseconds: 5000),
-                  behavior: .fixed,  // floating is better but animation is ass
-                  backgroundColor: Theme.of(context).colorScheme.outline,
-                ),
-              );
-            },
-            child: Text('Verify key'),
-          ),
+          VerifyKeyButton(),
         ],
       ),
     );
   }
 }
 
+class VerifyKeyButton extends StatelessWidget {
+  const VerifyKeyButton({
+    super.key,
+  });
 
-Future<Client> createClientWithSettings() async {
-  final prefs = await SharedPreferences.getInstance();
-  String url = prefs.getString('URL') ?? '';
-  String key = prefs.getString('Hydrus API key') ?? '';
-  var urlPort = parseUrl(url);
-  Client client = Client(key, urlPort[0], urlPort[1]);
-  return client;
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: () async {
+        Client client = await createClientWithSettings();
+        String response = await client.getVerifyAccessKey();
+        // TODO распарсить прежде чем вывести
+        // error: {"error": "Did not find an entry for that access key!", "exception_type": "InsufficientCredentialsException", "status_code": 403, "version": 81, "hydrus_version": 645}
+        // success: {"name": "My app", "permits_everything": true, "basic_permissions": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], "human_description": "API Permissions (My app): can do anything", "version": 81, "hydrus_version": 645}
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(response, style: TextStyle(color: Colors.black)),
+              duration: const Duration(milliseconds: 5000),
+              behavior: .fixed,  // floating is better but animation is ass
+              backgroundColor: Theme.of(context).colorScheme.outline,
+            ),
+          );
+        }
+      },
+      child: Text('Verify key'),
+    );
+  }
 }
 
 
@@ -151,7 +154,7 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
               ),
               VerticalDivider(),
             ],
-          )
+          ),
         ),
         onSubmitted: (String s) => writeValue(),
       ),

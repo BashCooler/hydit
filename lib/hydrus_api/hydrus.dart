@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -5,7 +7,9 @@ import 'package:http/http.dart' as http;
 
 Future<void> main() async {
 
-  Client client = Client('86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
+  Client client = Client('f056ce70e978042bd5ee1106fa65ab56540d99b46e8cd831140ca8f382f3da9b');
+  var response = await client.getSearchFiles(['system:inbox']);
+  log(response.toString());
 
   // var tags = ['creator:呵呜阿花', 'title:白丝秦喵喵。'];
   // print(
@@ -31,12 +35,12 @@ class Client {
   // MARK: REQUEST
 
   Future<String> request(String method, String path, [Map<String, dynamic>? params]) async {
-    var response = await getResponse(method, path, params);
+    final response = await getResponse(method, path, params);
     return response.body;
   }
 
   Future<Uint8List> requestBytes(String method, String path, [Map<String, dynamic>? params]) async {
-    var response = await getResponse(method, path, params);
+    final response = await getResponse(method, path, params);
     return response.bodyBytes;
   }
 
@@ -54,7 +58,6 @@ class Client {
   }
 
   Future<http.Response> get(String path, [Map<String, dynamic>? params]) async {
-
     http.Response response;
     try {
       response = await http.get(
@@ -78,7 +81,7 @@ class Client {
 
   Future<String> getRequestNewPermission(String name, [bool? permitsEverything, List<int>? basicPermissions]) {
 
-    Map<String, dynamic> params = {
+    final Map<String, dynamic> params = {
       'name': name,
       'permits_everything': permitsEverything,
       'basic_permissions': basicPermissions,
@@ -93,7 +96,7 @@ class Client {
 
   // MARK: SEARCHING AND FETCHING FILES
 
-  Future<String> getSearchFiles(
+  Future<List<int>> getSearchFiles(
       List<String> tags, [
         // fileDomain
         // tagServiceKey
@@ -104,8 +107,10 @@ class Client {
         bool? returnFileIds,
         bool? returnHashes,
       ]
-    ) {
-    Map<String, dynamic> params = {
+    ) async {
+    // TODO takes 26 ms to get 7202 ids... can we make it faster?
+    final stopwatch = Stopwatch()..start(); // DEBUG
+    final Map<String, dynamic> params = {
       'tags': encodeTags(tags),
       // 'file_domain': fileDomain,
       // 'tag_service_key': tagServiceKey,
@@ -118,7 +123,24 @@ class Client {
     };
     params.removeWhere((k, v) => (v == null));
 
-    return request('get', '/get_files/search_files', params);
+    final response = await request('get', '/get_files/search_files', params);
+    final decoded = jsonDecode(response) as Map<String, dynamic>;
+
+    if (decoded['file_ids'] == null) {
+      switch (decoded['status_code']) {
+        case 400:
+          throw HydrusBadRequestException(decoded['error']);
+        case 403:
+          throw HydrusInsufficientCredentialsException(decoded['error']);
+        default:
+          throw HydrusUnknownException();
+      }
+    }
+
+    stopwatch.stop();
+    log('Searching completed in ${stopwatch.elapsedMilliseconds} ms');
+
+    return (decoded['file_ids'] as List).cast<int>();
   }
 
   Future<Uint8List> getFile(dynamic fileIdOrHash, [bool? download]) async {
@@ -149,13 +171,13 @@ String encodeTags(List<String> tagList) {
     );
   }
 
-  List<String> tagsUnicode = tagList.map((tag) => '"${encodeUnicode(tag)}"').toList();
-  String jsonString = '[${tagsUnicode.join(", ")}]';
+  final tagsUnicode = tagList.map((tag) => '"${encodeUnicode(tag)}"').toList();
+  final jsonString = '[${tagsUnicode.join(", ")}]';
   return Uri.encodeComponent(jsonString);
 }
 
 List<dynamic> parseUrl(String url) {
-  Uri uri = Uri.parse(url);
+  final uri = Uri.parse(url);
   return [uri.host, uri.port];
 }
 
@@ -256,8 +278,17 @@ class HydrusTimeoutException extends HydrusException {
   HydrusTimeoutException(SocketException e) : super('$msg\nCaused by: $e');
 }
 
+class HydrusBadRequestException extends HydrusException {
+  HydrusBadRequestException(super.message);
+}
+
+class HydrusInsufficientCredentialsException extends HydrusException {
+  HydrusInsufficientCredentialsException(super.message);
+}
+
 class HydrusUnknownException extends HydrusException {
   static const String msg = 'Unknown error.';
+  final SocketException? e;
 
-  HydrusUnknownException(SocketException e) : super('$msg\nCaused by: $e');
+  HydrusUnknownException([this.e]) : super(e == null ? msg : '$msg\nCaused by: $e');
 }
