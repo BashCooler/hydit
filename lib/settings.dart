@@ -12,6 +12,9 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
+// TODO !IMPORTANT check input in settings
+// wrong input creates fuckton of trouble
+
 class _SettingsPageState extends State<SettingsPage> {
 
   @override
@@ -96,6 +99,7 @@ class SettingsTextField extends StatefulWidget {
   State<SettingsTextField> createState() => _SettingsTextFieldState();
 }
 
+// TODO 'Saved' and 'Error' messages
 
 class _SettingsTextFieldState extends State<SettingsTextField> {
   String text = '';
@@ -140,7 +144,6 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
               IconButton(
                 onPressed: () {
                   controller.clear();
-                  writeValue();
                 },
                 icon: Icon(Icons.clear),
               ),

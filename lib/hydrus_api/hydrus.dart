@@ -12,14 +12,6 @@ Future<void> main() async {
   log(response.toString());
 
   // var tags = ['creator:呵呜阿花', 'title:白丝秦喵喵。'];
-  // print(
-  //   await client.getSearchFiles(tags)
-  // );
-  //
-  // // TODO довести до ума, как и что оно должно сохранять
-  // Uint8List response = await client.getFile(166084067);
-  // var file = File('test_image.jpg');
-  // await file.writeAsBytes(response);
 }
 
 
@@ -108,8 +100,6 @@ class Client {
         bool? returnHashes,
       ]
     ) async {
-    // TODO takes 26 ms to get 7202 ids... can we make it faster?
-    final stopwatch = Stopwatch()..start(); // DEBUG
     final Map<String, dynamic> params = {
       'tags': encodeTags(tags),
       // 'file_domain': fileDomain,
@@ -137,25 +127,26 @@ class Client {
       }
     }
 
-    stopwatch.stop();
-    log('Searching completed in ${stopwatch.elapsedMilliseconds} ms');
-
     return (decoded['file_ids'] as List).cast<int>();
   }
 
+  // MARK: GET FILE
+
+  Future<Uint8List> getThumbnail(dynamic fileIdOrHash) async {
+    Map<String, dynamic> params = _getImageParams(fileIdOrHash);
+    return requestBytes('get', '/get_files/thumbnail', params);
+  }
+
   Future<Uint8List> getFile(dynamic fileIdOrHash, [bool? download]) async {
+    Map<String, dynamic> params = _getImageParams(fileIdOrHash);
+    return requestBytes('get', '/get_files/file', params);
+  }
 
-    Map<String, dynamic> params = {};
-    if (fileIdOrHash.toString().length == 64) {  // may not not be SHA256?
-      params['hash'] = fileIdOrHash;
-    }
-    else {
-      params['file_id'] = fileIdOrHash;
-    }
-
-    var response = requestBytes('get', '/get_files/file', params);
-
-    return response;
+  Map<String, dynamic> _getImageParams(dynamic fileIdOrHash) {
+    final Map<String, dynamic> params = {};
+    final type = fileIdOrHash.toString().length == 64 ? 'hash' : 'file_id';
+    params[type] = fileIdOrHash;
+    return params;
   }
 }
 
