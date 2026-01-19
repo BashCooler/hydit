@@ -65,7 +65,7 @@ class VerifyKeyButton extends StatelessWidget {
       onPressed: () async {
         Client client = await createClientWithSettings();
         String response = await client.getVerifyAccessKey();
-        // TODO распарсить прежде чем вывести
+        // TODO parse message before showing
         // error: {"error": "Did not find an entry for that access key!", "exception_type": "InsufficientCredentialsException", "status_code": 403, "version": 81, "hydrus_version": 645}
         // success: {"name": "My app", "permits_everything": true, "basic_permissions": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], "human_description": "API Permissions (My app): can do anything", "version": 81, "hydrus_version": 645}
         if (context.mounted) {
@@ -102,27 +102,33 @@ class SettingsTextField extends StatefulWidget {
 // TODO 'Saved' and 'Error' messages
 
 class _SettingsTextFieldState extends State<SettingsTextField> {
-  String text = '';
-  final controller = TextEditingController();
+  final _controller = TextEditingController();
+  final _focusNode = FocusNode();
+
+  String _text = '';
+  bool _showActions = false;
 
   @override
   void initState() {
     super.initState();
     loadValue();
+    _focusNode.addListener(() {
+      setState(() => _showActions = (_focusNode.hasFocus) ? true : false);
+    });
   }
 
   Future<void> loadValue() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      text = prefs.getString(widget.setting) ?? '';
-      controller.text = text;
+      _text = prefs.getString(widget.setting) ?? '';
+      _controller.text = _text;
     });
   }
 
   Future<void> writeValue() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      prefs.setString(widget.setting, controller.text);
+      prefs.setString(widget.setting, _controller.text);
     });
   }
 
@@ -131,20 +137,20 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
     return ClipRRect(
       borderRadius: BorderRadiusGeometry.circular(24),
       child: TextField(
-        controller: controller,
+        focusNode: _focusNode,
+        controller: _controller,
+        onSubmitted: (String s) => writeValue(),
         decoration: InputDecoration(
           border: InputBorder.none,
           contentPadding: .fromLTRB(20, 20, 20, 20),
           filled: true,
-          labelText: widget.hint ?? widget.setting,
+          labelText: widget.setting,
           helperText: null,
-          suffixIcon: Row(
+          suffixIcon: _showActions ? Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                onPressed: () {
-                  controller.clear();
-                },
+                onPressed: () => _controller.clear(),
                 icon: Icon(Icons.clear),
               ),
               VerticalDivider(),
@@ -157,9 +163,8 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
               ),
               VerticalDivider(),
             ],
-          ),
+          ) : null,
         ),
-        onSubmitted: (String s) => writeValue(),
       ),
     );
   }

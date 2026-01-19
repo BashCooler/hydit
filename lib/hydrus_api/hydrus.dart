@@ -167,11 +167,6 @@ String encodeTags(List<String> tagList) {
   return Uri.encodeComponent(jsonString);
 }
 
-List<dynamic> parseUrl(String url) {
-  final uri = Uri.parse(url);
-  return [uri.host, uri.port];
-}
-
 // MARK: DICTIONARIES
 
 class BasicPermissions {

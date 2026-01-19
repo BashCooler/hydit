@@ -13,6 +13,6 @@ Future<Client> createClientWithSettings() async {
   final prefs = await SharedPreferences.getInstance();
   final url = prefs.getString('URL') ?? '';
   final key = prefs.getString('Hydrus API key') ?? '';
-  final urlPort = parseUrl(url);
-  return Client(key, urlPort[0], urlPort[1]);
+  final uri = Uri.parse(url);
+  return Client(key, uri.host, uri.port);
 }
