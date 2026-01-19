@@ -243,6 +243,9 @@ HydrusException mapSocketException(SocketException e) {
     case 110:
       return HydrusTimeoutException(e);
 
+    case 11001:
+      throw HydrusUnknownHostException(e);
+
     default:
       return HydrusUnknownException(e);
   }
@@ -270,6 +273,11 @@ class HydrusBadRequestException extends HydrusException {
 
 class HydrusInsufficientCredentialsException extends HydrusException {
   HydrusInsufficientCredentialsException(super.message);
+}
+
+class HydrusUnknownHostException extends HydrusException {
+  static const String msg = 'This host is unknown. Probably wrong URI.';
+  HydrusUnknownHostException(SocketException e) : super('$msg\nCaused by: $e');
 }
 
 class HydrusUnknownException extends HydrusException {

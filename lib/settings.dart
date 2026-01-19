@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'hydrus_api/hydrus.dart';
-import 'hydrus_api/hydrus_ui.dart';
+
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -12,10 +13,13 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-// TODO !IMPORTANT check input in settings
-// wrong input creates fuckton of trouble
-
 class _SettingsPageState extends State<SettingsPage> {
+
+  final _urlController = TextEditingController();
+  final _keyController = TextEditingController();
+
+  String? _urlError, _keyError, _urlHint, _keyHint;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +39,16 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           SettingsTextField(
             setting: 'URL',
+            controller: _urlController,
+            errorMessage: _urlError,
+            hint: _urlHint,
           ),
           Divider(color: Colors.transparent),
           SettingsTextField(
             setting: 'Hydrus API key',
+            controller: _keyController,
+            errorMessage: _keyError,
+            hint: _keyHint,
           ),
           Divider(color: Colors.transparent),
           OutlinedButton(
@@ -47,62 +57,96 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Text('Get key'),
           ),
           Divider(color: Colors.transparent),
-          VerifyKeyButton(),
+          OutlinedButton(
+            onPressed: _isLoading ? null : () async {
+              await verifySave();
+              setState(() => _isLoading = false);
+            },
+            child: Text('Verify key and save'),
+          ),
         ],
       ),
     );
   }
-}
 
-class VerifyKeyButton extends StatelessWidget {
-  const VerifyKeyButton({
-    super.key,
-  });
+  //  MARK: VERIFY SAVE
 
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: () async {
-        Client client = await createClientWithSettings();
-        String response = await client.getVerifyAccessKey();
-        // TODO parse message before showing
-        // error: {"error": "Did not find an entry for that access key!", "exception_type": "InsufficientCredentialsException", "status_code": 403, "version": 81, "hydrus_version": 645}
-        // success: {"name": "My app", "permits_everything": true, "basic_permissions": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], "human_description": "API Permissions (My app): can do anything", "version": 81, "hydrus_version": 645}
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(response, style: TextStyle(color: Colors.black)),
-              duration: const Duration(milliseconds: 5000),
-              behavior: .fixed,  // floating is better but animation is ass
-              backgroundColor: Theme.of(context).colorScheme.outline,
-            ),
-          );
-        }
-      },
-      child: Text('Verify key'),
-    );
+  Future<void> verifySave() async {
+    // Set loading state
+    setState(() => _isLoading = true);
+    _urlError = _keyError = _urlHint = _keyHint = null;
+    // Check URL format
+    final key = _keyController.text;
+    final url = _urlController.text;
+    final uri = Uri.tryParse(url);
+    if (uri == null) {
+      setState(() => _urlError = 'Invalid URL');
+      return;
+    }
+    // Get response from client
+    final client = Client(key, uri.host, uri.port);
+    String response;
+    try {
+      response = await client.getVerifyAccessKey();
+    } on HydrusUnknownHostException {
+      setState(() => _urlError = 'Host is unknown, probably wrong URL');
+      return;
+    } on HydrusNoServiceException {
+      setState(() => _urlError = 'No connection with Hydrus. Is your client running?');
+      return;
+    } on HydrusTimeoutException {
+      setState(() => _urlError = 'No response (timeout). Is this the correct host?');
+      return;
+    } on HydrusUnknownException {
+      setState(() => _urlError = 'Unknown error');
+      return;
+    }
+    // Check if the key is valid
+    final decoded = jsonDecode(response) as Map<String, dynamic>;
+    if (decoded['error'] != null) {
+      switch (decoded['status_code']) {
+        case 401:
+        case 403:
+        case 419:
+          setState(() => _keyError = decoded['error']);
+        default:
+          setState(() => _keyError = 'Unknown error');
+      }
+    }
+    // Save settings
+    final prefs = await SharedPreferences.getInstance();
+    log('Settings saved!');
+    setState(() {
+      prefs.setString('URL', _urlController.text);
+      prefs.setString('Hydrus API key', _keyController.text);
+      _urlError = _keyError = null;
+      _urlHint = _keyHint = 'Saved';
+    });
   }
 }
 
 
+//ignore: must_be_immutable
 class SettingsTextField extends StatefulWidget {
   final String setting;
-  final String? hint;
+  final TextEditingController controller;
 
-  const SettingsTextField({
+  String? errorMessage;
+  String? hint;
+
+  SettingsTextField({
     super.key,
     required this.setting,
-    this.hint,
+    required this.controller,
+    required this.errorMessage,
+    required this.hint,
   });
 
   @override
   State<SettingsTextField> createState() => _SettingsTextFieldState();
 }
 
-// TODO 'Saved' and 'Error' messages
-
 class _SettingsTextFieldState extends State<SettingsTextField> {
-  final _controller = TextEditingController();
   final _focusNode = FocusNode();
 
   String _text = '';
@@ -112,7 +156,7 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
   void initState() {
     super.initState();
     loadValue();
-    _focusNode.addListener(() {
+    _focusNode.addListener(() {  // show actions on editing
       setState(() => _showActions = (_focusNode.hasFocus) ? true : false);
     });
   }
@@ -121,51 +165,39 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _text = prefs.getString(widget.setting) ?? '';
-      _controller.text = _text;
-    });
-  }
-
-  Future<void> writeValue() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      prefs.setString(widget.setting, _controller.text);
+      widget.controller.text = _text;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadiusGeometry.circular(24),
-      child: TextField(
-        focusNode: _focusNode,
-        controller: _controller,
-        onSubmitted: (String s) => writeValue(),
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: .fromLTRB(20, 20, 20, 20),
-          filled: true,
-          labelText: widget.setting,
-          helperText: null,
-          suffixIcon: _showActions ? Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                onPressed: () => _controller.clear(),
-                icon: Icon(Icons.clear),
-              ),
-              VerticalDivider(),
-              IconButton(
-                onPressed: () {
-                  writeValue();
-                  FocusScope.of(context).unfocus();
-                },
-                icon: Icon(Icons.check),
-              ),
-              VerticalDivider(),
-            ],
-          ) : null,
-        ),
+    return TextField(
+      focusNode: _focusNode,
+      controller: widget.controller,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        contentPadding: .fromLTRB(20, 20, 20, 20),
+        filled: true,
+        errorText: widget.errorMessage,
+        labelText: widget.setting,
+        helperText: widget.hint,
+        suffixIcon: _showActions ? Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: () => widget.controller.clear(),
+              icon: Icon(Icons.clear),
+            ),
+            VerticalDivider(),
+          ],
+        ) : null,
       ),
+      onChanged: (value) {
+        setState(() {
+          widget.hint = null;
+          widget.errorMessage = null;
+        });
+      },
     );
   }
 }
