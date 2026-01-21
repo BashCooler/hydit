@@ -1,8 +1,7 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/hydrus_api/hydrus.dart';
-import 'package:hydrus_flutter/main.dart';
+import 'package:hydrus_flutter/widgets/images.dart';
+
 
 class ImageView extends StatefulWidget {
   final int index;
@@ -24,54 +23,34 @@ class _ImageViewState extends State<ImageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.black,
       appBar: AppBar(),
       body: Center(
-        child: Hero(
-          tag: widget.images[widget.index].id,
-          child: SizedBox.expand(
-            child: HighResImage(
-              image: widget.images[widget.index],
-              client: widget.client,
-            ),
-          ),
+        child: _Hero(
+          images: widget.images,
+          index: widget.index,
+          client: widget.client,
         ),
       ),
     );
   }
 }
 
-class HighResImage extends StatelessWidget {
-  final HydrusImage image;
+
+class _Hero extends StatelessWidget {
+  final List<HydrusImage> images;
+  final int index;
   final Client client;
 
-  final BoxFit _boxFit = BoxFit.contain;
-
-  const HighResImage({super.key, required this.image, required this.client});
+  const _Hero({required this.images, required this.index, required this.client});
 
   @override
   Widget build(BuildContext context) {
-
-    if (image.high != null) {
-      return Image.memory(image.high!, fit: _boxFit);
-    }
-
-    return FutureBuilder<Uint8List>(
-      future: client.getFile(image.id),
-      builder: (context, snapshot) {
-        if (false) {
-          image.low = snapshot.data;
-          return InteractiveViewer(
-            child: Image.memory(snapshot.data!, fit: _boxFit),
-          );
-        }
-        else {
-          return Image.memory(
-            image.low!,
-            fit: _boxFit,
-          );
-        }
-      },
+    return Hero(
+      tag: images[index].id,
+      child: AspectRatio(
+        aspectRatio: 16/10,
+        child: HighResImage(image: images[index], client: client),
+      ),
     );
   }
 }
