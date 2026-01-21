@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../hydrus_api/hydrus.dart';
 
@@ -20,6 +19,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
   String? _urlError, _keyError, _urlHint, _keyHint;
   bool _isLoading = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _urlController.dispose();
+    _keyController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +147,12 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
 
   String _text = '';
   bool _showActions = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNode.dispose();
+  }
 
   @override
   void initState() {

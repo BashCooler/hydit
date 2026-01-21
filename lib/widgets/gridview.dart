@@ -43,6 +43,9 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
           },
           child: Hero(
             tag: images[index].id,
+            createRectTween: (begin, end) {  // linear transition
+              return RectTween(begin: begin, end: end);
+            },
             child: AspectRatio(
               aspectRatio: 1.0,
               child: Thumbnail(image: images[index], client: client),
