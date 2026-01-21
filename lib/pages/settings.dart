@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'hydrus_api/hydrus.dart';
+import '../hydrus_api/hydrus.dart';
 
 
 class SettingsPage extends StatefulWidget {
@@ -24,16 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.pop(
-            context,
-            MaterialPageRoute(builder: (_) => Home()),
-          ),
-          icon: Icon(Icons.arrow_back),
-        ),
-        title: Text('Settings'),
-      ),
+      appBar: AppBar(title: Text('Settings')),
       body: ListView(
         padding: EdgeInsets.all(20),
         children: [
@@ -115,7 +106,6 @@ class _SettingsPageState extends State<SettingsPage> {
     }
     // Save settings
     final prefs = await SharedPreferences.getInstance();
-    log('Settings saved!');
     setState(() {
       prefs.setString('URL', _urlController.text);
       prefs.setString('Hydrus API key', _keyController.text);

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/settings.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:hydrus_flutter/pages/image_view.dart';
+import 'package:hydrus_flutter/pages/settings.dart';
 import 'hydrus_api/hydrus.dart';
 import 'hydrus_api/hydrus_ui.dart';
 import 'dart:typed_data';
 
 void main() {
+  timeDilation = 1.0;  // DEBUG
   runApp(const App());
 }
 
@@ -42,7 +45,6 @@ class _HomeState extends State<Home> {
   }
 
   void searchForFiles(List<String> tags) async {
-    // Client client = await createClientWithSettings();
 
     // TODO implement multiple tags and tag handling
     // it throws HydrusBadRequestException if TextField is empty
@@ -52,6 +54,8 @@ class _HomeState extends State<Home> {
     // TODO handle tags with '_' and with no '_'
     // change words in 2 word 1 space requests
     // add settings to turn that on/off
+
+    // TODO return if client is invalid
 
     List<int> ids = [];
     try {
@@ -127,17 +131,24 @@ class _HomeState extends State<Home> {
 }
 
 
-class ImageGridViewBuilder extends StatelessWidget {
-  final padding = 5.0;
+class ImageGridViewBuilder extends StatefulWidget {
   final List<int> ids;
   final Client client;
+  late final List<HydrusImage> images = ids.map((id) => HydrusImage(id)).toList();
 
-  const ImageGridViewBuilder(this.ids, this.client, {super.key});
+  ImageGridViewBuilder(this.ids, this.client, {super.key});
+
+  @override
+  State<ImageGridViewBuilder> createState() => _ImageGridViewBuilderState();
+}
+
+class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
+  final padding = 5.0;
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      itemCount: ids.length,
+      itemCount: widget.ids.length,
       padding: EdgeInsetsGeometry.all(padding),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -145,21 +156,63 @@ class ImageGridViewBuilder extends StatelessWidget {
         crossAxisSpacing: padding,
       ),
       itemBuilder: (context, index) {
-        return FutureBuilder<Uint8List>(
-          future: client.getThumbnail(ids[index]),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Image.memory(
-                snapshot.data as Uint8List,
-                fit: BoxFit.cover,
-              );
-            }
-            else {
-              return CircularProgressIndicator();
-            }
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => ImageView(
+              images: widget.images,
+              index: index,
+              client: widget.client,
+            )));
           },
+          child: Hero(
+            tag: widget.images[index].id,
+            child: Thumbnail(image: widget.images[index], client: widget.client),
+          ),
         );
       },
     );
   }
+}
+
+
+class Thumbnail extends StatelessWidget {
+  final HydrusImage image;
+  final Client client;
+
+  final BoxFit _boxFit = BoxFit.cover;
+
+  const Thumbnail({super.key, required this.image, required this.client});
+
+  @override
+  Widget build(BuildContext context) {
+
+    if (image.low != null) {
+      return Image.memory(image.low!, fit: _boxFit);
+    }
+
+    return FutureBuilder<Uint8List>(
+      future: client.getThumbnail(image.id),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          image.low = snapshot.data;
+          return Image.memory(
+            snapshot.data!,
+            fit: _boxFit,
+          );
+        }
+        else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+}
+
+
+class HydrusImage {
+  final int id;
+  Uint8List? low;
+  Uint8List? high;
+
+  HydrusImage(this.id);
 }
