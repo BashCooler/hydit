@@ -19,6 +19,7 @@ class Thumbnail extends StatelessWidget {
   final Client client;
 
   final BoxFit _boxFit = BoxFit.cover;
+  final double _aspectRatio = 1.0;
 
   const Thumbnail({super.key, required this.image, required this.client});
 
@@ -26,7 +27,10 @@ class Thumbnail extends StatelessWidget {
   Widget build(BuildContext context) {
 
     if (image.low != null) {
-      return Image.memory(image.low!, fit: _boxFit);
+      return ImageStack(
+        aspectRatio: _aspectRatio,
+        elements: [Image.memory(image.low!, fit: _boxFit)],
+      );
     }
 
     return FutureBuilder<Uint8List>(
@@ -34,7 +38,10 @@ class Thumbnail extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           image.low = snapshot.data;
-          return Image.memory(snapshot.data!, fit: _boxFit);
+          return ImageStack(
+            aspectRatio: _aspectRatio,
+            elements: [Image.memory(snapshot.data!, fit: _boxFit)],
+          );
         }
         else {
           return CircularProgressIndicator();
@@ -50,6 +57,7 @@ class HighResImage extends StatelessWidget {
   final Client client;
 
   final BoxFit _boxFit = BoxFit.cover;
+  final double _aspectRatio = 16/10;
 
   const HighResImage({super.key, required this.image, required this.client});
 
@@ -57,25 +65,58 @@ class HighResImage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     if (image.high != null) {
-      return Image.memory(image.high!, fit: _boxFit);
+      return ImageStack(
+        aspectRatio: _aspectRatio,
+        elements: [
+          Image.memory(image.low!, fit: _boxFit),
+          Image.memory(image.high!, fit: _boxFit),
+        ],
+      );
     }
 
     return FutureBuilder<Uint8List>(
       future: client.getFile(image.id),
       builder: (context, snapshot) {
-        if (false) {
-          image.low = snapshot.data;
-          return InteractiveViewer(
-            child: Image.memory(snapshot.data!, fit: _boxFit),
+        if (snapshot.hasData) {
+          image.high = snapshot.data;
+          return ImageStack(
+            aspectRatio: _aspectRatio,
+            elements: [
+              Image.memory(image.low!, fit: _boxFit),
+              Image.memory(snapshot.data!, fit: _boxFit),
+            ],
           );
         }
         else {
-          return Image.memory(
-            image.low!,
-            fit: _boxFit,
+          return ImageStack(
+            aspectRatio: _aspectRatio,
+            elements: [Image.memory(image.low!, fit: _boxFit)],
           );
         }
       },
+    );
+  }
+}
+
+
+class ImageStack extends StatelessWidget {
+  final double aspectRatio;
+  final List<Widget> elements;
+
+  const ImageStack({
+    super.key,
+    required this.aspectRatio,
+    required this.elements,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: aspectRatio,
+      child: Stack(
+        fit: StackFit.expand,
+        children: elements,
+      ),
     );
   }
 }

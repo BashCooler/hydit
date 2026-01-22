@@ -93,12 +93,9 @@ class _ImageViewState extends State<ImageView> {
                   createRectTween: (begin, end) {  // linear transition
                     return RectTween(begin: begin, end: end);
                   },
-                  child: AspectRatio(
-                    aspectRatio: 16/10,  // TODO pass the actual value from api
-                    child: HighResImage(
-                      image: widget.images[i],
-                      client: widget.client,
-                    ),
+                  child: HighResImage(
+                    image: widget.images[i],
+                    client: widget.client,
                   ),
                 ),
               ),

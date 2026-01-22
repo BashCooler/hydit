@@ -46,10 +46,7 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
             createRectTween: (begin, end) {  // linear transition
               return RectTween(begin: begin, end: end);
             },
-            child: AspectRatio(
-              aspectRatio: 1.0,
-              child: Thumbnail(image: images[index], client: client),
-            ),
+            child: Thumbnail(image: images[index], client: client),
           ),
         );
       },
