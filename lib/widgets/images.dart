@@ -44,7 +44,7 @@ class Thumbnail extends StatelessWidget {
           );
         }
         else {
-          return CircularProgressIndicator();
+          return ColoredBox(color: Colors.white10);
         }
       },
     );
