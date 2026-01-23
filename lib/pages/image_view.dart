@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:scrollview_observer/scrollview_observer.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/hydrus_api/hydrus.dart';
 import 'package:hydrus_flutter/widgets/images.dart';
@@ -9,12 +11,14 @@ class ImageView extends StatefulWidget {
   final List<HydrusImage> images;
   final int index;
   final Client client;
+  final GridObserverController observerController;
 
   const ImageView({
     super.key,
     required this.images,
     required this.index,
     required this.client,
+    required this.observerController,
   });
 
   @override
@@ -95,6 +99,20 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
     _animationController.forward(from: 0);
   }
 
+  /// Jumps to corresponding item in [GridView].
+  ///
+  /// Example: you open item `0` in the [GridView], then scroll to file `40`
+  /// using [PageView]. [jumpToPageInBackground] scrolls to picture `40` in
+  /// the background to lazy load new thumbnails and so when you close
+  /// [PageView] you end up seeing item `40`, not `0`.
+  ///
+  /// TODO `-2` in `page - 2` is a tech debt!
+  /// If [SliverGridDelegateWithFixedCrossAxisCount.crossAxisCount] changed
+  /// in settings the `-2` offset becomes irrelevant
+  void jumpToPageInBackground(int page) {
+    widget.observerController.jumpTo(index: page - 2 > 0 ? page - 2 : 0);
+  }
+
   // MARK: BUILD
 
   @override
@@ -105,6 +123,7 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
         onPointerDown: registerPointerEventState,
         onPointerUp: registerPointerEventState,
         child: PageView.builder(
+          onPageChanged: jumpToPageInBackground,
           physics: (_isMultitouch || _isZoomed)
               ? const NeverScrollableScrollPhysics()
               : const SnappyPageScrollPhysics(),
@@ -219,6 +238,7 @@ Matrix4 getTargetMatrix(double targetScale, Matrix4 mat, double offSetX, double 
 }
 
 
+/// Makes [PageView] scroll more responsive. Still not perfect.
 class SnappyPageScrollPhysics extends PageScrollPhysics {
   const SnappyPageScrollPhysics({super.parent});
 
