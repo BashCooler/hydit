@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/hydrus.dart';
 
@@ -145,7 +146,7 @@ class SettingsTextField extends StatefulWidget {
 class _SettingsTextFieldState extends State<SettingsTextField> {
   final _focusNode = FocusNode();
 
-  String _text = '';
+  String _text = ' ';
   bool _showActions = false;
 
   @override
@@ -157,6 +158,7 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
   @override
   void initState() {
     super.initState();
+    widget.controller.text = ' ';
     loadValue();
     _focusNode.addListener(() {  // show actions on editing
       setState(() => _showActions = (_focusNode.hasFocus) ? true : false);
@@ -173,33 +175,42 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      focusNode: _focusNode,
-      controller: widget.controller,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        contentPadding: .fromLTRB(20, 20, 20, 20),
-        filled: true,
-        errorText: widget.errorMessage,
-        labelText: widget.setting,
-        helperText: widget.hint,
-        suffixIcon: _showActions ? Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              onPressed: () => widget.controller.clear(),
-              icon: Icon(Icons.clear),
-            ),
-            VerticalDivider(),
-          ],
-        ) : null,
+    final double spacing = 5;
+    return SizedBox(
+      height: 70,
+      child: TextField(
+        focusNode: _focusNode,
+        controller: widget.controller,
+        decoration: InputDecoration(
+          errorText: widget.errorMessage,
+          labelText: widget.setting,
+          helperText: widget.hint,
+          suffixIcon: _showActions ? Row(
+            spacing: spacing,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: () async {
+                  ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
+                  if (data?.text != null) widget.controller.text = data?.text ?? '';
+                },
+                icon: Icon(Icons.paste),
+              ),
+              IconButton(
+                onPressed: () => widget.controller.clear(),
+                icon: Icon(Icons.clear),
+              ),
+              Padding(padding: EdgeInsetsGeometry.only(right: spacing)),
+            ],
+          ) : null,
+        ),
+        onChanged: (value) {
+          setState(() {
+            widget.hint = null;
+            widget.errorMessage = null;
+          });
+        },
       ),
-      onChanged: (value) {
-        setState(() {
-          widget.hint = null;
-          widget.errorMessage = null;
-        });
-      },
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:developer';
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/api/meta_parser.dart';
+import 'package:hydrus_flutter/theme.dart';
 import 'package:hydrus_flutter/pages/settings.dart';
 import 'package:hydrus_flutter/widgets/images.dart';
 
@@ -16,7 +17,7 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin {
   List<HydrusImage> images = [];
   late Client client;
   late var _clientFuture = createClientWithSettings().then((v) => client = v);
@@ -26,6 +27,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void searchForFiles(List<String> tags) async {
+
+    // TODO tag chips see: https://api.flutter.dev/flutter/material/Chip-class.html
 
     List<int> ids = [];
     try {
@@ -56,35 +59,56 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ],
       ),
-      body: FutureBuilder(
-          future: _clientFuture,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Column(
-                children: [
-                  TextField(
-                    decoration: InputDecoration(filled: true, hintText: 'Search'),
-                    onSubmitted: (String t) => searchForFiles([t]),
+      body: FutureBuilder(future: _clientFuture, builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Stack(
+            children: [
+              ImageGridViewBuilder(images, client),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: RepaintBoundary(
+                  child: ClipRRect(
+                    borderRadius: BorderRadiusGeometry.circular(Consts.radius),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          filled: true,
+                          hintText: 'Search',
+                          fillColor: Consts.blackAlpha,
+                        ),
+                        onSubmitted: (String t) => searchForFiles([t]),
+                      ),
+                    ),
                   ),
-                  Expanded(child: ImageGridViewBuilder(images, client)),
-                ],
-              );
-            }
-            return Center(child: CircularProgressIndicator());
-          }
-      ),
+                ),
+              ),
+            ],
+          );
+        }
+        return Center(child: CircularProgressIndicator());
+      }),
     );
   }
 
   // MARK: SNACKBAR
 
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(String message) {
-    return ScaffoldMessenger.of(context).showSnackBar(
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message, style: TextStyle(color: Colors.black)),
-        duration: const Duration(milliseconds: 5000),
-        behavior: .fixed,  // floating is better but animation is ass
-        backgroundColor: Theme.of(context).colorScheme.outline,
+        content: RepaintBoundary(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
+            child: Text(message),
+          ),
+        ),
+        backgroundColor: Consts.blackAlpha,
+      ),
+      snackBarAnimationStyle: AnimationStyle(
+        curve: Curves.easeInExpo,
+        reverseCurve: Curves.easeOutExpo,
+        duration: Duration(milliseconds: 1000),
+        reverseDuration: Duration(milliseconds: 1000),
       ),
     );
   }

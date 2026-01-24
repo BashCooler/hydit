@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hydrus_flutter/pages/search.dart';
+import 'package:hydrus_flutter/theme.dart';
 
 
 void main() {
@@ -17,9 +18,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter App',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.blue, brightness: .dark),
-      ),
+      theme: darkTheme(),
       home: const SearchPage(),
     );
   }
