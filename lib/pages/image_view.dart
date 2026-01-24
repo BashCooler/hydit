@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/hydrus_api/hydrus.dart';
+import 'package:hydrus_flutter/api/hydrus.dart';
 import 'package:hydrus_flutter/widgets/images.dart';
 
 // TODO drag to close

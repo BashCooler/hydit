@@ -7,9 +7,12 @@ import 'package:http/http.dart' as http;
 
 Future<void> main() async {
 
-  Client client = Client('f056ce70e978042bd5ee1106fa65ab56540d99b46e8cd831140ca8f382f3da9b');
-  var response = await client.getSearchFiles(['system:inbox']);
-  log(response.toString());
+  Client client = Client('86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
+  Stopwatch watch = Stopwatch();
+  watch.start();
+  var response = await client.getSearchTags(r'');
+  print(response.toString());
+  print(watch.elapsedMilliseconds.toString());
 
   // var tags = ['creator:呵呜阿花', 'title:白丝秦喵喵。'];
 }
@@ -71,7 +74,7 @@ class Client {
     return request('get', 'api_version');
   }
 
-  Future<String> getRequestNewPermission(String name, [bool? permitsEverything, List<int>? basicPermissions]) {
+  Future<String> getRequestNewPermission(String name, {bool? permitsEverything, List<int>? basicPermissions}) {
 
     final Map<String, dynamic> params = {
       'name': name,
@@ -88,18 +91,16 @@ class Client {
 
   // MARK: SEARCHING AND FETCHING FILES
 
-  Future<List<int>> getSearchFiles(
-      List<String> tags, [
-        // fileDomain
-        // tagServiceKey
-        bool? includeCurrentTags,
-        bool? includePendingTags,
-        int? fileSortType,
-        bool? fileSortAsc,
-        bool? returnFileIds,
-        bool? returnHashes,
-      ]
-    ) async {
+  Future<List<int>> getSearchFiles(List<String> tags, {
+    // List<String>? fileDomain,
+    // String? tagServiceKey,
+    bool? includeCurrentTags,
+    bool? includePendingTags,
+    int? fileSortType,
+    bool? fileSortAsc,
+    bool? returnFileIds,
+    bool? returnHashes,
+  }) async {
     final Map<String, dynamic> params = {
       'tags': encodeTags(tags),
       // 'file_domain': fileDomain,
@@ -130,6 +131,31 @@ class Client {
     return (decoded['file_ids'] as List).cast<int>();
   }
 
+  Future<String> getFileMetadata(List<int> fileIds, {
+    bool? createNewFileIds,
+    bool? onlyReturnIdentifiers,
+    bool? onlyReturnBasicInformation,
+    bool? detailedUrlInformation,
+    bool? includeBlurhash,
+    bool? includeMilliseconds,
+    bool? includeNotes,
+    bool? includeServicesObject,
+  }) async {
+    final Map<String, dynamic> params = {
+      'file_ids': fileIds,
+      'only_return_identifiers': onlyReturnIdentifiers,
+      'only_return_basic_information': onlyReturnBasicInformation,
+      'detailed_url_information': detailedUrlInformation,
+      'include_blurhash': includeBlurhash,
+      'include_milliseconds': includeMilliseconds,
+      'include_notes': includeNotes,
+      'include_services_object': includeServicesObject,
+    };
+    params.removeWhere((k, v) => (v == null));
+
+    return await request('get', '/get_files/file_metadata', params);
+  }
+
   // MARK: GET FILE
 
   Future<Uint8List> getThumbnail(dynamic fileIdOrHash) async {
@@ -147,6 +173,24 @@ class Client {
     final type = fileIdOrHash.toString().length == 64 ? 'hash' : 'file_id';
     params[type] = fileIdOrHash;
     return params;
+  }
+
+  // MARK: TAGS
+
+  Future<String> getSearchTags(String tag, {
+    // List<String>? fileDomain,
+    // String? tagServiceKey,
+    String? tagDisplayType,
+  }) async {
+    final Map<String, dynamic> params = {
+      'search': tag,
+      // 'file_domain': fileDomain,
+      // 'tag_service_key': tagServiceKey,
+      'tag_display_type': tagDisplayType,
+    };
+    params.removeWhere((k, v) => (v == null));
+
+    return await request('get', '/add_tags/search_tags', params);
   }
 }
 

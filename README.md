@@ -36,7 +36,7 @@ Editing File Tags
 - [ ] clean_tags
 - [ ] get_favourite_tags
 - [ ] get_siblings_and_parents
-- [ ] search_tags
+- [x] search_tags
 - [ ] add_tags
 - [ ] set_favourite_tags
 
@@ -53,13 +53,12 @@ Searching and Fetching Files
 - [ ] search_files
   - [x] basic one tag search
   - [ ] multi tag search
+  - [ ] suggests
   - [ ] sorting
   - [ ] advanced sorting
 - [ ] file_hashes
-- [ ] file_metadata
-- [ ] file
-  - [x] api
-  - [ ] ui
+- [x] file_metadata
+- [x] file
 - [x] thumbnail
 - [ ] file_path
 - [ ] thumbnail_path

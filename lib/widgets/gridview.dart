@@ -1,7 +1,8 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:hydrus_flutter/hydrus_api/hydrus.dart';
+import 'package:hydrus_flutter/api/hydrus.dart';
 import 'package:hydrus_flutter/pages/image_view.dart';
 import 'images.dart';
 

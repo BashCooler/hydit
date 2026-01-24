@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 
-import 'package:hydrus_flutter/hydrus_api/hydrus.dart';
+import 'package:hydrus_flutter/api/hydrus.dart';
 
 
 class HydrusImage {

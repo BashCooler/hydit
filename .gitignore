@@ -120,3 +120,4 @@ app.*.symbols
 
 # User
 .idea/
+.dev/

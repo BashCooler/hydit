@@ -1,14 +1,15 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'hydrus_api/hydrus.dart';
-import 'hydrus_api/hydrus_ui.dart';
+import 'api/hydrus.dart';
+import 'api/hydrus_ui.dart';
 import 'package:hydrus_flutter/pages/settings.dart';
 import 'package:hydrus_flutter/widgets/gridview.dart';
 
 
 void main() {
-  timeDilation = 1.0;  // DEBUG
+  timeDilation = 1.0;
   runApp(const App());
 }
 
@@ -36,7 +37,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String text = 'Text';
   List<int> ids = [];
   late Client client;
   late var _clientFuture = createClientWithSettings().then((v) => client = v);
