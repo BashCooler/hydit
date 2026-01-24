@@ -4,6 +4,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 
+import 'meta_parser.dart';
+
 
 Future<void> main() async {
 
@@ -131,7 +133,7 @@ class Client {
     return (decoded['file_ids'] as List).cast<int>();
   }
 
-  Future<String> getFileMetadata(List<int> fileIds, {
+  Future<List<Map<String, dynamic>>> getFileMetadata(List<int> fileIds, {
     bool? createNewFileIds,
     bool? onlyReturnIdentifiers,
     bool? onlyReturnBasicInformation,
@@ -153,7 +155,8 @@ class Client {
     };
     params.removeWhere((k, v) => (v == null));
 
-    return await request('get', '/get_files/file_metadata', params);
+    final response = await request('get', '/get_files/file_metadata', params);
+    return parseMetadata(response);
   }
 
   // MARK: GET FILE

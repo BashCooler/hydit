@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/api/hydrus.dart';
 import 'package:hydrus_flutter/widgets/images.dart';
 
-// TODO drag to close
 
 class ImageView extends StatefulWidget {
   final List<HydrusImage> images;
@@ -118,7 +117,9 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      extendBodyBehindAppBar: true,
+      extendBody: true,
+      appBar: AppBar(backgroundColor: Colors.transparent),
       body: Listener(
         onPointerDown: registerPointerEventState,
         onPointerUp: registerPointerEventState,

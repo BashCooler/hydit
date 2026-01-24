@@ -1,5 +1,8 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/api/meta_parser.dart';
 import 'package:hydrus_flutter/pages/settings.dart';
+import 'package:hydrus_flutter/widgets/images.dart';
 
 import '../api/hydrus.dart';
 import '../api/hydrus_ui.dart';
@@ -14,7 +17,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  List<int> ids = [];
+  List<HydrusImage> images = [];
   late Client client;
   late var _clientFuture = createClientWithSettings().then((v) => client = v);
 
@@ -33,9 +36,9 @@ class _SearchPageState extends State<SearchPage> {
       showSnackBar('No response (timeout)');
     }
 
-    setState(() {
-      this.ids = ids;
-    });
+    final images = ids.map((id) => HydrusImage(id)).toList();
+
+    setState(() => this.images = images);
   }
 
   // MARK: BUILD
@@ -63,7 +66,7 @@ class _SearchPageState extends State<SearchPage> {
                     decoration: InputDecoration(filled: true, hintText: 'Search'),
                     onSubmitted: (String t) => searchForFiles([t]),
                   ),
-                  Expanded(child: ImageGridViewBuilder(ids, client)),
+                  Expanded(child: ImageGridViewBuilder(images, client)),
                 ],
               );
             }

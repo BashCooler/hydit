@@ -34,14 +34,17 @@ class Thumbnail extends StatelessWidget {
       );
     }
 
-    return FutureBuilder<Uint8List>(
-      future: client.getThumbnail(image.id),
-      builder: (context, snapshot) {
+    final thumbnail = client.getThumbnail(image.id);
+    final metadata = client.getFileMetadata([image.id], includeServicesObject: false);
+    return FutureBuilder(
+      future: Future.wait([thumbnail, metadata]),
+      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
         if (snapshot.hasData) {
-          image.low = snapshot.data;
+          image.low = snapshot.data![0];
+          writeMetadata(snapshot);
           return ImageStack(
             aspectRatio: _aspectRatio,
-            elements: [Image.memory(snapshot.data!, fit: _boxFit)],
+            elements: [Image.memory(snapshot.data![0], fit: _boxFit)],
           );
         }
         else {
@@ -49,6 +52,14 @@ class Thumbnail extends StatelessWidget {
         }
       },
     );
+  }
+
+  /// Save width and height to correctly display image in [PageView].
+  ///
+  /// See also: [HighResImage]
+  void writeMetadata(AsyncSnapshot<List<dynamic>> snapshot) {
+    image.width = snapshot.data![1][0]['width'];
+    image.height = snapshot.data![1][0]['height'];
   }
 }
 
@@ -58,16 +69,19 @@ class HighResImage extends StatelessWidget {
   final Client client;
 
   final BoxFit _boxFit = BoxFit.cover;
-  final double _aspectRatio = 16/10;
 
   const HighResImage({super.key, required this.image, required this.client});
 
   @override
   Widget build(BuildContext context) {
 
+    double width = image.width!.toDouble();
+    double height = image.height!.toDouble();
+    double aspectRatio = width/height;
+
     if (image.high != null) {
       return ImageStack(
-        aspectRatio: _aspectRatio,
+        aspectRatio: aspectRatio,
         elements: [
           Image.memory(image.low!, fit: _boxFit),
           Image.memory(image.high!, fit: _boxFit),
@@ -81,7 +95,7 @@ class HighResImage extends StatelessWidget {
         if (snapshot.hasData) {
           image.high = snapshot.data;
           return ImageStack(
-            aspectRatio: _aspectRatio,
+            aspectRatio: aspectRatio,
             elements: [
               Image.memory(image.low!, fit: _boxFit),
               Image.memory(snapshot.data!, fit: _boxFit),
@@ -90,7 +104,7 @@ class HighResImage extends StatelessWidget {
         }
         else {
           return ImageStack(
-            aspectRatio: _aspectRatio,
+            aspectRatio: aspectRatio,
             elements: [Image.memory(image.low!, fit: _boxFit)],
           );
         }

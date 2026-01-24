@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:hydrus_flutter/pages/image_view.dart';
+import 'package:hydrus_flutter/pages/pageview.dart';
 import 'images.dart';
 
 
 class ImageGridViewBuilder extends StatefulWidget {
-  final List<int> ids;
   final Client client;
-  late final List<HydrusImage> images = ids.map((id) => HydrusImage(id)).toList();
+  final List<HydrusImage> images;
 
-  ImageGridViewBuilder(this.ids, this.client, {super.key});
+  const ImageGridViewBuilder(this.images, this.client, {super.key});
 
   @override
   State<ImageGridViewBuilder> createState() => _ImageGridViewBuilderState();
@@ -39,7 +38,6 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    final ids = widget.ids;
     final images = widget.images;
     final client = widget.client;
 
@@ -47,7 +45,7 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
       controller: observerController,
       child: GridView.builder(
         controller: scrollController,
-        itemCount: ids.length,
+        itemCount: images.length,
         padding: EdgeInsetsGeometry.all(padding),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,

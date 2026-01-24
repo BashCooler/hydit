@@ -16,13 +16,13 @@ List<Map<String, dynamic>> parseMetadata(String data) {
   /// Parse each item
   List<Map<String, dynamic>> params = [];
   for (var item in unwrappedJson) {
-    params.add(parseItem(item));
+    params.add(_parseItem(item));
   }
 
   return params;
 }
 
-Map<String, dynamic> parseItem(Map<String, dynamic> unwrappedJson) {
+Map<String, dynamic> _parseItem(Map<String, dynamic> unwrappedJson) {
   FileMetadata metadata = FileMetadata.fromJson(unwrappedJson);
 
   /// Remember primitive typed data
