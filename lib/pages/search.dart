@@ -62,27 +62,10 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       body: FutureBuilder(future: _clientFuture, builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Stack(
+            alignment: .bottomCenter,
             children: [
               ImageGridViewBuilder(images, client),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: RepaintBoundary(
-                  child: ClipRRect(
-                    borderRadius: BorderRadiusGeometry.circular(Consts.radius),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          filled: true,
-                          hintText: 'Search',
-                          fillColor: Consts.blackAlpha,
-                        ),
-                        onSubmitted: (String t) => searchForFiles([t]),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              AnimatedLiquidSearchBar(onSearch: (s) => searchForFiles([s])),
             ],
           );
         }
@@ -121,5 +104,95 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       MaterialPageRoute(builder: (_) => SettingsPage()),
     );
     updateClient();
+  }
+}
+
+class AnimatedLiquidSearchBar extends StatefulWidget {
+  final ValueChanged<String> onSearch;
+
+  const AnimatedLiquidSearchBar({
+    super.key,
+    required this.onSearch,
+  });
+
+  @override
+  State<AnimatedLiquidSearchBar> createState() => _AnimatedLiquidSearchBarState();
+}
+
+class _AnimatedLiquidSearchBarState extends State<AnimatedLiquidSearchBar>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<Offset> _slide;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 350),
+    );
+    _slide = Tween<Offset>(
+      begin: Offset.zero,
+      end: Offset(0, 0.8),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutBack,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // ref.listen<SearchBarVisibility>(
+    //   searchBarVisibilityProvider,
+    //       (prev, next) {
+    //     if (next == SearchBarVisibility.hidden) {
+    //       _controller.forward();
+    //     } else {
+    //       _controller.reverse();
+    //     }
+    //   },
+    // );
+    return SlideTransition(
+      position: _slide,
+      child: LiquidSearchBar(onSearch: widget.onSearch),
+    );
+  }
+}
+
+class LiquidSearchBar extends StatelessWidget {
+  final ValueChanged<String> onSearch;
+
+  const LiquidSearchBar({
+    super.key,
+    required this.onSearch,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: RepaintBoundary(
+        child: ClipRRect(
+          borderRadius: BorderRadiusGeometry.circular(Consts.radius),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
+            child: TextField(
+              decoration: InputDecoration(
+                filled: true,
+                hintText: 'Search',
+                fillColor: Consts.blackAlpha,
+              ),
+              onSubmitted: onSearch,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
