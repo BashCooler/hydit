@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:hydrus_flutter/pages/pageview.dart';
+import 'package:hydrus_flutter/pages/image_view.dart';
 import '../main.dart';
 import 'images.dart';
 
