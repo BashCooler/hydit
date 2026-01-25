@@ -1,12 +1,14 @@
 import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrus_flutter/theme.dart';
 import 'package:hydrus_flutter/pages/settings.dart';
 import 'package:hydrus_flutter/widgets/images.dart';
 
 import '../api/hydrus.dart';
 import '../api/hydrus_ui.dart';
+import '../main.dart';
 import '../widgets/gridview.dart';
 
 
@@ -148,19 +150,18 @@ class _AnimatedLiquidSearchBarState extends State<AnimatedLiquidSearchBar>
 
   @override
   Widget build(BuildContext context) {
-    // ref.listen<SearchBarVisibility>(
-    //   searchBarVisibilityProvider,
-    //       (prev, next) {
-    //     if (next == SearchBarVisibility.hidden) {
-    //       _controller.forward();
-    //     } else {
-    //       _controller.reverse();
-    //     }
-    //   },
-    // );
-    return SlideTransition(
-      position: _slide,
-      child: LiquidSearchBar(onSearch: widget.onSearch),
+    return BlocBuilder<SearchVisibilityCubit, SearchVisibility>(
+      builder: (BuildContext context, SearchVisibility state) {
+        if (state == SearchVisibility.visible) {
+          _controller.reverse();
+        } else {
+          _controller.forward();
+        }
+        return SlideTransition(
+          position: _slide,
+          child: LiquidSearchBar(onSearch: widget.onSearch),
+        );
+      },
     );
   }
 }

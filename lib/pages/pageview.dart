@@ -3,7 +3,10 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/api/hydrus.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrus_flutter/widgets/images.dart';
+
+import '../main.dart';
 
 
 class ImageView extends StatefulWidget {
@@ -116,51 +119,56 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      extendBody: true,
-      appBar: AppBar(backgroundColor: Colors.transparent),
-      body: Listener(
-        onPointerDown: registerPointerEventState,
-        onPointerUp: registerPointerEventState,
-        child: PageView.builder(
-          onPageChanged: jumpToPageInBackground,
-          physics: (_isMultitouch || _isZoomed)
-              ? const NeverScrollableScrollPhysics()
-              : const SnappyPageScrollPhysics(),
-          controller: _pageController,
-          itemCount: widget.images.length,
-          itemBuilder: (context, i) {
-            return GestureDetector(
-              onDoubleTapDown: (TapDownDetails details) {
-                _doubleTapLocalPosition = details.localPosition;
-              },
-              onDoubleTap: handleDoubleTap,
-              child: InteractiveViewer(
-                minScale: _minScale,
-                maxScale: _maxScale,
-                transformationController: _transformationController,
-                child: Center(
-                  child: Hero(
-                    tag: widget.images[i].id,
-                    createRectTween: (begin, end) {  // linear transition
-                      return RectTween(begin: begin, end: end);
-                    },
-                    child: HighResImage(
-                      image: widget.images[i],
-                      client: widget.client,
+    return PopScope(
+      onPopInvokedWithResult: (closed, object) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => context.read<SearchVisibilityCubit>().show());
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        extendBody: true,
+        appBar: AppBar(backgroundColor: Colors.transparent),
+        body: Listener(
+          onPointerDown: registerPointerEventState,
+          onPointerUp: registerPointerEventState,
+          child: PageView.builder(
+            onPageChanged: jumpToPageInBackground,
+            physics: (_isMultitouch || _isZoomed)
+                ? const NeverScrollableScrollPhysics()
+                : const SnappyPageScrollPhysics(),
+            controller: _pageController,
+            itemCount: widget.images.length,
+            itemBuilder: (context, i) {
+              return GestureDetector(
+                onDoubleTapDown: (TapDownDetails details) {
+                  _doubleTapLocalPosition = details.localPosition;
+                },
+                onDoubleTap: handleDoubleTap,
+                child: InteractiveViewer(
+                  minScale: _minScale,
+                  maxScale: _maxScale,
+                  transformationController: _transformationController,
+                  child: Center(
+                    child: Hero(
+                      tag: widget.images[i].id,
+                      createRectTween: (begin, end) {  // linear transition
+                        return RectTween(begin: begin, end: end);
+                      },
+                      child: HighResImage(
+                        image: widget.images[i],
+                        client: widget.client,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
-        // Swipe doesn't work on Windows for some reason so I added buttons
-        child: BottomAppBarActions(pageController: _pageController),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.transparent,
+          // Swipe doesn't work on Windows for some reason so I added buttons
+          child: BottomAppBarActions(pageController: _pageController),
+        ),
       ),
     );
   }
