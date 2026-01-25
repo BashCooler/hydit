@@ -102,13 +102,18 @@ class _SettingsPageState extends State<SettingsPage> {
     // Check if the key is valid
     final decoded = jsonDecode(response) as Map<String, dynamic>;
     if (decoded['error'] != null) {
+      log(decoded['status_code'].toString());
+      log('${decoded['status_code'] == 400}');
       switch (decoded['status_code']) {
+        case 400:
         case 401:
         case 403:
         case 419:
           setState(() => _keyError = decoded['error']);
+          return;
         default:
           setState(() => _keyError = 'Unknown error');
+          return;
       }
     }
     // Save settings

@@ -20,7 +20,7 @@ class Thumbnail extends StatelessWidget {
   final Client client;
 
   final BoxFit _boxFit = BoxFit.cover;
-  final double _aspectRatio = 1.0;
+  static const double _aspectRatio = 1.0;
 
   const Thumbnail({super.key, required this.image, required this.client});
 
@@ -48,7 +48,7 @@ class Thumbnail extends StatelessWidget {
           );
         }
         else {
-          return ColoredBox(color: Colors.white10);
+          return const ColoredBox(color: Colors.white10);
         }
       },
     );

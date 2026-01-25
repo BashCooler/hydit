@@ -12,14 +12,12 @@ import '../main.dart';
 class ImageView extends StatefulWidget {
   final List<HydrusImage> images;
   final int index;
-  final Client client;
   final GridObserverController observerController;
 
   const ImageView({
     super.key,
     required this.images,
     required this.index,
-    required this.client,
     required this.observerController,
   });
 
@@ -121,7 +119,9 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvokedWithResult: (closed, object) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => context.read<SearchVisibilityCubit>().show());
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.read<SearchVisibilityCubit>().show();
+        });
       },
       child: Scaffold(
         extendBodyBehindAppBar: true,
@@ -155,7 +155,7 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
                       },
                       child: HighResImage(
                         image: widget.images[i],
-                        client: widget.client,
+                        client: context.read<ClientCubit>().state,
                       ),
                     ),
                   ),
@@ -190,17 +190,17 @@ class BottomAppBarActions extends StatelessWidget {
       children: [
         IconButton(
           onPressed: () => _pageController.previousPage(
-            duration: Duration(milliseconds: 150),
+            duration: const Duration(milliseconds: 150),
             curve: Curves.decelerate,
           ),
           icon: Icon(Icons.keyboard_arrow_left),
         ),
         IconButton(
           onPressed: () => _pageController.nextPage(
-            duration: Duration(milliseconds: 150),
+            duration: const Duration(milliseconds: 150),
             curve: Curves.decelerate,
           ),
-          icon: Icon(Icons.keyboard_arrow_right),
+          icon: const Icon(Icons.keyboard_arrow_right),
         ),
       ],
     );

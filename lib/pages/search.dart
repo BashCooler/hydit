@@ -7,7 +7,6 @@ import 'package:hydrus_flutter/pages/settings.dart';
 import 'package:hydrus_flutter/widgets/images.dart';
 
 import '../api/hydrus.dart';
-import '../api/hydrus_ui.dart';
 import '../main.dart';
 import '../widgets/gridview.dart';
 
@@ -19,13 +18,22 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin {
+class _SearchPageState extends State<SearchPage> {
   List<HydrusImage> images = [];
   late Client client;
-  late var _clientFuture = createClientWithSettings().then((v) => client = v);
+
+  @override void initState() {
+    super.initState();
+    updateClient();
+  }
 
   void updateClient() {
-    _clientFuture = createClientWithSettings().then((v) => client = v);
+    final prefs = context.read<SettingsCubit>().prefs;
+    final url = prefs.getString('URL') ?? '';
+    final key = prefs.getString('Hydrus API key') ?? '';
+    final uri = Uri.parse(url);
+    client = Client(key, uri.host, uri.port);
+    context.read<ClientCubit>().update(client);
   }
 
   void searchForFiles(List<String> tags) async {
@@ -53,26 +61,21 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Hydrus Client'),
+        title: const Text('Hydrus Client'),
         actions: [
           IconButton(
             onPressed: () => _openSettings(context),
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
           ),
         ],
       ),
-      body: FutureBuilder(future: _clientFuture, builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Stack(
-            alignment: .bottomCenter,
-            children: [
-              ImageGridViewBuilder(images, client),
-              AnimatedLiquidSearchBar(onSearch: (s) => searchForFiles([s])),
-            ],
-          );
-        }
-        return Center(child: CircularProgressIndicator());
-      }),
+      body: Stack(
+        alignment: .bottomCenter,
+        children: [
+          ImageGridViewBuilder(images),
+          AnimatedLiquidSearchBar(onSearch: (s) => searchForFiles([s])),
+        ],
+      ),
     );
   }
 
@@ -89,7 +92,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
         ),
         backgroundColor: Consts.blackAlpha,
       ),
-      snackBarAnimationStyle: AnimationStyle(
+      snackBarAnimationStyle: const AnimationStyle(
         curve: Curves.easeInExpo,
         reverseCurve: Curves.easeOutExpo,
         duration: Duration(milliseconds: 1000),
@@ -151,11 +154,13 @@ class _AnimatedLiquidSearchBarState extends State<AnimatedLiquidSearchBar>
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SearchVisibilityCubit, SearchVisibility>(
+      buildWhen: (prevState, state) => prevState != state,
       builder: (BuildContext context, SearchVisibility state) {
-        if (state == SearchVisibility.visible) {
-          _controller.reverse();
-        } else {
-          _controller.forward();
+        switch (state) {
+          case SearchVisibility.visible:
+            _controller.reverse();
+          default:
+            _controller.forward();
         }
         return SlideTransition(
           position: _slide,
@@ -176,20 +181,21 @@ class LiquidSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: RepaintBoundary(
-        child: ClipRRect(
-          borderRadius: BorderRadiusGeometry.circular(Consts.radius),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
-            child: TextField(
-              decoration: InputDecoration(
-                filled: true,
-                hintText: 'Search',
-                fillColor: Consts.blackAlpha,
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: RepaintBoundary(
+          child: ClipRRect(
+            borderRadius: BorderRadiusGeometry.circular(Consts.radius),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
+              child: TextField(
+                decoration: const InputDecoration(
+                  hintText: 'Search',
+                  fillColor: Consts.blackAlpha,
+                ),
+                onSubmitted: onSearch,
               ),
-              onSubmitted: onSearch,
             ),
           ),
         ),

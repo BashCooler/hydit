@@ -3,17 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:hydrus_flutter/api/hydrus.dart';
 import 'package:hydrus_flutter/pages/pageview.dart';
 import '../main.dart';
 import 'images.dart';
 
 
 class ImageGridViewBuilder extends StatefulWidget {
-  final Client client;
   final List<HydrusImage> images;
 
-  const ImageGridViewBuilder(this.images, this.client, {super.key});
+  const ImageGridViewBuilder(this.images, {super.key});
 
   @override
   State<ImageGridViewBuilder> createState() => _ImageGridViewBuilderState();
@@ -41,7 +39,7 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
   @override
   Widget build(BuildContext context) {
     final images = widget.images;
-    final client = widget.client;
+    final client = context.read<ClientCubit>().state;
 
     return GridViewObserver(
       controller: observerController,
@@ -58,12 +56,13 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
           return GestureDetector(
             onTap: () {
               context.read<SearchVisibilityCubit>().hide();
-              Navigator.push(context, MaterialPageRoute(builder: (_) => ImageView(
-                images: images,
-                index: index,
-                client: client,
-                observerController: observerController,
-              )));
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return ImageView(
+                  images: images,
+                  index: index,
+                  observerController: observerController,
+                );
+              }));
             },
             child: Hero(
               tag: images[index].id,
