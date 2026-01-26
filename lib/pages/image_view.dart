@@ -37,9 +37,12 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
   late AnimationController _animationController;
   Animation<Matrix4>? _animation;
 
+  late int _currentIndex;
+
   @override
   void initState() {
     super.initState();
+    _currentIndex = widget.index;
     _pageController = PageController(initialPage: widget.index);
     _animationController = AnimationController(
       vsync: this,
@@ -128,7 +131,11 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
           onPointerDown: registerPointerEventState,
           onPointerUp: registerPointerEventState,
           child: PageView.builder(
-            onPageChanged: jumpToPageInBackground,
+            allowImplicitScrolling: true,
+            onPageChanged: (page) {
+              jumpToPageInBackground(page);
+              setState(() => _currentIndex = page);
+            },
             physics: (_isMultitouch || _isZoomed)
                 ? const NeverScrollableScrollPhysics()
                 : const SnappyPageScrollPhysics(),
@@ -145,12 +152,15 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
                   maxScale: _maxScale,
                   transformationController: _transformationController,
                   child: Center(
-                    child: Hero(
-                      tag: widget.images[i].id,
-                      createRectTween: (begin, end) {  // linear transition
-                        return RectTween(begin: begin, end: end);
-                      },
-                      child: HighResImage(image: widget.images[i]),
+                    child: HeroMode(
+                      enabled: i == _currentIndex,
+                      child: Hero(
+                        tag: widget.images[i].id,
+                        createRectTween: (begin, end) {  // linear transition
+                          return RectTween(begin: begin, end: end);
+                        },
+                        child: HighResImage(image: widget.images[i]),
+                      ),
                     ),
                   ),
                 ),
