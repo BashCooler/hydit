@@ -20,20 +20,19 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   List<HydrusImage> images = [];
-  late Client client;
+  Client client = getIt<GetClient>().client;
 
-  @override void initState() {
+  @override
+  void initState() {
     super.initState();
     updateClient();
   }
 
   void updateClient() {
-    final prefs = context.read<SettingsCubit>().prefs;
-    final url = prefs.getString('URL') ?? '';
+    final prefs = getIt<GetPreferences>().prefs;
     final key = prefs.getString('Hydrus API key') ?? '';
-    final uri = Uri.parse(url);
-    client = Client(key, uri.host, uri.port);
-    context.read<ClientCubit>().update(client);
+    final uri = Uri.parse(prefs.getString('URL') ?? '');
+    getIt<GetClient>().client.updateClientFromPrefs(key: key, uri: uri);
   }
 
   void searchForFiles(List<String> tags) async {

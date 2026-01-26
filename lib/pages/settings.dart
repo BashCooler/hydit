@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hydrus_flutter/main.dart';
 import '../api/hydrus.dart';
 
 
@@ -82,7 +82,7 @@ class _SettingsPageState extends State<SettingsPage> {
       return;
     }
     // Get response from client
-    final client = Client(key, uri.host, uri.port);
+    final client = Client(accessKey: key, host: uri.host, port: uri.port);
     String response;
     try {
       response = await client.getVerifyAccessKey();
@@ -117,7 +117,7 @@ class _SettingsPageState extends State<SettingsPage> {
       }
     }
     // Save settings
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = getIt<GetPreferences>().prefs;
     setState(() {
       prefs.setString('URL', _urlController.text);
       prefs.setString('Hydrus API key', _keyController.text);
@@ -171,7 +171,7 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
   }
 
   Future<void> loadValue() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = getIt<GetPreferences>().prefs;
     setState(() {
       _text = prefs.getString(widget.setting) ?? '';
       widget.controller.text = _text;

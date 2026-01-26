@@ -31,7 +31,7 @@ Map<String, dynamic> _parseItem(Map<String, dynamic> unwrappedJson) {
   final height = metadata.height;
 
   /// Unwrap tags
-  List<dynamic> services = List.from(metadata.tags.values);
+  // List<dynamic> services = List.from(metadata.tags.values);
 
   /// Parse each service
   /// TODO parse tags from services

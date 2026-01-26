@@ -9,10 +9,10 @@ import 'meta_parser.dart';
 
 Future<void> main() async {
 
-  Client client = Client('86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
+  Client client = Client(accessKey: '86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
   Stopwatch watch = Stopwatch();
   watch.start();
-  var response = await client.getSearchTags(r'');
+  var response = await client.getSearchTags(r'123');
   print(response.toString());
   print(watch.elapsedMilliseconds.toString());
 
@@ -23,11 +23,17 @@ Future<void> main() async {
 class Client {
   static const int version = 81;
 
-  String apiUrl = 'localhost';
   String? accessKey;
+  String host = 'localhost';
   int port = 45869;
 
-  Client([this.accessKey, this.apiUrl = 'localhost', this.port = 45869]);
+  Client({this.accessKey, this.host = 'localhost', this.port = 45869});
+
+  void updateClientFromPrefs({required String key, required Uri uri}) {
+    accessKey = key;
+    host = uri.host;
+    port = uri.port;
+  }
 
   // MARK: REQUEST
 
@@ -58,7 +64,7 @@ class Client {
     http.Response response;
     try {
       response = await http.get(
-          Uri.http('$apiUrl:$port', path, params?.map((k,v) => MapEntry(k,'$v'))),
+          Uri.http('$host:$port', path, params?.map((k,v) => MapEntry(k,'$v'))),
           headers: { 'Hydrus-Client-API-Access-Key' : accessKey ?? '' }
       );
     } on SocketException catch (e, s) {

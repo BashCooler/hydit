@@ -20,6 +20,8 @@ class ImageGridViewBuilder extends StatefulWidget {
 class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
   final padding = 5.0;
 
+  final client = getIt<GetClient>().client;
+
   final scrollController = ScrollController();
   late GridObserverController observerController;
 
@@ -39,7 +41,6 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
   @override
   Widget build(BuildContext context) {
     final images = widget.images;
-    final client = context.read<ClientCubit>().state;
 
     return GridViewObserver(
       controller: observerController,
@@ -69,7 +70,7 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
               createRectTween: (begin, end) {  // linear transition
                 return RectTween(begin: begin, end: end);
               },
-              child: Thumbnail(image: images[index], client: client),
+              child: Thumbnail(image: images[index]),
             ),
           );
         },

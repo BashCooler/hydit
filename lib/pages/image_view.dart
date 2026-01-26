@@ -1,11 +1,9 @@
 import 'dart:developer';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrus_flutter/widgets/images.dart';
-
 import '../main.dart';
 
 
@@ -155,7 +153,6 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
                       },
                       child: HighResImage(
                         image: widget.images[i],
-                        client: context.read<ClientCubit>().state,
                       ),
                     ),
                   ),

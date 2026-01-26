@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
-
 import 'package:hydrus_flutter/api/hydrus.dart';
+import '../main.dart';
 
 
 class HydrusImage {
@@ -17,12 +17,12 @@ class HydrusImage {
 
 class Thumbnail extends StatelessWidget {
   final HydrusImage image;
-  final Client client;
+  final Client client = getIt<GetClient>().client;
 
   final BoxFit _boxFit = BoxFit.cover;
   static const double _aspectRatio = 1.0;
 
-  const Thumbnail({super.key, required this.image, required this.client});
+  Thumbnail({super.key, required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +66,11 @@ class Thumbnail extends StatelessWidget {
 
 class HighResImage extends StatelessWidget {
   final HydrusImage image;
-  final Client client;
+  final Client client  = getIt<GetClient>().client;
 
   final BoxFit _boxFit = BoxFit.cover;
 
-  const HighResImage({super.key, required this.image, required this.client});
+  HighResImage({super.key, required this.image});
 
   @override
   Widget build(BuildContext context) {
