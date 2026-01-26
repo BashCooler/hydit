@@ -33,10 +33,7 @@ dependencies:
   http: ^1.6.0
   shared_preferences: ^2.5.4
   scrollview_observer: ^1.26.3
-  sqflite: ^2.4.2
-  path: ^1.9.1
-  flutter_bloc: ^9.1.1
-  get_it: ^9.2.0
+  flutter_it: ^2.1.1
 
 dev_dependencies:
   flutter_test:

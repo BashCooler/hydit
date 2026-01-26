@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/widgets/images.dart';
@@ -118,7 +117,7 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
     return PopScope(
       onPopInvokedWithResult: (closed, object) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          context.read<SearchVisibilityCubit>().show();
+          getIt<SearchVisibilityController>().show();
         });
       },
       child: Scaffold(

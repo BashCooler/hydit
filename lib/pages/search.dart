@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:hydrus_flutter/theme.dart';
 import 'package:hydrus_flutter/pages/settings.dart';
 import 'package:hydrus_flutter/widgets/images.dart';
@@ -111,7 +111,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
-class AnimatedLiquidSearchBar extends StatefulWidget {
+class AnimatedLiquidSearchBar extends StatefulWidget with WatchItStatefulWidgetMixin {
   final ValueChanged<String> onSearch;
 
   const AnimatedLiquidSearchBar({
@@ -152,20 +152,16 @@ class _AnimatedLiquidSearchBarState extends State<AnimatedLiquidSearchBar>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SearchVisibilityCubit, SearchVisibility>(
-      buildWhen: (prevState, state) => prevState != state,
-      builder: (BuildContext context, SearchVisibility state) {
-        switch (state) {
-          case SearchVisibility.visible:
-            _controller.reverse();
-          default:
-            _controller.forward();
-        }
-        return SlideTransition(
-          position: _slide,
-          child: LiquidSearchBar(onSearch: widget.onSearch),
-        );
-      },
+    final visibility = watchIt<SearchVisibilityController>().value;
+    switch (visibility) {
+      case SearchState.hidden:
+        _controller.forward();
+      case SearchState.visible:
+        _controller.reverse();
+    }
+    return SlideTransition(
+      position: _slide,
+      child: LiquidSearchBar(onSearch: widget.onSearch),
     );
   }
 }

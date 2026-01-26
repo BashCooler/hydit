@@ -1,11 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:hydrus_flutter/pages/search.dart';
 import 'package:hydrus_flutter/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:get_it/get_it.dart';
 import 'api/hydrus.dart';
 
 
@@ -15,38 +14,25 @@ void main() async {
 
   getIt.registerSingleton(GetPreferences(prefs));
   getIt.registerSingleton(GetClient());
+  getIt.registerSingleton(SearchVisibilityController());
 
   timeDilation = 1.0;
-  runApp(App(prefs));
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
-  final SharedPreferences prefs;
 
-  const App(this.prefs, {super.key});
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => SearchVisibilityCubit(),
-      child: MaterialApp(
-        title: 'Flutter App',
-        debugShowCheckedModeBanner: false,
-        theme: darkTheme(),
-        home: SearchPage(),
-      ),
+    return MaterialApp(
+      title: 'Flutter App',
+      debugShowCheckedModeBanner: false,
+      theme: darkTheme(),
+      home: SearchPage(),
     );
   }
-}
-
-// MARK: BLOC
-
-enum SearchVisibility {visible, hidden}
-class SearchVisibilityCubit extends Cubit<SearchVisibility> {
-  SearchVisibilityCubit() : super(SearchVisibility.visible);
-
-  void show() => emit(SearchVisibility.visible);
-  void hide() => emit(SearchVisibility.hidden);
 }
 
 // MARK: SERVICES
@@ -61,4 +47,14 @@ class GetClient {
 class GetPreferences {
   final SharedPreferences prefs;
   GetPreferences(this.prefs);
+}
+
+enum SearchState {visible, hidden}
+
+class SearchVisibilityController extends ValueNotifier<SearchState> {
+
+  SearchVisibilityController() : super(SearchState.visible);
+
+  void show() => value = SearchState.visible;
+  void hide() => value = SearchState.hidden;
 }
