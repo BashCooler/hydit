@@ -150,9 +150,7 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
                       createRectTween: (begin, end) {  // linear transition
                         return RectTween(begin: begin, end: end);
                       },
-                      child: HighResImage(
-                        image: widget.images[i],
-                      ),
+                      child: HighResImage(image: widget.images[i]),
                     ),
                   ),
                 ),

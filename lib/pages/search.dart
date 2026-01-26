@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+
 import 'package:hydrus_flutter/theme.dart';
 import 'package:hydrus_flutter/pages/settings.dart';
 import 'package:hydrus_flutter/widgets/images.dart';
@@ -19,7 +20,6 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  List<HydrusImage> images = [];
   Client client = getIt<GetClient>().client;
 
   @override
@@ -48,9 +48,7 @@ class _SearchPageState extends State<SearchPage> {
       showSnackBar('No response (timeout)');
     }
 
-    final images = ids.map((id) => HydrusImage(id)).toList();
-
-    setState(() => this.images = images);
+    getIt<GetImages>().update(ids.map((id) => HydrusImage(id)).toList());
   }
 
   // MARK: BUILD
@@ -58,6 +56,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Hydrus Client'),
@@ -71,8 +70,15 @@ class _SearchPageState extends State<SearchPage> {
       body: Stack(
         alignment: .bottomCenter,
         children: [
-          ImageGridViewBuilder(images),
-          AnimatedLiquidSearchBar(onSearch: (s) => searchForFiles([s])),
+          ImageGridViewBuilder(),
+          AnimatedPadding(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOutBack,
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: AnimatedLiquidSearchBar(onSearch: (s) => searchForFiles([s])),
+          ),
         ],
       ),
     );
@@ -177,7 +183,7 @@ class LiquidSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
+      child: Padding(  // if you change this make sure to change Tween Offset
         padding: const EdgeInsets.all(15.0),
         child: RepaintBoundary(
           child: ClipRRect(

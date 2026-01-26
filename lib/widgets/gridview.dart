@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/pages/image_view.dart';
@@ -7,10 +8,8 @@ import '../main.dart';
 import 'images.dart';
 
 
-class ImageGridViewBuilder extends StatefulWidget {
-  final List<HydrusImage> images;
-
-  const ImageGridViewBuilder(this.images, {super.key});
+class ImageGridViewBuilder extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const ImageGridViewBuilder({super.key});
 
   @override
   State<ImageGridViewBuilder> createState() => _ImageGridViewBuilderState();
@@ -39,8 +38,7 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    final images = widget.images;
-
+    final images = watchIt<GetImages>().value;
     return GridViewObserver(
       controller: observerController,
       child: GridView.builder(
