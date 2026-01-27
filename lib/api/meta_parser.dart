@@ -59,9 +59,10 @@ class UnwrappedJson {
 
 class FileMetadata {
   final int fileId, width, height;
+  final String mime;
   final Map<String, dynamic> tags;
 
-  FileMetadata(this.fileId, this.width, this.height, this.tags);
+  FileMetadata(this.fileId, this.width, this.height, this.mime, this.tags);
 
   /// Extract [fileId], [width], [height], [tags] from unwrapped JSON.
   ///
@@ -70,8 +71,9 @@ class FileMetadata {
     final fileId = fileMetadata['file_id'];
     final width  = fileMetadata['width'];
     final height = fileMetadata['height'];
+    final mime = fileMetadata['mime'];
     final Map<String, dynamic> tags = fileMetadata['tags'];
 
-    return FileMetadata(fileId, width, height, tags);
+    return FileMetadata(fileId, width, height, mime, tags);
   }
 }

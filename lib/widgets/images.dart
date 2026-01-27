@@ -10,6 +10,7 @@ class HydrusImage {
   Uint8List? low;
   Uint8List? high;
   int? width, height;
+  String? mime;
 
   HydrusImage(this.id);
 }
@@ -54,12 +55,16 @@ class Thumbnail extends StatelessWidget {
     );
   }
 
+  // MARK: METADATA
+
   /// Save width and height to correctly display image in [PageView].
   ///
   /// See also: [HighResImage]
   void writeMetadata(AsyncSnapshot<List<dynamic>> snapshot) {
-    image.width = snapshot.data![1][0]['width'];
-    image.height = snapshot.data![1][0]['height'];
+    final metadata = snapshot.data![1][0];
+    image.width = metadata['width'];
+    image.height = metadata['height'];
+    image.mime = metadata['mime'];
   }
 }
 
