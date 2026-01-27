@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:hydrus_flutter/pages/image_view.dart';
+import 'package:hydrus_flutter/viewer/viewer.dart';
 import '../main.dart';
-import 'images.dart';
+import '../viewer/images.dart';
 
 
 class ImageGridViewBuilder extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -55,7 +55,7 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
             onTap: () {
               getIt<SearchVisibilityController>().hide();
               Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return ImageView(
+                return Viewer(
                   images: images,
                   index: index,
                   observerController: observerController,
