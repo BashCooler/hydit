@@ -1,9 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:hydrus_flutter/search/search.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
-
 import 'package:hydrus_flutter/viewer/viewer.dart';
+
 import '../main.dart';
 import '../viewer/images.dart';
 
@@ -21,12 +22,12 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
   final client = getIt<GetClient>().client;
 
   final scrollController = ScrollController();
-  late GridObserverController observerController;
+  final observerController = getIt<GridObserverController>();
 
   @override
   void initState() {
     super.initState();
-    observerController = GridObserverController(controller: scrollController);
+    observerController.controller = scrollController;
   }
 
   @override
@@ -55,11 +56,7 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
             onTap: () {
               getIt<SearchVisibilityController>().hide();
               Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return Viewer(
-                  images: images,
-                  index: index,
-                  observerController: observerController,
-                );
+                return Viewer(index: index);
               }));
             },
             child: Hero(

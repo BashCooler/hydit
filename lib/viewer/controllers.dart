@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
+import '../main.dart';
+
 
 class MultitouchController {
   final Set<int> _pointers = {};
@@ -81,14 +83,11 @@ class ZoomController with ChangeNotifier {
 class PageViewController {
   final int initialIndex;
   final PageController pageController;
-  final GridObserverController observerController;
+  final observerController = getIt<GridObserverController>();
 
   final ValueNotifier<int> currentIndex;
 
-  PageViewController({
-    required this.initialIndex,
-    required this.observerController,
-  })
+  PageViewController({required this.initialIndex})
       : currentIndex = ValueNotifier<int>(initialIndex),
         pageController = PageController(initialPage: initialIndex);
 

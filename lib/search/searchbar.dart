@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_it/flutter_it.dart';
+import 'package:hydrus_flutter/search/search.dart';
 
-import '../main.dart';
 import '../settings/theme.dart';
 
 

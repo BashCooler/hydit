@@ -5,20 +5,14 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/viewer/images.dart';
 import '../main.dart';
+import '../search/search.dart';
 import 'controllers.dart';
 
 
 class Viewer extends StatefulWidget with WatchItStatefulWidgetMixin {
-  final List<HydrusImage> images;
   final int index;
-  final GridObserverController observerController;
 
-  const Viewer({
-    super.key,
-    required this.images,
-    required this.index,
-    required this.observerController,
-  });
+  const Viewer({super.key, required this.index});
 
   @override
   State<Viewer> createState() => _ViewerState();
@@ -26,18 +20,18 @@ class Viewer extends StatefulWidget with WatchItStatefulWidgetMixin {
 
 class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
 
+  final images = getIt<GetImages>().value;
+
   late final ZoomController _zoomCtrl;
   late final PageViewController _pageCtrl;
   final _multitouchCtrl = MultitouchController();
+  final observerCtrl = getIt<GridObserverController>();
 
   @override
   void initState() {
     super.initState();
     _zoomCtrl = ZoomController(vsync: this);
-    _pageCtrl = PageViewController(
-      initialIndex: widget.index,
-      observerController: widget.observerController,
-    );
+    _pageCtrl = PageViewController(initialIndex: widget.index);
   }
 
   @override
@@ -81,30 +75,12 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
                 ? const NeverScrollableScrollPhysics()
                 : const SnappyPageScrollPhysics(),
             controller: _pageCtrl.pageController,
-            itemCount: widget.images.length,
+            itemCount: images.length,
             itemBuilder: (context, index) {
-              return GestureDetector(
-                onDoubleTapDown: (TapDownDetails details) {
-                  _zoomCtrl.handleDoubleTap(details.localPosition);
-                },
-                // onDoubleTap: handleDoubleTap,
-                child: InteractiveViewer(
-                  minScale: _zoomCtrl.minScale,
-                  maxScale: _zoomCtrl.maxScale,
-                  transformationController: _zoomCtrl.transformationCtrl,
-                  child: Center(
-                    child: HeroMode(
-                      enabled: index == curIndex,
-                      child: Hero(
-                        tag: widget.images[index].id,
-                        createRectTween: (begin, end) {  // linear transition
-                          return RectTween(begin: begin, end: end);
-                        },
-                        child: HighResImage(image: widget.images[index]),
-                      ),
-                    ),
-                  ),
-                ),
+              return ViewImage(
+                zoomCtrl: _zoomCtrl,
+                curIndex: curIndex,
+                itemIndex: index,
               );
             },
           ),

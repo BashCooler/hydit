@@ -1,19 +1,23 @@
 import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 
 import 'package:hydrus_flutter/settings/theme.dart';
 import 'package:hydrus_flutter/settings/settings.dart';
 import 'package:hydrus_flutter/viewer/images.dart';
 import 'package:hydrus_flutter/search/searchbar.dart';
+import 'package:scrollview_observer/scrollview_observer.dart';
 
 import '../api/hydrus.dart';
 import '../main.dart';
 import 'gridview.dart';
 
 
-class SearchPage extends StatefulWidget {
+class SearchPage extends WatchingStatefulWidget {
   const SearchPage({super.key});
+
+  final pageId = 0;
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -21,11 +25,20 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   Client client = getIt<GetClient>().client;
+  final scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     updateClient();
+    getIt.pushNewScope(
+      scopeName: 'Page ${widget.pageId}',
+      init: (getIt) {
+        getIt.registerSingleton(SearchVisibilityController());
+        getIt.registerSingleton(GetImages());
+        getIt.registerSingleton(GridObserverController());
+      },
+    );
   }
 
   void updateClient() {
@@ -77,7 +90,9 @@ class _SearchPageState extends State<SearchPage> {
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-            child: AnimatedLiquidSearchBar(onSearch: (s) => searchForFiles([s])),
+            child: AnimatedLiquidSearchBar(
+                onSearch: (s) => searchForFiles([s])
+            ),
           ),
         ],
       ),
@@ -115,4 +130,21 @@ class _SearchPageState extends State<SearchPage> {
     );
     updateClient();
   }
+}
+
+
+// MARK: SERVICES
+
+class GetImages extends ValueNotifier<List<HydrusImage>> {
+  GetImages() : super([]);
+  void update(List<HydrusImage> images) => value = images;
+}
+
+enum SearchState {visible, hidden}
+
+class SearchVisibilityController extends ValueNotifier<SearchState> {
+  SearchVisibilityController() : super(SearchState.visible);
+
+  void show() => value = SearchState.visible;
+  void hide() => value = SearchState.hidden;
 }

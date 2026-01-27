@@ -1,8 +1,11 @@
 import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
+
 import 'package:hydrus_flutter/api/hydrus.dart';
 import '../main.dart';
+import '../search/search.dart';
+import 'controllers.dart';
 
 
 class HydrusImage {
@@ -140,3 +143,46 @@ class ImageStack extends StatelessWidget {
     );
   }
 }
+
+
+class ViewImage extends StatelessWidget {
+  final ZoomController zoomCtrl;
+  final int curIndex;
+  final int itemIndex;
+
+  ViewImage({
+    super.key,
+    required this.zoomCtrl,
+    required this.curIndex,
+    required this.itemIndex,
+  });
+
+  final images = getIt<GetImages>().value;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onDoubleTapDown: (TapDownDetails details) {
+        zoomCtrl.handleDoubleTap(details.localPosition);
+      },
+      child: InteractiveViewer(
+        minScale: zoomCtrl.minScale,
+        maxScale: zoomCtrl.maxScale,
+        transformationController: zoomCtrl.transformationCtrl,
+        child: Center(
+          child: HeroMode(
+            enabled: itemIndex == curIndex,
+            child: Hero(
+              tag: images[itemIndex].id,
+              createRectTween: (begin, end) {  // linear transition
+                return RectTween(begin: begin, end: end);
+              },
+              child: HighResImage(image: images[itemIndex]),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
