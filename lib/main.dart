@@ -13,7 +13,7 @@ void main() async {
 
   // GetIt.instance.debugEventsEnabled = true;
   getIt.registerSingleton(GetPreferences(prefs));
-  getIt.registerSingleton(GetClient());
+  getIt.registerSingleton(Client());
 
   timeDilation = 1.0;
   runApp(const App());
@@ -36,12 +36,7 @@ class App extends StatelessWidget {
 
 // MARK: SERVICES
 
-final getIt = GetIt.instance;  // global
-
-class GetClient {
-  final Client client = Client();
-  GetClient();
-}
+final getIt = GetIt.instance;
 
 class GetPreferences {
   final SharedPreferences prefs;

@@ -24,7 +24,7 @@ class SearchPage extends WatchingStatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  Client client = getIt<GetClient>().client;
+  Client client = getIt<Client>();
   final scrollController = ScrollController();
 
   @override
@@ -45,7 +45,7 @@ class _SearchPageState extends State<SearchPage> {
     final prefs = getIt<GetPreferences>().prefs;
     final key = prefs.getString('Hydrus API key') ?? '';
     final uri = Uri.parse(prefs.getString('URL') ?? '');
-    getIt<GetClient>().client.updateClientFromPrefs(key: key, uri: uri);
+    getIt<Client>().updateClientFromPrefs(key: key, uri: uri);
   }
 
   void searchForFiles(List<String> tags) async {

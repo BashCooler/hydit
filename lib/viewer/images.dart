@@ -14,6 +14,7 @@ class HydrusImage {
   Uint8List? high;
   int? width, height;
   String? mime;
+  int? duration;
 
   HydrusImage(this.id);
 }
@@ -21,7 +22,7 @@ class HydrusImage {
 
 class Thumbnail extends StatelessWidget {
   final HydrusImage image;
-  final Client client = getIt<GetClient>().client;
+  final Client client = getIt<Client>();
 
   final BoxFit _boxFit = BoxFit.cover;
   static const double _aspectRatio = 1.0;
@@ -68,13 +69,14 @@ class Thumbnail extends StatelessWidget {
     image.width = metadata['width'];
     image.height = metadata['height'];
     image.mime = metadata['mime'];
+    image.duration = metadata['duration'];
   }
 }
 
 
 class HighResImage extends StatelessWidget {
   final HydrusImage image;
-  final Client client  = getIt<GetClient>().client;
+  final Client client  = getIt<Client>();
 
   final BoxFit _boxFit = BoxFit.cover;
 
@@ -145,17 +147,28 @@ class ImageStack extends StatelessWidget {
 }
 
 
+/// To make sure the next image is ready we need to preload
+/// next/previous images.
+///
+/// ```dart
+/// PageView.allowImplicitScrolling = true
+/// ```
+///
+/// Hero tries to animate them as well, so we need to explicitly tell it
+/// not to by comparing the **true** [index] of the image we're looking
+/// at with the [builderIndex] provided by the item builder.
+///
+/// ```dart
+/// itemBuilder: (context, index)
+///                          ↑
+///               This is builderIndex
+/// ```
 class ViewImage extends StatelessWidget {
   final ZoomController zoomCtrl;
-  final int curIndex;
-  final int itemIndex;
+  final int index;
+  final int builderIndex;
 
-  ViewImage({
-    super.key,
-    required this.zoomCtrl,
-    required this.curIndex,
-    required this.itemIndex,
-  });
+  ViewImage(this.zoomCtrl, this.index, this.builderIndex, {super.key});
 
   final images = getIt<GetImages>().value;
 
@@ -171,13 +184,13 @@ class ViewImage extends StatelessWidget {
         transformationController: zoomCtrl.transformationCtrl,
         child: Center(
           child: HeroMode(
-            enabled: itemIndex == curIndex,
+            enabled: builderIndex == index,
             child: Hero(
-              tag: images[itemIndex].id,
+              tag: images[builderIndex].id,
               createRectTween: (begin, end) {  // linear transition
                 return RectTween(begin: begin, end: end);
               },
-              child: HighResImage(image: images[itemIndex]),
+              child: HighResImage(image: images[builderIndex]),
             ),
           ),
         ),

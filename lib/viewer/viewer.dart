@@ -76,12 +76,13 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
                 : const SnappyPageScrollPhysics(),
             controller: _pageCtrl.pageController,
             itemCount: images.length,
-            itemBuilder: (context, index) {
-              return ViewImage(
-                zoomCtrl: _zoomCtrl,
-                curIndex: curIndex,
-                itemIndex: index,
-              );
+            itemBuilder: (context, buildIndex) {
+              final mime = images[buildIndex].mime;
+              final type = mime?.split('/').first;
+              return switch (type) {
+                'image' => ViewImage(_zoomCtrl, curIndex, buildIndex),
+                _ => ErrorText(mime),
+              };
             },
           ),
         ),
@@ -144,4 +145,18 @@ class SnappyPageScrollPhysics extends PageScrollPhysics {
     stiffness: 250,
     damping: 30,
   );
+}
+
+
+class ErrorText extends StatelessWidget {
+  final String? type;
+
+  const ErrorText(this.type, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text('Error: media type "$type" is unsupported'),
+    );
+  }
 }

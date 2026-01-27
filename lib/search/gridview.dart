@@ -5,6 +5,7 @@ import 'package:hydrus_flutter/search/search.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:hydrus_flutter/viewer/viewer.dart';
 
+import '../api/hydrus.dart';
 import '../main.dart';
 import '../viewer/images.dart';
 
@@ -19,7 +20,7 @@ class ImageGridViewBuilder extends StatefulWidget with WatchItStatefulWidgetMixi
 class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
   final padding = 5.0;
 
-  final client = getIt<GetClient>().client;
+  final client = getIt<Client>();
 
   final scrollController = ScrollController();
   final observerController = getIt<GridObserverController>();
