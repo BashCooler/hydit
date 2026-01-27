@@ -40,6 +40,4 @@ abstract class Consts {
   static const radius = 10.0;
   static const blur = 8.0;
   static const blackAlpha = Color.fromARGB(128, 0, 0, 0);
-  static const minZoomScale = 1.0;
-  static const maxZoomScale = 4.0;
 }

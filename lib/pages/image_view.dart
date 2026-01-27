@@ -1,12 +1,13 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/widgets/images.dart';
 import '../main.dart';
 
 
-class ImageView extends StatefulWidget {
+class ImageView extends StatefulWidget with WatchItStatefulWidgetMixin {
   final List<HydrusImage> images;
   final int index;
   final GridObserverController observerController;
@@ -22,101 +23,43 @@ class ImageView extends StatefulWidget {
   State<ImageView> createState() => _ImageViewState();
 }
 
-class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
-  late final PageController _pageController;
+class _ImageViewState extends State<ImageView> with SingleTickerProviderStateMixin {
 
-  final _transformationController = TransformationController();
-  double get _interactiveViewerScale => _transformationController.value.row0.x;
-
-  bool _isZoomed = false, _isMultitouch = false;
-  final List<int> _pointerEvents = [];
-
-  final double _minScale = 1.0, _maxScale = 4.0;
-
-  late Offset _doubleTapLocalPosition;
-  late AnimationController _animationController;
-  Animation<Matrix4>? _animation;
-
-  late int _currentIndex;
+  late final ZoomController _zoomCtrl;
+  late final PageViewController _pageCtrl;
+  final _multitouchCtrl = MultitouchController();
 
   @override
   void initState() {
     super.initState();
-    _currentIndex = widget.index;
-    _pageController = PageController(initialPage: widget.index);
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 150),
-    )..addListener(() {
-      // listen matrix4 changed, if not, set as default value
-      _transformationController.value = _animation?.value ?? Matrix4.identity();
-    });
+    _zoomCtrl = ZoomController(vsync: this);
+    _pageCtrl = PageViewController(
+      initialIndex: widget.index,
+      observerController: widget.observerController,
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
-    _transformationController.dispose();
-    _pageController.dispose();
-    _animationController.dispose();
-  }
-
-  /// Takes details of [PointerDownEvent] or [PointerUpEvent].
-  /// Adds/removes the event to/from the [List] of type [int].
-  /// Determines whether a multitouch is being used, updates
-  /// the [bool] [_isMultitouch] variable with [SetState].
-  void registerPointerEventState(Object details) {
-    if (details is PointerDownEvent) {
-      _pointerEvents.add(details.pointer);
-    }
-    if (details is PointerUpEvent) {
-      _pointerEvents.remove(details.pointer);
-    }
-    if (_interactiveViewerScale > 1.0) return;
-
-    final newValue = _pointerEvents.length > 1;
-    if (newValue != _isMultitouch) {
-      setState(() => _isMultitouch = newValue);
-    }
-  }
-
-  void handleDoubleTap() {
-    Matrix4 mat = _transformationController.value.clone();
-    final double currentScale = mat.row0.x;
-    double targetScale = (currentScale <= _minScale) ? _maxScale : _minScale;
-    setState(() => _isZoomed = targetScale > 1.0);
-    final double offSetX = targetScale == _minScale
-        ? 0.0
-        : -_doubleTapLocalPosition.dx * (targetScale - 1);
-    final double offSetY = targetScale == _minScale
-        ? 0.0
-        : -_doubleTapLocalPosition.dy * (targetScale - 1);
-    mat = getTargetMatrix(targetScale, mat, offSetX, offSetY);
-    _animation = Matrix4Tween(
-      begin: _transformationController.value,
-      end: mat,
-    ).animate(CurveTween(curve: Curves.easeOut).animate(_animationController));
-    _animationController.forward(from: 0);
-  }
-
-  /// Jumps to corresponding item in [GridView].
-  ///
-  /// Example: you open item `0` in the [GridView], then scroll to file `40`
-  /// using [PageView]. [jumpToPageInBackground] scrolls to picture `40` in
-  /// the background to lazy load new thumbnails and so when you close
-  /// [PageView] you end up seeing item `40`, not `0`.
-  ///
-  /// TODO `-2` in `page - 2` is a tech debt!
-  /// If [SliverGridDelegateWithFixedCrossAxisCount.crossAxisCount] changed
-  /// in settings the `-2` offset becomes irrelevant
-  void jumpToPageInBackground(int page) {
-    widget.observerController.jumpTo(index: page - 2 > 0 ? page - 2 : 0);
+    _zoomCtrl.dispose();
+    _pageCtrl.dispose();
   }
 
   // MARK: BUILD
 
   @override
   Widget build(BuildContext context) {
+    // Watch multitouch state
+    final mCtrl = createOnce(() => _multitouchCtrl.isMultitouch);
+    final isMultitouch = watch(mCtrl).value;
+    // Watch zoom state
+    final zCtrl = createOnce(() => _zoomCtrl.isZoomed);
+    final isZoomed = watch(zCtrl).value;
+    // Watch page state
+    final pCtrl = createOnce(() => _pageCtrl.currentIndex);
+    final curIndex = watch(pCtrl).value;
+    // Build widget
     return PopScope(
       onPopInvokedWithResult: (closed, object) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -128,38 +71,35 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
         extendBody: true,
         appBar: AppBar(backgroundColor: Colors.transparent),
         body: Listener(
-          onPointerDown: registerPointerEventState,
-          onPointerUp: registerPointerEventState,
+          onPointerDown: _multitouchCtrl.register,
+          onPointerUp: _multitouchCtrl.register,
           child: PageView.builder(
             allowImplicitScrolling: true,
-            onPageChanged: (page) {
-              jumpToPageInBackground(page);
-              setState(() => _currentIndex = page);
-            },
-            physics: (_isMultitouch || _isZoomed)
+            onPageChanged: _pageCtrl.onPageChanged,
+            physics: (isMultitouch || isZoomed)
                 ? const NeverScrollableScrollPhysics()
                 : const SnappyPageScrollPhysics(),
-            controller: _pageController,
+            controller: _pageCtrl.pageController,
             itemCount: widget.images.length,
-            itemBuilder: (context, i) {
+            itemBuilder: (context, index) {
               return GestureDetector(
                 onDoubleTapDown: (TapDownDetails details) {
-                  _doubleTapLocalPosition = details.localPosition;
+                  _zoomCtrl.handleDoubleTap(details.localPosition);
                 },
-                onDoubleTap: handleDoubleTap,
+                // onDoubleTap: handleDoubleTap,
                 child: InteractiveViewer(
-                  minScale: _minScale,
-                  maxScale: _maxScale,
-                  transformationController: _transformationController,
+                  minScale: _zoomCtrl.minScale,
+                  maxScale: _zoomCtrl.maxScale,
+                  transformationController: _zoomCtrl.transformationCtrl,
                   child: Center(
                     child: HeroMode(
-                      enabled: i == _currentIndex,
+                      enabled: index == curIndex,
                       child: Hero(
-                        tag: widget.images[i].id,
+                        tag: widget.images[index].id,
                         createRectTween: (begin, end) {  // linear transition
                           return RectTween(begin: begin, end: end);
                         },
-                        child: HighResImage(image: widget.images[i]),
+                        child: HighResImage(image: widget.images[index]),
                       ),
                     ),
                   ),
@@ -171,7 +111,7 @@ class _ImageViewState extends State<ImageView> with TickerProviderStateMixin {
         bottomNavigationBar: BottomAppBar(
           color: Colors.transparent,
           // Swipe doesn't work on Windows for some reason so I added buttons
-          child: BottomAppBarActions(pageController: _pageController),
+          child: BottomAppBarActions(pageController: _pageCtrl.pageController),
         ),
       ),
     );
@@ -208,6 +148,119 @@ class BottomAppBarActions extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+
+class MultitouchController {
+  final Set<int> _pointers = {};
+
+  final isMultitouch = ValueNotifier<bool>(false);
+
+  void register(Object details) {
+    if (details is PointerDownEvent) _pointers.add(details.pointer);
+    if (details is PointerUpEvent) _pointers.remove(details.pointer);
+    isMultitouch.value = _pointers.length > 1;
+  }
+}
+
+class ZoomController with ChangeNotifier {
+  final double minScale = 1.0;
+  final double maxScale = 4.0;
+  final transformationCtrl = TransformationController();
+
+  late AnimationController _animationCtrl;
+  Animation<Matrix4>? _animation;
+
+  final isZoomed = ValueNotifier<bool>(false);
+
+  ZoomController({required TickerProvider vsync}) {
+    _animationCtrl = AnimationController(
+      vsync: vsync,
+      duration: const Duration(milliseconds: 150),
+    )..addListener(() {
+      // listen matrix4 changed, if not, set as default value
+      transformationCtrl.value = _animation?.value ?? Matrix4.identity();
+    });
+    transformationCtrl.addListener(_onMatrixChange);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    transformationCtrl.dispose();
+    _animationCtrl.dispose();
+  }
+
+  void _onMatrixChange() {
+    isZoomed.value = transformationCtrl.value.row0.x > minScale + 0.1;
+  }
+
+  void handleDoubleTap(Offset localPos) {
+    var mat = transformationCtrl.value.clone();
+
+    final curScale = mat.row0.x;
+    double targetScale = (curScale <= minScale) ? maxScale : minScale;
+
+    isZoomed.value = targetScale > minScale;
+
+    final double offSetX = targetScale == minScale
+        ? 0.0
+        : -localPos.dx * (targetScale - 1);
+    final double offSetY = targetScale == minScale
+        ? 0.0
+        : -localPos.dy * (targetScale - 1);
+
+    mat = getTargetMatrix(targetScale, mat, offSetX, offSetY);
+
+    _animation = Matrix4Tween(
+      begin: transformationCtrl.value,
+      end: mat,
+    ).animate(
+        CurvedAnimation(
+          parent: _animationCtrl,
+          curve: Curves.easeOut,
+        )
+    );
+    _animationCtrl.forward(from: 0);
+  }
+}
+
+class PageViewController {
+  final int initialIndex;
+  final PageController pageController;
+  final GridObserverController observerController;
+
+  final ValueNotifier<int> currentIndex;
+
+  PageViewController({
+    required this.initialIndex,
+    required this.observerController,
+  })
+      : currentIndex = ValueNotifier<int>(initialIndex),
+        pageController = PageController(initialPage: initialIndex);
+
+  void dispose() {
+    pageController.dispose();
+  }
+
+  void onPageChanged(int page) {
+    currentIndex.value = page;
+    jumpToPageInBackground(page);
+  }
+
+  /// Jumps to corresponding item in [GridView].
+  ///
+  /// Example: you open item `0` in the [GridView], then scroll to file `40`
+  /// using [PageView]. [jumpToPageInBackground] scrolls to picture `40` in
+  /// the background to lazy load new thumbnails and so when you close
+  /// [PageView] you end up seeing item `40`, not `0`.
+  ///
+  /// TODO `-2` in `page - 2` is a tech debt!
+  /// If [SliverGridDelegateWithFixedCrossAxisCount.crossAxisCount] changed
+  /// in settings the `-2` offset becomes irrelevant
+  void jumpToPageInBackground(int page) {
+    observerController.jumpTo(index: page - 2 > 0 ? page - 2 : 0);
   }
 }
 
