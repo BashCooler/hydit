@@ -52,7 +52,33 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
           mainAxisSpacing: padding,
           crossAxisSpacing: padding,
         ),
-        itemBuilder: (context, index) {
+        itemBuilder: (context, index) => Tile(index),
+      ),
+    );
+  }
+}
+
+
+class Tile extends StatelessWidget {
+  final int index;
+
+  Tile(this.index, {super.key});
+
+  final Client client = getIt<Client>();
+
+  @override
+  Widget build(BuildContext context) {
+    final HydrusImage image = getIt<GetImages>().value[index];
+    return FutureBuilder(
+      future: client.getFileMetadata(
+        [image.id],
+        includeServicesObject: false,
+      ),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const ColoredBox(color: Colors.white10);
+        } else {
+          writeMetadata(snapshot.data![0], image);
           return GestureDetector(
             onTap: () {
               getIt<SearchVisibilityController>().hide();
@@ -60,16 +86,34 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
                 return Viewer(index: index);
               }));
             },
-            child: Hero(
-              tag: images[index].id,
-              createRectTween: (begin, end) {  // linear transition
-                return RectTween(begin: begin, end: end);
-              },
-              child: Thumbnail(image: images[index]),
+            child: Stack(
+              children: [
+                Hero(
+                  tag: image.id,
+                  createRectTween: (begin, end) {  // linear transition
+                    return RectTween(begin: begin, end: end);
+                  },
+                  child: Thumbnail(image: image),
+                ),
+              ],
             ),
           );
-        },
-      ),
+        }
+      },
     );
   }
 }
+
+
+// MARK: METADATA
+
+/// Save width and height to correctly display image in [PageView].
+///
+/// See also: [HighResImage]
+void writeMetadata(Map<String, dynamic> metadata, HydrusImage image) {
+  image.width = metadata['width'];
+  image.height = metadata['height'];
+  image.mime = metadata['mime'];
+  image.duration = metadata['duration'];
+}
+

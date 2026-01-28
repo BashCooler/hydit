@@ -42,17 +42,14 @@ class Thumbnail extends StatelessWidget {
       );
     }
 
-    final thumbnail = client.getThumbnail(image.id);
-    final metadata = client.getFileMetadata([image.id], includeServicesObject: false);
     return FutureBuilder(
-      future: Future.wait([thumbnail, metadata]),
-      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+      future: client.getThumbnail(image.id),
+      builder: (context, snapshot) {
         if (snapshot.hasData) {
-          image.low = snapshot.data![0];
-          writeMetadata(snapshot);
+          image.low = snapshot.data;
           return ImageStack(
             aspectRatio: _aspectRatio,
-            children: [Image.memory(snapshot.data![0], fit: _boxFit)],
+            children: [Image.memory(snapshot.data!, fit: _boxFit)],
           );
         }
         else {
@@ -60,19 +57,6 @@ class Thumbnail extends StatelessWidget {
         }
       },
     );
-  }
-
-  // MARK: METADATA
-
-  /// Save width and height to correctly display image in [PageView].
-  ///
-  /// See also: [HighResImage]
-  void writeMetadata(AsyncSnapshot<List<dynamic>> snapshot) {
-    final metadata = snapshot.data![1][0];
-    image.width = metadata['width'];
-    image.height = metadata['height'];
-    image.mime = metadata['mime'];
-    image.duration = metadata['duration'];
   }
 }
 
