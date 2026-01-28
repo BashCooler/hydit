@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 
 import 'package:hydrus_flutter/api/hydrus.dart';
 import '../main.dart';
@@ -199,3 +201,78 @@ class ViewImage extends StatelessWidget {
   }
 }
 
+
+class ViewVideo extends StatefulWidget {
+  final int index;
+  final int builderIndex;
+
+  const ViewVideo({super.key, required this.index, required this.builderIndex});
+
+  @override
+  State<ViewVideo> createState() => _ViewVideoState();
+}
+
+class _ViewVideoState extends State<ViewVideo> {
+  late final player = Player(
+    configuration: const PlayerConfiguration(
+      logLevel: MPVLogLevel.debug,
+    ),
+  )..setVolume(0.0)..stream.log.listen((l) => log(l.toString()));
+  late final controller = VideoController(player);
+
+  final images = getIt<GetImages>().value;
+  final client = getIt<Client>();
+
+  @override
+  void initState() {
+    super.initState();
+    player.open(
+      Media(
+        // r'https://user-images.githubusercontent.com/28951144/229373695-22f88f13-d18f-4288-9bf1-c3e078d83722.mp4',
+        'http://${client.host}:${client.port}/get_files/file?file_id=182560646',
+        httpHeaders: {
+          'Hydrus-Client-API-Access-Key' : client.accessKey ?? '',
+        },
+      ),
+      play: false,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    player.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    double width = images[widget.builderIndex].width!.toDouble();
+    double height = images[widget.builderIndex].height!.toDouble();
+    double aspectRatio = width/height;
+
+    return SafeArea(
+      child: HeroMode(
+        enabled: widget.builderIndex == widget.index,
+        child: Hero(
+          tag: images[widget.builderIndex].id,
+          createRectTween: (begin, end) {  // linear transition
+            return RectTween(begin: begin, end: end);
+          },
+          child: ImageStack(
+            aspectRatio: aspectRatio,
+            elements: [
+              Image.memory(images[widget.builderIndex].low!),
+              Video(
+                controller: controller,
+                // fill: Colors.transparent,
+                width: width,
+                height: height,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

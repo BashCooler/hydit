@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_it/flutter_it.dart';
 import 'package:hydrus_flutter/search/search.dart';
 import 'package:hydrus_flutter/settings/theme.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api/hydrus.dart';
 
@@ -14,6 +15,8 @@ void main() async {
   // GetIt.instance.debugEventsEnabled = true;
   getIt.registerSingleton(GetPreferences(prefs));
   getIt.registerSingleton(Client());
+
+  MediaKit.ensureInitialized();
 
   timeDilation = 1.0;
   runApp(const App());

@@ -12,9 +12,9 @@ Future<void> main() async {
   Client client = Client(accessKey: '86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
   Stopwatch watch = Stopwatch();
   watch.start();
-  var response = await client.getSearchTags(r'123');
-  print(response.toString());
-  print(watch.elapsedMilliseconds.toString());
+  var response = await client.getFile(182560646);
+  log(response.toString());
+  log(watch.elapsedMilliseconds.toString());
 
   // var tags = ['creator:呵呜阿花', 'title:白丝秦喵喵。'];
 }

@@ -34,6 +34,9 @@ dependencies:
   shared_preferences: ^2.5.4
   scrollview_observer: ^1.26.3
   flutter_it: ^2.1.1
+  media_kit: ^1.2.6
+  media_kit_video: ^2.0.1
+  media_kit_libs_video: ^1.0.7
 
 dev_dependencies:
   flutter_test:
