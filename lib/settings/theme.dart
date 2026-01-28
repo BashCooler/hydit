@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 ThemeData darkTheme() {
   return ThemeData(
     brightness: .dark,
-    colorSchemeSeed: Colors.blue,
+    colorSchemeSeed: Colors.pinkAccent,
     inputDecorationTheme: InputDecorationThemeData(
       filled: true,
       enabledBorder: outlineInputBorder(),

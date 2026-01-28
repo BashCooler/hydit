@@ -31,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
     updateClient();
     getIt.pushNewScope(
       init: (getIt) {
-        getIt.registerSingleton(SearchVisibilityController());
+        getIt.registerSingleton(SearchVisibility());
         getIt.registerSingleton(GetImages());
         getIt.registerSingleton(GridObserverController());
       },
@@ -137,11 +137,9 @@ class GetImages extends ValueNotifier<List<HydrusImage>> {
   void update(List<HydrusImage> images) => value = images;
 }
 
-enum SearchState {visible, hidden}
+class SearchVisibility extends ValueNotifier<bool> {
+  SearchVisibility() : super(true);
 
-class SearchVisibilityController extends ValueNotifier<SearchState> {
-  SearchVisibilityController() : super(SearchState.visible);
-
-  void show() => value = SearchState.visible;
-  void hide() => value = SearchState.hidden;
+  void show() => value = true;
+  void hide() => value = false;
 }

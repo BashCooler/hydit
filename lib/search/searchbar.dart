@@ -47,11 +47,11 @@ class _AnimatedLiquidSearchBarState extends State<AnimatedLiquidSearchBar>
 
   @override
   Widget build(BuildContext context) {
-    final visibility = watchIt<SearchVisibilityController>().value;
+    final visibility = watchIt<SearchVisibility>().value;
     switch (visibility) {
-      case SearchState.hidden:
+      case false:
         _controller.forward();
-      case SearchState.visible:
+      case true:
         _controller.reverse();
     }
     return SlideTransition(

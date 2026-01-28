@@ -61,7 +61,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
     return PopScope(
       onPopInvokedWithResult: (closed, object) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          getIt<SearchVisibilityController>().show();
+          getIt<SearchVisibility>().show();
         });
       },
       child: Scaffold(
