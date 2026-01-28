@@ -17,8 +17,6 @@ import 'gridview.dart';
 class SearchPage extends WatchingStatefulWidget {
   const SearchPage({super.key});
 
-  final pageId = 0;
-
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
@@ -32,7 +30,6 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
     updateClient();
     getIt.pushNewScope(
-      scopeName: 'Page ${widget.pageId}',
       init: (getIt) {
         getIt.registerSingleton(SearchVisibilityController());
         getIt.registerSingleton(GetImages());

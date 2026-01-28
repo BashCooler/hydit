@@ -30,6 +30,7 @@ Map<String, dynamic> _parseItem(Map<String, dynamic> unwrappedJson) {
   final width  = metadata.width;
   final height = metadata.height;
   final mime = metadata.mime;
+  final duration = metadata.duration;
 
   /// Unwrap tags
   // List<dynamic> services = List.from(metadata.tags.values);
@@ -42,6 +43,7 @@ Map<String, dynamic> _parseItem(Map<String, dynamic> unwrappedJson) {
     'width': width,
     'height': height,
     'mime': mime,
+    'duration': duration,
   };
 }
 
@@ -62,20 +64,21 @@ class UnwrappedJson {
 class FileMetadata {
   final int fileId, width, height;
   final String mime;
+  final int duration;
   final Map<String, dynamic> tags;
 
-  FileMetadata(this.fileId, this.width, this.height, this.mime, this.tags);
+  FileMetadata(this.fileId, this.width, this.height, this.mime, this.duration, this.tags);
 
-  /// Extract [fileId], [width], [height], [tags] from unwrapped JSON.
-  ///
+  /// Extract parameters from unwrapped JSON.<br>
   /// [tags] is a Map and should be unwrapped further.
   factory FileMetadata.fromJson(Map<String, dynamic> fileMetadata) {
     final fileId = fileMetadata['file_id'];
     final width  = fileMetadata['width'];
     final height = fileMetadata['height'];
     final mime = fileMetadata['mime'];
+    final duration = fileMetadata['duration'] ?? 0;  /// YOU CAN'T HAVE NULLS IN HERE IT FUCKING BREAKS!
     final Map<String, dynamic> tags = fileMetadata['tags'];
 
-    return FileMetadata(fileId, width, height, mime, tags);
+    return FileMetadata(fileId, width, height, mime, duration, tags);
   }
 }

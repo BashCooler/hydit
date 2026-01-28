@@ -9,7 +9,7 @@ import '../search/search.dart';
 import 'controllers.dart';
 
 
-class Viewer extends StatefulWidget with WatchItStatefulWidgetMixin {
+class Viewer extends WatchingStatefulWidget {
   final int index;
 
   const Viewer({super.key, required this.index});
@@ -23,7 +23,6 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   final images = getIt<GetImages>().value;
 
   late final ZoomController _zoomCtrl;
-  late final PageViewController _pageCtrl;
   final _multitouchCtrl = MultitouchController();
   final observerCtrl = getIt<GridObserverController>();
 
@@ -31,20 +30,24 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _zoomCtrl = ZoomController(vsync: this);
-    _pageCtrl = PageViewController(initialIndex: widget.index);
+    getIt.pushNewScope(
+      init: (getIt) {
+        getIt.registerSingleton(PageViewController(initialIndex: widget.index));
+      }
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
     _zoomCtrl.dispose();
-    _pageCtrl.dispose();
   }
 
   // MARK: BUILD
 
   @override
   Widget build(BuildContext context) {
+    final pageCtrl = getIt<PageViewController>();
     // Watch multitouch state
     final mCtrl = createOnce(() => _multitouchCtrl.isMultitouch);
     final isMultitouch = watch(mCtrl).value;
@@ -52,7 +55,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
     final zCtrl = createOnce(() => _zoomCtrl.isZoomed);
     final isZoomed = watch(zCtrl).value;
     // Watch page state
-    final pCtrl = createOnce(() => _pageCtrl.currentIndex);
+    final pCtrl = createOnce(() => pageCtrl.currentIndex);
     final curIndex = watch(pCtrl).value;
     // Build widget
     return PopScope(
@@ -70,18 +73,18 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
           onPointerUp: _multitouchCtrl.register,
           child: PageView.builder(
             allowImplicitScrolling: true,
-            onPageChanged: _pageCtrl.onPageChanged,
+            onPageChanged: pageCtrl.onPageChanged,
             physics: (isMultitouch || isZoomed)
                 ? const NeverScrollableScrollPhysics()
                 : const SnappyPageScrollPhysics(),
-            controller: _pageCtrl.pageController,
+            controller: pageCtrl.pageController,
             itemCount: images.length,
             itemBuilder: (context, buildIndex) {
               final mime = images[buildIndex].mime;
               final type = mime?.split('/').first;
               return switch (type) {
                 'image' => ViewImage(_zoomCtrl, curIndex, buildIndex),
-                'video' => ViewVideo(_pageCtrl, curIndex, buildIndex),
+                'video' => ViewVideo(curIndex, buildIndex),
                 _ => ErrorText(mime),
               };
             },
@@ -90,7 +93,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
         bottomNavigationBar: BottomAppBar(
           color: Colors.transparent,
           // Swipe doesn't work on Windows for some reason so I added buttons
-          child: BottomAppBarActions(pageController: _pageCtrl.pageController),
+          child: BottomAppBarActions(pageController: pageCtrl.pageController),
         ),
       ),
     );

@@ -206,9 +206,8 @@ class ViewImage extends StatelessWidget {
 class ViewVideo extends StatefulWidget with WatchItStatefulWidgetMixin {
   final int index;
   final int builderIndex;
-  final PageViewController pageCtrl;
 
-  const ViewVideo(this.pageCtrl, this.index, this.builderIndex, {super.key});
+  const ViewVideo(this.index, this.builderIndex, {super.key});
 
   @override
   State<ViewVideo> createState() => _ViewVideoState();
@@ -251,6 +250,17 @@ class _ViewVideoState extends State<ViewVideo> {
 
   @override
   Widget build(BuildContext context) {
+    registerHandler(
+      select: (PageViewController c) => c.currentIndex,
+      handler: (_, index, _) {
+        if (index != widget.builderIndex) {
+          player.pause();
+          player.seek(Duration.zero);
+        } else {
+          player.play();
+        }
+      },
+    );
     // Get video parameters
     double width = images[widget.builderIndex].width!.toDouble();
     double height = images[widget.builderIndex].height!.toDouble();
