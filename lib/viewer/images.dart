@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_it/flutter_it.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
@@ -37,7 +38,7 @@ class Thumbnail extends StatelessWidget {
     if (image.low != null) {
       return ImageStack(
         aspectRatio: _aspectRatio,
-        elements: [Image.memory(image.low!, fit: _boxFit)],
+        children: [Image.memory(image.low!, fit: _boxFit)],
       );
     }
 
@@ -51,7 +52,7 @@ class Thumbnail extends StatelessWidget {
           writeMetadata(snapshot);
           return ImageStack(
             aspectRatio: _aspectRatio,
-            elements: [Image.memory(snapshot.data![0], fit: _boxFit)],
+            children: [Image.memory(snapshot.data![0], fit: _boxFit)],
           );
         }
         else {
@@ -94,7 +95,7 @@ class HighResImage extends StatelessWidget {
     if (image.high != null) {
       return ImageStack(
         aspectRatio: aspectRatio,
-        elements: [
+        children: [
           Image.memory(image.low!, fit: _boxFit),
           Image.memory(image.high!, fit: _boxFit),
         ],
@@ -108,7 +109,7 @@ class HighResImage extends StatelessWidget {
           image.high = snapshot.data;
           return ImageStack(
             aspectRatio: aspectRatio,
-            elements: [
+            children: [
               Image.memory(image.low!, fit: _boxFit),
               Image.memory(snapshot.data!, fit: _boxFit),
             ],
@@ -117,7 +118,7 @@ class HighResImage extends StatelessWidget {
         else {
           return ImageStack(
             aspectRatio: aspectRatio,
-            elements: [Image.memory(image.low!, fit: _boxFit)],
+            children: [Image.memory(image.low!, fit: _boxFit)],
           );
         }
       },
@@ -128,12 +129,12 @@ class HighResImage extends StatelessWidget {
 
 class ImageStack extends StatelessWidget {
   final double aspectRatio;
-  final List<Widget> elements;
+  final List<Widget> children;
 
   const ImageStack({
     super.key,
     required this.aspectRatio,
-    required this.elements,
+    required this.children,
   });
 
   @override
@@ -142,7 +143,7 @@ class ImageStack extends StatelessWidget {
       aspectRatio: aspectRatio,
       child: Stack(
         fit: StackFit.expand,
-        children: elements,
+        children: children,
       ),
     );
   }
@@ -186,7 +187,7 @@ class ViewImage extends StatelessWidget {
         transformationController: zoomCtrl.transformationCtrl,
         child: Center(
           child: HeroMode(
-            enabled: builderIndex == index,
+            enabled: index == builderIndex,
             child: Hero(
               tag: images[builderIndex].id,
               createRectTween: (begin, end) {  // linear transition
@@ -202,40 +203,44 @@ class ViewImage extends StatelessWidget {
 }
 
 
-class ViewVideo extends StatefulWidget {
+class ViewVideo extends StatefulWidget with WatchItStatefulWidgetMixin {
   final int index;
   final int builderIndex;
+  final PageViewController pageCtrl;
 
-  const ViewVideo({super.key, required this.index, required this.builderIndex});
+  const ViewVideo(this.pageCtrl, this.index, this.builderIndex, {super.key});
 
   @override
   State<ViewVideo> createState() => _ViewVideoState();
 }
 
 class _ViewVideoState extends State<ViewVideo> {
+
   late final player = Player(
-    configuration: const PlayerConfiguration(
-      logLevel: MPVLogLevel.debug,
-    ),
-  )..setVolume(0.0)..stream.log.listen((l) => log(l.toString()));
+    configuration: PlayerConfiguration(logLevel: MPVLogLevel.error),
+  )..setVolume(0.0);
   late final controller = VideoController(player);
 
   final images = getIt<GetImages>().value;
   final client = getIt<Client>();
+
+  bool ready = false;
 
   @override
   void initState() {
     super.initState();
     player.open(
       Media(
-        // r'https://user-images.githubusercontent.com/28951144/229373695-22f88f13-d18f-4288-9bf1-c3e078d83722.mp4',
         'http://${client.host}:${client.port}/get_files/file?file_id=182560646',
-        httpHeaders: {
-          'Hydrus-Client-API-Access-Key' : client.accessKey ?? '',
-        },
+        httpHeaders: { 'Hydrus-Client-API-Access-Key' : client.accessKey ?? '' },
       ),
-      play: false,
+      play: widget.index == widget.builderIndex,
     );
+    player.stream.buffer.listen((duration) {
+      if (!ready && duration > Duration(milliseconds: 500)) {
+        setState(() => ready = true);
+      }
+    });
   }
 
   @override
@@ -246,12 +251,12 @@ class _ViewVideoState extends State<ViewVideo> {
 
   @override
   Widget build(BuildContext context) {
-
+    // Get video parameters
     double width = images[widget.builderIndex].width!.toDouble();
     double height = images[widget.builderIndex].height!.toDouble();
     double aspectRatio = width/height;
-
-    return SafeArea(
+    // Build widget
+    return Center(
       child: HeroMode(
         enabled: widget.builderIndex == widget.index,
         child: Hero(
@@ -261,13 +266,20 @@ class _ViewVideoState extends State<ViewVideo> {
           },
           child: ImageStack(
             aspectRatio: aspectRatio,
-            elements: [
-              Image.memory(images[widget.builderIndex].low!),
-              Video(
-                controller: controller,
-                // fill: Colors.transparent,
-                width: width,
-                height: height,
+            children: [
+              Image.memory(
+                images[widget.builderIndex].low!,
+                fit: BoxFit.cover,
+              ),
+              AnimatedOpacity(
+                opacity: ready ? 1 : 0,
+                duration: Duration(milliseconds: 150),
+                curve: Curves.easeInQuint,
+                child: Video(
+                  controller: controller,
+                  fill: Colors.transparent,
+                  fit: BoxFit.cover,
+                ),
               ),
             ],
           ),

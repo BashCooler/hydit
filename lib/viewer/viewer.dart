@@ -81,7 +81,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
               final type = mime?.split('/').first;
               return switch (type) {
                 'image' => ViewImage(_zoomCtrl, curIndex, buildIndex),
-                'video' => ViewVideo(index: curIndex, builderIndex: buildIndex),
+                'video' => ViewVideo(_pageCtrl, curIndex, buildIndex),
                 _ => ErrorText(mime),
               };
             },
