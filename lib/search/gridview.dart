@@ -1,17 +1,14 @@
-import 'dart:developer';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
-import 'package:hydrus_flutter/search/search.dart';
+import 'package:hydrus_flutter/viewer/images.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
+
+import 'package:hydrus_flutter/api/hydrus.dart';
+import 'package:hydrus_flutter/search/search.dart';
 import 'package:hydrus_flutter/viewer/viewer.dart';
 
-import '../api/hydrus.dart';
-import '../main.dart';
-import '../settings/theme.dart';
-import '../viewer/images.dart';
 
-
-class ImageGridViewBuilder extends StatefulWidget with WatchItStatefulWidgetMixin {
+class ImageGridViewBuilder extends StatefulWidget {
   const ImageGridViewBuilder({super.key});
 
   @override
@@ -19,41 +16,41 @@ class ImageGridViewBuilder extends StatefulWidget with WatchItStatefulWidgetMixi
 }
 
 class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
-  final padding = 5.0;
-
-  final client = getIt<Client>();
-
-  final scrollController = ScrollController();
-  final observerController = getIt<GridObserverController>();
+  static const padding = 5.0;
+  final client = Get.find<Client>();
+  final imgCtrl = Get.find<Images>();
+  
+  final scrollCtrl = ScrollController();
+  late final GridObserverController gridObserverCtrl;
 
   @override
   void initState() {
     super.initState();
-    observerController.controller = scrollController;
+    gridObserverCtrl = GridObserverController(controller: scrollCtrl);
+    Get.put<GridObserverController>(gridObserverCtrl);
   }
 
   @override
   void dispose() {
-    scrollController.dispose();
-    observerController.controller?.dispose();
     super.dispose();
+    gridObserverCtrl.controller?.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final images = watchIt<GetImages>().value;
-    return GridViewObserver(
-      controller: observerController,
-      child: GridView.builder(
-        controller: scrollController,
-        itemCount: images.length,
-        padding: EdgeInsetsGeometry.all(padding),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: padding,
-          crossAxisSpacing: padding,
+    return Obx(
+      () => GridViewObserver(
+        controller: gridObserverCtrl,
+        child: GridView.builder(
+          controller: scrollCtrl,
+          itemCount: imgCtrl.images.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: padding,
+            crossAxisSpacing: padding,
+          ),
+          itemBuilder: (context, index) => TileFutureBuilder(index),
         ),
-        itemBuilder: (context, index) => TileFutureBuilder(index),
       ),
     );
   }
@@ -62,10 +59,10 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
 
 class TileFutureBuilder extends StatelessWidget {
   final int index;
+  final client = Get.find<Client>();
+  final imgCtrl = Get.find<Images>();
 
   TileFutureBuilder(this.index, {super.key});
-
-  final Client client = getIt<Client>();
 
   /// Save width and height to correctly display image in [PageView].
   ///
@@ -79,7 +76,7 @@ class TileFutureBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HydrusImage image = getIt<GetImages>().value[index];
+    final image = imgCtrl.images[index];
     return FutureBuilder(
       future: client.getFileMetadata(
         [image.id],
@@ -90,7 +87,7 @@ class TileFutureBuilder extends StatelessWidget {
           return const ColoredBox(color: Colors.white10);
         } else {
           writeMetadata(snapshot.data![0], image);
-          return Tile(index: index, image: image);
+          return Tile(index, image);
         }
       },
     );
@@ -98,37 +95,33 @@ class TileFutureBuilder extends StatelessWidget {
 }
 
 
-class Tile extends StatelessWidget with WatchItMixin {
-  const Tile({
-    super.key,
-    required this.index,
-    required this.image,
-  });
-
+class Tile extends StatelessWidget {
   final int index;
   final HydrusImage image;
 
+  const Tile(this.index, this.image, {super.key});
+
   @override
   Widget build(BuildContext context) {
-    final visible = watchIt<SearchVisibility>().value;
+    final visibility = Get.find<SearchVisibility>();
     return GestureDetector(
+      key: ValueKey(image.id),
       onTap: () {
-        getIt<SearchVisibility>().hide();
-        Navigator.push(context, MaterialPageRoute(builder: (_) {
-          return Viewer(index: index);
-        }));
+        visibility.hide();
+        Get.to(() => Viewer(index));
       },
       child: Stack(
         alignment: .bottomRight,
         children: [
           Hero(
             tag: image.id,
-            createRectTween: (begin, end) {  // linear transition
-              return RectTween(begin: begin, end: end);
-            },
-            child: Thumbnail(image: image),
+            createRectTween: (b, e) => RectTween(begin: b, end: e),
+            child: Thumbnail(image),
           ),
-          visible ? TileBadges(image) : SizedBox.shrink(),
+          Obx(() => visibility.visible.value
+              ? TileBadges(image)
+              : SizedBox.shrink()
+          ),
         ],
       ),
     );

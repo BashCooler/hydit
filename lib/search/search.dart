@@ -1,20 +1,17 @@
 import 'dart:developer';
-import 'dart:ui';
+
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:hydrus_flutter/settings/theme.dart';
-import 'package:hydrus_flutter/settings/settings.dart';
+import 'package:hydrus_flutter/api/hydrus.dart';
 import 'package:hydrus_flutter/viewer/images.dart';
+import 'package:hydrus_flutter/search/gridview.dart';
 import 'package:hydrus_flutter/search/searchbar.dart';
-import 'package:scrollview_observer/scrollview_observer.dart';
-
-import '../api/hydrus.dart';
-import '../main.dart';
-import 'gridview.dart';
+import 'package:hydrus_flutter/settings/settings.dart';
 
 
-class SearchPage extends WatchingStatefulWidget {
+class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
   @override
@@ -22,46 +19,37 @@ class SearchPage extends WatchingStatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  Client client = getIt<Client>();
-  final scrollController = ScrollController();
+  final client = Get.find<Client>();
+  final imgCtrl = Get.put<Images>(Images());
 
   @override
   void initState() {
     super.initState();
     updateClient();
-    getIt.pushNewScope(
-      init: (getIt) {
-        getIt.registerSingleton(SearchVisibility());
-        getIt.registerSingleton(GetImages());
-        getIt.registerSingleton(GridObserverController());
-      },
-    );
+    Get.put<SearchVisibility>(SearchVisibility());
   }
 
   void updateClient() {
-    final prefs = getIt<GetPreferences>().prefs;
+    final prefs = Get.find<SharedPreferences>();
     final key = prefs.getString('Hydrus API key') ?? '';
     final uri = Uri.parse(prefs.getString('URL') ?? '');
-    getIt<Client>().updateClientFromPrefs(key: key, uri: uri);
+    client.updateClientFromPrefs(key: key, uri: uri);
   }
 
   void searchForFiles(List<String> tags) async {
-
-    // TODO tag chips see: https://api.flutter.dev/flutter/material/Chip-class.html
 
     List<int> ids = [];
     try {
       ids = await client.getSearchFiles(tags);
     } on HydrusNoServiceException {
-      showSnackBar('No connection with Hydrus');
+      Get.snackbar('Error', 'No connection with Hydrus');
     } on HydrusTimeoutException {
-      showSnackBar('No response (timeout)');
+      Get.snackbar('Error', 'No response (timeout)');
     }
 
-    getIt<GetImages>().update(ids.map((id) => HydrusImage(id)).toList());
+    var list = ids.map((id) => HydrusImage(id)).toList();
+    imgCtrl.images.assignAll(list);
   }
-
-  // MARK: BUILD
 
   @override
   Widget build(BuildContext context) {
@@ -69,12 +57,12 @@ class _SearchPageState extends State<SearchPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Hydrus Client'),
+        title: const Text('Hydrus client GetX'),
         actions: [
           IconButton(
-            onPressed: () => _openSettings(context),
+            onPressed: () => Get.to(() => SettingsPage(callback: updateClient)),
             icon: const Icon(Icons.settings),
-          ),
+          )
         ],
       ),
       body: Stack(
@@ -82,64 +70,30 @@ class _SearchPageState extends State<SearchPage> {
         children: [
           ImageGridViewBuilder(),
           AnimatedPadding(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeOutBack,
-            padding: EdgeInsets.only(
+            padding: EdgeInsetsGeometry.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOutBack,
             child: AnimatedLiquidSearchBar(
-                onSearch: (s) => searchForFiles([s])
+              onSearch: (s) => searchForFiles([s]),
             ),
-          ),
+          )
         ],
       ),
     );
-  }
-
-  // MARK: SNACKBAR
-
-  void showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: RepaintBoundary(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
-            child: Text(message),
-          ),
-        ),
-        backgroundColor: Consts.blackAlpha,
-      ),
-      snackBarAnimationStyle: const AnimationStyle(
-        curve: Curves.easeInExpo,
-        reverseCurve: Curves.easeOutExpo,
-        duration: Duration(milliseconds: 1000),
-        reverseDuration: Duration(milliseconds: 1000),
-      ),
-    );
-  }
-
-  // MARK: SETTINGS
-
-  void _openSettings(BuildContext context) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => SettingsPage()),
-    );
-    updateClient();
   }
 }
 
 
 // MARK: SERVICES
 
-class GetImages extends ValueNotifier<List<HydrusImage>> {
-  GetImages() : super([]);
-  void update(List<HydrusImage> images) => value = images;
+class SearchVisibility extends GetxController {
+  var visible = true.obs;
+  void show() => visible.value = true;
+  void hide() => visible.value = false;
 }
 
-class SearchVisibility extends ValueNotifier<bool> {
-  SearchVisibility() : super(true);
-
-  void show() => value = true;
-  void hide() => value = false;
+class Images extends GetxController {
+  final images = <HydrusImage>[].obs;
 }

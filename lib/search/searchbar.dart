@@ -1,12 +1,12 @@
 import 'dart:ui';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
+
 import 'package:hydrus_flutter/search/search.dart';
+import 'package:hydrus_flutter/settings/theme.dart';
 
-import '../settings/theme.dart';
 
-
-class AnimatedLiquidSearchBar extends StatefulWidget with WatchItStatefulWidgetMixin {
+class AnimatedLiquidSearchBar extends StatefulWidget {
   final ValueChanged<String> onSearch;
 
   const AnimatedLiquidSearchBar({
@@ -47,13 +47,15 @@ class _AnimatedLiquidSearchBarState extends State<AnimatedLiquidSearchBar>
 
   @override
   Widget build(BuildContext context) {
-    final visibility = watchIt<SearchVisibility>().value;
-    switch (visibility) {
-      case false:
-        _controller.forward();
-      case true:
-        _controller.reverse();
-    }
+    final visibility = Get.find<SearchVisibility>();
+    ever(visibility.visible, (v) {
+      switch (v) {
+        case false:
+          _controller.forward();
+        case true:
+          _controller.reverse();
+      }
+    });
     return SlideTransition(
       position: _slide,
       child: LiquidSearchBar(onSearch: widget.onSearch),

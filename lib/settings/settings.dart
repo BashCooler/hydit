@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hydrus_flutter/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../api/hydrus.dart';
 
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final void Function() callback;
+
+  const SettingsPage({super.key, required this.callback});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -117,10 +120,11 @@ class _SettingsPageState extends State<SettingsPage> {
       }
     }
     // Save settings
-    final prefs = getIt<GetPreferences>().prefs;
+    final prefs = Get.find<SharedPreferences>();
+    prefs.setString('URL', _urlController.text);
+    prefs.setString('Hydrus API key', _keyController.text);
+    widget.callback();  // update client
     setState(() {
-      prefs.setString('URL', _urlController.text);
-      prefs.setString('Hydrus API key', _keyController.text);
       _urlError = _keyError = null;
       _urlHint = _keyHint = 'Saved';
     });
@@ -171,7 +175,7 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
   }
 
   Future<void> loadValue() async {
-    final prefs = getIt<GetPreferences>().prefs;
+    final prefs = Get.find<SharedPreferences>();
     setState(() {
       _text = prefs.getString(widget.setting) ?? '';
       widget.controller.text = _text;

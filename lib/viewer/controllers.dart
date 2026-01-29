@@ -1,13 +1,12 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import '../main.dart';
 
-
-class MultitouchController {
+class MultitouchController extends GetxController {
   final Set<int> _pointers = {};
 
-  final isMultitouch = ValueNotifier<bool>(false);
+  final isMultitouch = false.obs;
 
   void register(Object details) {
     if (details is PointerDownEvent) _pointers.add(details.pointer);
@@ -17,7 +16,7 @@ class MultitouchController {
 }
 
 
-class ZoomController with ChangeNotifier {
+class ZoomController extends GetxController {
   final double minScale = 1.0;
   final double maxScale = 4.0;
   final transformationCtrl = TransformationController();
@@ -25,7 +24,7 @@ class ZoomController with ChangeNotifier {
   late AnimationController _animationCtrl;
   Animation<Matrix4>? _animation;
 
-  final isZoomed = ValueNotifier<bool>(false);
+  final isZoomed = false.obs;
 
   ZoomController({required TickerProvider vsync}) {
     _animationCtrl = AnimationController(
@@ -80,20 +79,16 @@ class ZoomController with ChangeNotifier {
 }
 
 
-class PageViewController {
+class PageViewController extends GetxController {
   final int initialIndex;
   final PageController pageController;
-  final observerController = getIt<GridObserverController>();
+  final observerController = Get.find<GridObserverController>();
 
-  final ValueNotifier<int> currentIndex;
+  final RxInt currentIndex;
 
   PageViewController({required this.initialIndex})
-      : currentIndex = ValueNotifier<int>(initialIndex),
+      : currentIndex = initialIndex.obs,
         pageController = PageController(initialPage: initialIndex);
-
-  void dispose() {
-    pageController.dispose();
-  }
 
   void onPageChanged(int page) {
     currentIndex.value = page;

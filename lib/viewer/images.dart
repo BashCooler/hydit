@@ -1,13 +1,13 @@
 import 'dart:developer';
+
 import 'dart:typed_data';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_it/flutter_it.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
 import 'package:hydrus_flutter/api/hydrus.dart';
-import '../main.dart';
-import '../search/search.dart';
+import 'package:hydrus_flutter/search/search.dart';
 import 'controllers.dart';
 
 
@@ -25,12 +25,12 @@ class HydrusImage {
 
 class Thumbnail extends StatelessWidget {
   final HydrusImage image;
-  final Client client = getIt<Client>();
+  final client = Get.find<Client>();
 
   final BoxFit _boxFit = BoxFit.cover;
   static const double _aspectRatio = 1.0;
 
-  Thumbnail({super.key, required this.image});
+  Thumbnail(this.image, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class Thumbnail extends StatelessWidget {
 
 class HighResImage extends StatelessWidget {
   final HydrusImage image;
-  final Client client  = getIt<Client>();
+  final client = Get.find<Client>();
 
   final BoxFit _boxFit = BoxFit.cover;
 
@@ -157,10 +157,11 @@ class ViewImage extends StatelessWidget {
 
   ViewImage(this.zoomCtrl, this.index, this.builderIndex, {super.key});
 
-  final images = getIt<GetImages>().value;
+  final imgCtrl = Get.find<Images>();
 
   @override
   Widget build(BuildContext context) {
+    final images = imgCtrl.images;
     return GestureDetector(
       onDoubleTapDown: (TapDownDetails details) {
         zoomCtrl.handleDoubleTap(details.localPosition);
@@ -187,7 +188,7 @@ class ViewImage extends StatelessWidget {
 }
 
 
-class ViewVideo extends StatefulWidget with WatchItStatefulWidgetMixin {
+class ViewVideo extends StatefulWidget {
   final int index;
   final int builderIndex;
 
@@ -204,8 +205,8 @@ class _ViewVideoState extends State<ViewVideo> {
   )..setVolume(0.0);
   late final controller = VideoController(player);
 
-  final images = getIt<GetImages>().value;
-  final client = getIt<Client>();
+  final imgCtrl = Get.find<Images>();
+  final client = Get.find<Client>();
 
   bool ready = false;
 
@@ -214,6 +215,7 @@ class _ViewVideoState extends State<ViewVideo> {
     super.initState();
     player.open(
       Media(
+        // TODO this shouldn't be in UI layer
         'http://${client.host}:${client.port}/get_files/file?file_id=182560646',
         httpHeaders: { 'Hydrus-Client-API-Access-Key' : client.accessKey ?? '' },
       ),
@@ -234,37 +236,34 @@ class _ViewVideoState extends State<ViewVideo> {
 
   @override
   Widget build(BuildContext context) {
-    registerHandler(
-      select: (PageViewController c) => c.currentIndex,
-      handler: (_, index, _) {
-        if (index != widget.builderIndex) {
-          player.pause();
-          player.seek(Duration.zero);
-        } else {
-          player.play();
-        }
-      },
-    );
+    // Auto play/pause on page change
+    final pageCtrl = Get.find<PageViewController>();
+    ever(pageCtrl.currentIndex, (i) {
+      if (i != widget.builderIndex) {
+        player.pause();
+        player.seek(Duration.zero);
+      } else {
+        player.play();
+      }
+    });
     // Get video parameters
-    double width = images[widget.builderIndex].width!.toDouble();
-    double height = images[widget.builderIndex].height!.toDouble();
+    var video = imgCtrl.images[widget.builderIndex];
+    double width = video.width!.toDouble();
+    double height = video.height!.toDouble();
     double aspectRatio = width/height;
     // Build widget
     return Center(
       child: HeroMode(
         enabled: widget.builderIndex == widget.index,
         child: Hero(
-          tag: images[widget.builderIndex].id,
-          createRectTween: (begin, end) {  // linear transition
+          tag: video.id,
+          createRectTween: (begin, end) {
             return RectTween(begin: begin, end: end);
           },
           child: ImageStack(
             aspectRatio: aspectRatio,
             children: [
-              Image.memory(
-                images[widget.builderIndex].low!,
-                fit: BoxFit.cover,
-              ),
+              Image.memory(video.low!, fit: BoxFit.cover),
               AnimatedOpacity(
                 opacity: ready ? 1 : 0,
                 duration: Duration(milliseconds: 150),
