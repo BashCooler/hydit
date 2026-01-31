@@ -202,7 +202,7 @@ class ViewVideo extends StatefulWidget {
 class _ViewVideoState extends State<ViewVideo> {
 
   late final player = Player(
-    configuration: PlayerConfiguration(logLevel: MPVLogLevel.error),
+    configuration: PlayerConfiguration(),
   )..setVolume(0.0);
   late final controller = VideoController(player);
 
@@ -214,11 +214,12 @@ class _ViewVideoState extends State<ViewVideo> {
   @override
   void initState() {
     super.initState();
+    final id = imgCtrl.images[widget.builderIndex].id;
     player.open(
       Media(
-        // TODO this shouldn't be in UI layer
-        'http://${client.host}:${client.port}/get_files/file?file_id=182560646',
-        httpHeaders: { 'Hydrus-Client-API-Access-Key' : client.accessKey ?? '' },
+        // TODO this shouldn't be in UI layer and it's http only
+        'http://${client.host}:${client.port}/get_files/file?file_id=$id',
+        httpHeaders: {'Hydrus-Client-API-Access-Key': client.accessKey ?? ''},
       ),
       play: widget.index == widget.builderIndex,
     );
@@ -230,9 +231,9 @@ class _ViewVideoState extends State<ViewVideo> {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     super.dispose();
-    player.dispose();
+    await player.dispose();
   }
 
   @override

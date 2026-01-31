@@ -24,6 +24,7 @@ class _AnimatedLiquidSearchBarState extends State<AnimatedLiquidSearchBar>
   late final AnimationController _controller;
   late final Animation<Offset> _slide;
   late final Worker _visibilityWorker;
+  final _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -56,6 +57,7 @@ class _AnimatedLiquidSearchBarState extends State<AnimatedLiquidSearchBar>
   void dispose() {
     _controller.dispose();
     _visibilityWorker.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -63,35 +65,23 @@ class _AnimatedLiquidSearchBarState extends State<AnimatedLiquidSearchBar>
   Widget build(BuildContext context) {
     return SlideTransition(
       position: _slide,
-      child: LiquidSearchBar(onSearch: widget.onSearch),
-    );
-  }
-}
-
-class LiquidSearchBar extends StatelessWidget {
-  final ValueChanged<String> onSearch;
-
-  const LiquidSearchBar({
-    super.key,
-    required this.onSearch,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(  // if you change this make sure to change Tween Offset
-        padding: const EdgeInsets.all(15.0),
-        child: RepaintBoundary(
-          child: ClipRRect(
-            borderRadius: BorderRadiusGeometry.circular(Consts.radius),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
-              child: TextField(
-                decoration: const InputDecoration(
-                  hintText: 'Search',
-                  fillColor: Consts.blackAlpha,
+      child: SafeArea(
+        child: Padding(  // if you change this make sure to change Tween Offset
+          padding: const EdgeInsets.all(15.0),
+          child: RepaintBoundary(
+            child: ClipRRect(
+              borderRadius: BorderRadiusGeometry.circular(Consts.radius),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
+                child: TextField(
+                  focusNode: _focusNode,
+                  decoration: const InputDecoration(
+                    hintText: 'Search',
+                    fillColor: Consts.blackAlpha,
+                  ),
+                  onSubmitted: widget.onSearch,
+                  onTapOutside: (_) => setState(() => _focusNode.unfocus()),
                 ),
-                onSubmitted: onSearch,
               ),
             ),
           ),

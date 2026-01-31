@@ -68,7 +68,7 @@ class _SearchPageState extends State<SearchPage> {
       body: Stack(
         alignment: .bottomCenter,
         children: [
-          ImageGridViewBuilder(),
+          const ImageGridViewBuilder(),
           AnimatedPadding(
             padding: EdgeInsetsGeometry.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,

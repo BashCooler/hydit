@@ -120,7 +120,7 @@ class Tile extends StatelessWidget {
           ),
           Obx(() => visibility.visible.value
               ? TileBadges(image)
-              : SizedBox.shrink()
+              : const SizedBox.shrink()
           ),
         ],
       ),
