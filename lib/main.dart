@@ -32,7 +32,32 @@ class App extends StatelessWidget {
       title: 'Flutter App',
       debugShowCheckedModeBanner: false,
       theme: darkTheme(),
-      home: SearchPage(),
+      home: TabView(),
     );
   }
 }
+
+
+class TabView extends StatelessWidget {
+  const TabView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Main')),
+      body: Column(
+        children: [
+          TextButton(
+            onPressed: () => Get.to(SearchPage()),
+            child: Text('To search 1'),
+          ),
+          TextButton(
+            onPressed: () => Get.to(SearchPage()),
+            child: Text('To search 2'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

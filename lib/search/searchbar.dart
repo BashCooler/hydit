@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +23,17 @@ class _AnimatedLiquidSearchBarState extends State<AnimatedLiquidSearchBar>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<Offset> _slide;
+  late final Worker _visibilityWorker;
 
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 350),
     );
+
     _slide = Tween<Offset>(
       begin: Offset.zero,
       end: Offset(0, 0.8),
@@ -37,25 +41,26 @@ class _AnimatedLiquidSearchBarState extends State<AnimatedLiquidSearchBar>
       parent: _controller,
       curve: Curves.easeOutBack,
     ));
+
+    final visibility = Get.find<SearchVisibility>();
+    _visibilityWorker = ever<bool>(visibility.visible, (v) {
+      if (v) {
+        _controller.reverse();
+      } else {
+        _controller.forward();
+      }
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _visibilityWorker.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final visibility = Get.find<SearchVisibility>();
-    ever(visibility.visible, (v) {
-      switch (v) {
-        case false:
-          _controller.forward();
-        case true:
-          _controller.reverse();
-      }
-    });
     return SlideTransition(
       position: _slide,
       child: LiquidSearchBar(onSearch: widget.onSearch),

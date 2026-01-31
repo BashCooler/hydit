@@ -23,6 +23,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   final imgCtrl = Get.find<Images>();
 
   late final ZoomController zoomCtrl;
+  late final PageViewController pageCtrl;
   final multitouchCtrl = MultitouchController();
   final observerCtrl = Get.find<GridObserverController>();
 
@@ -30,7 +31,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     zoomCtrl = ZoomController(vsync: this);
-    Get.put(PageViewController(initialIndex: widget.index));
+    pageCtrl = PageViewController(initialIndex: widget.index);
   }
 
   @override
@@ -39,17 +40,16 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
     zoomCtrl.dispose();
   }
 
+  void showSearchBar(_, _) => Future.delayed(Duration(milliseconds: 32), () {
+    Get.find<SearchVisibility>().show();
+  });
+
   // MARK: BUILD
 
   @override
   Widget build(BuildContext context) {
-    final pageCtrl = Get.find<PageViewController>();
     return PopScope(
-      onPopInvokedWithResult: (closed, object) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Get.find<SearchVisibility>().show();
-        });
-      },
+      onPopInvokedWithResult: showSearchBar,
       child: Scaffold(
         extendBodyBehindAppBar: true,
         extendBody: true,
@@ -69,9 +69,12 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
               itemBuilder: (context, buildIndex) {
                 final mime = imgCtrl.images[buildIndex].mime;
                 final type = mime?.split('/').first;
+                final currentIndex = pageCtrl.currentIndex;
                 return switch (type) {
-                  'image' => Obx(() => ViewImage(zoomCtrl, pageCtrl.currentIndex.value, buildIndex)),
-                  'video' => Obx(() => ViewVideo(pageCtrl.currentIndex.value, buildIndex)),
+                  'image' => Obx(() =>
+                      ViewImage(zoomCtrl, currentIndex.value, buildIndex)),
+                  'video' => Obx(() =>
+                      ViewVideo(pageCtrl, currentIndex.value, buildIndex)),
                   _ => ErrorText(mime),
                 };
               },
