@@ -6,12 +6,12 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 class MultitouchController extends GetxController {
   final Set<int> _pointers = {};
 
-  final isMultitouch = false.obs;
+  final multitouch = false.obs;
 
   void register(Object details) {
     if (details is PointerDownEvent) _pointers.add(details.pointer);
     if (details is PointerUpEvent) _pointers.remove(details.pointer);
-    isMultitouch.value = _pointers.length > 1;
+    multitouch.value = _pointers.length > 1;
   }
 }
 
@@ -24,7 +24,7 @@ class ZoomController extends GetxController {
   late AnimationController _animationCtrl;
   Animation<Matrix4>? _animation;
 
-  final isZoomed = false.obs;
+  final zoomed = false.obs;
 
   ZoomController({required TickerProvider vsync}) {
     _animationCtrl = AnimationController(
@@ -45,7 +45,7 @@ class ZoomController extends GetxController {
   }
 
   void _onMatrixChange() {
-    isZoomed.value = transformationCtrl.value.row0.x > minScale + 0.1;
+    zoomed.value = transformationCtrl.value.row0.x > minScale + 0.1;
   }
 
   void handleDoubleTap(Offset localPos) {
@@ -54,7 +54,7 @@ class ZoomController extends GetxController {
     final curScale = mat.row0.x;
     double targetScale = (curScale <= minScale) ? maxScale : minScale;
 
-    isZoomed.value = targetScale > minScale;
+    zoomed.value = targetScale > minScale;
 
     final double offSetX = targetScale == minScale
         ? 0.0
@@ -81,14 +81,14 @@ class ZoomController extends GetxController {
 
 class PageViewController extends GetxController {
   final int initialIndex;
-  final PageController pageController;
+  final PageController controller;
   final observerController = Get.find<GridObserverController>();
 
   final RxInt currentIndex;
 
   PageViewController({required this.initialIndex})
       : currentIndex = initialIndex.obs,
-        pageController = PageController(initialPage: initialIndex);
+        controller = PageController(initialPage: initialIndex);
 
   void onPageChanged(int page) {
     currentIndex.value = page;
