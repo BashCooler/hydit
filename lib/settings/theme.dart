@@ -40,4 +40,7 @@ abstract class Consts {
   static const radius = 10.0;
   static const blur = 8.0;
   static const blackAlpha = Color.fromARGB(128, 0, 0, 0);
+  static const listTileHeight = 56.0;
+  static const searchPadding = 15.0;
+  static const maxSearchSuggests = 14;
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import '../settings/theme.dart';
 import 'hydrus.dart';
 
 
@@ -106,5 +107,6 @@ class TagSuggest {
 List<TagSuggest> parseSearchResults(String query) {
   final json = jsonDecode(query);
   final List<dynamic> tags = json['tags'];
-  return tags.take(8).map((e) => TagSuggest(e['value'], e['count'])).toList();
+  return tags.take(Consts.maxSearchSuggests).map((e) =>
+      TagSuggest(e['value'], e['count'])).toList();
 }

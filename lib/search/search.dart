@@ -11,6 +11,8 @@ import 'package:hydrus_flutter/search/gridview.dart';
 import 'package:hydrus_flutter/search/searchbar.dart';
 import 'package:hydrus_flutter/settings/settings.dart';
 
+import '../settings/theme.dart';
+
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -104,6 +106,7 @@ class QueryController extends GetxController {
   final query = ''.obs;
   final suggests = <TagSuggest>[].obs;
   final isLoading = false.obs;
+  final visible = false.obs;
 
   final client = Get.find<Client>();
 
@@ -128,11 +131,14 @@ class QueryController extends GetxController {
 
   Future<void> fetch(String q) async {
     isLoading.value = true;
-    final int id = ++_requestId;
-    final response = await client.getSearchTags(q);
-    if (id != _requestId) return;
-    final List<TagSuggest> parsed = parseSearchResults(response);
-    suggests.assignAll(parsed);
+    {
+      final int id = ++_requestId;
+      final response = await client.getSearchTags(q);
+      if (id != _requestId) return;
+      visible.value = true;
+      final List<TagSuggest> parsed = parseSearchResults(response);
+      suggests.assignAll(parsed);
+    }
     isLoading.value = false;
   }
 }
