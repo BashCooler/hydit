@@ -1,11 +1,10 @@
 import 'dart:developer';
 import 'dart:ui';
-import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydrus_flutter/search/search.dart';
+import 'package:hydrus_flutter/gallery/gallery.dart';
 import 'package:hydrus_flutter/settings/theme.dart';
 
 

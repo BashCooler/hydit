@@ -4,7 +4,7 @@ import 'package:hydrus_flutter/viewer/images.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:hydrus_flutter/search/search.dart';
+import 'package:hydrus_flutter/gallery/gallery.dart';
 import 'package:hydrus_flutter/viewer/viewer.dart';
 
 

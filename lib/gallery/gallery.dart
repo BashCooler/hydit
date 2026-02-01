@@ -7,8 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hydrus_flutter/api/hydrus.dart';
 import 'package:hydrus_flutter/api/parser.dart';
 import 'package:hydrus_flutter/viewer/images.dart';
-import 'package:hydrus_flutter/search/gridview.dart';
-import 'package:hydrus_flutter/search/searchbar.dart';
+import 'package:hydrus_flutter/gallery/gridview.dart';
+import 'package:hydrus_flutter/gallery/searchbar.dart';
 import 'package:hydrus_flutter/settings/settings.dart';
 
 import '../settings/theme.dart';
