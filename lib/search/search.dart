@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:hydrus_flutter/api/hydrus.dart';
+import 'package:hydrus_flutter/api/parser.dart';
 import 'package:hydrus_flutter/viewer/images.dart';
 import 'package:hydrus_flutter/search/gridview.dart';
 import 'package:hydrus_flutter/search/searchbar.dart';
@@ -27,6 +28,7 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
     updateClient();
     Get.put<SearchVisibility>(SearchVisibility());
+    Get.put<QueryController>(QueryController());
   }
 
   void updateClient() {
@@ -96,4 +98,41 @@ class SearchVisibility extends GetxController {
 
 class Images extends GetxController {
   final images = <HydrusImage>[].obs;
+}
+
+class QueryController extends GetxController {
+  final query = ''.obs;
+  final suggests = <TagSuggest>[].obs;
+  final isLoading = false.obs;
+
+  final client = Get.find<Client>();
+
+  @override
+  void onInit() {
+    super.onInit();
+    debounce(
+      query, (q) => onChange(q),
+      time: Duration(milliseconds: 300),
+    );
+  }
+
+  void onChange(String q) {
+    if (q.length < 3) {
+      suggests.clear();
+      return;
+    }
+    fetch(q);
+  }
+
+  int _requestId = 0;
+
+  Future<void> fetch(String q) async {
+    isLoading.value = true;
+    final int id = ++_requestId;
+    final response = await client.getSearchTags(q);
+    if (id != _requestId) return;
+    final List<TagSuggest> parsed = parseSearchResults(response);
+    suggests.assignAll(parsed);
+    isLoading.value = false;
+  }
 }
