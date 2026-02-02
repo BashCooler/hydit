@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../api/hydrus.dart';
+import 'package:hydrus_flutter/api/hydrus.dart';
 
 
 class SettingsPage extends StatefulWidget {

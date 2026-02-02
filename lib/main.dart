@@ -51,11 +51,11 @@ class TabView extends StatelessWidget {
       body: Column(
         children: [
           TextButton(
-            onPressed: () => Get.to(SearchPage()),
+            onPressed: () => Get.to(Gallery()),
             child: Text('To search 1'),
           ),
           TextButton(
-            onPressed: () => Get.to(SearchPage()),
+            onPressed: () => Get.to(Gallery()),
             child: Text('To search 2'),
           ),
         ],

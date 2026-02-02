@@ -44,6 +44,7 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
         child: GridView.builder(
           controller: scrollCtrl,
           itemCount: imgCtrl.images.length,
+          padding: EdgeInsetsGeometry.all(5.0),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: padding,
