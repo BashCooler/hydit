@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/viewer/images.dart';
-import 'package:hydrus_flutter/gallery/gallery.dart';
+import 'package:hydrus_flutter/gallery/services.dart';
 import 'controllers.dart';
 
 

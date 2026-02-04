@@ -7,7 +7,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
 import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:hydrus_flutter/gallery/gallery.dart';
+import 'package:hydrus_flutter/gallery/services.dart';
 import 'controllers.dart';
 
 

@@ -1,11 +1,53 @@
-import 'dart:developer';
+import 'dart:ui';
 
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import 'package:hydrus_flutter/gallery/gallery.dart';
+import 'package:hydrus_flutter/gallery/services.dart';
 import 'package:hydrus_flutter/settings/theme.dart';
+
+
+class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Consts.blackAlpha,
+      // appBar: AppBar(backgroundColor: Colors.transparent),
+      body: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
+        child: AnimatedPadding(
+          padding: EdgeInsetsGeometry.only(
+            bottom: context.mediaQueryViewInsets.bottom,
+          ),
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOutBack,
+          child: Padding(
+            padding: EdgeInsetsGeometry.all(Consts.searchPadding),
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: .end,
+                spacing: Consts.searchPadding,
+                children: [
+                  Suggests(),
+                  TagPanel(clickable: false),
+                  LiquidSearchBar(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 
 class LiquidSearchBar extends StatefulWidget {
@@ -50,9 +92,9 @@ class _LiquidSearchBarState extends State<LiquidSearchBar>
           hintText: 'Enter tags here',
           fillColor: Consts.blackAlpha,
           suffixIcon: Row(
-            mainAxisSize: .min,
-            spacing: 5.0,
-            mainAxisAlignment: .end,
+              mainAxisSize: .min,
+              spacing: 5.0,
+              mainAxisAlignment: .end,
               children: [
                 IconButton(
                   onPressed: () {
@@ -102,29 +144,29 @@ class Suggests extends StatelessWidget {
     return Obx(() => !queryController.visible.value
         ? const SizedBox.shrink()
         : Flexible(
-          child: Obx(() => Material(
-            borderRadius: BorderRadius.circular(Consts.radius),
-            clipBehavior: Clip.hardEdge,
-            color: Colors.transparent,
-            child: ListView.builder(
-              reverse: true,
-              itemCount: queryController.suggests.length,
-              itemBuilder: (context, index) {
-                final tag = queryController.suggests[index];
-                return ListTile(
-                  minTileHeight: Consts.listTileHeight,
-                  title: Text(tag.value),
-                  trailing: Text(tag.count.toString()),
-                  onTap: () {
-                    queryController.visible.value = false;
-                    queryController.textController.text = '';
-                    queryController.addTag(Tag(tag.value));
-                  },
-                );
+      child: Obx(() => Material(
+        borderRadius: BorderRadius.circular(Consts.radius),
+        clipBehavior: Clip.hardEdge,
+        color: Colors.transparent,
+        child: ListView.builder(
+          reverse: true,
+          itemCount: queryController.suggests.length,
+          itemBuilder: (context, index) {
+            final tag = queryController.suggests[index];
+            return ListTile(
+              minTileHeight: Consts.listTileHeight,
+              title: Text(tag.value),
+              trailing: Text(tag.count.toString()),
+              onTap: () {
+                queryController.visible.value = false;
+                queryController.textController.text = '';
+                queryController.addTag(Tag(tag.value));
               },
-            ),
-          )),
-        )
+            );
+          },
+        ),
+      )),
+    )
     );
   }
 }

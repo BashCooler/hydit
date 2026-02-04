@@ -3,13 +3,12 @@ import 'dart:developer';
 import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/search/search.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:hydrus_flutter/api/parser.dart';
-import 'package:hydrus_flutter/viewer/images.dart';
+import 'package:hydrus_flutter/gallery/search.dart';
 import 'package:hydrus_flutter/gallery/gridview.dart';
+import 'package:hydrus_flutter/gallery/services.dart';
 import 'package:hydrus_flutter/settings/settings.dart';
 
 import '../settings/theme.dart';
@@ -76,47 +75,46 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text('Hydrus client'),
-          actions: [
-            IconButton(
-              onPressed: () => Get.to(() => SettingsPage(callback: updateClient)),
-              icon: const Icon(Icons.settings),
-            )
-          ],
-        ),
-        body: SafeArea(
-          child: Stack(
-            alignment: .bottomCenter,
-            children: [
-              const ImageGridViewBuilder(),
-              SlideTransition(
-                position: _slide,
-                child: Padding(
-                  padding: EdgeInsetsGeometry.all(Consts.searchPadding),
-                  child: RepaintBoundary(
-                    child: ClipRRect(
-                      clipBehavior: Clip.hardEdge,
-                      borderRadius: BorderRadiusGeometry.circular(Consts.radius),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
-                        child: Card.outlined(
-                          color: Consts.blackAlpha,
-                          margin: EdgeInsets.zero,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Hydrus client'),
+        actions: [
+          IconButton(
+            onPressed: () => Get.to(() => SettingsPage(callback: updateClient)),
+            icon: const Icon(Icons.settings),
+          )
+        ],
+      ),
+      body: Stack(
+        alignment: .bottomCenter,
+        children: [
+          const ImageGridViewBuilder(),
+          SafeArea(
+            child: SlideTransition(
+              position: _slide,
+              child: Padding(
+                padding: EdgeInsetsGeometry.all(Consts.searchPadding),
+                child: Column(
+                  mainAxisAlignment: .end,
+                  children: [
+                    RepaintBoundary(
+                      child: ClipRRect(
+                        clipBehavior: Clip.hardEdge,
+                        borderRadius: BorderRadiusGeometry.circular(Consts.radius),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
                           child: TagPanel(clickable: true),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              )
-            ],
-          ),
-        ),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -139,7 +137,7 @@ class TagPanel extends StatelessWidget {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.hardEdge,
       child: Obx(() {
-        final tags = queryController._tags;
+        final tags = queryController.tags;
         return Stack(
           children: [
             ListTile(
@@ -171,109 +169,5 @@ class TagPanel extends StatelessWidget {
         );
       }),
     );
-  }
-}
-
-
-
-// MARK: SERVICES
-
-class SearchVisibility extends GetxController {
-  var visible = true.obs;
-  void show() => visible.value = true;
-  void hide() => visible.value = false;
-}
-
-class Images extends GetxController {
-  final images = <HydrusImage>[].obs;
-}
-
-class QueryController extends GetxController {
-  final query = ''.obs;
-  final suggests = <TagSuggest>[].obs;
-  final _tags = <Tag>[].obs;
-  final isLoading = false.obs;
-  final visible = false.obs;
-
-  List<String> get values => _tags.map((t) => t.raw).toList();
-  bool hasTag(Tag tag) => values.contains(tag.raw);
-
-  final client = Get.find<Client>();
-  final textController = TextEditingController();
-
-  @override
-  void onInit() {
-    super.onInit();
-    debounce(
-      query, (q) => onChange(q),
-      time: Duration(milliseconds: 300),
-    );
-  }
-
-  @override
-  void dispose() {
-    textController.dispose();
-    super.dispose();
-  }
-
-  void onChange(String q) {
-    if (q.length < 3) {
-      suggests.clear();
-      return;
-    }
-    fetch(q);
-  }
-
-  int _requestId = 0;
-
-  Future<void> fetch(String q) async {
-    isLoading.value = true;
-    {
-      final int id = ++_requestId;
-      final response = await client.getSearchTags(q);
-      if (id != _requestId) return;
-      visible.value = true;
-      final List<TagSuggest> parsed = parseSearchResults(response);
-      suggests.assignAll(parsed);
-    }
-    isLoading.value = false;
-  }
-
-  void addTag(Tag tag) {
-    if (hasTag(tag)) return;
-    if (tag.raw.isEmpty) return;
-    _tags.add(tag);
-  }
-
-  void removeTag(Tag tag) => _tags.remove(tag);
-
-  void searchForFiles() async {
-    final imageController = Get.find<Images>();
-    List<int> ids = [];
-    try {
-      ids = await client.getSearchFiles(_tags.map((t) => t.raw).toList());
-    } on HydrusNoServiceException {
-      Get.snackbar('Error', 'No connection with Hydrus');
-    } on HydrusTimeoutException {
-      Get.snackbar('Error', 'No response (timeout)');
-    }
-    var list = ids.map((id) => HydrusImage(id)).toList();
-    imageController.images.assignAll(list);
-  }
-}
-
-
-class Tag {
-  final String raw;
-  const Tag(this.raw);
-
-  String get namespace {
-    final idx = raw.indexOf(':');
-    return idx == -1 ? 'no namespace' : raw.substring(0 , idx);
-  }
-
-  String get value {
-    final idx = raw.indexOf(':');
-    return idx == -1 ? raw : raw.substring(idx + 1);
   }
 }
