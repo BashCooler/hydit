@@ -27,7 +27,6 @@ abstract class AppTheme {
   static const blackAlpha = Color.fromARGB(96, 0, 0, 0);
   static const listTileHeight = 50.0;
   static const searchPadding = 15.0;
-  static const maxSearchSuggests = 15;
   static final backdropFilter = ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0);
   static final borderRadius = BorderRadius.circular(radius);
 }

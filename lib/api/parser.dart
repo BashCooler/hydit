@@ -1,16 +1,14 @@
-import 'dart:convert';
 import 'dart:io';
-
-import '../settings/theme.dart';
 import 'hydrus.dart';
+import 'dart:convert';
 
 
 void main() async {
   // String response = '{"metadata": [{"file_id": 170345180, "hash": "3155f7f554be8ad8d4edde5cbf0efa95e4230dc64186b628f8e82221c031a408", "size": 1010879, "mime": "image/jpeg", "filetype_human": "jpeg", "filetype_enum": 1, "ext": ".jpg", "width": 2480, "height": 3508, "duration": null, "num_frames": null, "num_words": null, "has_audio": false, "blurhash": "cvOg4.RQ_NxuWBWBIoayn%?bofWVt7ofRj", "pixel_hash": "87621f8e673d1402e567f13b6bf83f6dd4177d357b6d60e2290120324f4f9917", "filetype_forced": false, "thumbnail_width": 326, "thumbnail_height": 462, "file_services": {"current": {"616c6c206c6f63616c2066696c6573": {"name": "all local files", "type": 15, "type_pretty": "virtual combined local file service", "time_imported": 1758224317}, "616c6c206c6f63616c206d65646961": {"name": "all my files", "type": 21, "type_pretty": "virtual combined local media service", "time_imported": 1758224317}, "6c6f63616c2066696c6573": {"name": "my files", "type": 2, "type_pretty": "local file domain", "time_imported": 1758224317}}, "deleted": {}}, "time_modified": 1708177738, "time_modified_details": {"local": 1708177738}, "is_inbox": true, "is_local": true, "is_trashed": false, "is_deleted": false, "has_transparency": false, "has_exif": false, "has_human_readable_embedded_metadata": true, "has_icc_profile": false, "known_urls": [], "ipfs_multihashes": {}, "ratings": {"6661766f757269746573": null}, "tags": {"a6b99cec4194c950847fe2569f91bb58da65db89f5d545334971f3deefb11b58": {"name": "ai", "type": 5, "type_pretty": "local tag service", "storage_tags": {}, "display_tags": {}}, "616c6c206b6e6f776e2074616773": {"name": "all known tags", "type": 10, "type_pretty": "virtual combined tag service", "storage_tags": {"0": ["local source:g", "pixiv work:109427049"]}, "display_tags": {"0": ["local source:g", "pixiv work:109427049"]}}, "646f776e6c6f616465722074616773": {"name": "downloader tags", "type": 5, "type_pretty": "local tag service", "storage_tags": {}, "display_tags": {}}, "6c6f63616c2074616773": {"name": "my tags", "type": 5, "type_pretty": "local tag service", "storage_tags": {"0": ["local source:g", "pixiv work:109427049"]}, "display_tags": {"0": ["local source:g", "pixiv work:109427049"]}}, "d6a661d0c1d682fbfe6eae5b555234780699cc841ef288049036b76eb4f7ff31": {"name": "public tag repository", "type": 0, "type_pretty": "hydrus tag repository", "storage_tags": {}, "display_tags": {}}}, "file_viewing_statistics": [{"canvas_type": 0, "canvas_type_pretty": "media viewer", "views": 0, "viewtime": 0.0, "last_viewed_timestamp": null}, {"canvas_type": 1, "canvas_type_pretty": "preview viewer", "views": 0, "viewtime": 0.0, "last_viewed_timestamp": null}, {"canvas_type": 4, "canvas_type_pretty": "client api viewer", "views": 0, "viewtime": 0.0, "last_viewed_timestamp": null}]}, {"file_id": 170345178, "hash": "fcb895cad8b15ca1e59a78000bea4bd9f35949ecf401414701fe13817357c92e", "size": 1132359, "mime": "image/jpeg", "filetype_human": "jpeg", "filetype_enum": 1, "ext": ".jpg", "width": 2480, "height": 3508, "duration": null, "num_frames": null, "num_words": null, "has_audio": false, "blurhash": "cxODUuM{_Nx]bHV@Ioaynj?HoebHxuozNG", "pixel_hash": "0fa750119c6d3508cb58b819c867719327129cf5141360a2d91d604ff1c5046f", "filetype_forced": false, "thumbnail_width": 326, "thumbnail_height": 462, "file_services": {"current": {"616c6c206c6f63616c2066696c6573": {"name": "all local files", "type": 15, "type_pretty": "virtual combined local file service", "time_imported": 1758224316}, "616c6c206c6f63616c206d65646961": {"name": "all my files", "type": 21, "type_pretty": "virtual combined local media service", "time_imported": 1758224316}, "6c6f63616c2066696c6573": {"name": "my files", "type": 2, "type_pretty": "local file domain", "time_imported": 1758224316}}, "deleted": {}}, "time_modified": 1708177738, "time_modified_details": {"local": 1708177738}, "is_inbox": true, "is_local": true, "is_trashed": false, "is_deleted": false, "has_transparency": false, "has_exif": false, "has_human_readable_embedded_metadata": true, "has_icc_profile": false, "known_urls": [], "ipfs_multihashes": {}, "ratings": {"6661766f757269746573": null}, "tags": {"a6b99cec4194c950847fe2569f91bb58da65db89f5d545334971f3deefb11b58": {"name": "ai", "type": 5, "type_pretty": "local tag service", "storage_tags": {}, "display_tags": {}}, "616c6c206b6e6f776e2074616773": {"name": "all known tags", "type": 10, "type_pretty": "virtual combined tag service", "storage_tags": {"0": ["local source:g", "pixiv work:109427049"]}, "display_tags": {"0": ["local source:g", "pixiv work:109427049"]}}, "646f776e6c6f616465722074616773": {"name": "downloader tags", "type": 5, "type_pretty": "local tag service", "storage_tags": {}, "display_tags": {}}, "6c6f63616c2074616773": {"name": "my tags", "type": 5, "type_pretty": "local tag service", "storage_tags": {"0": ["local source:g", "pixiv work:109427049"]}, "display_tags": {"0": ["local source:g", "pixiv work:109427049"]}}, "d6a661d0c1d682fbfe6eae5b555234780699cc841ef288049036b76eb4f7ff31": {"name": "public tag repository", "type": 0, "type_pretty": "hydrus tag repository", "storage_tags": {}, "display_tags": {}}}, "file_viewing_statistics": [{"canvas_type": 0, "canvas_type_pretty": "media viewer", "views": 0, "viewtime": 0.0, "last_viewed_timestamp": null}, {"canvas_type": 1, "canvas_type_pretty": "preview viewer", "views": 0, "viewtime": 0.0, "last_viewed_timestamp": null}, {"canvas_type": 4, "canvas_type_pretty": "client api viewer", "views": 0, "viewtime": 0.0, "last_viewed_timestamp": null}]}, {"file_id": 170345176, "hash": "d1d2a195db77f6cac8618015639345cb20d6ff51a0481f06566e616cc8aaa8ef", "size": 2685454, "mime": "image/jpeg", "filetype_human": "jpeg", "filetype_enum": 1, "ext": ".jpg", "width": 2480, "height": 3508, "duration": null, "num_frames": null, "num_words": null, "has_audio": false, "blurhash": "cLH1r,i{D.?dI;s;56o}-:-WsCS5-rR*M{", "pixel_hash": "aaaa2d404a941d834388bf58c9f1683aced7af88378cf3cb84d53719a104f039", "filetype_forced": false, "thumbnail_width": 326, "thumbnail_height": 462, "file_services": {"current": {"616c6c206c6f63616c2066696c6573": {"name": "all local files", "type": 15, "type_pretty": "virtual combined local file service", "time_imported": 1758224316}, "616c6c206c6f63616c206d65646961": {"name": "all my files", "type": 21, "type_pretty": "virtual combined local media service", "time_imported": 1758224316}, "6c6f63616c2066696c6573": {"name": "my files", "type": 2, "type_pretty": "local file domain", "time_imported": 1758224316}}, "deleted": {}}, "time_modified": 1701634684, "time_modified_details": {"local": 1701634684}, "is_inbox": true, "is_local": true, "is_trashed": false, "is_deleted": false, "has_transparency": false, "has_exif": false, "has_human_readable_embedded_metadata": true, "has_icc_profile": false, "known_urls": [], "ipfs_multihashes": {}, "ratings": {"6661766f757269746573": null}, "tags": {"a6b99cec4194c950847fe2569f91bb58da65db89f5d545334971f3deefb11b58": {"name": "ai", "type": 5, "type_pretty": "local tag service", "storage_tags": {}, "display_tags": {}}, "616c6c206b6e6f776e2074616773": {"name": "all known tags", "type": 10, "type_pretty": "virtual combined tag service", "storage_tags": {"0": ["local source:g", "pixiv work:109427049"]}, "display_tags": {"0": ["local source:g", "pixiv work:109427049"]}}, "646f776e6c6f616465722074616773": {"name": "downloader tags", "type": 5, "type_pretty": "local tag service", "storage_tags": {}, "display_tags": {}}, "6c6f63616c2074616773": {"name": "my tags", "type": 5, "type_pretty": "local tag service", "storage_tags": {"0": ["local source:g", "pixiv work:109427049"]}, "display_tags": {"0": ["local source:g", "pixiv work:109427049"]}}, "d6a661d0c1d682fbfe6eae5b555234780699cc841ef288049036b76eb4f7ff31": {"name": "public tag repository", "type": 0, "type_pretty": "hydrus tag repository", "storage_tags": {}, "display_tags": {}}}, "file_viewing_statistics": [{"canvas_type": 0, "canvas_type_pretty": "media viewer", "views": 0, "viewtime": 0.0, "last_viewed_timestamp": null}, {"canvas_type": 1, "canvas_type_pretty": "preview viewer", "views": 0, "viewtime": 0.0, "last_viewed_timestamp": null}, {"canvas_type": 4, "canvas_type_pretty": "client api viewer", "views": 0, "viewtime": 0.0, "last_viewed_timestamp": null}]}], "version": 81, "hydrus_version": 645}';
   // print(parseMetadata(response));
   Client client = Client(accessKey: '86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
-  String response = await client.getSearchTags('shi', tagDisplayType: 'storage');
-  print(parseSearchResults(response).toString());
+  var response = await client.getFileMetadata([170344670]);
+  print(response.toString());
   exit(0);
 }
 
@@ -40,10 +38,15 @@ Map<String, dynamic> _parseItem(Map<String, dynamic> unwrappedJson) {
   final duration = metadata.duration;
 
   /// Unwrap tags
-  // List<dynamic> services = List.from(metadata.tags.values);
+  List<dynamic> services = List.from(metadata.tags.values);
 
   /// Parse each service
-  /// TODO parse tags from services
+  Map<String, dynamic> tags = {};
+  for (var service in services) {
+    final parsed = _parseTags(service);
+    if (parsed == null) continue;
+    tags.addAll(parsed);
+  }
 
   return {
     'file_id': fileId,
@@ -51,6 +54,7 @@ Map<String, dynamic> _parseItem(Map<String, dynamic> unwrappedJson) {
     'height': height,
     'mime': mime,
     'duration': duration,
+    'tags': tags,
   };
 }
 
@@ -90,6 +94,19 @@ class FileMetadata {
   }
 }
 
+// MARK: TAGS
+
+Map<String, dynamic>? _parseTags(dynamic service, {bool storage = false}) {
+  final String type = storage ? 'storage_tags' : 'display_tags';
+
+  final String name = service['name'];
+  final List<dynamic>? tags = service[type]['0'];
+  if (tags == null) return null;
+
+  final Map<String, dynamic> serviceTags = {name: tags};
+  return serviceTags;
+}
+
 // MARK: SEARCH RESULTS
 
 class TagSuggest {
@@ -107,6 +124,6 @@ class TagSuggest {
 List<TagSuggest> parseSearchResults(String query) {
   final json = jsonDecode(query);
   final List<dynamic> tags = json['tags'];
-  return tags.take(AppTheme.maxSearchSuggests).map((e) =>
+  return tags.take(15).map((e) =>
       TagSuggest(e['value'], e['count'])).toList();
 }

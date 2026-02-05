@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
@@ -73,6 +75,7 @@ class _TileFutureBuilder extends StatelessWidget {
     image.height = metadata['height'];
     image.mime = metadata['mime'];
     image.duration = metadata['duration'];
+    image.tags = metadata['tags'];
   }
 
   @override

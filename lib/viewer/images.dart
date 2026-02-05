@@ -18,6 +18,7 @@ class HydrusImage {
   int? width, height;
   String? mime;
   int? duration;
+  Map<String, dynamic>? tags;
 
   HydrusImage(this.id);
 }
