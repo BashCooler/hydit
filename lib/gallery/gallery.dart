@@ -27,14 +27,14 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
   late final AnimationController _animationController;
   late final Animation<Offset> _slide;
   late final Worker _visibilityWorker;
+  late final _queryController;
 
   @override
   void initState() {
     super.initState();
     updateClient();
     Get.put<SearchVisibility>(SearchVisibility());
-    Get.put<QueryController>(QueryController());
-    Get.put<QueryController>(QueryController());
+    _queryController = Get.put<QueryController>(QueryController());
 
     _animationController = AnimationController(
       vsync: this,
@@ -105,7 +105,30 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
                         borderRadius: BorderRadiusGeometry.circular(Consts.radius),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
-                          child: TagPanel(clickable: true),
+                          child: TagPanel(
+                            onTap: () => Get.dialog(
+                              SearchPage(),
+                              barrierColor: Consts.blackAlpha,
+                              transitionDuration: Duration(milliseconds: 200),
+                              transitionCurve: Curves.easeInOutBack,
+                              useSafeArea: false,
+                            ),
+                            trailing: Row(
+                              spacing: 5.0,
+                              children: [
+                                IconButton(
+                                  tooltip: 'Clear tags',
+                                  onPressed: () => _queryController.clearTags(),
+                                  icon: Icon(Icons.clear),
+                                ),
+                                IconButton(
+                                  tooltip: 'Search',
+                                  onPressed: () => _queryController.searchForFiles(),
+                                  icon: Icon(Icons.search),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -122,52 +145,71 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
 
 
 class TagPanel extends StatelessWidget {
-  final bool clickable;
+  final VoidCallback? onTap;
+  final Widget? trailing;
 
-  const TagPanel({
-    super.key,
-    required this.clickable,
-  });
+  const TagPanel({super.key, this.onTap, this.trailing});
 
   @override
   Widget build(BuildContext context) {
     final queryController = Get.find<QueryController>();
-    return Card.outlined(
-      color: Consts.blackAlpha,
-      margin: EdgeInsets.zero,
-      clipBehavior: Clip.hardEdge,
-      child: Obx(() {
-        final tags = queryController.tags;
-        return Stack(
+    return SizedBox(
+      height: Consts.listTileHeight,
+      child: Card.outlined(
+        color: Consts.blackAlpha,
+        margin: EdgeInsets.zero,
+        clipBehavior: Clip.hardEdge,
+        child: Stack(
+          fit: .expand,
           children: [
-            ListTile(
-              title: tags.isNotEmpty ? null :Text('Search for tags'),
-              onTap: !clickable ? null : () => Get.dialog(
-                SearchPage(),
-                barrierColor: Consts.blackAlpha,
-                transitionDuration: Duration(milliseconds: 200),
-                transitionCurve: Curves.easeInOutBack,
-                useSafeArea: false,
+            Padding(
+              padding: const EdgeInsets.only(left: Consts.searchPadding),
+              child: Align(
+                alignment: .centerLeft,
+                child: Obx(() {
+                  final tags = queryController.tags;
+                  if (tags.isEmpty) {
+                    return Text('No tags', style: TextStyle(fontSize: 16));
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                }),
               ),
             ),
-            SingleChildScrollView(
-              padding: EdgeInsetsGeometry.all(6.0),
-              scrollDirection: .horizontal,
-              child: Wrap(
-                spacing: 5.0,
-                children: [
-                  for (final tag in tags) InputChip(
-                    label: Text(tag.value),
-                    backgroundColor: namespaceColors[tag.namespace]
-                        ?? namespaceColors['namespace'],
-                    onDeleted: () => queryController.removeTag(tag),
-                  ),
-                ],
+            InkWell(
+              onTap: onTap,
+              child: Padding(
+                padding: .symmetric(horizontal: 6.0),
+                child: Row(
+                  spacing: 5.0,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: .horizontal,
+                        child: Obx(() {
+                          final tags = queryController.tags;
+                          return Wrap(
+                            spacing: 5.0,
+                            children: [
+                              for (final tag in tags) InputChip(
+                                label: Text(tag.value),
+                                backgroundColor: namespaceColors[tag.namespace]
+                                    ?? namespaceColors['namespace'],
+                                onDeleted: () => queryController.removeTag(tag),
+                              )
+                            ],
+                          );
+                        }),
+                      ),
+                    ),
+                    trailing ?? SizedBox.shrink(),
+                  ],
+                ),
               ),
-            )
+            ),
           ],
-        );
-      }),
+        ),
+      ),
     );
   }
 }

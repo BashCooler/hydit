@@ -17,10 +17,11 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
+    final queryController = Get.find<QueryController>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Consts.blackAlpha,
-      // appBar: AppBar(backgroundColor: Colors.transparent),
+      appBar: AppBar(backgroundColor: Colors.transparent),
       body: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: Consts.blur, sigmaY: Consts.blur),
         child: AnimatedPadding(
@@ -37,7 +38,28 @@ class _SearchPageState extends State<SearchPage> {
                 spacing: Consts.searchPadding,
                 children: [
                   Suggests(),
-                  TagPanel(clickable: false),
+                  TagPanel(
+                    trailing: Row(
+                      spacing: 4.0,
+                      children: [
+                        IconButton(
+                          tooltip: 'Clear tags',
+                          onPressed: () => queryController.clearTags(),
+                          icon: Icon(Icons.clear),
+                        ),
+                        IconButton(
+                          tooltip: 'Search',
+                          onPressed: () {
+                            queryController.visible.value = false;
+                            queryController.textController.text = '';
+                            queryController.searchForFiles();
+                            Get.back();
+                          },
+                          icon: Icon(Icons.search),
+                        ),
+                      ],
+                    ),
+                  ),
                   LiquidSearchBar(),
                 ],
               ),
