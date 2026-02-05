@@ -44,13 +44,13 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
         child: GridView.builder(
           controller: scrollCtrl,
           itemCount: imgCtrl.images.length,
-          padding: EdgeInsetsGeometry.all(5.0),
+          padding: .all(5.0),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: padding,
             crossAxisSpacing: padding,
           ),
-          itemBuilder: (context, index) => TileFutureBuilder(index),
+          itemBuilder: (context, index) => _TileFutureBuilder(index),
         ),
       ),
     );
@@ -58,12 +58,12 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
 }
 
 
-class TileFutureBuilder extends StatelessWidget {
+class _TileFutureBuilder extends StatelessWidget {
   final int index;
   final client = Get.find<Client>();
   final imgCtrl = Get.find<Images>();
 
-  TileFutureBuilder(this.index, {super.key});
+  _TileFutureBuilder(this.index);
 
   /// Save width and height to correctly display image in [PageView].
   ///
@@ -88,7 +88,7 @@ class TileFutureBuilder extends StatelessWidget {
           return const ColoredBox(color: Colors.white10);
         } else {
           writeMetadata(snapshot.data![0], image);
-          return Tile(index, image);
+          return _Tile(index, image);
         }
       },
     );
@@ -96,11 +96,11 @@ class TileFutureBuilder extends StatelessWidget {
 }
 
 
-class Tile extends StatelessWidget {
+class _Tile extends StatelessWidget {
   final int index;
   final HydrusImage image;
 
-  const Tile(this.index, this.image, {super.key});
+  const _Tile(this.index, this.image);
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +120,7 @@ class Tile extends StatelessWidget {
             child: Thumbnail(image),
           ),
           Obx(() => visibility.visible.value
-              ? TileBadges(image)
+              ? _TileBadges(image)
               : const SizedBox.shrink()
           ),
         ],
@@ -130,10 +130,10 @@ class Tile extends StatelessWidget {
 }
 
 
-class TileBadges extends StatelessWidget {
+class _TileBadges extends StatelessWidget {
   final HydrusImage image;
 
-  const TileBadges(this.image, {super.key});
+  const _TileBadges(this.image);
 
   @override
   Widget build(BuildContext context) {

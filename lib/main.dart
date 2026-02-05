@@ -5,7 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:media_kit/media_kit.dart';
 
 import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:hydrus_flutter/gallery/gallery.dart';
+import 'package:hydrus_flutter/gallery/pages/gallery.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hydrus_flutter/settings/theme.dart';
 

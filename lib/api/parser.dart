@@ -107,6 +107,6 @@ class TagSuggest {
 List<TagSuggest> parseSearchResults(String query) {
   final json = jsonDecode(query);
   final List<dynamic> tags = json['tags'];
-  return tags.take(Consts.maxSearchSuggests).map((e) =>
+  return tags.take(AppTheme.maxSearchSuggests).map((e) =>
       TagSuggest(e['value'], e['count'])).toList();
 }

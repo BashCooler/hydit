@@ -29,7 +29,7 @@ class Client {
 
   Client({this.accessKey, this.host = 'localhost', this.port = 45869});
 
-  void updateClientFromPrefs({required String key, required Uri uri}) {
+  void updateClient({required String key, required Uri uri}) {
     accessKey = key;
     host = uri.host;
     port = uri.port;
