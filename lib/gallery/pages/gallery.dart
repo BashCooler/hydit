@@ -24,9 +24,6 @@ class Gallery extends StatefulWidget {
 class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
   final client = Get.find<Client>();
   final imgCtrl = Get.put<Images>(Images());
-  late final AnimationController _animationController;
-  late final Animation<Offset> _slide;
-  late final Worker _visibilityWorker;
 
   @override
   void initState() {
@@ -34,35 +31,6 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
     updateClient();
     Get.put<SearchVisibility>(SearchVisibility());
     Get.put<QueryController>(QueryController());
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 350),
-    );
-
-    _slide = Tween<Offset>(
-      begin: Offset.zero,
-      end: Offset(0, 0.8),
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutBack,
-    ));
-
-    final visibility = Get.find<SearchVisibility>();
-    _visibilityWorker = ever<bool>(visibility.visible, (v) {
-      if (v) {
-        _animationController.reverse();
-      } else {
-        _animationController.forward();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _animationController.dispose();
-    _visibilityWorker.dispose();
   }
 
   void updateClient() {
@@ -90,26 +58,6 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
         alignment: .bottomCenter,
         children: [
           const ImageGridViewBuilder(),
-          SafeArea(
-            child: SlideTransition(
-              position: _slide,
-              child: Padding(
-                padding: const .all(AppTheme.searchPadding),
-                child: LiquidGlass(
-                  child: TagPanel(
-                    onTap: () => Get.dialog(
-                      const SearchPage(),
-                      barrierColor: AppTheme.blackAlpha,
-                      transitionDuration: const Duration(milliseconds: 200),
-                      transitionCurve: Curves.easeInOutBack,
-                      useSafeArea: false,
-                    ),
-                    trailing: const _TagPanelActions(),
-                  ),
-                ),
-              ),
-            ),
-          )
         ],
       ),
     );

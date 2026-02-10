@@ -34,7 +34,7 @@ class App extends StatelessWidget {
         title: 'Flutter App',
         debugShowCheckedModeBanner: false,
         theme: darkTheme(),
-        home: TabView(),
+        home: Gallery(),
       ),
     );
   }
