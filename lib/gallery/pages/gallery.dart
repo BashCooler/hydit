@@ -2,16 +2,14 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/gallery/widgets/common.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:keyboard_insets/keyboard_insets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:hydrus_flutter/gallery/pages/search.dart';
 import 'package:hydrus_flutter/gallery/widgets/gridview.dart';
 import 'package:hydrus_flutter/gallery/services.dart';
 import 'package:hydrus_flutter/settings/settings.dart';
-
-import '../../settings/theme.dart';
 
 
 class Gallery extends StatefulWidget {
@@ -29,7 +27,7 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     updateClient();
-    Get.put<SearchVisibility>(SearchVisibility());
+    // Get.put<SearchVisibility>(SearchVisibility());
     Get.put<QueryController>(QueryController());
   }
 
@@ -55,9 +53,15 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
         ],
       ),
       body: Stack(
-        alignment: .bottomCenter,
+        alignment: .bottomRight,
         children: [
           const ImageGridViewBuilder(),
+          SafeArea(
+            child: IconButton(
+              onPressed: () => _showModalSheet(context),
+              icon: Icon(Icons.search),
+            ),
+          )
         ],
       ),
     );
@@ -65,26 +69,74 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
 }
 
 
-class _TagPanelActions extends StatelessWidget {
-  const _TagPanelActions();
+void _showModalSheet(BuildContext context) {
+  Navigator.push(
+    context,
+    ModalSheetRoute(
+      swipeDismissible: true,
+      builder: (context) => SearchPage(),
+      viewportBuilder: (context, child) {
+        return SheetViewport(
+          padding: .only(top: MediaQuery.viewPaddingOf(context).top),
+          child: child,
+        );
+      },
+    ),
+  );
+}
+
+
+class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  @override
+  void initState() {
+    super.initState();
+    PersistentSafeAreaBottom.startObserving();
+    PersistentSafeAreaBottom.notifier?.addListener(printSafeAreaBottom);
+    KeyboardInsets.stateStream.listen((event) {
+      log('Keyboard height: ${event.isAnimating} v=${event.isVisible} ${KeyboardInsets.keyboardHeight}');
+      setState(() {});
+    });
+  }
+
+  void printSafeAreaBottom() {
+    log('Safe area height: ${PersistentSafeAreaBottom.notifier?.value}');
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    final queryController = Get.find<QueryController>();
-    return Row(
-      spacing: 5.0,
-      children: [
-        IconButton(
-          tooltip: 'Clear tags',
-          onPressed: () => queryController.clearTags(),
-          icon: const Icon(Icons.clear),
+    return PopScope(
+      child: SheetKeyboardDismissible(
+        dismissBehavior: const .onDragDown(isContentScrollAware: true),
+        child: Sheet(
+          shrinkChildToAvoidDynamicOverlap: false,
+          scrollConfiguration: const SheetScrollConfiguration(),
+          child: StreamBuilder(
+            stream: KeyboardInsets.insets,
+            builder: (context, snapshot) {
+              return PersistentSafeArea(
+                child: Column(
+                  mainAxisAlignment: .end,
+                  children: [
+                    Padding(
+                      padding: .all(15.0),
+                      child: Material(child: TextField(autofocus: true)),
+                    ),
+                    SizedBox(height: snapshot.data),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
-        IconButton(
-          tooltip: 'Search',
-          onPressed: () => queryController.searchForFiles(),
-          icon: const Icon(Icons.search),
-        ),
-      ],
+      ),
     );
   }
 }
