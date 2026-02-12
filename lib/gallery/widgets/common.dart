@@ -4,10 +4,10 @@ import 'package:hydrus_flutter/gallery/services.dart';
 import 'package:hydrus_flutter/settings/theme.dart';
 
 
-class LiquidGlass extends StatelessWidget {
+class FrostedGlass extends StatelessWidget {
   final Widget child;
 
-  const LiquidGlass({super.key, required this.child});
+  const FrostedGlass({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -57,29 +57,33 @@ class _TagSearchBarState extends State<TagSearchBar>
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: .circular(AppTheme.radius),
-      child: TextField(
-        autofocus: true,
-        focusNode: _focusNode,
-        controller: _queryController.textController,
-        decoration: InputDecoration(
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppTheme.radius),
-            borderSide: BorderSide(
-              width: 2,
-              color: Theme.of(context).colorScheme.inversePrimary,
+      child: Material(
+        color: AppTheme.blackAlpha,
+        child: TextField(
+          autofocus: true,
+          focusNode: _focusNode,
+          controller: _queryController.textController,
+          decoration: InputDecoration(
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppTheme.radius),
+              borderSide: BorderSide(
+                width: 2,
+                color: Theme.of(context).colorScheme.inversePrimary,
+              ),
             ),
+            hintText: 'Enter tags here',
+            fillColor: AppTheme.blackAlpha,
+            suffixIcon: const _TagSearchBarActions(),
           ),
-          hintText: 'Enter tags here',
-          fillColor: AppTheme.blackAlpha,
-          suffixIcon: const _TagSearchBarActions(),
+          onSubmitted: (_) => _searchThenBack(),
+          onTapOutside: (_) => setState(() => _focusNode.requestFocus()),
+          onChanged: (q) => _queryController.onChange(q),
         ),
-        onSubmitted: (_) => _searchThenBack(),
-        onTapOutside: (_) => setState(() => _focusNode.requestFocus()),
-        onChanged: (q) => _queryController.onChange(q),
       ),
     );
   }
 }
+
 
 class _TagSearchBarActions extends StatelessWidget {
   const _TagSearchBarActions();
@@ -88,28 +92,29 @@ class _TagSearchBarActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final queryController = Get.find<QueryController>();
     return Row(
-        mainAxisSize: .min,
-        spacing: 5.0,
-        mainAxisAlignment: .end,
-        children: [
-          IconButton(
-            onPressed: () {
-              queryController.textController.text = '';
-              queryController.visible.value = false;
-            },
-            icon: const Icon(Icons.clear),
-            tooltip: 'Clear',
-          ),
-          IconButton(
-            onPressed: () {
-              queryController.addTag(Tag(queryController.textController.text));
-              queryController.textController.text = '';
-            },
-            icon: const Icon(Icons.arrow_drop_up),
-            tooltip: 'Insert as tag',
-          ),
-          const VerticalDivider(width: 0.0),
-        ]
+      mainAxisSize: .min,
+      spacing: 5.0,
+      mainAxisAlignment: .end,
+      children: [
+        IconButton(
+          onPressed: () {
+            queryController.textController.text = '';
+            queryController.visible.value = false;
+          },
+          icon: const Icon(Icons.clear),
+          tooltip: 'Clear',
+        ),
+        IconButton(
+          onPressed: () {
+            queryController.addTag(Tag(queryController.textController.text));
+            queryController.textController.text = '';
+            queryController.visible.value = false;
+          },
+          icon: const Icon(Icons.arrow_drop_up),
+          tooltip: 'Insert as tag',
+        ),
+        const VerticalDivider(width: 0.0),
+      ],
     );
   }
 }

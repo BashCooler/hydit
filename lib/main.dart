@@ -1,11 +1,11 @@
-import 'package:flutter_portal/flutter_portal.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:media_kit/media_kit.dart';
 
 import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:hydrus_flutter/gallery/pages/gallery.dart';
+import 'package:hydrus_flutter/gallery/gallery.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hydrus_flutter/settings/theme.dart';
 
@@ -13,6 +13,15 @@ import 'package:hydrus_flutter/settings/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
+
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarContrastEnforced: false,
+    ),
+  );
 
   Get.put<SharedPreferences>(prefs);
   Get.put<Client>(Client());
@@ -29,13 +38,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Portal(
-      child: GetMaterialApp(
-        title: 'Flutter App',
-        debugShowCheckedModeBanner: false,
-        theme: darkTheme(),
-        home: Gallery(),
-      ),
+    return GetMaterialApp(
+      title: 'Flutter App',
+      debugShowCheckedModeBanner: false,
+      theme: darkTheme(),
+      home: Gallery(),
     );
   }
 }

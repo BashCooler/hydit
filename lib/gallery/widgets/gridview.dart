@@ -46,6 +46,7 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
         child: GridView.builder(
           controller: scrollCtrl,
           itemCount: imgCtrl.images.length,
+          // itemCount: 20,
           padding: .all(5.0),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
@@ -53,6 +54,7 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
             crossAxisSpacing: padding,
           ),
           itemBuilder: (context, index) => _TileFutureBuilder(index),
+          // itemBuilder: (context, index) => _testTileBuilder(),
         ),
       ),
     );
@@ -151,5 +153,15 @@ class _TileBadges extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Row(mainAxisAlignment: .end, children: badges),
     );
+  }
+}
+
+
+class _testTileBuilder extends StatelessWidget {
+  const _testTileBuilder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const ColoredBox(color: Colors.white10);
   }
 }
