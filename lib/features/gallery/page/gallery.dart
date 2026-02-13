@@ -1,16 +1,17 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
-import 'package:hydrus_flutter/settings/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:hydrus_flutter/gallery/services.dart';
-import 'package:hydrus_flutter/settings/settings.dart';
-import 'package:hydrus_flutter/gallery/widgets/common.dart';
-import 'package:hydrus_flutter/gallery/widgets/gridview.dart';
+import 'package:hydrus_flutter/utils/theme.dart';
+import 'package:hydrus_flutter/core/data/hydrus.dart';
+import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
+import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
+import 'package:hydrus_flutter/features/settings/settings.dart';
+
+import '../getx/controllers.dart';
+import '../widget/search.dart';
+import '../widget/gridview.dart';
 
 
 class Gallery extends StatefulWidget {
@@ -80,39 +81,14 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
   }
 }
 
-
-class FilledIconButton extends StatelessWidget {
-  final VoidCallback onPressed;
-
-  const FilledIconButton({super.key, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Center(
-        child: Ink(
-          decoration: const ShapeDecoration(
-            color: AppTheme.blackAlpha,
-            shape: CircleBorder(),
-          ),
-          child: IconButton(
-            onPressed: onPressed,
-            icon: const Icon(Icons.search),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
+// MARK: SHOW SHEET
 
 void _showModalSheet(BuildContext context) {
   Navigator.push(
     context,
     ModalSheetRoute(
       swipeDismissible: true,
-      builder: (context) => SearchPage(),
+      builder: (context) => SearchSheet(),
       viewportBuilder: (context, child) {
         return SheetViewport(
           padding: .only(top: MediaQuery.viewPaddingOf(context).top),
@@ -124,14 +100,14 @@ void _showModalSheet(BuildContext context) {
 }
 
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+class SearchSheet extends StatefulWidget {
+  const SearchSheet({super.key});
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  State<SearchSheet> createState() => _SearchSheetState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchSheetState extends State<SearchSheet> {
   @override
   Widget build(BuildContext context) {
     return const PopScope(

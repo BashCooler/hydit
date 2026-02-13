@@ -1,48 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hydrus_flutter/gallery/services.dart';
-import 'package:hydrus_flutter/settings/theme.dart';
+import 'package:flutter/material.dart';
 
-
-enum Shape {rect, rRect, oval}
-
-class FrostedGlass extends StatelessWidget {
-  final Widget child;
-  final Shape? shape;
-  final BorderRadius? borderRadius;
-
-  const FrostedGlass({
-    super.key, 
-    required this.child, 
-    this.shape = .rect, 
-    this.borderRadius,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final filter = BackdropFilter(
-      filter: AppTheme.backdropFilter,
-      child: child,
-    );
-    return RepaintBoundary(
-      child: switch (shape) {
-        .rRect => ClipRRect(
-          clipBehavior: .hardEdge,
-          borderRadius: borderRadius ?? AppTheme.borderRadius,
-          child: filter,
-        ),
-        .oval => ClipOval(
-          clipBehavior: .hardEdge,
-          child: filter,
-        ),
-        _ => ClipRect(
-          clipBehavior: .hardEdge,
-          child: filter,
-        ),
-      },
-    );
-  }
-}
+import 'package:hydrus_flutter/utils/theme.dart';
+import 'package:hydrus_flutter/core/logic/entities.dart';
+import '../getx/controllers.dart';
 
 
 class TagSearchBar extends StatefulWidget {

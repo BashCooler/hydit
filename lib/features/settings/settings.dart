@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hydrus_flutter/api/hydrus.dart';
+
+import 'package:hydrus_flutter/core/data/hydrus.dart';
 
 
 class SettingsPage extends StatefulWidget {
@@ -105,8 +105,6 @@ class _SettingsPageState extends State<SettingsPage> {
     // Check if the key is valid
     final decoded = jsonDecode(response) as Map<String, dynamic>;
     if (decoded['error'] != null) {
-      log(decoded['status_code'].toString());
-      log('${decoded['status_code'] == 400}');
       switch (decoded['status_code']) {
         case 400:
         case 401:

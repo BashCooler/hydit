@@ -1,13 +1,12 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:hydrus_flutter/viewer/viewer.dart';
-import 'package:hydrus_flutter/viewer/images.dart';
-import 'package:hydrus_flutter/gallery/services.dart';
+import 'package:hydrus_flutter/core/data/hydrus.dart';
+import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
+import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
+import 'package:hydrus_flutter/features/viewer/widget/images.dart';
 
 
 class ImageGridViewBuilder extends StatefulWidget {

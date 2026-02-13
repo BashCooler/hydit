@@ -1,27 +1,13 @@
-import 'dart:developer';
-
 import 'dart:typed_data';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:hydrus_flutter/gallery/services.dart';
-import 'controllers.dart';
-
-
-class HydrusImage {
-  final int id;
-  Uint8List? low;
-  Uint8List? high;
-  int? width, height;
-  String? mime;
-  int? duration;
-  Map<String, dynamic>? tags;
-
-  HydrusImage(this.id);
-}
+import 'package:hydrus_flutter/core/data/hydrus.dart';
+import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
+import '../getx/controllers.dart';
 
 
 class Thumbnail extends StatelessWidget {

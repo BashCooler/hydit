@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:media_kit/media_kit.dart';
-
-import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:hydrus_flutter/gallery/gallery.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hydrus_flutter/settings/theme.dart';
+
+import 'package:hydrus_flutter/utils/theme.dart';
+import 'package:hydrus_flutter/core/data/hydrus.dart';
+import 'features/gallery/page/gallery.dart';
 
 
 void main() async {

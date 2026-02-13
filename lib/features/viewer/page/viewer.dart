@@ -1,12 +1,10 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:hydrus_flutter/viewer/images.dart';
-import 'package:hydrus_flutter/gallery/services.dart';
-import 'controllers.dart';
+import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
+import '../widget/images.dart';
+import '../getx/controllers.dart';
 
 
 class Viewer extends StatefulWidget {
@@ -70,7 +68,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
         bottomNavigationBar: BottomAppBar(
           color: Colors.transparent,
           // Swipe doesn't work on Windows so I added buttons
-          child: BottomAppBarActions(
+          child: _BottomAppBarActions(
             pageController: pageController.controller,
           ),
         ),
@@ -113,7 +111,7 @@ class FilePageBuilder extends StatelessWidget {
               ViewImage(zoomCtrl, index.value, buildIndex)),
           'video' => Obx(() =>
               ViewVideo(pageCtrl, index.value, buildIndex)),
-          _ => ErrorText(mime),
+          _ => _ErrorText(mime),
         };
       },
     ));
@@ -121,11 +119,9 @@ class FilePageBuilder extends StatelessWidget {
 }
 
 
-class BottomAppBarActions extends StatelessWidget {
-  const BottomAppBarActions({
-    super.key,
-    required PageController pageController,
-  }) : _pageController = pageController;
+class _BottomAppBarActions extends StatelessWidget {
+  const _BottomAppBarActions({required PageController pageController})
+      : _pageController = pageController;
 
   final PageController _pageController;
 
@@ -172,10 +168,10 @@ class SnappyPageScrollPhysics extends PageScrollPhysics {
 }
 
 
-class ErrorText extends StatelessWidget {
+class _ErrorText extends StatelessWidget {
   final String? type;
 
-  const ErrorText(this.type, {super.key});
+  const _ErrorText(this.type, {super.key});
 
   @override
   Widget build(BuildContext context) {

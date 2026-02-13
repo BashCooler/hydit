@@ -1,21 +1,11 @@
-import 'dart:developer';
-
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hydrus_flutter/api/hydrus.dart';
-import 'package:hydrus_flutter/api/parser.dart';
-import 'package:hydrus_flutter/viewer/images.dart';
+import 'package:flutter/material.dart';
 
+import 'package:hydrus_flutter/core/data/hydrus.dart';
+import 'package:hydrus_flutter/core/data/parser.dart';
+import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 
-class SearchVisibility extends GetxController {
-  var visible = true.obs;
-  void show() => visible.value = true;
-  void hide() => visible.value = false;
-}
-
-class Images extends GetxController {
-  final images = <HydrusImage>[].obs;
-}
 
 class QueryController extends GetxController {
   final query = ''.obs;
@@ -105,21 +95,5 @@ class QueryController extends GetxController {
       case _:
         Get.snackbar('Error', '$e');
     }
-  }
-}
-
-
-class Tag {
-  final String raw;
-  const Tag(this.raw);
-
-  String get namespace {
-    final idx = raw.indexOf(':');
-    return idx == -1 ? 'no namespace' : raw.substring(0 , idx);
-  }
-
-  String get value {
-    final idx = raw.indexOf(':');
-    return idx == -1 ? raw : raw.substring(idx + 1);
   }
 }
