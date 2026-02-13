@@ -64,25 +64,10 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
               child: Row(
                 mainAxisAlignment: .end,
                 children: [
-                  RepaintBoundary(
-                    child: ClipOval(
-                      clipBehavior: Clip.hardEdge,
-                      child: BackdropFilter(
-                        filter: AppTheme.backdropFilter,
-                        child: Material(
-                          color: Colors.transparent,
-                          child: Ink(
-                            decoration: const ShapeDecoration(
-                              color: AppTheme.blackAlpha,
-                              shape: CircleBorder(),
-                            ),
-                            child: IconButton(
-                              onPressed: () => _showModalSheet(context),
-                              icon: Icon(Icons.search),
-                            ),
-                          ),
-                        ),
-                      ),
+                  FrostedGlass(
+                    shape: .oval,
+                    child: FilledIconButton(
+                      onPressed: () => _showModalSheet(context),
                     ),
                   ),
                 ],
@@ -90,6 +75,32 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+
+class FilledIconButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const FilledIconButton({super.key, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: Center(
+        child: Ink(
+          decoration: const ShapeDecoration(
+            color: AppTheme.blackAlpha,
+            shape: CircleBorder(),
+          ),
+          child: IconButton(
+            onPressed: onPressed,
+            icon: const Icon(Icons.search),
+          ),
+        ),
       ),
     );
   }
@@ -123,11 +134,11 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
-    return PopScope(
+    return const PopScope(
       child: SheetKeyboardDismissible(
-        dismissBehavior: const .onDragDown(isContentScrollAware: true),
+        dismissBehavior: .onDragDown(isContentScrollAware: true),
         child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
+          scrollConfiguration: SheetScrollConfiguration(),
           child: Padding(
             padding: .symmetric(horizontal: 10.0),
             child: SafeArea(

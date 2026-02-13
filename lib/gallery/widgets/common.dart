@@ -4,22 +4,42 @@ import 'package:hydrus_flutter/gallery/services.dart';
 import 'package:hydrus_flutter/settings/theme.dart';
 
 
+enum Shape {rect, rRect, oval}
+
 class FrostedGlass extends StatelessWidget {
   final Widget child;
+  final Shape? shape;
+  final BorderRadius? borderRadius;
 
-  const FrostedGlass({super.key, required this.child});
+  const FrostedGlass({
+    super.key, 
+    required this.child, 
+    this.shape = .rect, 
+    this.borderRadius,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final filter = BackdropFilter(
+      filter: AppTheme.backdropFilter,
+      child: child,
+    );
     return RepaintBoundary(
-      child: ClipRRect(
-        clipBehavior: Clip.hardEdge,
-        borderRadius: AppTheme.borderRadius,
-        child: BackdropFilter(
-          filter: AppTheme.backdropFilter,
-          child: child,
+      child: switch (shape) {
+        .rRect => ClipRRect(
+          clipBehavior: .hardEdge,
+          borderRadius: borderRadius ?? AppTheme.borderRadius,
+          child: filter,
         ),
-      ),
+        .oval => ClipOval(
+          clipBehavior: .hardEdge,
+          child: filter,
+        ),
+        _ => ClipRect(
+          clipBehavior: .hardEdge,
+          child: filter,
+        ),
+      },
     );
   }
 }
