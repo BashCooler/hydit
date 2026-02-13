@@ -27,21 +27,24 @@ class FrostedGlass extends StatelessWidget {
       filter: AppTheme.backdropFilter,
       child: child,
     );
+    final clipRRect = ClipRRect(
+      clipBehavior: .hardEdge,
+      borderRadius: borderRadius ?? AppTheme.borderRadius,
+      child: filter,
+    );
+    final clipOval = ClipOval(
+      clipBehavior: .hardEdge,
+      child: filter,
+    );
+    final clipRect = ClipRect(
+      clipBehavior: .hardEdge,
+      child: filter,
+    );
     return RepaintBoundary(
       child: switch (shape) {
-            .rRect => ClipRRect(
-          clipBehavior: .hardEdge,
-          borderRadius: borderRadius ?? AppTheme.borderRadius,
-          child: filter,
-        ),
-            .oval => ClipOval(
-          clipBehavior: .hardEdge,
-          child: filter,
-        ),
-        _ => ClipRect(
-          clipBehavior: .hardEdge,
-          child: filter,
-        ),
+        Shape.rRect => clipRRect,
+        Shape.oval => clipOval,
+        _ => clipRect,
       },
     );
   }

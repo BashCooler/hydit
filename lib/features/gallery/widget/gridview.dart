@@ -21,39 +21,23 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
   static const padding = 5.0;
   final client = Get.find<Client>();
   final imgCtrl = Get.find<Images>();
-  
-  final scrollCtrl = ScrollController();
-  late final GridObserverController gridObserverCtrl;
-
-  @override
-  void initState() {
-    super.initState();
-    gridObserverCtrl = GridObserverController(controller: scrollCtrl);
-    Get.put<GridObserverController>(gridObserverCtrl);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    gridObserverCtrl.controller?.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     final queryController = Get.find<QueryController>();
-    return Obx(
-      () => GridViewObserver(
-        controller: gridObserverCtrl,
+    final gridController = Get.find<GridObserverController>();
+    return Padding(
+      padding: .symmetric(horizontal: 5.0),
+      child: GridViewObserver(
+        controller: gridController,
         child: RefreshIndicator(
+          displacement: 100.0,
           onRefresh: () async => queryController.searchForFiles(),
-          child: GridView.builder(
-            physics: BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
-            ),
-            controller: scrollCtrl,
+          child: Obx(() => GridView.builder(
+            physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            controller: gridController.controller,
             itemCount: imgCtrl.images.length,
             // itemCount: 20,
-            padding: .all(5.0),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: padding,
@@ -61,7 +45,7 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
             ),
             itemBuilder: (context, index) => _TileFutureBuilder(index),
             // itemBuilder: (context, index) => _testTileBuilder(),
-          ),
+          )),
         ),
       ),
     );

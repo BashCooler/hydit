@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/data/hydrus.dart';
@@ -26,12 +28,23 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
   final client = Get.find<Client>();
   final imgCtrl = Get.put<Images>(Images());
 
+  final scrollController = ScrollController();
+  late final GridObserverController gridObserverController;
+
   @override
   void initState() {
     super.initState();
     updateClient();
     Get.put<SearchVisibility>(SearchVisibility());
     Get.put<QueryController>(QueryController());
+    gridObserverController = GridObserverController(controller: scrollController);
+    Get.put<GridObserverController>(gridObserverController);
+  }
+
+  @override
+  void dispose() {
+    gridObserverController.controller?.dispose();
+    super.dispose();
   }
 
   void updateClient() {
@@ -50,9 +63,13 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
         alignment: .bottomRight,
         children: [
           const ImageGridViewBuilder(),
-          SafeArea(
+          ScrollToHide(
+            scrollController: gridObserverController.controller!,
+            hideDirection: .vertical,
+            height: AppTheme.buttonSize * 2,
+            duration: const Duration(milliseconds: 150),
             child: Padding(
-              padding: .all(AppTheme.outerPadding),
+              padding: const .symmetric(horizontal: AppTheme.outerPadding),
               child: Row(
                 mainAxisAlignment: .spaceBetween,
                 children: [
