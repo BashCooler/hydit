@@ -73,7 +73,7 @@ class QueryController extends GetxController {
   void removeTag(Tag tag) => _tags.remove(tag);
   void clearTags() => _tags.clear();
 
-  void searchForFiles() async {
+  Future<void> searchForFiles() async {
     final imageController = Get.find<Images>();
     List<int> ids = [];
     try {

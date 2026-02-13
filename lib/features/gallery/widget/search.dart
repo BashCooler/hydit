@@ -39,26 +39,29 @@ class _TagSearchBarState extends State<TagSearchBar>
     return ClipRRect(
       borderRadius: .circular(AppTheme.radius),
       child: Material(
-        color: AppTheme.blackAlpha,
-        child: TextField(
-          autofocus: true,
-          focusNode: _focusNode,
-          controller: _queryController.textController,
-          decoration: InputDecoration(
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppTheme.radius),
-              borderSide: BorderSide(
-                width: 2,
-                color: Theme.of(context).colorScheme.inversePrimary,
+        color: AppColors.blackWithAlpha,
+        child: SizedBox(
+          height: AppTheme.fieldHeight,
+          child: TextField(
+            autofocus: true,
+            focusNode: _focusNode,
+            controller: _queryController.textController,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppTheme.radius),
+                borderSide: BorderSide(
+                  width: 2,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
               ),
+              hintText: 'Enter tags here',
+              fillColor: AppColors.blackWithAlpha,
+              suffixIcon: const _TagSearchBarActions(),
             ),
-            hintText: 'Enter tags here',
-            fillColor: AppTheme.blackAlpha,
-            suffixIcon: const _TagSearchBarActions(),
+            onSubmitted: (_) => _searchThenBack(),
+            onTapOutside: (_) => setState(() => _focusNode.requestFocus()),
+            onChanged: (q) => _queryController.onChange(q),
           ),
-          onSubmitted: (_) => _searchThenBack(),
-          onTapOutside: (_) => setState(() => _focusNode.requestFocus()),
-          onChanged: (q) => _queryController.onChange(q),
         ),
       ),
     );
@@ -86,13 +89,14 @@ class _TagSearchBarActions extends StatelessWidget {
           tooltip: 'Clear',
         ),
         IconButton(
+          tooltip: 'Search',
           onPressed: () {
-            queryController.addTag(Tag(queryController.textController.text));
-            queryController.textController.text = '';
             queryController.visible.value = false;
+            queryController.textController.text = '';
+            queryController.searchForFiles();
+            Get.back();
           },
-          icon: const Icon(Icons.arrow_drop_up),
-          tooltip: 'Insert as tag',
+          icon: const Icon(Icons.search),
         ),
         const VerticalDivider(width: 0.0),
       ],
@@ -111,16 +115,16 @@ class TagPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final queryController = Get.find<QueryController>();
     return SizedBox(
-      height: AppTheme.listTileHeight,
+      height: AppTheme.fieldHeight,
       child: Card.outlined(
-        color: AppTheme.blackAlpha,
+        color: AppColors.blackWithAlpha,
         margin: EdgeInsets.zero,
         clipBehavior: Clip.hardEdge,
         child: Stack(
           fit: .expand,
           children: [
             Padding(
-              padding: const .only(left: AppTheme.searchPadding),
+              padding: const .only(left: AppTheme.outerPadding),
               child: Align(
                 alignment: .centerLeft,
                 child: Obx(() {
@@ -144,20 +148,17 @@ class TagPanel extends StatelessWidget {
                     Expanded(
                       child: SingleChildScrollView(
                         scrollDirection: .horizontal,
-                        child: Obx(() {
-                          final tags = queryController.tags;
-                          return Wrap(
-                            spacing: 5.0,
-                            children: [
-                              for (final tag in tags) InputChip(
-                                label: Text(tag.value),
-                                backgroundColor: namespaceColors[tag.namespace]
-                                    ?? namespaceColors['namespace'],
-                                onDeleted: () => queryController.removeTag(tag),
-                              )
-                            ],
-                          );
-                        }),
+                        child: Obx(() => Wrap(
+                          spacing: 5.0,
+                          children: [
+                            for (final tag in queryController.tags) InputChip(
+                              label: Text(tag.value),
+                              backgroundColor: namespaceColors[tag.namespace]
+                                  ?? namespaceColors['namespace'],
+                              onDeleted: () => queryController.removeTag(tag),
+                            ),
+                          ],
+                        )),
                       ),
                     ),
                     trailing ?? const SizedBox.shrink(),
@@ -192,7 +193,7 @@ class Suggests extends StatelessWidget {
           itemBuilder: (context, index) {
             final tag = queryController.suggests[index];
             return ListTile(
-              minTileHeight: AppTheme.listTileHeight,
+              minTileHeight: AppTheme.fieldHeight,
               title: Text(tag.value),
               trailing: Text(tag.count.toString()),
               onTap: () {

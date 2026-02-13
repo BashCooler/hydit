@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
+import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
@@ -54,7 +56,25 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         extendBody: true,
-        appBar: AppBar(backgroundColor: Colors.transparent),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          actionsPadding: .all(AppTheme.outerPadding),
+          toolbarHeight: AppTheme.buttonSize + AppTheme.outerPadding * 2,
+          actions: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: .spaceBetween,
+                children: [
+                  FilledIconButton(
+                    onPressed: () => Get.back(),
+                    icon: Icon(Icons.arrow_back),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
         body: Listener(
           onPointerDown: multitouchController.register,
           onPointerUp: multitouchController.register,
@@ -130,14 +150,14 @@ class _BottomAppBarActions extends StatelessWidget {
     return Row(
       mainAxisAlignment: .spaceBetween,
       children: [
-        IconButton(
+        FilledIconButton(
           onPressed: () => _pageController.previousPage(
             duration: const Duration(milliseconds: 150),
             curve: Curves.decelerate,
           ),
           icon: Icon(Icons.keyboard_arrow_left),
         ),
-        IconButton(
+        FilledIconButton(
           onPressed: () => _pageController.nextPage(
             duration: const Duration(milliseconds: 150),
             curve: Curves.decelerate,
@@ -171,7 +191,7 @@ class SnappyPageScrollPhysics extends PageScrollPhysics {
 class _ErrorText extends StatelessWidget {
   final String? type;
 
-  const _ErrorText(this.type, {super.key});
+  const _ErrorText(this.type);
 
   @override
   Widget build(BuildContext context) {

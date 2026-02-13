@@ -11,6 +11,10 @@ ThemeData darkTheme() {
       enabledBorder: outlineInputBorder(),
       border: outlineInputBorder(),
     ),
+    tooltipTheme: const TooltipThemeData(
+      preferBelow: false,
+      showDuration: Duration(milliseconds: 0),
+    ),
   );
 }
 
@@ -19,14 +23,15 @@ abstract class AppColors {
   static const filled = Color(0xFF32353a);
   static const fontDark = Color(0xFF000000);
   static const fontLight = Colors.white70;
+  static const blackWithAlpha = Color.fromARGB(96, 0, 0, 0);
 }
 
 
 abstract class AppTheme {
   static const radius = 10.0;
-  static const blackAlpha = Color.fromARGB(96, 0, 0, 0);
-  static const listTileHeight = 50.0;
-  static const searchPadding = 15.0;
+  static const buttonSize = 48.0;
+  static const fieldHeight = 55.0;
+  static const outerPadding = 15.0;
   static final backdropFilter = ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0);
   static final borderRadius = BorderRadius.circular(radius);
 }

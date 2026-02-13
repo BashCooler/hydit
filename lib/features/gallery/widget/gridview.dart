@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/core/data/hydrus.dart';
@@ -39,21 +40,28 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    final queryController = Get.find<QueryController>();
     return Obx(
       () => GridViewObserver(
         controller: gridObserverCtrl,
-        child: GridView.builder(
-          controller: scrollCtrl,
-          itemCount: imgCtrl.images.length,
-          // itemCount: 20,
-          padding: .all(5.0),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: padding,
-            crossAxisSpacing: padding,
+        child: RefreshIndicator(
+          onRefresh: () async => queryController.searchForFiles(),
+          child: GridView.builder(
+            physics: BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            controller: scrollCtrl,
+            itemCount: imgCtrl.images.length,
+            // itemCount: 20,
+            padding: .all(5.0),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: padding,
+              crossAxisSpacing: padding,
+            ),
+            itemBuilder: (context, index) => _TileFutureBuilder(index),
+            // itemBuilder: (context, index) => _testTileBuilder(),
           ),
-          itemBuilder: (context, index) => _TileFutureBuilder(index),
-          // itemBuilder: (context, index) => _testTileBuilder(),
         ),
       ),
     );
@@ -157,8 +165,6 @@ class _TileBadges extends StatelessWidget {
 
 
 class _testTileBuilder extends StatelessWidget {
-  const _testTileBuilder({super.key});
-
   @override
   Widget build(BuildContext context) {
     return const ColoredBox(color: Colors.white10);

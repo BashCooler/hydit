@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/data/hydrus.dart';
+import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/features/settings/settings.dart';
@@ -45,31 +46,24 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const Text('Hydrus client'),
-        actions: [
-          IconButton(
-            onPressed: () => Get.to(() => SettingsPage(callback: updateClient)),
-            icon: const Icon(Icons.settings),
-          )
-        ],
-      ),
       body: Stack(
         alignment: .bottomRight,
         children: [
           const ImageGridViewBuilder(),
           SafeArea(
             child: Padding(
-              padding: .all(AppTheme.searchPadding),
+              padding: .all(AppTheme.outerPadding),
               child: Row(
-                mainAxisAlignment: .end,
+                mainAxisAlignment: .spaceBetween,
                 children: [
-                  FrostedGlass(
-                    shape: .oval,
-                    child: FilledIconButton(
-                      onPressed: () => _showModalSheet(context),
-                    ),
+                  FilledIconButton(
+                    onPressed: () => Get.to(() =>
+                        SettingsPage(callback: updateClient)),
+                    icon: const Icon(Icons.settings),
+                  ),
+                  FilledIconButton(
+                    onPressed: () => _showModalSheet(context),
+                    icon: const Icon(Icons.search),
                   ),
                 ],
               ),
@@ -116,7 +110,7 @@ class _SearchSheetState extends State<SearchSheet> {
         child: Sheet(
           scrollConfiguration: SheetScrollConfiguration(),
           child: Padding(
-            padding: .symmetric(horizontal: 10.0),
+            padding: .all(AppTheme.outerPadding),
             child: SafeArea(
               child: Column(
                 spacing: 10.0,
@@ -151,14 +145,13 @@ class _TagPanelActions extends StatelessWidget {
           icon: const Icon(Icons.clear),
         ),
         IconButton(
-          tooltip: 'Search',
           onPressed: () {
-            queryController.visible.value = false;
+            queryController.addTag(Tag(queryController.textController.text));
             queryController.textController.text = '';
-            queryController.searchForFiles();
-            Get.back();
+            queryController.visible.value = false;
           },
-          icon: const Icon(Icons.search),
+          icon: const Icon(Icons.arrow_drop_up),
+          tooltip: 'Insert input as tag',
         ),
       ],
     );
