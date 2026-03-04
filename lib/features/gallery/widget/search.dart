@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:nil/nil.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
@@ -133,7 +134,7 @@ class TagPanel extends StatelessWidget {
                     return const Text('No tags', style: TextStyle(fontSize: 16),
                     );
                   } else {
-                    return const SizedBox.shrink();
+                    return nil;
                   }
                 }),
               ),
@@ -153,15 +154,14 @@ class TagPanel extends StatelessWidget {
                           children: [
                             for (final tag in queryController.tags) InputChip(
                               label: Text(tag.value),
-                              backgroundColor: namespaceColors[tag.namespace]
-                                  ?? namespaceColors['namespace'],
+                              backgroundColor: tag.color,
                               onDeleted: () => queryController.removeTag(tag),
                             ),
                           ],
                         )),
                       ),
                     ),
-                    trailing ?? const SizedBox.shrink(),
+                    trailing ?? nil,
                   ],
                 ),
               ),
@@ -180,9 +180,7 @@ class Suggests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final queryController = Get.find<QueryController>();
-    return Obx(() => !queryController.visible.value
-        ? const SizedBox.shrink()
-        : Flexible(
+    return Obx(() => !queryController.visible.value ? nil : Expanded(
       child: Obx(() => Material(
         borderRadius: AppTheme.borderRadius,
         clipBehavior: Clip.hardEdge,
@@ -190,21 +188,35 @@ class Suggests extends StatelessWidget {
         child: ListView.builder(
           reverse: true,
           itemCount: queryController.suggests.length,
-          itemBuilder: (context, index) {
-            final tag = queryController.suggests[index];
-            return ListTile(
-              minTileHeight: AppTheme.fieldHeight,
-              title: Text(tag.value),
-              trailing: Text(tag.count.toString()),
-              onTap: () {
-                queryController.visible.value = false;
-                queryController.textController.text = '';
-                queryController.addTag(Tag(tag.value));
-              },
-            );
-          },
+          itemBuilder: (_, index) => SearchEntry(index),
         ),
       )),
     ));
+  }
+}
+
+class SearchEntry extends StatelessWidget {
+  final int index;
+
+  const SearchEntry(this.index, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final queryController = Get.find<QueryController>();
+    final suggest = queryController.suggests[index];
+    final tag = Tag(suggest.value);
+    return ListTile(
+      minTileHeight: AppTheme.fieldHeight,
+      title: Text(tag.value, style: TextStyle(color: tag.color)),
+      trailing: Text(
+        suggest.count.toString(),
+        style: TextStyle(color: tag.color, fontSize: 14.0),
+      ),
+      onTap: () {
+        queryController.visible.value = false;
+        queryController.textController.text = '';
+        queryController.addTag(tag);
+      },
+    );
   }
 }

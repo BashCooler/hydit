@@ -1,4 +1,6 @@
+import 'dart:ui';
 import 'dart:typed_data';
+import 'package:hydrus_flutter/utils/theme.dart';
 
 
 class HydrusImage {
@@ -16,7 +18,9 @@ class HydrusImage {
 
 class Tag {
   final String raw;
-  const Tag(this.raw);
+  final int? count;
+
+  const Tag(this.raw, {this.count});
 
   String get namespace {
     final idx = raw.indexOf(':');
@@ -27,4 +31,7 @@ class Tag {
     final idx = raw.indexOf(':');
     return idx == -1 ? raw : raw.substring(idx + 1);
   }
+
+  Color? get color => namespaceColors[namespace]
+      ?? namespaceColors['namespace'];
 }
