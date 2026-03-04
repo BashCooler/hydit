@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
-import 'package:scroll_to_hide/scroll_to_hide.dart';
+import '../../../core/ui/widget/scroll_to_hide.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -29,6 +29,7 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
   final imgCtrl = Get.put<Images>(Images());
 
   final scrollController = ScrollController();
+  final scrollToHideController = Get.put(ScrollToHideController());
   late final GridObserverController gridObserverController;
 
   @override
@@ -65,6 +66,7 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
           const ImageGridViewBuilder(),
           ScrollToHide(
             scrollController: gridObserverController.controller!,
+            controller: scrollToHideController,
             hideDirection: .vertical,
             height: AppTheme.buttonSize * 2,
             duration: const Duration(milliseconds: 150),
@@ -95,6 +97,7 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
 // MARK: SHOW SHEET
 
 void _showModalSheet(BuildContext context) {
+  Get.find<ScrollToHideController>().hide();
   Navigator.push(
     context,
     ModalSheetRoute(
@@ -121,8 +124,10 @@ class SearchSheet extends StatefulWidget {
 class _SearchSheetState extends State<SearchSheet> {
   @override
   Widget build(BuildContext context) {
-    return const PopScope(
-      child: SheetKeyboardDismissible(
+    return PopScope(
+      onPopInvokedWithResult: (_, _) =>
+          Get.find<ScrollToHideController>().show(),
+      child: const SheetKeyboardDismissible(
         dismissBehavior: .onDragDown(isContentScrollAware: true),
         child: Sheet(
           child: FrostedGlass(

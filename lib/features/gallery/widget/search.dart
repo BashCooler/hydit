@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:nil/nil.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
@@ -134,7 +133,7 @@ class TagPanel extends StatelessWidget {
                     return const Text('No tags', style: TextStyle(fontSize: 16),
                     );
                   } else {
-                    return nil;
+                    return SizedBox.shrink();
                   }
                 }),
               ),
@@ -161,7 +160,7 @@ class TagPanel extends StatelessWidget {
                         )),
                       ),
                     ),
-                    trailing ?? nil,
+                    trailing ?? SizedBox.shrink(),
                   ],
                 ),
               ),

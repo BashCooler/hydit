@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
-import 'package:hydrus_flutter/utils/theme.dart';
+import '../../../core/ui/widget/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
+import 'package:hydrus_flutter/utils/theme.dart';
+import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import '../widget/images.dart';
 import '../getx/controllers.dart';
@@ -19,9 +20,6 @@ class Viewer extends StatefulWidget {
 }
 
 class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
-
-  final imgCtrl = Get.find<Images>();
-
   late final ZoomController zoomController;
   late final PageViewController pageController;
   final multitouchController = MultitouchController();
@@ -42,8 +40,11 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
 
   void showSearchBar(_, _) {
     Future.delayed(
-      Duration(milliseconds: 32),
-      () => Get.find<SearchVisibility>().show(),
+      Duration(milliseconds: 250),
+      () {
+        Get.find<SearchVisibility>().show();
+        Get.find<ScrollToHideController>().show();
+      },
     );
   }
 
@@ -51,6 +52,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final imgCtrl = Get.find<Images>();
     return PopScope(
       onPopInvokedWithResult: showSearchBar,
       child: Scaffold(

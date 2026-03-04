@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import '../../../core/ui/widget/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/core/data/hydrus.dart';
@@ -103,6 +104,7 @@ class _Tile extends StatelessWidget {
     return GestureDetector(
       key: ValueKey(image.id),
       onTap: () {
+        Get.find<ScrollToHideController>().hide();
         visibility.hide();
         Get.to(() => Viewer(index));
       },
