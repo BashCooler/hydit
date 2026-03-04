@@ -12,7 +12,8 @@ class QueryController extends GetxController {
   final suggests = <Tag>[].obs;
   final _tags = <Tag>[].obs;
   final isLoading = false.obs;
-  final visible = false.obs;
+  final suggestVisible = false.obs;
+  final badgeVisible = true.obs;
 
   List<String> get values => _tags.map((t) => t.raw).toList();
   List<Tag> get tags => _tags;
@@ -57,7 +58,7 @@ class QueryController extends GetxController {
         return;
       }
       if (id != _requestId) return;
-      visible.value = true;
+      suggestVisible.value = true;
       final List<Tag> parsed = parseSearchResults(response);
       suggests.assignAll(parsed);
     }

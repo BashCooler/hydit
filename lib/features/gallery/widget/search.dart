@@ -28,7 +28,7 @@ class _TagSearchBarState extends State<TagSearchBar>
     if (_queryController.tags.isEmpty) {
       _queryController.addTag(Tag(_queryController.textController.text));
     }
-    _queryController.visible.value = false;
+    _queryController.suggestVisible.value = false;
     _queryController.textController.text = '';
     _queryController.searchForFiles();
     Get.back();
@@ -83,7 +83,7 @@ class _TagSearchBarActions extends StatelessWidget {
         IconButton(
           onPressed: () {
             queryController.textController.text = '';
-            queryController.visible.value = false;
+            queryController.suggestVisible.value = false;
           },
           icon: const Icon(Icons.clear),
           tooltip: 'Clear',
@@ -91,7 +91,7 @@ class _TagSearchBarActions extends StatelessWidget {
         IconButton(
           tooltip: 'Search',
           onPressed: () {
-            queryController.visible.value = false;
+            queryController.suggestVisible.value = false;
             queryController.textController.text = '';
             queryController.searchForFiles();
             Get.back();
@@ -179,7 +179,7 @@ class Suggests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final queryController = Get.find<QueryController>();
-    return Obx(() => !queryController.visible.value ? SizedBox.shrink() : Expanded(
+    return Obx(() => !queryController.suggestVisible.value ? SizedBox.shrink() : Expanded(
       child: Obx(() => Material(
         borderRadius: AppTheme.borderRadius,
         clipBehavior: Clip.hardEdge,
@@ -211,7 +211,7 @@ class SearchEntry extends StatelessWidget {
         style: TextStyle(color: tag.color, fontSize: 14.0),
       ),
       onTap: () {
-        queryController.visible.value = false;
+        queryController.suggestVisible.value = false;
         queryController.textController.text = '';
         queryController.addTag(tag);
       },

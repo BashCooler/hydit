@@ -6,6 +6,7 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
+import '../../gallery/getx/controllers.dart';
 import '../widget/images.dart';
 import '../getx/controllers.dart';
 
@@ -42,7 +43,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
     Future.delayed(
       Duration(milliseconds: 250),
       () {
-        Get.find<SearchVisibility>().show();
+        Get.find<QueryController>().badgeVisible.value = true;
         Get.find<ScrollToHideController>().show();
       },
     );

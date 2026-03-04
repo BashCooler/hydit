@@ -100,12 +100,12 @@ class _Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final visibility = Get.find<SearchVisibility>();
+    final badgeVisible = Get.find<QueryController>().badgeVisible;
     return GestureDetector(
       key: ValueKey(image.id),
       onTap: () {
         Get.find<ScrollToHideController>().hide();
-        visibility.hide();
+        badgeVisible.value = false;
         Get.to(() => Viewer(index));
       },
       child: Stack(
@@ -116,7 +116,7 @@ class _Tile extends StatelessWidget {
             createRectTween: (b, e) => RectTween(begin: b, end: e),
             child: Thumbnail(image),
           ),
-          Obx(() => visibility.visible.value ? _TileBadges(image) : SizedBox.shrink()),
+          Obx(() => badgeVisible.value ? _TileBadges(image) : SizedBox.shrink()),
         ],
       ),
     );

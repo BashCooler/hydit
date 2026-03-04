@@ -36,7 +36,6 @@ class _GalleryState extends State<Gallery> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     updateClient();
-    Get.put<SearchVisibility>(SearchVisibility());
     Get.put<QueryController>(QueryController());
     gridObserverController = GridObserverController(controller: scrollController);
     Get.put<GridObserverController>(gridObserverController);
@@ -172,7 +171,7 @@ class _TagPanelActions extends StatelessWidget {
           onPressed: () {
             queryController.addTag(Tag(queryController.textController.text));
             queryController.textController.text = '';
-            queryController.visible.value = false;
+            queryController.suggestVisible.value = false;
           },
           icon: const Icon(Icons.arrow_drop_up),
           tooltip: 'Insert input as tag',
