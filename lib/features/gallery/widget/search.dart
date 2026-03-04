@@ -203,13 +203,12 @@ class SearchEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final queryController = Get.find<QueryController>();
-    final suggest = queryController.suggests[index];
-    final tag = Tag(suggest.value);
+    final tag = queryController.suggests[index];
     return ListTile(
       minTileHeight: AppTheme.fieldHeight,
       title: Text(tag.value, style: TextStyle(color: tag.color)),
       trailing: Text(
-        suggest.count.toString(),
+        tag.count.toString(),
         style: TextStyle(color: tag.color, fontSize: 14.0),
       ),
       onTap: () {

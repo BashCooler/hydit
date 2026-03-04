@@ -9,7 +9,7 @@ import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 
 class QueryController extends GetxController {
   final query = ''.obs;
-  final suggests = <TagSuggest>[].obs;
+  final suggests = <Tag>[].obs;
   final _tags = <Tag>[].obs;
   final isLoading = false.obs;
   final visible = false.obs;
@@ -58,7 +58,7 @@ class QueryController extends GetxController {
       }
       if (id != _requestId) return;
       visible.value = true;
-      final List<TagSuggest> parsed = parseSearchResults(response);
+      final List<Tag> parsed = parseSearchResults(response);
       suggests.assignAll(parsed);
     }
     isLoading.value = false;

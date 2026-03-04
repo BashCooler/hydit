@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -125,18 +125,20 @@ class _SearchSheetState extends State<SearchSheet> {
       child: SheetKeyboardDismissible(
         dismissBehavior: .onDragDown(isContentScrollAware: true),
         child: Sheet(
-          scrollConfiguration: SheetScrollConfiguration(),
-          child: Padding(
-            padding: .all(AppTheme.outerPadding),
-            child: SafeArea(
-              child: Column(
-                spacing: 10.0,
-                mainAxisAlignment: .end,
-                children: [
-                  Suggests(),
-                  TagPanel(trailing: _TagPanelActions()),
-                  TagSearchBar(),
-                ],
+          child: FrostedGlass(
+            shape: .rRect,
+            child: Padding(
+              padding: .all(AppTheme.outerPadding),
+              child: SafeArea(
+                child: Column(
+                  spacing: 10.0,
+                  mainAxisAlignment: .end,
+                  children: [
+                    Suggests(),
+                    TagPanel(trailing: _TagPanelActions()),
+                    TagSearchBar(),
+                  ],
+                ),
               ),
             ),
           ),

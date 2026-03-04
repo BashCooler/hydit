@@ -1,4 +1,5 @@
 import 'dart:io';
+import '../logic/entities.dart';
 import 'hydrus.dart';
 import 'dart:convert';
 
@@ -109,21 +110,9 @@ Map<String, dynamic>? _parseTags(dynamic service, {bool storage = false}) {
 
 // MARK: SEARCH RESULTS
 
-class TagSuggest {
-  final String value;
-  final int count;
-
-  TagSuggest(this.value, this.count);
-
-  @override
-  String toString() {
-    return '{value: $value, count: $count}';
-  }
-}
-
-List<TagSuggest> parseSearchResults(String query) {
+List<Tag> parseSearchResults(String query) {
   final json = jsonDecode(query);
   final List<dynamic> tags = json['tags'];
   return tags.take(15).map((e) =>
-      TagSuggest(e['value'], e['count'])).toList();
+      Tag(e['value'], count: e['count'])).toList();
 }

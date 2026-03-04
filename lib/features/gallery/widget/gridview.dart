@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/core/data/hydrus.dart';
@@ -8,6 +7,7 @@ import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
 import 'package:hydrus_flutter/features/viewer/widget/images.dart';
+import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
 
 
 class ImageGridViewBuilder extends StatefulWidget {
