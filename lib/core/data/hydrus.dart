@@ -74,6 +74,14 @@ class Client {
     return response;
   }
 
+  // MARK: BUILD URL
+
+  String buildImageUrl(int id, {bool thumbnail = false}) => ""
+      "http://$host:$port/get_files/"
+      "${thumbnail ? "thumbnail" : "file"}"
+      "?file_id=$id"
+      "&Hydrus-Client-API-Access-Key=$accessKey";
+
   // Documentation: https://hydrusnetwork.github.io/hydrus/developer_api.html
 
   // MARK: ACCESS MANAGEMENT

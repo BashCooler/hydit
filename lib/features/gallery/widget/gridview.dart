@@ -44,7 +44,6 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
               crossAxisSpacing: padding,
             ),
             itemBuilder: (context, index) => _TileFutureBuilder(index),
-            // itemBuilder: (context, index) => _testTileBuilder(),
           )),
         ),
       ),
@@ -115,10 +114,7 @@ class _Tile extends StatelessWidget {
             createRectTween: (b, e) => RectTween(begin: b, end: e),
             child: Thumbnail(image),
           ),
-          Obx(() => visibility.visible.value
-              ? _TileBadges(image)
-              : const SizedBox.shrink()
-          ),
+          Obx(() => visibility.visible.value ? _TileBadges(image) : SizedBox.shrink()),
         ],
       ),
     );
@@ -144,13 +140,5 @@ class _TileBadges extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Row(mainAxisAlignment: .end, children: badges),
     );
-  }
-}
-
-
-class _testTileBuilder extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const ColoredBox(color: Colors.white10);
   }
 }

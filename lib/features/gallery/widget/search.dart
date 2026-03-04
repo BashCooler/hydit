@@ -180,7 +180,7 @@ class Suggests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final queryController = Get.find<QueryController>();
-    return Obx(() => !queryController.visible.value ? nil : Expanded(
+    return Obx(() => !queryController.visible.value ? SizedBox.shrink() : Expanded(
       child: Obx(() => Material(
         borderRadius: AppTheme.borderRadius,
         clipBehavior: Clip.hardEdge,

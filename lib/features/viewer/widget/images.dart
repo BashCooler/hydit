@@ -1,8 +1,8 @@
-import 'dart:typed_data';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:hydrus_flutter/core/data/hydrus.dart';
 import 'package:hydrus_flutter/core/logic/entities.dart';
@@ -12,37 +12,19 @@ import '../getx/controllers.dart';
 
 class Thumbnail extends StatelessWidget {
   final HydrusImage image;
-  final client = Get.find<Client>();
 
-  final BoxFit _boxFit = BoxFit.cover;
-  static const double _aspectRatio = 1.0;
-
-  Thumbnail(this.image, {super.key});
+  const Thumbnail(this.image, {super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    if (image.low != null) {
-      return ImageStack(
-        aspectRatio: _aspectRatio,
-        children: [Image.memory(image.low!, fit: _boxFit)],
-      );
-    }
-
-    return FutureBuilder(
-      future: client.getThumbnail(image.id),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          image.low = snapshot.data;
-          return ImageStack(
-            aspectRatio: _aspectRatio,
-            children: [Image.memory(snapshot.data!, fit: _boxFit)],
-          );
-        }
-        else {
-          return const ColoredBox(color: Colors.white10);
-        }
-      },
+    final client = Get.find<Client>();
+    return AspectRatio(
+      aspectRatio: 1.0,
+      child: CachedNetworkImage(
+        imageUrl: client.buildImageUrl(image.id, thumbnail: true),
+        placeholder: (context, url) => ColoredBox(color: Colors.white10),
+        fit: .cover,
+      ),
     );
   }
 }
@@ -50,49 +32,27 @@ class Thumbnail extends StatelessWidget {
 
 class HighResImage extends StatelessWidget {
   final HydrusImage image;
-  final client = Get.find<Client>();
 
-  final BoxFit _boxFit = BoxFit.cover;
-
-  HighResImage({super.key, required this.image});
+  const HighResImage({super.key, required this.image});
 
   @override
   Widget build(BuildContext context) {
-
-    double width = image.width!.toDouble();
-    double height = image.height!.toDouble();
-    double aspectRatio = width/height;
-
-    if (image.high != null) {
-      return ImageStack(
-        aspectRatio: aspectRatio,
-        children: [
-          Image.memory(image.low!, fit: _boxFit),
-          Image.memory(image.high!, fit: _boxFit),
-        ],
-      );
-    }
-
-    return FutureBuilder<Uint8List>(
-      future: client.getFile(image.id),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          image.high = snapshot.data;
-          return ImageStack(
-            aspectRatio: aspectRatio,
-            children: [
-              Image.memory(image.low!, fit: _boxFit),
-              Image.memory(snapshot.data!, fit: _boxFit),
-            ],
-          );
-        }
-        else {
-          return ImageStack(
-            aspectRatio: aspectRatio,
-            children: [Image.memory(image.low!, fit: _boxFit)],
-          );
-        }
-      },
+    final client = Get.find<Client>();
+    final aspectRatio = image.width!/image.height!;
+    return ImageStack(
+      aspectRatio: aspectRatio,
+      children: [
+        CachedNetworkImage(
+          imageUrl: client.buildImageUrl(image.id, thumbnail: true),
+          placeholder: (_, _) => SizedBox.shrink(),
+          fit: .cover,
+        ),
+        CachedNetworkImage(
+          imageUrl: client.buildImageUrl(image.id),
+          placeholder: (_, _) => SizedBox.shrink(),
+          fit: .cover,
+        ),
+      ],
     );
   }
 }
@@ -188,9 +148,8 @@ class ViewVideo extends StatefulWidget {
 
 class _ViewVideoState extends State<ViewVideo> {
 
-  late final player = Player(
-    configuration: PlayerConfiguration(),
-  )..setVolume(0.0);
+  late final player = Player(configuration: PlayerConfiguration())
+    ..setVolume(0.0);
   late final controller = VideoController(player);
 
   final imgCtrl = Get.find<Images>();
@@ -204,7 +163,7 @@ class _ViewVideoState extends State<ViewVideo> {
     final id = imgCtrl.images[widget.builderIndex].id;
     player.open(
       Media(
-        // TODO this shouldn't be in UI layer and it's http only
+        // TODO this shouldn't be in UI layer
         'http://${client.host}:${client.port}/get_files/file?file_id=$id',
         httpHeaders: {'Hydrus-Client-API-Access-Key': client.accessKey ?? ''},
       ),
@@ -252,7 +211,11 @@ class _ViewVideoState extends State<ViewVideo> {
           child: ImageStack(
             aspectRatio: aspectRatio,
             children: [
-              Image.memory(video.low!, fit: BoxFit.cover),
+              CachedNetworkImage(
+                imageUrl: client.buildImageUrl(video.id, thumbnail: true),
+                placeholder: (context, url) => SizedBox.shrink(),
+                fit: .cover,
+              ),
               AnimatedOpacity(
                 opacity: ready ? 1 : 0,
                 duration: Duration(milliseconds: 150),
