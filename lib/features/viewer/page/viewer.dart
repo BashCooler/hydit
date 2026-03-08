@@ -23,7 +23,6 @@ class Viewer extends StatefulWidget {
 
 class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   late final ZoomController zoomController;
-  late final PageViewController pageController;
   final multitouchController = MultitouchController();
   final observerController = Get.find<GridObserverController>();
 
@@ -31,7 +30,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     zoomController = ZoomController(vsync: this);
-    pageController = PageViewController(initialIndex: widget.index);
+    Get.put(PageViewController(initialIndex: widget.index));
   }
 
   @override
@@ -83,7 +82,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
           onPointerDown: multitouchController.register,
           onPointerUp: multitouchController.register,
           child: FilePageBuilder(
-            pageCtrl: pageController,
+            pageCtrl: Get.find<PageViewController>(),
             multitouchCtrl: multitouchController,
             zoomCtrl: zoomController,
             imgCtrl: imgCtrl,
@@ -92,9 +91,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
         bottomNavigationBar: BottomAppBar(
           color: Colors.transparent,
           // Swipe doesn't work on Windows so I added buttons
-          child: _BottomAppBarActions(
-            pageController: pageController.controller,
-          ),
+          child: _BottomAppBarActions(),
         ),
       ),
     );
@@ -144,20 +141,17 @@ class FilePageBuilder extends StatelessWidget {
 
 
 class _BottomAppBarActions extends StatelessWidget {
-  const _BottomAppBarActions({
-    required PageController pageController
-  }) : _pageController = pageController;
-
-  final PageController _pageController;
+  const _BottomAppBarActions();
 
   @override
   Widget build(BuildContext context) {
+    final pageController = Get.find<PageViewController>().controller;
     return Row(
       mainAxisAlignment: .spaceBetween,
       spacing: 10.0,
       children: [
         FilledIconButton(
-          onPressed: () => _pageController.previousPage(
+          onPressed: () => pageController.previousPage(
             duration: const Duration(milliseconds: 150),
             curve: Curves.decelerate,
           ),
@@ -169,7 +163,7 @@ class _BottomAppBarActions extends StatelessWidget {
           icon: Icon(Icons.tag),
         ),
         FilledIconButton(
-          onPressed: () => _pageController.nextPage(
+          onPressed: () => pageController.nextPage(
             duration: const Duration(milliseconds: 150),
             curve: Curves.decelerate,
           ),
@@ -227,22 +221,26 @@ void _showTagSheet(BuildContext context) {
 
 
 class TagSheet extends StatelessWidget {
-  const TagSheet({super.key,});
+  const TagSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const SheetKeyboardDismissible(
-      dismissBehavior: .onDragDown(isContentScrollAware: true),
+    final index = Get.find<PageViewController>().currentIndex.value;
+    final image = Get.find<Images>().images[index];
+    final tags = image.tags;
+    return SheetKeyboardDismissible(
+      dismissBehavior: const .onDragDown(isContentScrollAware: true),
       child: Sheet(
         child: Padding(
-          padding: .all(AppTheme.outerPadding),
+          padding: const .all(AppTheme.outerPadding),
           child: SafeArea(
-            child: Column(
-              spacing: 10.0,
-              mainAxisAlignment: .end,
-              children: [
-
-              ],
+            child: ListView.builder(
+              itemCount: tags?["all known tags"]?.length ?? 0,
+              itemBuilder: (context, i) {
+                return Material(
+                  child: ListTile(title: Text(tags?["all known tags"][i])),
+                );
+              },
             ),
           ),
         ),
