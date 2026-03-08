@@ -67,14 +67,24 @@ class FilledIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: padding ?? .zero,
-      child: FrostedGlass(
-        shape: .oval,
-        child: Material(
-          color: AppColors.blackWithAlpha,
-          child: IconButton(
-            padding: .all(AppTheme.buttonSize * 0.25),
-            onPressed: onPressed,
-            icon: icon,
+      child: PhysicalModel(
+        elevation: 2,
+        shape: .circle,
+        color: Colors.transparent,
+        child: RepaintBoundary(
+          child: ClipOval(
+            clipBehavior: .hardEdge,
+            child: BackdropFilter(
+              filter: AppTheme.backdropFilter,
+              child: Material(
+                color: AppColors.blackWithAlpha,
+                child: IconButton(
+                  padding: .all(AppTheme.buttonSize * 0.25),
+                  onPressed: onPressed,
+                  icon: icon,
+                ),
+              ),
+            ),
           ),
         ),
       ),

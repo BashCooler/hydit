@@ -104,7 +104,7 @@ void _showModalSheet(BuildContext context) {
       builder: (context) => SearchSheet(),
       viewportBuilder: (context, child) {
         return SheetViewport(
-          padding: .only(top: MediaQuery.viewPaddingOf(context).top),
+          // padding: .only(top: MediaQuery.viewPaddingOf(context).top),
           child: child,
         );
       },
@@ -129,8 +129,7 @@ class _SearchSheetState extends State<SearchSheet> {
       child: const SheetKeyboardDismissible(
         dismissBehavior: .onDragDown(isContentScrollAware: true),
         child: Sheet(
-          child: FrostedGlass(
-            shape: .rRect,
+          child: Material(
             child: Padding(
               padding: .all(AppTheme.outerPadding),
               child: SafeArea(

@@ -181,7 +181,6 @@ class Suggests extends StatelessWidget {
     final queryController = Get.find<QueryController>();
     return Obx(() => !queryController.suggestVisible.value ? SizedBox.shrink() : Expanded(
       child: Obx(() => Material(
-        borderRadius: AppTheme.borderRadius,
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
         child: ListView.builder(

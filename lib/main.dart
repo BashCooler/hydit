@@ -46,28 +46,3 @@ class App extends StatelessWidget {
     );
   }
 }
-
-
-class TabView extends StatelessWidget {
-  const TabView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Main')),
-      body: Column(
-        children: [
-          TextButton(
-            onPressed: () => Get.to(Gallery()),
-            child: Text('To search 1'),
-          ),
-          TextButton(
-            onPressed: () => Get.to(Gallery()),
-            child: Text('To search 2'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-

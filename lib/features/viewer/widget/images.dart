@@ -162,11 +162,7 @@ class _ViewVideoState extends State<ViewVideo> {
     super.initState();
     final id = imgCtrl.images[widget.builderIndex].id;
     player.open(
-      Media(
-        // TODO this shouldn't be in UI layer
-        'http://${client.host}:${client.port}/get_files/file?file_id=$id',
-        httpHeaders: {'Hydrus-Client-API-Access-Key': client.accessKey ?? ''},
-      ),
+      Media(client.buildImageUrl(id)),
       play: widget.index == widget.builderIndex,
     );
     player.stream.buffer.listen((duration) {

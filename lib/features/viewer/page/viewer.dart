@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 import '../../../core/ui/widget/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -143,8 +144,9 @@ class FilePageBuilder extends StatelessWidget {
 
 
 class _BottomAppBarActions extends StatelessWidget {
-  const _BottomAppBarActions({required PageController pageController})
-      : _pageController = pageController;
+  const _BottomAppBarActions({
+    required PageController pageController
+  }) : _pageController = pageController;
 
   final PageController _pageController;
 
@@ -152,6 +154,7 @@ class _BottomAppBarActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: .spaceBetween,
+      spacing: 10.0,
       children: [
         FilledIconButton(
           onPressed: () => _pageController.previousPage(
@@ -159,6 +162,11 @@ class _BottomAppBarActions extends StatelessWidget {
             curve: Curves.decelerate,
           ),
           icon: Icon(Icons.keyboard_arrow_left),
+        ),
+        Expanded(child: Center()),
+        FilledIconButton(
+          onPressed: () => _showTagSheet(context),
+          icon: Icon(Icons.tag),
         ),
         FilledIconButton(
           onPressed: () => _pageController.nextPage(
@@ -203,3 +211,43 @@ class _ErrorText extends StatelessWidget {
     );
   }
 }
+
+// MARK: SHEET
+
+void _showTagSheet(BuildContext context) {
+  Navigator.push(
+    context,
+    ModalSheetRoute(
+      swipeDismissible: true,
+      viewportBuilder: (context, child) => SheetViewport(child: child),
+      builder: (context) => TagSheet(),
+    ),
+  );
+}
+
+
+class TagSheet extends StatelessWidget {
+  const TagSheet({super.key,});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SheetKeyboardDismissible(
+      dismissBehavior: .onDragDown(isContentScrollAware: true),
+      child: Sheet(
+        child: Padding(
+          padding: .all(AppTheme.outerPadding),
+          child: SafeArea(
+            child: Column(
+              spacing: 10.0,
+              mainAxisAlignment: .end,
+              children: [
+
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
