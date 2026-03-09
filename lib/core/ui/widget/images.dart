@@ -7,7 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:hydrus_flutter/core/data/hydrus.dart';
 import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
-import '../getx/controllers.dart';
+import '../../../features/viewer/getx/controllers.dart';
 
 
 class Thumbnail extends StatelessWidget {

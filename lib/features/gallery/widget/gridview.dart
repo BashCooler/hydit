@@ -7,7 +7,7 @@ import 'package:hydrus_flutter/core/data/hydrus.dart';
 import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
-import 'package:hydrus_flutter/features/viewer/widget/images.dart';
+import 'package:hydrus_flutter/core/ui/widget/images.dart';
 import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
 
 

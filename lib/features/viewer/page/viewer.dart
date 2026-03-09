@@ -2,13 +2,12 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import '../../../core/ui/widget/scroll_to_hide.dart';
-import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
-import '../../gallery/getx/controllers.dart';
-import '../widget/images.dart';
+import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
+import 'package:hydrus_flutter/core/ui/widget/images.dart';
 import '../getx/controllers.dart';
 
 
@@ -24,7 +23,6 @@ class Viewer extends StatefulWidget {
 class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   late final ZoomController zoomController;
   final multitouchController = MultitouchController();
-  final observerController = Get.find<GridObserverController>();
 
   @override
   void initState() {
@@ -82,7 +80,6 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
           onPointerDown: multitouchController.register,
           onPointerUp: multitouchController.register,
           child: FilePageBuilder(
-            pageCtrl: Get.find<PageViewController>(),
             multitouchCtrl: multitouchController,
             zoomCtrl: zoomController,
             imgCtrl: imgCtrl,
@@ -100,14 +97,12 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
 
 
 class FilePageBuilder extends StatelessWidget {
-  final PageViewController pageCtrl;
   final MultitouchController multitouchCtrl;
   final ZoomController zoomCtrl;
   final Images imgCtrl;
 
   const FilePageBuilder({
     super.key,
-    required this.pageCtrl,
     required this.multitouchCtrl,
     required this.zoomCtrl,
     required this.imgCtrl,
@@ -115,6 +110,7 @@ class FilePageBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final pageCtrl = Get.find<PageViewController>();
     return Obx(() => PageView.builder(
       allowImplicitScrolling: true,
       onPageChanged: pageCtrl.onPageChanged,

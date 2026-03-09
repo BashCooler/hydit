@@ -5,6 +5,15 @@ import 'package:hydrus_flutter/core/data/hydrus.dart';
 import 'package:hydrus_flutter/core/data/parser.dart';
 import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+void updateClient() {
+  final prefs = Get.find<SharedPreferences>();
+  final key = prefs.getString('Hydrus API key') ?? '';
+  final uri = Uri.parse(prefs.getString('URL') ?? '');
+  Get.find<Client>().updateClient(key: key, uri: uri);
+}
 
 
 class QueryController extends GetxController {
