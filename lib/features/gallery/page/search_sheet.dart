@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/core/ui/widget/scroll_to_hide.dart';
-import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 import '../getx/controllers.dart';
@@ -39,18 +38,15 @@ class _SearchSheetState extends State<SearchSheet> {
         dismissBehavior: .onDragDown(isContentScrollAware: true),
         child: Sheet(
           child: Material(
-            child: Padding(
-              padding: .all(AppTheme.outerPadding),
-              child: SafeArea(
-                child: Column(
-                  spacing: 10.0,
-                  mainAxisAlignment: .end,
-                  children: [
-                    Suggests(),
-                    TagPanel(trailing: _TagPanelActions()),
-                    TagSearchBar(),
-                  ],
-                ),
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: .end,
+                children: [
+                  Suggests(),
+                  Divider(height: 1),
+                  TagPanel(trailing: _TagPanelActions()),
+                  TagSearchBar(),
+                ],
               ),
             ),
           ),

@@ -6,11 +6,6 @@ ThemeData darkTheme() {
   return ThemeData(
     brightness: .dark,
     colorSchemeSeed: Colors.black,
-    inputDecorationTheme: InputDecorationThemeData(
-      filled: true,
-      enabledBorder: outlineInputBorder(),
-      border: outlineInputBorder(),
-    ),
     tooltipTheme: const TooltipThemeData(
       preferBelow: false,
       showDuration: Duration(milliseconds: 0),

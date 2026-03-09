@@ -36,34 +36,21 @@ class _TagSearchBarState extends State<TagSearchBar>
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: .circular(AppTheme.radius),
-      child: Material(
-        color: AppColors.blackWithAlpha,
-        child: SizedBox(
-          height: AppTheme.fieldHeight,
-          child: TextField(
-            autofocus: true,
-            focusNode: _focusNode,
-            controller: _queryController.textController,
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppTheme.radius),
-                borderSide: BorderSide(
-                  width: 2,
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                ),
-              ),
-              hintText: 'Enter tags here',
-              fillColor: AppColors.blackWithAlpha,
-              suffixIcon: const _TagSearchBarActions(),
-            ),
-            onSubmitted: (_) => _searchThenBack(),
-            onTapOutside: (_) => setState(() => _focusNode.requestFocus()),
-            onChanged: (q) => _queryController.onChange(q),
-          ),
-        ),
+    return TextField(
+      textAlignVertical: .center,
+      autofocus: true,
+      focusNode: _focusNode,
+      controller: _queryController.textController,
+      decoration: InputDecoration(
+        hintText: 'Enter tags here',
+        filled: true,
+        fillColor: Colors.transparent,
+        suffixIcon: const _TagSearchBarActions(),
+        border: .none,
       ),
+      onSubmitted: (_) => _searchThenBack(),
+      onTapOutside: (_) => setState(() => _focusNode.requestFocus()),
+      onChanged: (q) => _queryController.onChange(q),
     );
   }
 }
@@ -115,58 +102,47 @@ class TagPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final queryController = Get.find<QueryController>();
     return SizedBox(
-      height: AppTheme.fieldHeight,
-      child: Card.outlined(
-        color: AppColors.blackWithAlpha,
-        margin: EdgeInsets.zero,
-        clipBehavior: Clip.hardEdge,
-        child: Stack(
-          fit: .expand,
-          children: [
-            Padding(
-              padding: const .only(left: AppTheme.outerPadding),
-              child: Align(
-                alignment: .centerLeft,
-                child: Obx(() {
-                  final tags = queryController.tags;
-                  if (tags.isEmpty) {
-                    return const Text('No tags', style: TextStyle(fontSize: 16),
-                    );
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                }),
-              ),
+      height: 48.0,
+      child: Stack(
+        fit: .expand,
+        children: [
+          Padding(
+            padding: const .only(left: 16.0),
+            child: Align(
+              alignment: .centerLeft,
+              child: Obx(() => queryController.tags.isNotEmpty
+                  ? SizedBox.shrink()
+                  : Text('No tags', style: TextStyle(fontSize: 16))),
             ),
-            InkWell(
-              onTap: onTap,
-              child: Padding(
-                padding: const .symmetric(horizontal: 6.0),
-                child: Row(
-                  spacing: 5.0,
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        scrollDirection: .horizontal,
-                        child: Obx(() => Wrap(
-                          spacing: 5.0,
-                          children: [
-                            for (final tag in queryController.tags) InputChip(
-                              label: Text(tag.value),
-                              backgroundColor: tag.color,
-                              onDeleted: () => queryController.removeTag(tag),
-                            ),
-                          ],
-                        )),
-                      ),
+          ),
+          InkWell(
+            onTap: onTap,
+            child: Padding(
+              padding: const .symmetric(horizontal: 6.0),
+              child: Row(
+                spacing: 5.0,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: .horizontal,
+                      child: Obx(() => Wrap(
+                        spacing: 5.0,
+                        children: [
+                          for (final tag in queryController.tags) InputChip(
+                            label: Text(tag.value),
+                            backgroundColor: tag.color,
+                            onDeleted: () => queryController.removeTag(tag),
+                          ),
+                        ],
+                      )),
                     ),
-                    trailing ?? SizedBox.shrink(),
-                  ],
-                ),
+                  ),
+                  trailing ?? SizedBox.shrink(),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
