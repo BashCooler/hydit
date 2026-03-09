@@ -132,8 +132,8 @@ class _TileBadges extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> badges = [];
-    if (image.duration! > 0) {
-      final duration = Duration(milliseconds: image.duration!).toString();
+    if (image.duration > 0) {
+      final duration = Duration(milliseconds: image.duration).toString();
       final t = duration.split('.')[0].split(':');
       if (t[0] == '0') t.removeAt(0);
       badges.add(Text(t.join(':')));

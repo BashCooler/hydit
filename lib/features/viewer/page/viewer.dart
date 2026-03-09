@@ -125,7 +125,7 @@ class FilePageBuilder extends StatelessWidget {
       itemCount: imgCtrl.images.length,
       itemBuilder: (context, buildIndex) {
         final mime = imgCtrl.images[buildIndex].mime;
-        final type = mime?.split('/').first;
+        final type = mime.split('/').first;
         final index = pageCtrl.currentIndex;
         return switch (type) {
           'image' => Obx(() =>
@@ -231,17 +231,15 @@ class TagSheet extends StatelessWidget {
     return SheetKeyboardDismissible(
       dismissBehavior: const .onDragDown(isContentScrollAware: true),
       child: Sheet(
-        child: Padding(
-          padding: const .all(AppTheme.outerPadding),
-          child: SafeArea(
-            child: ListView.builder(
-              itemCount: tags?["all known tags"]?.length ?? 0,
-              itemBuilder: (context, i) {
-                return Material(
-                  child: ListTile(title: Text(tags?["all known tags"][i])),
-                );
-              },
-            ),
+        child: SafeArea(
+          child: ListView.builder(
+            itemCount: tags["all known tags"]?.length ?? 0,
+            itemBuilder: (context, i) {
+              return Material(
+                color: Colors.transparent,
+                child: ListTile(title: Text(tags["all known tags"][i])),
+              );
+            },
           ),
         ),
       ),

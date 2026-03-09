@@ -38,7 +38,7 @@ class HighResImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final client = Get.find<Client>();
-    final aspectRatio = image.width!/image.height!;
+    final aspectRatio = image.width/image.height;
     return ImageStack(
       aspectRatio: aspectRatio,
       children: [
@@ -192,8 +192,8 @@ class _ViewVideoState extends State<ViewVideo> {
     });
     // Get video parameters
     var video = imgCtrl.images[widget.builderIndex];
-    double width = video.width!.toDouble();
-    double height = video.height!.toDouble();
+    double width = video.width.toDouble();
+    double height = video.height.toDouble();
     double aspectRatio = width/height;
     // Build widget
     return Center(

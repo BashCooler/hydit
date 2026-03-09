@@ -4,10 +4,10 @@ import 'package:hydrus_flutter/utils/theme.dart';
 
 class HydrusImage {
   final int id;
-  int? width, height;
-  String? mime;
-  int? duration;
-  Map<String, dynamic>? tags;
+  late int width, height;
+  late String mime;
+  late int duration;
+  late Map<String, dynamic> tags;
 
   HydrusImage(this.id);
 }
