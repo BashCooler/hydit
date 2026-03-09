@@ -111,7 +111,7 @@ class TagPanel extends StatelessWidget {
             child: Align(
               alignment: .centerLeft,
               child: Obx(() => queryController.tags.isNotEmpty
-                  ? SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : Text('No tags', style: TextStyle(fontSize: 16))),
             ),
           ),
@@ -154,25 +154,38 @@ class Suggests extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final queryController = Get.find<QueryController>();
-    return Obx(() => !queryController.suggestVisible.value ? SizedBox.shrink() : Expanded(
-      child: Obx(() => Material(
-        clipBehavior: Clip.hardEdge,
-        color: Colors.transparent,
-        child: ListView.builder(
-          reverse: true,
-          itemCount: queryController.suggests.length,
-          itemBuilder: (_, index) => SearchEntry(index),
-        ),
-      )),
-    ));
+    final ctrl = Get.find<QueryController>();
+    return Obx(() => ctrl.suggestVisible.value
+        ? const _TagList()
+        : const SizedBox.shrink());
   }
 }
 
-class SearchEntry extends StatelessWidget {
+
+class _TagList extends StatelessWidget {
+  const _TagList();
+
+  @override
+  Widget build(BuildContext context) {
+    final ctrl = Get.find<QueryController>();
+    return Expanded(
+      child: Material(
+        clipBehavior: Clip.hardEdge,
+        color: Colors.transparent,
+        child: Obx(() => ListView.builder(
+          reverse: true,
+          itemCount: ctrl.suggests.length,
+          itemBuilder: (_, index) => _SearchEntry(index),
+        )),
+      ),
+    );
+  }
+}
+
+class _SearchEntry extends StatelessWidget {
   final int index;
 
-  const SearchEntry(this.index, {super.key});
+  const _SearchEntry(this.index);
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +193,7 @@ class SearchEntry extends StatelessWidget {
     final tag = queryController.suggests[index];
     return ListTile(
       minTileHeight: AppTheme.fieldHeight,
-      title: Text(tag.value, style: TextStyle(color: tag.color)),
+      title: tag.label,
       trailing: Text(
         tag.count.toString(),
         style: TextStyle(color: tag.color, fontSize: 14.0),

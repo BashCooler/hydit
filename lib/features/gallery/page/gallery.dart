@@ -66,8 +66,8 @@ class BottomActions extends StatelessWidget {
           mainAxisAlignment: .spaceBetween,
           children: [
             FilledIconButton(
-              onPressed: () => Get.to(() =>
-                  SettingsPage(callback: updateClient)),
+              onPressed: () =>
+                  Get.to(() => const SettingsPage(), transition: .downToUp),
               icon: const Icon(Icons.settings),
             ),
             FilledIconButton(

@@ -3,14 +3,13 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
 
 import 'package:hydrus_flutter/core/data/hydrus.dart';
 
 
 class SettingsPage extends StatefulWidget {
-  final void Function() callback;
-
-  const SettingsPage({super.key, required this.callback});
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -121,7 +120,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final prefs = Get.find<SharedPreferences>();
     prefs.setString('URL', _urlController.text);
     prefs.setString('Hydrus API key', _keyController.text);
-    widget.callback();  // update client
+    updateClient();  // update client
     setState(() {
       _urlError = _keyError = null;
       _urlHint = _keyHint = 'Saved';

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import '../../../core/ui/widget/scroll_to_hide.dart';
+import 'package:hydrus_flutter/core/logic/entities.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
@@ -231,9 +232,10 @@ class TagSheet extends StatelessWidget {
           child: ListView.builder(
             itemCount: tags["all known tags"]?.length ?? 0,
             itemBuilder: (context, i) {
+              final tag = Tag(tags["all known tags"][i]);
               return Material(
                 color: Colors.transparent,
-                child: ListTile(title: Text(tags["all known tags"][i])),
+                child: ListTile(title: tag.label),
               );
             },
           ),

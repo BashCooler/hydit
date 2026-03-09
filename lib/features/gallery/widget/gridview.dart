@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import '../../../core/ui/widget/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
+import 'package:hydrus_flutter/core/ui/widget/scroll_to_hide.dart';
 
 import 'package:hydrus_flutter/core/data/hydrus.dart';
 import 'package:hydrus_flutter/core/logic/entities.dart';
@@ -106,7 +106,9 @@ class _Tile extends StatelessWidget {
       onTap: () {
         Get.find<ScrollToHideController>().hide();
         badgeVisible.value = false;
-        Get.to(() => Viewer(index));
+        Get.to(() => Viewer(index),
+            transition: .fadeIn,
+            curve: Curves.easeInCubic);
       },
       child: Stack(
         alignment: .bottomRight,
