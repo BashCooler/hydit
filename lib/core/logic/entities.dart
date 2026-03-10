@@ -4,7 +4,7 @@ import 'package:hydrus_flutter/utils/theme.dart';
 
 class HydrusImage {
   final int id;
-  late int width, height;
+  int width = -1, height = -1;
   late String mime;
   late int duration;
   late Map<String, dynamic> tags;

@@ -5,10 +5,10 @@ import 'package:hydrus_flutter/core/ui/widget/scroll_to_hide.dart';
 
 import 'package:hydrus_flutter/core/data/hydrus.dart';
 import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/core/ui/widget/images.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
-import 'package:hydrus_flutter/core/ui/widget/images.dart';
-import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
+import '../getx/controllers.dart';
 
 
 class ImageGridViewBuilder extends StatefulWidget {
@@ -19,14 +19,12 @@ class ImageGridViewBuilder extends StatefulWidget {
 }
 
 class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
-  static const padding = 5.0;
-  final client = Get.find<Client>();
-  final imgCtrl = Get.find<Images>();
+  final imageController = Get.find<Images>();
+  final queryController = Get.find<QueryController>();
+  final gridController = Get.find<GridObserverController>();
 
   @override
   Widget build(BuildContext context) {
-    final queryController = Get.find<QueryController>();
-    final gridController = Get.find<GridObserverController>();
     return Padding(
       padding: .symmetric(horizontal: 5.0),
       child: GridViewObserver(
@@ -37,12 +35,11 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
           child: Obx(() => GridView.builder(
             physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             controller: gridController.controller,
-            itemCount: imgCtrl.images.length,
-            // itemCount: 20,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            itemCount: imageController.images.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              mainAxisSpacing: padding,
-              crossAxisSpacing: padding,
+              mainAxisSpacing: 5.0,
+              crossAxisSpacing: 5.0,
             ),
             itemBuilder: (context, index) => _TileFutureBuilder(index),
           )),
@@ -74,6 +71,11 @@ class _TileFutureBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final image = imgCtrl.images[index];
+
+    if (image.width != -1) {
+      return _Tile(index, image);
+    }
+
     return FutureBuilder(
       future: client.getFileMetadata(
         [image.id],
