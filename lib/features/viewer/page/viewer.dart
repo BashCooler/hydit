@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
-import '../../../core/ui/widget/scroll_to_hide.dart';
-import 'package:hydrus_flutter/core/logic/entities.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
+import 'package:hydrus_flutter/core/ui/widget/images.dart';
 import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
+import 'package:hydrus_flutter/core/ui/widget/scroll_to_hide.dart';
 import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
-import 'package:hydrus_flutter/core/ui/widget/images.dart';
+
+import 'tag_sheet.dart';
 import '../getx/controllers.dart';
 
 
@@ -156,7 +156,7 @@ class _BottomAppBarActions extends StatelessWidget {
         ),
         Expanded(child: Center()),
         FilledIconButton(
-          onPressed: () => _showTagSheet(context),
+          onPressed: () => showTagSheet(context),
           icon: Icon(Icons.tag),
         ),
         FilledIconButton(
@@ -202,66 +202,3 @@ class _ErrorText extends StatelessWidget {
     );
   }
 }
-
-// MARK: SHEET
-
-void _showTagSheet(BuildContext context) {
-  Navigator.push(
-    context,
-    ModalSheetRoute(
-      swipeDismissible: true,
-      viewportBuilder: (context, child) => SheetViewport(child: child),
-      builder: (context) => TagSheet(),
-    ),
-  );
-}
-
-
-class TagSheet extends StatelessWidget {
-  const TagSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final index = Get.find<PageViewController>().currentIndex.value;
-    final image = Get.find<Images>().images[index];
-    final tags = image.tags;
-    final namespaces = tags.keys.toList();
-    return SheetKeyboardDismissible(
-      dismissBehavior: const .onDragDown(isContentScrollAware: true),
-      child: Sheet(
-        child: SafeArea(
-          child: DefaultTabController(
-            length: tags.length,
-            child: Material(
-              color: Colors.transparent,
-              child: Column(
-                children: [
-                  TabBar(
-                    isScrollable: true,
-                    tabs: namespaces.map((n) => Tab(text: n)).toList(),
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      children: namespaces.map((n) {
-                        return ListView.builder(
-                          itemCount: tags[n].length ?? 0,
-                          reverse: true,
-                          shrinkWrap: true,
-                          itemBuilder: (context, i) {
-                            final tag = Tag(tags[n][i]);
-                            return ListTile(title: tag.label);
-                          },
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
