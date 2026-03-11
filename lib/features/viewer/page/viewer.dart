@@ -225,19 +225,39 @@ class TagSheet extends StatelessWidget {
     final index = Get.find<PageViewController>().currentIndex.value;
     final image = Get.find<Images>().images[index];
     final tags = image.tags;
+    final namespaces = tags.keys.toList();
     return SheetKeyboardDismissible(
       dismissBehavior: const .onDragDown(isContentScrollAware: true),
       child: Sheet(
         child: SafeArea(
-          child: ListView.builder(
-            itemCount: tags["all known tags"]?.length ?? 0,
-            itemBuilder: (context, i) {
-              final tag = Tag(tags["all known tags"][i]);
-              return Material(
-                color: Colors.transparent,
-                child: ListTile(title: tag.label),
-              );
-            },
+          child: DefaultTabController(
+            length: tags.length,
+            child: Material(
+              color: Colors.transparent,
+              child: Column(
+                children: [
+                  TabBar(
+                    isScrollable: true,
+                    tabs: namespaces.map((n) => Tab(text: n)).toList(),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: namespaces.map((n) {
+                        return ListView.builder(
+                          itemCount: tags[n].length ?? 0,
+                          reverse: true,
+                          shrinkWrap: true,
+                          itemBuilder: (context, i) {
+                            final tag = Tag(tags[n][i]);
+                            return ListTile(title: tag.label);
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
