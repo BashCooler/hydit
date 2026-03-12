@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/core/logic/entities_ext.dart';
 import '../getx/controllers.dart';
 
 

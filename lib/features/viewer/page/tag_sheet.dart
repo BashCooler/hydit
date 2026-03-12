@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/core/logic/entities_ext.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import '../getx/controllers.dart';
 
