@@ -18,7 +18,7 @@ class HydrusImage {
   int width = -1, height = -1;
   late String mime;
   late int duration;
-  late Map<String, dynamic> tags;
+  late Map<String, TagService> service;
 
   HydrusImage(this.id);
 }
@@ -53,5 +53,21 @@ class Tag {
   String get value {
     final idx = raw.indexOf(':');
     return idx == -1 ? raw : raw.substring(idx + 1);
+  }
+
+  @override
+  String toString() => raw;
+}
+
+
+class TagService {
+  final String service;
+  final List<Tag> entries;
+
+  TagService({required this.service, required this.entries});
+
+  @override
+  String toString() {
+    return 'service: $service, entries: $entries';
   }
 }

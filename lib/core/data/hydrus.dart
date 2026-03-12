@@ -1,21 +1,13 @@
-import 'dart:developer';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
-
-import 'parser.dart';
+import 'package:hydrus_flutter/core/data/parser.dart';
+import 'package:hydrus_flutter/core/logic/entities.dart';
 
 
 Future<void> main() async {
-
-  Client client = Client(accessKey: '86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
-  Stopwatch watch = Stopwatch();
-  watch.start();
-  var response = await client.getFileMetadata([182560646]);
-  log(response.toString());
-  log(watch.elapsedMilliseconds.toString());
-
+  // final client = Client(accessKey: '86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
   // var tags = ['creator:呵呜阿花', 'title:白丝秦喵喵。'];
 }
 
@@ -147,7 +139,7 @@ class Client {
     return (decoded['file_ids'] as List).cast<int>();
   }
 
-  Future<List<Map<String, dynamic>>> getFileMetadata(List<int> fileIds, {
+  Future<void> writeMetadata(HydrusImage image, {
     bool? createNewFileIds,
     bool? onlyReturnIdentifiers,
     bool? onlyReturnBasicInformation,
@@ -158,7 +150,7 @@ class Client {
     bool? includeServicesObject,
   }) async {
     final Map<String, dynamic> params = {
-      'file_ids': fileIds,
+      'file_ids': [image.id],
       'only_return_identifiers': onlyReturnIdentifiers,
       'only_return_basic_information': onlyReturnBasicInformation,
       'detailed_url_information': detailedUrlInformation,
@@ -170,7 +162,7 @@ class Client {
     params.removeWhere((k, v) => (v == null));
 
     final response = await request('get', '/get_files/file_metadata', params);
-    return parseMetadata(response);
+    parseMetadataThenWrite(response, image);
   }
 
   // MARK: GET FILE

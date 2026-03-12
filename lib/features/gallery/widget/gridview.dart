@@ -53,40 +53,25 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
 class _TileFutureBuilder extends StatelessWidget {
   final int index;
   final client = Get.find<Client>();
-  final imgCtrl = Get.find<Images>();
+  final imageController = Get.find<Images>();
 
   _TileFutureBuilder(this.index);
 
-  /// Save width and height to correctly display image in [PageView].
-  ///
-  /// See also: [HighResImage]
-  void writeMetadata(Map<String, dynamic> metadata, HydrusImage image) {
-    image.width = metadata['width'];
-    image.height = metadata['height'];
-    image.mime = metadata['mime'];
-    image.duration = metadata['duration'];
-    image.tags = metadata['tags'];
-  }
-
   @override
   Widget build(BuildContext context) {
-    final image = imgCtrl.images[index];
+    final image = imageController.images[index];
 
     if (image.width != -1) {
       return _Tile(index, image);
     }
 
     return FutureBuilder(
-      future: client.getFileMetadata(
-        [image.id],
-        includeServicesObject: false,
-      ),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const ColoredBox(color: Colors.white10);
-        } else {
-          writeMetadata(snapshot.data![0], image);
+      future: client.writeMetadata(image, includeServicesObject: false),
+      builder: (_, snapshot) {
+        if (snapshot.connectionState == .done) {
           return _Tile(index, image);
+        } else {
+          return const ColoredBox(color: Colors.white10);
         }
       },
     );
