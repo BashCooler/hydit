@@ -4,10 +4,15 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:hydrus_flutter/core/data/parser.dart';
 import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/utils/dictionaries.dart';
 
 
 Future<void> main() async {
-  // final client = Client(accessKey: '86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
+  final client = Client(accessKey: '86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
+  // my_tags 6c6f63616c2074616773
+  // all known tags 616c6c206b6e6f776e2074616773
+  final response = await client._postAddTags(182560646, "6c6f63616c2074616773", Action.deleteFromLocalFileDomain, ["test"]);
+  print(response);
   // var tags = ['creator:呵呜阿花', 'title:白丝秦喵喵。'];
 }
 
@@ -30,39 +35,56 @@ class Client {
   // MARK: REQUEST
 
   Future<String> request(String method, String path, [Map<String, dynamic>? params]) async {
-    final response = await getResponse(method, path, params);
+    final response = await _getResponse(method, path, params);
     return response.body;
   }
 
   Future<Uint8List> requestBytes(String method, String path, [Map<String, dynamic>? params]) async {
-    final response = await getResponse(method, path, params);
+    final response = await _getResponse(method, path, params);
     return response.bodyBytes;
   }
 
-  Future<http.Response> getResponse(String method, String path, Map<String, dynamic>? params) async {
-    http.Response response;
-    switch (method) {
-      case 'get':
-        response = await get(path, params);
-      case 'post':
-        throw UnimplementedError();
-      default:
-        throw Exception('No such http method "$method"');
-    }
-    return response;
+  Future<int> requestStatus(String method, String path, [Map<String, dynamic>? params]) async {
+    final response = await _getResponse(method, path, params);
+    return response.statusCode;
   }
 
-  Future<http.Response> get(String path, [Map<String, dynamic>? params]) async {
+  Future<http.Response> _getResponse(String method, String path, Map<String, dynamic>? params) async {
     http.Response response;
     try {
-      response = await http.get(
-          Uri.http('$host:$port', path, params?.map((k,v) => MapEntry(k,'$v'))),
-          headers: { 'Hydrus-Client-API-Access-Key' : accessKey ?? '' }
-      );
+      switch (method) {
+        case 'get':
+          response = await http.get(
+            Uri.http(
+                '$host:$port',
+                path,
+                params?.map((k,v) => MapEntry(k,'$v'))
+            ),
+            headers: {
+              'Hydrus-Client-API-Access-Key' : accessKey ?? ''
+            },
+          );
+        case 'post':
+          response = await http.post(
+            Uri.http('$host:$port', path),
+            headers: {
+              'Hydrus-Client-API-Access-Key': accessKey ?? '',
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode(params),
+          );
+        default:
+          throw Exception('No such http method "$method"');
+      }
     } on SocketException catch (e, s) {
-      throw Error.throwWithStackTrace(mapSocketException(e), s);
+      throw Error.throwWithStackTrace(_mapSocketException(e), s);
     }
-
+    if (response.body.isNotEmpty) {
+      final data = jsonDecode(response.body);
+      if (data['error'] != null) {
+        throw Exception('${data['status_code']}: ${data['error']}');
+      }
+    }
     return response;
   }
 
@@ -110,7 +132,7 @@ class Client {
     bool? returnHashes,
   }) async {
     final Map<String, dynamic> params = {
-      'tags': encodeTags(tags),
+      'tags': _encodeTags(tags),
       // 'file_domain': fileDomain,
       // 'tag_service_key': tagServiceKey,
       'include_current_tags': includeCurrentTags,
@@ -201,20 +223,42 @@ class Client {
 
     return await request('get', '/add_tags/search_tags', params);
   }
+
+  Future<int> _postAddTags(int id, String service, int action, List<String> tags) async {
+    final Map<String, dynamic> params = {
+      'file_ids': [id],
+      'service_keys_to_actions_to_tags': {
+        service: {
+          "$action": tags,
+        }
+      }
+    };
+    return await requestStatus('post', '/add_tags/add_tags', params);
+  }
+
+  Future<int> addTags(int id, String service, List<String> tags) async {
+    return await _postAddTags(id, service, Action.addToLocalFileDomain, tags);
+  }
+
+  Future<int> removeTags(int id, String service, List<String> tags) async {
+    return await _postAddTags(id, service, Action.deleteFromLocalFileDomain, tags);
+  }
 }
 
 // MARK: METHODS
 
-String encodeTags(List<String> tagList) {
-
+String _encodeTags(List<String> tagList) {
   // Replace special symbols with Unicode escape sequences (like \uxxxx)
   String encodeUnicode(String input) {
     return input.replaceAllMapped(
-        RegExp(r'[^\x00-\x7F]'),
-            (Match m) => '\\u${m.group(0)!.codeUnitAt(0).toRadixString(16).padLeft(4, '0')}'
+      RegExp(r'[^\x00-\x7F]'),
+          (Match m) => '\\u${m
+          .group(0)!
+          .codeUnitAt(0)
+          .toRadixString(16)
+          .padLeft(4, '0')}',
     );
   }
-
   final tagsUnicode = tagList.map((tag) => '"${encodeUnicode(tag)}"').toList();
   final jsonString = '[${tagsUnicode.join(", ")}]';
   return Uri.encodeComponent(jsonString);
@@ -233,7 +277,7 @@ sealed class HydrusException implements Exception {
   String toString() => '$runtimeType: $message';
 }
 
-HydrusException mapSocketException(SocketException e) {
+HydrusException _mapSocketException(SocketException e) {
   final code = e.osError?.errorCode;
 
   switch (code) {
@@ -263,7 +307,7 @@ class HydrusNoServiceException extends HydrusException {
 
 class HydrusTimeoutException extends HydrusException {
   static const String msg =
-      'No response (timeout). The host took your request and sent no response. '
+      'No response (timeout). The host got your request and sent no response. '
       'Is this the correct host?';
 
   HydrusTimeoutException(SocketException e) : super('$msg\nCaused by: $e');

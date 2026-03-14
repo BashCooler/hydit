@@ -1,6 +1,14 @@
+class Action {
+  static const addToLocalFileDomain = 0;
+  static const deleteFromLocalFileDomain = 1;
+  static const pendToTagRepository = 2;
+  static const rescindPendFromTagRepository = 3;
+  static const petitionFromTagRepository = 4;
+  static const rescindPetitionFromTagRepository = 5;
+}
 
 
-class BasicPermissions {
+class BasicPermission {
   static const importAndEditURLs = 0;
   static const importAndDeleteFiles = 1;
   static const editFileTags = 2;
