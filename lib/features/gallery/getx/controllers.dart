@@ -81,6 +81,7 @@ class QueryController extends GetxController {
   }
 
   void removeTag(Tag tag) => _tags.remove(tag);
+
   void clearTags() => _tags.clear();
 
   Future<void> searchForFiles() async {
@@ -105,5 +106,11 @@ class QueryController extends GetxController {
       case _:
         Get.snackbar('Error', '$e');
     }
+  }
+
+  void clear() {
+    suggestVisible.value = false;
+    textController.text = '';
+    suggests.clear();
   }
 }

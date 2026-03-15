@@ -39,13 +39,10 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   }
 
   void showSearchBar(_, _) {
-    Future.delayed(
-      Duration(milliseconds: 250),
-      () {
-        Get.find<QueryController>().badgeVisible.value = true;
-        Get.find<ScrollToHideController>().show();
-      },
-    );
+    Future.delayed(Duration(milliseconds: 250), () {
+      Get.find<QueryController>().badgeVisible.value = true;
+      Get.find<ScrollToHideController>().show();
+    });
   }
 
   // MARK: BUILD

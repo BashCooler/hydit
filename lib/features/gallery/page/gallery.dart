@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../core/ui/widget/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/features/settings/settings.dart';
@@ -58,10 +57,10 @@ class BottomActions extends StatelessWidget {
       scrollController: Get.find<GridObserverController>().controller!,
       controller: Get.find<ScrollToHideController>(),
       hideDirection: .vertical,
-      height: AppTheme.buttonSize * 2,
+      height: MediaQuery.of(context).viewPadding.bottom * 2,
       duration: const Duration(milliseconds: 150),
       child: Padding(
-        padding: const .symmetric(horizontal: AppTheme.outerPadding),
+        padding: .only(left: 15.0, right: 15.0, bottom: 15.0),
         child: Row(
           mainAxisAlignment: .spaceBetween,
           children: [

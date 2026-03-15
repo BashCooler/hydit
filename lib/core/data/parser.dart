@@ -20,14 +20,14 @@ List<Tag> parseSearchResults(String query) {
 
 void parseMetadataThenWrite(String response, HydrusImage image) {
   final json = jsonDecode(response);
-  Pick _pick(String property) => pick(json, 'metadata', 0, property);
+  Pick getMeta(String property) => pick(json, 'metadata', 0, property);
 
-  final int width  = _pick('width').asIntOrThrow();
-  final int height = _pick('height').asIntOrThrow();
-  final String mime = _pick('mime').asStringOrThrow();
-  final int duration = _pick('duration').asIntOrNull() ?? 0;
+  final int width  = getMeta('width').asIntOrThrow();
+  final int height = getMeta('height').asIntOrThrow();
+  final String mime = getMeta('mime').asStringOrThrow();
+  final int duration = getMeta('duration').asIntOrNull() ?? 0;
 
-  final tags = _pick('tags').asMapOrEmpty<String, dynamic>();
+  final tags = getMeta('tags').asMapOrEmpty<String, dynamic>();
   final Map<String, TagService> service = _parseTags(tags);
 
   image.width = width;

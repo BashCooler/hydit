@@ -29,6 +29,7 @@ abstract class AppTheme {
   static const outerPadding = 15.0;
   static final backdropFilter = ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0);
   static final borderRadius = BorderRadius.circular(radius);
+  static final duration = Duration(milliseconds: 300);
 }
 
 

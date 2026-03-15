@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
+
 import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/core/ui/widget/scroll_to_hide.dart';
-import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:hydrus_flutter/utils/theme.dart';
 
 import '../getx/controllers.dart';
 import '../widget/search.dart';
@@ -16,6 +18,7 @@ void showSearchSheet(BuildContext context) {
       swipeDismissible: true,
       viewportBuilder: (context, child) => SheetViewport(child: child),
       builder: (context) => SearchSheet(),
+      transitionDuration: AppTheme.duration,
     ),
   );
 }
@@ -32,8 +35,12 @@ class _SearchSheetState extends State<SearchSheet> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvokedWithResult: (_, _) =>
-          Get.find<ScrollToHideController>().show(),
+      onPopInvokedWithResult: (_, _) {
+        Future.delayed(AppTheme.duration, () {
+          Get.find<ScrollToHideController>().show();
+          Get.find<QueryController>().clear();
+        });
+      },
       child: const SheetKeyboardDismissible(
         dismissBehavior: .onDragDown(isContentScrollAware: true),
         child: Sheet(

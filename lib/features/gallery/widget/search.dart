@@ -14,8 +14,7 @@ class TagSearchBar extends StatefulWidget {
   State<TagSearchBar> createState() => _TagSearchBarState();
 }
 
-class _TagSearchBarState extends State<TagSearchBar>
-    with SingleTickerProviderStateMixin {
+class _TagSearchBarState extends State<TagSearchBar> {
   final _focusNode = FocusNode();
   final _queryController = Get.find<QueryController>();
 
@@ -173,11 +172,16 @@ class _TagList extends StatelessWidget {
       child: Material(
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
-        child: Obx(() => ListView.builder(
-          reverse: true,
-          itemCount: ctrl.suggests.length,
-          itemBuilder: (_, index) => _SearchEntry(index),
-        )),
+        child: Scrollbar(
+          thumbVisibility: true,
+          thickness: 6,
+          radius: .circular(3),
+          child: Obx(() => ListView.builder(
+            reverse: true,
+            itemCount: ctrl.suggests.length,
+            itemBuilder: (_, index) => _SearchEntry(index),
+          )),
+        ),
       ),
     );
   }
@@ -200,8 +204,7 @@ class _SearchEntry extends StatelessWidget {
         style: TextStyle(color: tag.color, fontSize: 14.0),
       ),
       onTap: () {
-        queryController.suggestVisible.value = false;
-        queryController.textController.text = '';
+        queryController.clear();
         queryController.addTag(tag);
       },
     );

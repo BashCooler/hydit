@@ -1,7 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
+import 'dart:convert';
 import 'dart:typed_data';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' show Response, get, post;
 import 'package:hydrus_flutter/core/data/parser.dart';
 import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/utils/dictionaries.dart';
@@ -49,12 +49,12 @@ class Client {
     return response.statusCode;
   }
 
-  Future<http.Response> _getResponse(String method, String path, Map<String, dynamic>? params) async {
-    http.Response response;
+  Future<Response> _getResponse(String method, String path, Map<String, dynamic>? params) async {
+    Response response;
     try {
       switch (method) {
         case 'get':
-          response = await http.get(
+          response = await get(
             Uri.http(
                 '$host:$port',
                 path,
@@ -65,7 +65,7 @@ class Client {
             },
           );
         case 'post':
-          response = await http.post(
+          response = await post(
             Uri.http('$host:$port', path),
             headers: {
               'Hydrus-Client-API-Access-Key': accessKey ?? '',
@@ -78,12 +78,6 @@ class Client {
       }
     } on SocketException catch (e, s) {
       throw Error.throwWithStackTrace(_mapSocketException(e), s);
-    }
-    if (response.body.isNotEmpty) {
-      final data = jsonDecode(response.body);
-      if (data['error'] != null) {
-        throw Exception('${data['status_code']}: ${data['error']}');
-      }
     }
     return response;
   }
