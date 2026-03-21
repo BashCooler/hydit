@@ -23,13 +23,15 @@ class Viewer extends StatefulWidget {
 
 class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   late final ZoomController zoomController;
+  late final PageViewController pageViewController;
   final multitouchController = MultitouchController();
+  final imageController = Get.find<Images>();
 
   @override
   void initState() {
     super.initState();
     zoomController = ZoomController(vsync: this);
-    Get.put(PageViewController(initialIndex: widget.index));
+    pageViewController = PageViewController(initialIndex: widget.index);
   }
 
   @override
@@ -49,7 +51,6 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final imgCtrl = Get.find<Images>();
     return PopScope(
       onPopInvokedWithResult: showSearchBar,
       child: Scaffold(
@@ -77,59 +78,34 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
         body: Listener(
           onPointerDown: multitouchController.register,
           onPointerUp: multitouchController.register,
-          child: FilePageBuilder(
-            multitouchCtrl: multitouchController,
-            zoomCtrl: zoomController,
-            imgCtrl: imgCtrl,
-          ),
+          child: Obx(() => PageView.builder(
+            allowImplicitScrolling: true,
+            onPageChanged: pageViewController.onPageChanged,
+            physics: (multitouchController.multitouch.value || zoomController.zoomed.value)
+                ? const NeverScrollableScrollPhysics()
+                : const SnappyPageScrollPhysics(),
+            controller: pageViewController.controller,
+            itemCount: imageController.images.length,
+            itemBuilder: (context, buildIndex) {
+              final mime = imageController.images[buildIndex].mime;
+              final type = mime.split('/').first;
+              final index = pageViewController.currentIndex;
+              return switch (type) {
+                'image' => Obx(() =>
+                    ViewImage(zoomController, index.value, buildIndex)),
+                'video' => Obx(() =>
+                    ViewVideo(pageViewController, index.value, buildIndex)),
+                _ => _ErrorText(mime),
+              };
+            },
+          )),
         ),
         bottomNavigationBar: BottomAppBar(
           color: Colors.transparent,
-          // Swipe doesn't work on Windows so I added buttons
           child: _BottomAppBarActions(),
         ),
       ),
     );
-  }
-}
-
-
-class FilePageBuilder extends StatelessWidget {
-  final MultitouchController multitouchCtrl;
-  final ZoomController zoomCtrl;
-  final Images imgCtrl;
-
-  const FilePageBuilder({
-    super.key,
-    required this.multitouchCtrl,
-    required this.zoomCtrl,
-    required this.imgCtrl,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final pageCtrl = Get.find<PageViewController>();
-    return Obx(() => PageView.builder(
-      allowImplicitScrolling: true,
-      onPageChanged: pageCtrl.onPageChanged,
-      physics: (multitouchCtrl.multitouch.value || zoomCtrl.zoomed.value)
-          ? const NeverScrollableScrollPhysics()
-          : const SnappyPageScrollPhysics(),
-      controller: pageCtrl.controller,
-      itemCount: imgCtrl.images.length,
-      itemBuilder: (context, buildIndex) {
-        final mime = imgCtrl.images[buildIndex].mime;
-        final type = mime.split('/').first;
-        final index = pageCtrl.currentIndex;
-        return switch (type) {
-          'image' => Obx(() =>
-              ViewImage(zoomCtrl, index.value, buildIndex)),
-          'video' => Obx(() =>
-              ViewVideo(pageCtrl, index.value, buildIndex)),
-          _ => _ErrorText(mime),
-        };
-      },
-    ));
   }
 }
 
@@ -166,24 +142,6 @@ class _BottomAppBarActions extends StatelessWidget {
       ],
     );
   }
-}
-
-
-/// Makes [PageView] scroll more responsive. Still not perfect.
-class SnappyPageScrollPhysics extends PageScrollPhysics {
-  const SnappyPageScrollPhysics({super.parent});
-
-  @override
-  SnappyPageScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return SnappyPageScrollPhysics(parent: buildParent(ancestor));
-  }
-
-  @override
-  SpringDescription get spring => const SpringDescription(
-    mass: 1,
-    stiffness: 250,
-    damping: 30,
-  );
 }
 
 
