@@ -15,10 +15,18 @@ library;
 
 class HydrusImage {
   final int id;
-  int width = -1, height = -1;
-  late String mime;
+  int width = -1;
+  int height = -1;
+  late String type;
+  late String ext;
   late int duration;
   late Map<String, TagService> service;
+
+  set mime(String value) {
+    final m = value.split('/');
+    type = m.first;
+    ext = m.last;
+  }
 
   HydrusImage(this.id);
 }

@@ -2,14 +2,14 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
-import 'package:hydrus_flutter/core/ui/widget/images.dart';
+import 'package:preload_page_view/preload_page_view.dart';
 import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/core/ui/widget/scroll_to_hide.dart';
 import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
-import 'package:preload_page_view/preload_page_view.dart';
 
 import 'tag_sheet.dart';
+import '../widget/views.dart';
 import '../getx/controllers.dart';
 
 
@@ -23,22 +23,13 @@ class Viewer extends StatefulWidget {
 }
 
 class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
-  late final ZoomController zoomController;
   late final PageGetxController controller;
-  final multitouchController = MultitouchController();
-  final imageController = Get.find<Images>();
+  final images = Get.find<Images>();
 
   @override
   void initState() {
     super.initState();
-    zoomController = ZoomController(vsync: this);
-    controller = PageGetxController(initial: widget.index);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    zoomController.dispose();
+    controller = Get.put(PageGetxController(initial: widget.index));
   }
 
   void showSearchBar(_, _) {
@@ -76,35 +67,18 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
             )
           ],
         ),
-        body: Listener(
-          onPointerDown: multitouchController.register,
-          onPointerUp: multitouchController.register,
-          child: Obx(() => PreloadPageView.builder(
-            onPageChanged: controller.onPageChanged,
-            physics: (multitouchController.multitouch.value || zoomController.zoomed.value)
-                ? const NeverScrollableScrollPhysics()
-                : const SnappyPageScrollPhysics(),
-            controller: controller.c,
-            itemCount: imageController.images.length,
-            preloadPagesCount: 3,
-            itemBuilder: (context, buildIndex) {
-              final mime = imageController.images[buildIndex].mime;
-              final type = mime.split('/').first;
-              final index = controller.index;
-              return switch (type) {
-                'image' => Obx(() =>
-                    ViewImage(zoomController, index.value, buildIndex)),
-                'video' => Obx(() =>
-                    ViewVideo(controller, index.value, buildIndex)),
-                _ => _ErrorText(mime),
-              };
-            },
-          )),
+        body: Obx(() => PreloadPageView.builder(
+          onPageChanged: controller.onPageChanged,
+          physics: SnappyPageScrollPhysics(),
+          controller: controller.$,
+          itemCount: images.$.length,
+          preloadPagesCount: 3,
+          itemBuilder: (_, index) => ViewFile(index),
+        )),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.transparent,
+          child: _BottomAppBarActions(),
         ),
-        // bottomNavigationBar: BottomAppBar(
-        //   color: Colors.transparent,
-        //   child: _BottomAppBarActions(),
-        // ),
       ),
     );
   }
@@ -141,20 +115,6 @@ class _BottomAppBarActions extends StatelessWidget {
           icon: const Icon(Icons.keyboard_arrow_right),
         ),
       ],
-    );
-  }
-}
-
-
-class _ErrorText extends StatelessWidget {
-  final String? type;
-
-  const _ErrorText(this.type);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Error: media type "$type" is unsupported'),
     );
   }
 }
