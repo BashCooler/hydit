@@ -7,6 +7,7 @@ import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/core/ui/widget/scroll_to_hide.dart';
 import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
+import 'package:preload_page_view/preload_page_view.dart';
 
 import 'tag_sheet.dart';
 import '../getx/controllers.dart';
@@ -23,7 +24,7 @@ class Viewer extends StatefulWidget {
 
 class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   late final ZoomController zoomController;
-  late final PageViewController pageViewController;
+  late final PageGetxController controller;
   final multitouchController = MultitouchController();
   final imageController = Get.find<Images>();
 
@@ -31,7 +32,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     zoomController = ZoomController(vsync: this);
-    pageViewController = PageViewController(initialIndex: widget.index);
+    controller = PageGetxController(initial: widget.index);
   }
 
   @override
@@ -78,32 +79,32 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
         body: Listener(
           onPointerDown: multitouchController.register,
           onPointerUp: multitouchController.register,
-          child: Obx(() => PageView.builder(
-            allowImplicitScrolling: true,
-            onPageChanged: pageViewController.onPageChanged,
+          child: Obx(() => PreloadPageView.builder(
+            onPageChanged: controller.onPageChanged,
             physics: (multitouchController.multitouch.value || zoomController.zoomed.value)
                 ? const NeverScrollableScrollPhysics()
                 : const SnappyPageScrollPhysics(),
-            controller: pageViewController.controller,
+            controller: controller.c,
             itemCount: imageController.images.length,
+            preloadPagesCount: 3,
             itemBuilder: (context, buildIndex) {
               final mime = imageController.images[buildIndex].mime;
               final type = mime.split('/').first;
-              final index = pageViewController.currentIndex;
+              final index = controller.index;
               return switch (type) {
                 'image' => Obx(() =>
                     ViewImage(zoomController, index.value, buildIndex)),
                 'video' => Obx(() =>
-                    ViewVideo(pageViewController, index.value, buildIndex)),
+                    ViewVideo(controller, index.value, buildIndex)),
                 _ => _ErrorText(mime),
               };
             },
           )),
         ),
-        bottomNavigationBar: BottomAppBar(
-          color: Colors.transparent,
-          child: _BottomAppBarActions(),
-        ),
+        // bottomNavigationBar: BottomAppBar(
+        //   color: Colors.transparent,
+        //   child: _BottomAppBarActions(),
+        // ),
       ),
     );
   }
@@ -115,7 +116,7 @@ class _BottomAppBarActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pageController = Get.find<PageViewController>().controller;
+    final pageController = Get.find<PageGetxController>().controller;
     return Row(
       mainAxisAlignment: .spaceBetween,
       spacing: 10.0,

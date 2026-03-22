@@ -138,7 +138,7 @@ class ViewImage extends StatelessWidget {
 class ViewVideo extends StatefulWidget {
   final int index;
   final int builderIndex;
-  final PageViewController pageViewController;
+  final PageGetxController pageViewController;
 
   const ViewVideo(this.pageViewController, this.index, this.builderIndex, {super.key});
 
@@ -182,7 +182,7 @@ class _ViewVideoState extends State<ViewVideo> {
   Widget build(BuildContext context) {
     // Auto play/pause on page change
     final pageCtrl = widget.pageViewController;
-    ever(pageCtrl.currentIndex, (i) {
+    ever(pageCtrl.index, (i) {
       if (i != widget.builderIndex) {
         player.pause();
         player.seek(Duration.zero);

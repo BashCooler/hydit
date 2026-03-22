@@ -24,7 +24,7 @@ class TagSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final index = Get.find<PageViewController>().currentIndex.value;
+    final index = Get.find<PageGetxController>().index.value;
     final service = Get.find<Images>().images[index].service;
     final namespaces = service.keys.toList();
     return SheetKeyboardDismissible(
