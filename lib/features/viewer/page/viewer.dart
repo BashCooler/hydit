@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/features/viewer/getx/transform.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -10,7 +11,7 @@ import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
 
 import 'tag_sheet.dart';
 import '../widget/views.dart';
-import '../getx/controllers.dart';
+import '../getx/page.dart';
 
 
 class Viewer extends StatefulWidget {
@@ -23,13 +24,21 @@ class Viewer extends StatefulWidget {
 }
 
 class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
+  late final TransformController transform;
   late final PageGetxController controller;
-  final images = Get.find<Images>();
+
+  static const scroll = SnappyPageScrollPhysics();
+  static const block = NeverScrollableScrollPhysics();
 
   @override
   void initState() {
     super.initState();
     controller = Get.put(PageGetxController(initial: widget.index));
+    transform = Get.put(TransformController(
+      minScale: 1.0,
+      maxScale: 4.0,
+      vsync: this,
+    ));
   }
 
   void showSearchBar(_, _) {
@@ -43,6 +52,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final images = Get.find<Images>();
     return PopScope(
       onPopInvokedWithResult: showSearchBar,
       child: Scaffold(
@@ -67,14 +77,18 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
             )
           ],
         ),
-        body: Obx(() => PreloadPageView.builder(
-          onPageChanged: controller.onPageChanged,
-          physics: SnappyPageScrollPhysics(),
-          controller: controller.$,
-          itemCount: images.$.length,
-          preloadPagesCount: 3,
-          itemBuilder: (_, index) => ViewFile(index),
-        )),
+        body: Listener(
+          onPointerUp: transform.registerPointer,
+          onPointerDown: transform.registerPointer,
+          child: Obx(() => PreloadPageView.builder(
+            onPageChanged: controller.onPageChanged,
+            physics: transform.block ? block : scroll,
+            controller: controller.$,
+            itemCount: images.$.length,
+            preloadPagesCount: 3,
+            itemBuilder: (_, index) => ViewFile(index),
+          )),
+        ),
         bottomNavigationBar: BottomAppBar(
           color: Colors.transparent,
           child: _BottomAppBarActions(),

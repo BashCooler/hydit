@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/features/viewer/getx/transform.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,7 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:hydrus_flutter/core/data/hydrus.dart';
 import 'package:hydrus_flutter/core/ui/widget/images.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
-import '../getx/controllers.dart';
+import '../getx/page.dart';
 
 
 class ViewFile extends StatelessWidget {
@@ -18,13 +19,11 @@ class ViewFile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final file = Get.find<Images>().$[index];
-    return Center(
-      child: switch (file.type) {
-        'image' => ViewImage(index),
-        'video' => ViewVideo(index),
-        _ => _NotSupported(file.type),
-      },
-    );
+    return switch (file.type) {
+      'image' => ViewImage(index),
+      'video' => ViewVideo(index),
+      _ => _NotSupported(file.type),
+    };
   }
 }
 
@@ -59,10 +58,21 @@ class ViewImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final image = Get.find<Images>().$[index];
-    return ObxHero(
-      index: index,
-      tag: image.id,
-      child: HighResImage(image: image),
+    final TransformController transform = Get.find();
+    return GestureDetector(
+      onDoubleTapDown: transform.handleDoubleTap,
+      child: InteractiveViewer(
+        minScale: transform.minScale,
+        maxScale: transform.maxScale,
+        transformationController: transform.$,
+        child: Center(
+          child: ObxHero(
+            index: index,
+            tag: image.id,
+            child: HighResImage(image: image),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -125,28 +135,30 @@ class _ViewVideoState extends State<ViewVideo> {
   @override
   Widget build(BuildContext context) {
     var video = images.$[widget.index];
-    return ObxHero(
-      index: widget.index,
-      tag: video.id,
-      child: ImageStack(
-        aspectRatio: video.width /video.height,
-        children: [
-          CachedNetworkImage(
-            imageUrl: client.buildUrl(video.id, thumbnail: true),
-            placeholder: (context, url) => SizedBox.shrink(),
-            fit: .cover,
-          ),
-          AnimatedOpacity(
-            opacity: ready ? 1 : 0,
-            duration: Duration(milliseconds: 150),
-            curve: Curves.easeInQuint,
-            child: Video(
-              controller: controller,
-              fill: Colors.transparent,
-              fit: BoxFit.cover,
+    return Center(
+      child: ObxHero(
+        index: widget.index,
+        tag: video.id,
+        child: ImageStack(
+          aspectRatio: video.width /video.height,
+          children: [
+            CachedNetworkImage(
+              imageUrl: client.buildUrl(video.id, thumbnail: true),
+              placeholder: (context, url) => SizedBox.shrink(),
+              fit: .cover,
             ),
-          ),
-        ],
+            AnimatedOpacity(
+              opacity: ready ? 1 : 0,
+              duration: Duration(milliseconds: 150),
+              curve: Curves.easeInQuint,
+              child: Video(
+                controller: controller,
+                fill: Colors.transparent,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
