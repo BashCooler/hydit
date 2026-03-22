@@ -84,7 +84,7 @@ class Client {
 
   // MARK: BUILD URL
 
-  String buildImageUrl(int id, {bool thumbnail = false}) => ""
+  String buildUrl(int id, {bool thumbnail = false}) => ""
       "http://$host:$port/get_files/"
       "${thumbnail ? "thumbnail" : "file"}"
       "?file_id=$id"

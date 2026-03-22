@@ -173,9 +173,6 @@ class _TagList extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         color: Colors.transparent,
         child: Scrollbar(
-          thumbVisibility: true,
-          thickness: 6,
-          radius: .circular(3),
           child: Obx(() => ListView.builder(
             reverse: true,
             itemCount: ctrl.suggests.length,

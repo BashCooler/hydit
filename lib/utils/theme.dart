@@ -2,17 +2,21 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 
-ThemeData darkTheme() {
-  return ThemeData(
-    brightness: .dark,
-    colorSchemeSeed: Colors.black,
-    tooltipTheme: const TooltipThemeData(
-      preferBelow: false,
-      showDuration: Duration(milliseconds: 0),
-    ),
-  );
-}
+ThemeData darkTheme() => ThemeData(
+  brightness: .dark,
+  colorSchemeSeed: Colors.black,
 
+  tooltipTheme: const TooltipThemeData(
+    preferBelow: false,
+    showDuration: Duration(milliseconds: 0),
+  ),
+
+  scrollbarTheme: ScrollbarThemeData(
+    thumbVisibility: .all(true),
+    thickness: .all(6),
+    radius: .circular(3),
+  ),
+);
 
 abstract class AppColors {
   static const filled = Color(0xFF32353a);

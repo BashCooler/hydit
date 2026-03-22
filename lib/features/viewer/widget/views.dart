@@ -5,8 +5,8 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:hydrus_flutter/core/data/hydrus.dart';
-import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/core/ui/widget/images.dart';
+import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import '../getx/controllers.dart';
 
 
@@ -18,14 +18,13 @@ class ViewFile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final file = Get.find<Images>().$[index];
-    switch (file.type) {
-      case 'image':
-        return ViewImage(index);
-      case 'video':
-        return ViewVideo(index);
-      case _:
-        return _NotSupported(file.type);
-    }
+    return Center(
+      child: switch (file.type) {
+        'image' => ViewImage(index),
+        'video' => ViewVideo(index),
+        _ => _NotSupported(file.type),
+      },
+    );
   }
 }
 
@@ -41,7 +40,7 @@ class ObxHero extends StatelessWidget {
   Widget build(BuildContext context) {
     final PageGetxController controller = Get.find();
     return Obx(() => HeroMode(
-      enabled: controller.i == index,
+      enabled: controller.enabled(index),
       child: Hero(
         tag: tag,
         createRectTween: (b, e) => RectTween(begin: b, end: e),
@@ -60,12 +59,10 @@ class ViewImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final image = Get.find<Images>().$[index];
-    return Center(
-      child: ObxHero(
-        index: index,
-        tag: image.id,
-        child: HighResImage(image: image),
-      ),
+    return ObxHero(
+      index: index,
+      tag: image.id,
+      child: HighResImage(image: image),
     );
   }
 }
@@ -90,23 +87,34 @@ class _ViewVideoState extends State<ViewVideo> {
   final client = Get.find<Client>();
   final pageController = Get.find<PageGetxController>();
 
-
   bool ready = false;
 
   @override
   void initState() {
     super.initState();
-    final id = images.images[widget.index].id;
+    final id = images.$[widget.index].id;
     player.open(
-      Media(client.buildImageUrl(id)),
-      play: pageController.i == widget.index,
+      Media(client.buildUrl(id)),
+      play: pageController.enabled(widget.index),
     );
-    player.stream.buffer.listen((duration) {
-      if (!ready && duration > Duration(milliseconds: 500)) {
-        setState(() => ready = true);
-      }
-    });
+    player.stream.buffer.listen(playWhenLoaded);
+    setPageChangeListener();
   }
+
+  void playWhenLoaded(Duration d) {
+    if (ready) return;
+    if (d < Duration(milliseconds: 500)) return;
+    setState(() => ready = true);
+  }
+
+  void setPageChangeListener() => ever(pageController.index, (i) {
+    if (i == widget.index) {
+      player.play();
+    } else {
+      player.pause();
+      player.seek(Duration.zero);
+    }
+  });
 
   @override
   void dispose() async {
@@ -116,49 +124,30 @@ class _ViewVideoState extends State<ViewVideo> {
 
   @override
   Widget build(BuildContext context) {
-    // Auto play/pause on page change
-    ever(pageController.index, (i) {
-      if (i != widget.index) {
-        player.pause();
-        player.seek(Duration.zero);
-      } else {
-        player.play();
-      }
-    });
-    // Get video parameters
-    var video = images.images[widget.index];
-    double width = video.width.toDouble();
-    double height = video.height.toDouble();
-    double aspectRatio = width/height;
-    // Build widget
-    return Center(
-      child: Obx(() => HeroMode(
-        enabled: widget.index == pageController.i,
-        child: Hero(
-          tag: video.id,
-          createRectTween: (begin, end) => RectTween(begin: begin, end: end),
-          child: ImageStack(
-            aspectRatio: aspectRatio,
-            children: [
-              CachedNetworkImage(
-                imageUrl: client.buildImageUrl(video.id, thumbnail: true),
-                placeholder: (context, url) => SizedBox.shrink(),
-                fit: .cover,
-              ),
-              AnimatedOpacity(
-                opacity: ready ? 1 : 0,
-                duration: Duration(milliseconds: 150),
-                curve: Curves.easeInQuint,
-                child: Video(
-                  controller: controller,
-                  fill: Colors.transparent,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ],
+    var video = images.$[widget.index];
+    return ObxHero(
+      index: widget.index,
+      tag: video.id,
+      child: ImageStack(
+        aspectRatio: video.width /video.height,
+        children: [
+          CachedNetworkImage(
+            imageUrl: client.buildUrl(video.id, thumbnail: true),
+            placeholder: (context, url) => SizedBox.shrink(),
+            fit: .cover,
           ),
-        ),
-      )),
+          AnimatedOpacity(
+            opacity: ready ? 1 : 0,
+            duration: Duration(milliseconds: 150),
+            curve: Curves.easeInQuint,
+            child: Video(
+              controller: controller,
+              fill: Colors.transparent,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -171,8 +160,13 @@ class _NotSupported extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Error: media type "$type" is unsupported'),
+    return Column(
+      mainAxisAlignment: .center,
+      spacing: 15,
+      children: [
+        Icon(Icons.image_not_supported_outlined, size: 96),
+        Text('Media type "$type" is unsupported'),
+      ],
     );
   }
 }

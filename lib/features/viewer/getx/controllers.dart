@@ -11,8 +11,8 @@ class PageGetxController extends GetxController {
   final RxInt index;
 
   PreloadPageController get $ => controller;
-  PreloadPageController get c => controller;
   int get i => index.value;
+  bool enabled(int index) => index == i;
 
   PageGetxController({required int initial})
       : index = initial.obs,
