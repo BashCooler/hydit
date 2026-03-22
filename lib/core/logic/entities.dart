@@ -15,8 +15,8 @@ library;
 
 class HydrusImage {
   final int id;
-  int width = -1;
-  int height = -1;
+  double width = -1;
+  double height = -1;
   late String type;
   late String ext;
   late int duration;

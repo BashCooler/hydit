@@ -22,8 +22,8 @@ void parseMetadataThenWrite(String response, HydrusImage image) {
   final json = jsonDecode(response);
   Pick getMeta(String property) => pick(json, 'metadata', 0, property);
 
-  final int width  = getMeta('width').asIntOrThrow();
-  final int height = getMeta('height').asIntOrThrow();
+  final double width  = getMeta('width').asDoubleOrThrow();
+  final double height = getMeta('height').asDoubleOrThrow();
   final String mime = getMeta('mime').asStringOrThrow();
   final int duration = getMeta('duration').asIntOrNull() ?? 0;
 
