@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/features/viewer/getx/transform.dart';
@@ -28,7 +30,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   late final PageGetxController controller;
 
   static const scroll = SnappyPageScrollPhysics();
-  static const block = NeverScrollableScrollPhysics();
+  static const noScroll = NeverScrollableScrollPhysics();
 
   @override
   void initState() {
@@ -82,7 +84,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
           onPointerDown: transform.registerPointer,
           child: Obx(() => PreloadPageView.builder(
             onPageChanged: controller.onPageChanged,
-            physics: transform.block ? block : scroll,
+            physics: transform.noScroll ? noScroll : scroll,
             controller: controller.$,
             itemCount: images.$.length,
             preloadPagesCount: 3,

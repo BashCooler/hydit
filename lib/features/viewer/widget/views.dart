@@ -61,9 +61,10 @@ class ViewImage extends StatelessWidget {
     final TransformController transform = Get.find();
     return GestureDetector(
       onDoubleTapDown: transform.handleDoubleTap,
-      child: InteractiveViewer(
+      child: Obx(() => InteractiveViewer(
         minScale: transform.minScale,
         maxScale: transform.maxScale,
+        panEnabled: !transform.blockViewer.value,
         transformationController: transform.$,
         child: Center(
           child: ObxHero(
@@ -72,7 +73,7 @@ class ViewImage extends StatelessWidget {
             child: HighResImage(image: image),
           ),
         ),
-      ),
+      )),
     );
   }
 }

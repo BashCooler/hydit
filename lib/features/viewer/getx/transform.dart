@@ -3,19 +3,23 @@ import 'package:flutter/material.dart';
 
 
 class TransformController extends GetxController {
-  bool _zoom = false;
-  bool get block => _zoom || _pinch;
+  final blockScroll = false.obs;
+  final blockViewer = false.obs;
+  final _pointers = RxSet<int>();
 
   final double minScale;
   final double maxScale;
 
-  final _pointers = RxSet<int>();
-  bool get _pinch => _pointers.length > 1;
-
   final controller = TransformationController();
-  TransformationController get $ => controller;
   late AnimationController _animationController;
   Animation<Matrix4>? _animation;
+
+  bool get _pinch => _pointers.length > 1;
+  bool get _zoom => scale > minScale + 0.1;
+  bool get noScroll => blockScroll.value;
+  double get scale => controller.value.row0.x;
+
+  TransformationController get $ => controller;
 
   TransformController({
     required this.minScale,
@@ -25,8 +29,25 @@ class TransformController extends GetxController {
     _animationController = AnimationController(
       vsync: vsync,
       duration: const Duration(milliseconds: 150),
-    )..addListener(_setMatrix);
+    )..addListener(_setMatrix)..addStatusListener(_onStatusUpdate);
     controller.addListener(_onMatrixChange);
+  }
+
+  /// Block pan gestures during animation
+  void _onStatusUpdate(AnimationStatus status) {
+    switch (status) {
+      case .forward:
+        blockViewer.value = true;
+      case .completed:
+        blockViewer.value = false;
+      case _:
+    }
+  }
+
+  @override
+  void onInit() {
+    ever(_pointers, _everPointers);
+    super.onInit();
   }
 
   @override
@@ -41,13 +62,19 @@ class TransformController extends GetxController {
     if (details is PointerUpEvent) _pointers.remove(details.pointer);
   }
 
+  void _everPointers(Set<int> callback) {
+    _updateBlockScroll();
+  }
+
+  void _updateBlockScroll() {
+    blockScroll.value = _zoom || _pinch;
+  }
+
   void _setMatrix() {
     controller.value = _animation?.value ?? Matrix4.identity();
   }
 
-  void _onMatrixChange() {
-    _zoom = controller.value.row0.x > minScale + 0.1;
-  }
+  void _onMatrixChange() => _updateBlockScroll();
 
   void handleDoubleTap(TapDownDetails details) {
     final pos = details.localPosition;
@@ -55,7 +82,6 @@ class TransformController extends GetxController {
 
     final scale = mat.row0.x;
     double target = (scale <= minScale) ? maxScale : minScale;
-    _zoom = target > minScale;
 
     final double offsetX = target == minScale
         ? 0.0
@@ -63,8 +89,6 @@ class TransformController extends GetxController {
     final double offsetY = target == minScale
         ? 0.0
         : -pos.dy * (target - 1);
-
-    _zoom = offsetX != 0.0;
 
     mat = getTargetMatrix(target, mat, offsetX, offsetY);
 
