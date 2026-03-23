@@ -27,10 +27,31 @@ class TransformController extends GetxController {
     required TickerProvider vsync,
   }) {
     _animationController = AnimationController(
-      vsync: vsync,
-      duration: const Duration(milliseconds: 150),
-    )..addListener(_setMatrix)..addStatusListener(_onStatusUpdate);
+        vsync: vsync,
+        duration: const Duration(milliseconds: 150))
+      ..addListener(_onAnimationFrame)
+      ..addStatusListener(_onStatusUpdate);
     controller.addListener(_onMatrixChange);
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    ever(_pointers, _everPointers);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    _animationController
+      ..removeListener(_onAnimationFrame)
+      ..removeStatusListener(_onStatusUpdate)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onAnimationFrame() {
+    controller.value = _animation?.value ?? Matrix4.identity();
   }
 
   /// Block pan gestures during animation
@@ -42,19 +63,6 @@ class TransformController extends GetxController {
         blockViewer.value = false;
       case _:
     }
-  }
-
-  @override
-  void onInit() {
-    ever(_pointers, _everPointers);
-    super.onInit();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    controller.dispose();
-    _animationController.dispose();
   }
 
   void registerPointer(Object details) {
@@ -70,30 +78,24 @@ class TransformController extends GetxController {
     blockScroll.value = _zoom || _pinch;
   }
 
-  void _setMatrix() {
-    controller.value = _animation?.value ?? Matrix4.identity();
-  }
-
   void _onMatrixChange() => _updateBlockScroll();
 
   void handleDoubleTap(TapDownDetails details) {
     final pos = details.localPosition;
-    var mat = controller.value.clone();
 
-    final scale = mat.row0.x;
-    double target = (scale <= minScale) ? maxScale : minScale;
+    final target = (scale <= minScale) ? maxScale : minScale;
 
-    final double offsetX = target == minScale
+    final offsetX = target == minScale
         ? 0.0
         : -pos.dx * (target - 1);
-    final double offsetY = target == minScale
+    final offsetY = target == minScale
         ? 0.0
         : -pos.dy * (target - 1);
 
-    mat = getTargetMatrix(target, mat, offsetX, offsetY);
+    final mat = getTargetMatrix(target, $.value.clone(), offsetX, offsetY);
 
     _animation = Matrix4Tween(
-      begin: controller.value,
+      begin: $.value,
       end: mat,
     ).animate(CurvedAnimation(
       parent: _animationController,
