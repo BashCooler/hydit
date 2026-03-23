@@ -52,12 +52,6 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           Divider(color: Colors.transparent),
           OutlinedButton(
-            // TODO Implement access request
-            onPressed: null,
-            child: Text('Get key'),
-          ),
-          Divider(color: Colors.transparent),
-          OutlinedButton(
             onPressed: _isLoading ? null : () async {
               await verifySave();
               setState(() => _isLoading = false);
@@ -99,6 +93,9 @@ class _SettingsPageState extends State<SettingsPage> {
       return;
     } on HydrusUnknownException {
       setState(() => _urlError = 'Unknown error');
+      return;
+    } catch (e) {
+      setState(() => _urlError = 'Invalid URL');
       return;
     }
     // Check if the key is valid
@@ -181,7 +178,6 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final double spacing = 5;
     return SizedBox(
       height: 70,
       child: TextField(
@@ -192,7 +188,7 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
           labelText: widget.setting,
           helperText: widget.hint,
           suffixIcon: _showActions ? Row(
-            spacing: spacing,
+            spacing: 5,
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
@@ -206,7 +202,6 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
                 onPressed: () => widget.controller.clear(),
                 icon: Icon(Icons.clear),
               ),
-              Padding(padding: EdgeInsetsGeometry.only(right: spacing)),
             ],
           ) : null,
         ),
@@ -216,6 +211,7 @@ class _SettingsTextFieldState extends State<SettingsTextField> {
             widget.errorMessage = null;
           });
         },
+        onTapOutside: (_) => _focusNode.unfocus(),
       ),
     );
   }
