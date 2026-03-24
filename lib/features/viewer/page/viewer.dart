@@ -9,7 +9,7 @@ import 'package:preload_page_view/preload_page_view.dart';
 import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
-import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
+import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 import '../widget/views.dart';

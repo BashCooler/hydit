@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/core/logic/entities_ext.dart';
-import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
+import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 
 
 class TagPanel extends StatelessWidget {

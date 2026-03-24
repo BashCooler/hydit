@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
+import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 
 import 'package:hydrus_flutter/core/data/hydrus.dart';
 

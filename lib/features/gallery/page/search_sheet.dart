@@ -8,7 +8,7 @@ import 'package:hydrus_flutter/core/ui/widget/tag_search.dart';
 import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 import 'package:hydrus_flutter/utils/theme.dart';
 
-import '../getx/controllers.dart';
+import '../getx/query.dart';
 import '../widget/tag_panel.dart';
 
 

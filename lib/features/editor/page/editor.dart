@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hydrus_flutter/core/ui/widget/tag_search.dart';
-import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
+import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 import 'package:split_view/split_view.dart';
 
 import 'package:hydrus_flutter/core/logic/entities.dart';

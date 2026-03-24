@@ -8,7 +8,7 @@ import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/features/settings/settings.dart';
 
 import 'search_sheet.dart';
-import '../getx/controllers.dart';
+import '../getx/query.dart';
 import '../widget/gridview.dart';
 
 

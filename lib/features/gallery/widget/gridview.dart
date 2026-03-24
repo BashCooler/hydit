@@ -8,7 +8,7 @@ import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/core/ui/widget/images.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
-import '../getx/controllers.dart';
+import '../getx/query.dart';
 
 
 class ImageGridViewBuilder extends StatefulWidget {
