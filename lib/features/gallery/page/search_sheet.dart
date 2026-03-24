@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 import 'package:hydrus_flutter/core/logic/entities.dart';
-import 'package:hydrus_flutter/core/ui/widget/scroll_to_hide.dart';
+import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 import 'package:hydrus_flutter/utils/theme.dart';
 
 import '../getx/controllers.dart';

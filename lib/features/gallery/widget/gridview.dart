@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
-import 'package:hydrus_flutter/core/ui/widget/scroll_to_hide.dart';
+import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 
 import 'package:hydrus_flutter/core/data/hydrus.dart';
 import 'package:hydrus_flutter/core/logic/entities.dart';

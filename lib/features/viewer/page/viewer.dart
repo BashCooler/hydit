@@ -6,7 +6,7 @@ import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
-import 'package:hydrus_flutter/core/ui/widget/scroll_to_hide.dart';
+import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
 
 import 'tag_sheet.dart';
