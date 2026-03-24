@@ -1,14 +1,15 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/core/ui/widget/suggests.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/core/ui/widget/suggests.dart';
+import 'package:hydrus_flutter/core/ui/widget/tag_search.dart';
 import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 import 'package:hydrus_flutter/utils/theme.dart';
 
 import '../getx/controllers.dart';
-import '../widget/search.dart';
+import '../widget/tag_panel.dart';
 
 
 void showSearchSheet(BuildContext context) {
@@ -33,6 +34,17 @@ class SearchSheet extends StatefulWidget {
 }
 
 class _SearchSheetState extends State<SearchSheet> {
+  final QueryController controller = Get.find();
+
+  void _searchThenBack() {
+    if (controller.tags.isEmpty) {
+      controller.add(Tag(controller.textController.text));
+    }
+    controller.clear();
+    controller.searchForFiles();
+    Get.back();
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -42,20 +54,25 @@ class _SearchSheetState extends State<SearchSheet> {
           Get.find<QueryController>().clear();
         });
       },
-      child: const SheetKeyboardDismissible(
-        dismissBehavior: .onDragDown(isContentScrollAware: true),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: const .onDragDown(isContentScrollAware: true),
         child: Sheet(
           child: Material(
             child: SafeArea(
               child: Column(
                 mainAxisAlignment: .end,
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: Suggests(),
                   ),
-                  Divider(height: 1),
-                  TagPanel(trailing: _TagPanelActions()),
-                  TagSearchBar(),
+                  const Divider(height: 1),
+                  const TagPanel(),
+                  TagSearchBar(
+                    autofocus: true,
+                    hintText: 'Enter tags here',
+                    actions: const _TagSearchBarActions(),
+                    onSubmitted: _searchThenBack,
+                  ),
                 ],
               ),
             ),
@@ -67,29 +84,32 @@ class _SearchSheetState extends State<SearchSheet> {
 }
 
 
-class _TagPanelActions extends StatelessWidget {
-  const _TagPanelActions();
+class _TagSearchBarActions extends StatelessWidget {
+  const _TagSearchBarActions();
 
   @override
   Widget build(BuildContext context) {
     final queryController = Get.find<QueryController>();
     return Row(
-      spacing: 4.0,
+      mainAxisSize: .min,
+      spacing: 5.0,
+      mainAxisAlignment: .end,
       children: [
         IconButton(
-          tooltip: 'Clear tags',
-          onPressed: () => queryController.clearTags(),
+          onPressed: queryController.clear,
           icon: const Icon(Icons.clear),
+          tooltip: 'Clear',
         ),
         IconButton(
+          tooltip: 'Search',
           onPressed: () {
-            queryController.addTag(Tag(queryController.textController.text));
-            queryController.textController.text = '';
-            queryController.suggestVisible.value = false;
+            queryController.clear();
+            queryController.searchForFiles();
+            Get.back();
           },
-          icon: const Icon(Icons.arrow_drop_up),
-          tooltip: 'Insert input as tag',
+          icon: const Icon(Icons.search),
         ),
+        const VerticalDivider(width: 0.0),
       ],
     );
   }

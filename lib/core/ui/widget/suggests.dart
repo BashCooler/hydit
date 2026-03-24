@@ -21,7 +21,7 @@ class Suggests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<QueryController>();
-    return Obx(() => controller.suggestVisible.value
+    return Obx(() => controller.suggestsVisible
         ? _TagList(trailing, onTap)
         : const _Hint());
   }
@@ -75,7 +75,7 @@ class _SearchEntry extends StatelessWidget {
         if (onTap != null) {
           onTap!();
         } else {
-          queryController.addTag(tag);
+          queryController.add(tag);
         }
       },
     );

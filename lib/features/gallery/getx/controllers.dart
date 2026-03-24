@@ -21,11 +21,15 @@ class QueryController extends GetxController {
   final suggests = <Tag>[].obs;
   final _tags = <Tag>[].obs;
   final isLoading = false.obs;
-  final suggestVisible = false.obs;
+  final _suggestVisible = false.obs;
   final badgeVisible = true.obs;
 
-  List<String> get values => _tags.map((t) => t.raw).toList();
   List<Tag> get tags => _tags;
+  String get text => textController.text;
+  TextEditingController get $ => textController;
+  bool get suggestsVisible => _suggestVisible.value;
+  List<String> get values => _tags.map((t) => t.raw).toList();
+
   bool hasTag(Tag tag) => values.contains(tag.raw);
 
   final client = Get.find<Client>();
@@ -67,20 +71,20 @@ class QueryController extends GetxController {
         return;
       }
       if (id != _requestId) return;
-      suggestVisible.value = true;
+      _suggestVisible.value = true;
       final List<Tag> parsed = parseSearchResults(response);
       suggests.assignAll(parsed);
     }
     isLoading.value = false;
   }
 
-  void addTag(Tag tag) {
+  void add(Tag tag) {
     if (hasTag(tag)) return;
     if (tag.raw.isEmpty) return;
     _tags.add(tag);
   }
 
-  void removeTag(Tag tag) => _tags.remove(tag);
+  void remove(Tag tag) => _tags.remove(tag);
 
   void clearTags() => _tags.clear();
 
@@ -109,7 +113,7 @@ class QueryController extends GetxController {
   }
 
   void clear() {
-    suggestVisible.value = false;
+    _suggestVisible.value = false;
     textController.text = '';
     suggests.clear();
   }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hydrus_flutter/core/ui/widget/tag_search.dart';
 import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
 import 'package:split_view/split_view.dart';
 
 import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/core/ui/widget/images.dart';
 import 'package:hydrus_flutter/core/ui/widget/suggests.dart';
-import '../widget/add.dart';
 
 
 class Editor extends StatefulWidget {
@@ -94,7 +94,10 @@ class _EditorState extends State<Editor> {
                 ),
               ),
               Divider(height: 1),
-              TagSearchBar(),
+              TagSearchBar(
+                hintText: 'Add tags',
+                onSubmitted: () {},
+              ),
             ],
           ),
         ),
