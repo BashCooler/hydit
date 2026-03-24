@@ -92,7 +92,9 @@ class TransformController extends GetxController {
         ? 0.0
         : -pos.dy * (target - 1);
 
-    final mat = getTargetMatrix(target, $.value.clone(), offsetX, offsetY);
+    final Matrix4 mat = .identity()
+      ..translateByDouble(offsetX, offsetY, 1, 1)
+      ..scaleByDouble(target, target, target, 1);
 
     _animation = Matrix4Tween(
       begin: $.value,
@@ -103,41 +105,4 @@ class TransformController extends GetxController {
     ));
     _animationController.forward(from: 0);
   }
-}
-
-
-/// Returns target transformation matrix.
-///
-/// Initial transformation matrix is an identity matrix.
-///
-/// Target matrix with 4x scale and X1=-500, Y1=-800 offset:
-/// ```
-/// 4 0 0 -500
-/// 0 4 0 -800
-/// 0 0 4 0
-/// 0 0 0 1
-/// ```
-Matrix4 getTargetMatrix(double scale, Matrix4 mat, double offsetX, double offsetY) {
-  return Matrix4.fromList([
-    // Column 1
-    scale,  // scale X
-    mat.row1.x,
-    mat.row2.x,
-    mat.row3.x,
-    // Column 2
-    mat.row0.y,
-    scale,  // scale Y
-    mat.row2.y,
-    mat.row3.y,
-    // Column 3
-    mat.row0.z,
-    mat.row1.z,
-    scale,  // scale Z
-    mat.row3.z,
-    // Column 4
-    offsetX,      // translate X1
-    offsetY,      // translate Y1
-    mat.row2.w,
-    mat.row3.w,
-  ]);
 }
