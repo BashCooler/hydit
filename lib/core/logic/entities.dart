@@ -24,6 +24,7 @@ class HydrusImage {
   late Map<String, TagService> service;
 
   int get length => service.values.first.entries.length;
+  List<Tag> get all => service.values.first.entries;
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
 
   set mime(String value) {

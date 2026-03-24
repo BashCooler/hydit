@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:filesize/filesize.dart';
+import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/features/editor/getx/tags.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 import 'package:split_view/split_view.dart';
@@ -33,6 +34,12 @@ class _EditorState extends State<Editor> {
   final PageGetxController page = Get.find();
 
   @override
+  void initState() {
+    super.initState();
+    manager.tags.assignAll(images.$[page.i].all);
+  }
+
+  @override
   void dispose() {
     scrollUp.dispose();
     scrollDown.dispose();
@@ -49,6 +56,7 @@ class _EditorState extends State<Editor> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      // TODO confirm dialog
       onPopInvokedWithResult: onLeave,
       child: Scaffold(
         appBar: AppBar(
@@ -80,15 +88,13 @@ class _EditorState extends State<Editor> {
                   indicator: SplitIndicator(viewMode: SplitViewMode.Vertical),
                   children: [
                     ClipRect(
-                      child: Scrollbar(
-                        controller: scrollUp,
-                        child: ListView.builder(
-                          itemCount: 21,
-                          shrinkWrap: true,
-                          reverse: true,
-                          controller: scrollUp,
-                          itemBuilder: (context, index) => ListTile(title: Text("$index")),
-                        ),
+                      // TODO Add tabs for services
+                      // TODO paint tags to remove red
+                      child: TagList(
+                        observable: manager.tags,
+                        trailing: const Icon(Icons.playlist_remove),
+                        scrollController: scrollUp,
+                        onTap: manager.delete,
                       ),
                     ),
                     Suggests(
@@ -99,10 +105,12 @@ class _EditorState extends State<Editor> {
                 ),
               ),
               Divider(height: 1),
+              // TODO add remove and insert actions
               TagSearchBar(
                 hintText: 'Add tags',
                 onSubmitted: () {},
               ),
+              // TODO confirm button
             ],
           ),
         ),
@@ -147,7 +155,7 @@ class _Info extends StatelessWidget {
                   }
                 }),
                 Obx(() => manager.deletions > 0
-                    ? Text("-10", style: const .new(color: deletions))
+                    ? Text("-${manager.deletions}", style: const .new(color: deletions))
                     : const SizedBox.shrink()),
               ],
             ),

@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/core/logic/entities.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
-import 'package:hydrus_flutter/core/logic/entities_ext.dart';
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 
 
 class Suggests extends StatelessWidget {
   final Widget? trailing;
   final bool expanded;
+  final ScrollController? scrollController;
   final void Function(Tag tag) onTap;
 
   const Suggests({
     super.key,
     this.expanded = true,
+    this.scrollController,
     this.trailing,
     required this.onTap,
   });
@@ -22,31 +23,63 @@ class Suggests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<QueryController>();
-    return Obx(() => controller.suggestsVisible
-        ? _TagList(trailing, onTap)
-        : const _Hint());
+    return Obx(() {
+      if (!controller.suggestsVisible) {
+        return const _Hint();
+      }
+      return TagList(
+        trailing: trailing,
+        onTap: onTap,
+        scrollController: scrollController,
+        observable: controller.suggests);
+    });
   }
 }
 
 
-class _TagList extends StatelessWidget {
+/// [ListView] of [Tag]s.
+///
+/// The [observable] should be of type [RxList] or [RxSet] and should
+/// contain [Tag]s.
+///
+/// Parameters [trailing] and [onTap] apply to each [ListTile] in
+/// [ListView].
+///
+/// Default [trailing] is [Tag.count].
+///
+/// The [onTap] method is called when [ListTile] pressed and
+/// usually used to add tag to some [RxList] or [RxSet].
+class TagList extends StatelessWidget {
   final Widget? trailing;
+  final dynamic observable;
+  final ScrollController? scrollController;
   final void Function(Tag tag) onTap;
 
-  const _TagList(this.trailing, this.onTap);
+  const TagList({
+    super.key,
+    this.trailing,
+    required this.onTap,
+    this.scrollController,
+    required this.observable,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final QueryController controller = Get.find();
     return Material(
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
       child: Scrollbar(
+        controller: scrollController,
         child: Obx(() => ListView.builder(
           reverse: true,
-          itemCount: controller.suggests.length,
-          itemBuilder: (_, index) =>
-              _SearchEntry(index, trailing, onTap),
+          itemCount: observable.length,
+          controller: scrollController,
+          itemBuilder: (_, index) => _SearchEntry(
+            index: index,
+            observable: observable,
+            trailing: trailing,
+            onTap: onTap,
+          ),
         )),
       ),
     );
@@ -56,19 +89,26 @@ class _TagList extends StatelessWidget {
 class _SearchEntry extends StatelessWidget {
   final int index;
   final Widget? trailing;
+  final dynamic observable;
   final void Function(Tag tag) onTap;
 
-  const _SearchEntry(this.index, this.trailing, this.onTap);
+  const _SearchEntry({
+    required this.index,
+    this.trailing,
+    required this.onTap,
+    this.observable,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final tag = Get.find<QueryController>().suggests[index];
+    final tag = observable[index];
+    final color = namespaceColors[tag.namespace] ?? namespaceColors['_'];
     return ListTile(
       minTileHeight: AppTheme.fieldHeight,
-      title: tag.label,
+      title: Text(tag.value, style: TextStyle(color: color)),
       trailing: trailing ?? Text(
-        tag.count.toString(),
-        style: TextStyle(color: tag.color, fontSize: 14.0),
+        tag.count?.toString() ?? '0',
+        style: TextStyle(color: color, fontSize: 14.0),
       ),
       onTap: () => onTap.call(tag),
     );

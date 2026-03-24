@@ -45,6 +45,7 @@ const namespaceColors = {
   'studio': Color.fromARGB(255, 128, 0, 0),
   'system': Color.fromARGB(255, 153, 101, 21),
   'namespace': Color.fromARGB(255, 114, 160, 193),
+  '_': Color.fromARGB(255, 114, 160, 193),
   'no namespace': Color.fromARGB(255, 0, 111, 250),
 };
 
