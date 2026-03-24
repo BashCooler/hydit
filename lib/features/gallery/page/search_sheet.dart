@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
-import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/core/ui/widget/suggests.dart';
 import 'package:hydrus_flutter/core/ui/widget/tag_search.dart';
 import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
@@ -36,24 +35,26 @@ class SearchSheet extends StatefulWidget {
 class _SearchSheetState extends State<SearchSheet> {
   final QueryController controller = Get.find();
 
-  void _searchThenBack() {
+  void searchThenBack() {
     if (controller.tags.isEmpty) {
-      controller.add(Tag(controller.textController.text));
+      controller.add(controller.text);
     }
     controller.clear();
     controller.searchForFiles();
     Get.back();
   }
 
+  void onLeave(bool didPop, Object? result) {
+    Future.delayed(AppTheme.duration, () {
+      Get.find<ScrollToHideController>().show();
+      Get.find<QueryController>().clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvokedWithResult: (_, _) {
-        Future.delayed(AppTheme.duration, () {
-          Get.find<ScrollToHideController>().show();
-          Get.find<QueryController>().clear();
-        });
-      },
+      onPopInvokedWithResult: onLeave,
       child: SheetKeyboardDismissible(
         dismissBehavior: const .onDragDown(isContentScrollAware: true),
         child: Sheet(
@@ -62,8 +63,12 @@ class _SearchSheetState extends State<SearchSheet> {
               child: Column(
                 mainAxisAlignment: .end,
                 children: [
-                  const Expanded(
-                    child: Suggests(),
+                  Expanded(
+                    child: Suggests(
+                      onTap: (tag) => Get.find<QueryController>()
+                        ..clear()
+                        ..add(tag.raw),
+                    ),
                   ),
                   const Divider(height: 1),
                   const TagPanel(),
@@ -71,7 +76,7 @@ class _SearchSheetState extends State<SearchSheet> {
                     autofocus: true,
                     hintText: 'Enter tags here',
                     actions: const _TagSearchBarActions(),
-                    onSubmitted: _searchThenBack,
+                    onSubmitted: searchThenBack,
                   ),
                 ],
               ),

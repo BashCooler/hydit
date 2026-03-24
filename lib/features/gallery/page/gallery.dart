@@ -25,10 +25,11 @@ class _GalleryState extends State<Gallery> {
   void initState() {
     super.initState();
     updateClient();
-    Get.put<Images>(Images());
-    Get.put(QueryController());
-    Get.put(ScrollToHideController());
-    Get.put(GridObserverController(controller: ScrollController()));
+    Get
+      ..put(Images())
+      ..put(QueryController())
+      ..put(ScrollToHideController())
+      ..put(GridObserverController(controller: ScrollController()));
   }
 
   @override

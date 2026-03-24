@@ -53,6 +53,7 @@ class QueryController extends GetxController {
   void onChange(String q) {
     if (q.length < 3) {
       suggests.clear();
+      _suggestVisible.value = false;
       return;
     }
     fetch(q);
@@ -78,10 +79,11 @@ class QueryController extends GetxController {
     isLoading.value = false;
   }
 
-  void add(Tag tag) {
-    if (hasTag(tag)) return;
-    if (tag.raw.isEmpty) return;
-    _tags.add(tag);
+  void add(String tag) {
+    final t = Tag(tag);
+    if (hasTag(t)) return;
+    if (t.raw.isEmpty) return;
+    _tags.add(t);
   }
 
   void remove(Tag tag) => _tags.remove(tag);

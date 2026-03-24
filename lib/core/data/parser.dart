@@ -22,19 +22,14 @@ void parseMetadataThenWrite(String response, HydrusImage image) {
   final json = jsonDecode(response);
   Pick getMeta(String property) => pick(json, 'metadata', 0, property);
 
-  final double width  = getMeta('width').asDoubleOrThrow();
-  final double height = getMeta('height').asDoubleOrThrow();
-  final String mime = getMeta('mime').asStringOrThrow();
-  final int duration = getMeta('duration').asIntOrNull() ?? 0;
+  image.width  = getMeta('width').asDoubleOrThrow();
+  image.height = getMeta('height').asDoubleOrThrow();
+  image.size = getMeta('size').asIntOrThrow();
+  image.mime = getMeta('mime').asStringOrThrow();
+  image.duration = getMeta('duration').asIntOrNull() ?? 0;
 
   final tags = getMeta('tags').asMapOrEmpty<String, dynamic>();
-  final Map<String, TagService> service = _parseTags(tags);
-
-  image.width = width;
-  image.height = height;
-  image.mime = mime;
-  image.duration = duration;
-  image.service = service;
+  image.service = _parseTags(tags);
 }
 
 

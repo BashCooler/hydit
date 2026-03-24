@@ -44,6 +44,7 @@ dependencies:
   deep_pick: ^1.1.0
   preload_page_view: ^0.2.0
   split_view: ^3.2.2
+  filesize: ^2.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

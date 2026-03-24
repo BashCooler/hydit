@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/core/logic/entities.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/logic/entities_ext.dart';
@@ -9,13 +10,13 @@ import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 class Suggests extends StatelessWidget {
   final Widget? trailing;
   final bool expanded;
-  final void Function()? onTap;
+  final void Function(Tag tag) onTap;
 
   const Suggests({
     super.key,
     this.expanded = true,
     this.trailing,
-    this.onTap,
+    required this.onTap,
   });
 
   @override
@@ -30,20 +31,20 @@ class Suggests extends StatelessWidget {
 
 class _TagList extends StatelessWidget {
   final Widget? trailing;
-  final void Function()? onTap;
+  final void Function(Tag tag) onTap;
 
   const _TagList(this.trailing, this.onTap);
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.find<QueryController>();
+    final QueryController controller = Get.find();
     return Material(
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
       child: Scrollbar(
         child: Obx(() => ListView.builder(
           reverse: true,
-          itemCount: ctrl.suggests.length,
+          itemCount: controller.suggests.length,
           itemBuilder: (_, index) =>
               _SearchEntry(index, trailing, onTap),
         )),
@@ -55,14 +56,13 @@ class _TagList extends StatelessWidget {
 class _SearchEntry extends StatelessWidget {
   final int index;
   final Widget? trailing;
-  final void Function()? onTap;
+  final void Function(Tag tag) onTap;
 
   const _SearchEntry(this.index, this.trailing, this.onTap);
 
   @override
   Widget build(BuildContext context) {
-    final queryController = Get.find<QueryController>();
-    final tag = queryController.suggests[index];
+    final tag = Get.find<QueryController>().suggests[index];
     return ListTile(
       minTileHeight: AppTheme.fieldHeight,
       title: tag.label,
@@ -70,14 +70,7 @@ class _SearchEntry extends StatelessWidget {
         tag.count.toString(),
         style: TextStyle(color: tag.color, fontSize: 14.0),
       ),
-      onTap: () {
-        queryController.clear();
-        if (onTap != null) {
-          onTap!();
-        } else {
-          queryController.add(tag);
-        }
-      },
+      onTap: () => onTap.call(tag),
     );
   }
 }
@@ -99,7 +92,7 @@ class _Hint extends StatelessWidget {
             spacing: 15,
             children: [
               Icon(Icons.search, size: 96),
-              Text('No results for now'),
+              Text('Start typing to search tags'),
             ],
           ),
         ),

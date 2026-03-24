@@ -17,10 +17,14 @@ class HydrusImage {
   final int id;
   double width = -1;
   double height = -1;
+  late int size;
   late String type;
   late String ext;
   late int duration;
   late Map<String, TagService> service;
+
+  int get length => service.values.first.entries.length;
+  String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
 
   set mime(String value) {
     final m = value.split('/');

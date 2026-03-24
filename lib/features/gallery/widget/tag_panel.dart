@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/core/logic/entities_ext.dart';
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 
@@ -78,7 +77,7 @@ class _TagPanelActions extends StatelessWidget {
         ),
         IconButton(
           onPressed: () {
-            controller.add(Tag(controller.text));
+            controller.add(controller.text);
             controller.clear();
           },
           icon: const Icon(Icons.arrow_drop_up),

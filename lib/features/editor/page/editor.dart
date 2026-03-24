@@ -1,12 +1,20 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hydrus_flutter/core/ui/widget/tag_search.dart';
-import 'package:hydrus_flutter/features/gallery/getx/query.dart';
+import 'package:flutter/material.dart';
+import 'package:filesize/filesize.dart';
+import 'package:hydrus_flutter/features/editor/getx/tags.dart';
+import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 import 'package:split_view/split_view.dart';
 
-import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/ui/widget/images.dart';
 import 'package:hydrus_flutter/core/ui/widget/suggests.dart';
+import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
+import 'package:hydrus_flutter/core/ui/widget/tag_search.dart';
+import 'package:hydrus_flutter/features/gallery/getx/query.dart';
+
+
+const additions = Color(0xFF3fb950);
+const deletions = Color(0xFFf85149);
 
 
 class Editor extends StatefulWidget {
@@ -17,14 +25,31 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
-  final scrollControllerUp = ScrollController();
-  final scrollControllerDown = ScrollController();
+  final scrollUp = ScrollController();
+  final scrollDown = ScrollController();
+
+  final Images images = Get.find();
+  final TagManager manager = Get.put(TagManager());
+  final PageGetxController page = Get.find();
+
+  @override
+  void dispose() {
+    scrollUp.dispose();
+    scrollDown.dispose();
+    super.dispose();
+  }
+
+  void onLeave(bool didPop, Object? result) {
+    Future.delayed(
+      AppTheme.duration,
+      Get.find<QueryController>().clear,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvokedWithResult: (_, _) =>
-          Get.find<QueryController>().clear(),
+      onPopInvokedWithResult: onLeave,
       child: Scaffold(
         appBar: AppBar(
           elevation: 2,
@@ -34,32 +59,14 @@ class _EditorState extends State<Editor> {
           title: Row(
             mainAxisAlignment: .spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: .start,
-                children: [
-                  Row(
-                    spacing: 10,
-                    crossAxisAlignment: .center,
-                    children: [
-                      Text("128 tags", style: Theme.of(context).textTheme.bodyLarge),
-                      Text("+12", style: TextStyle(
-                        color: Color(0xFF3fb950),
-                        fontSize: 16,
-                      )),
-                      Text("-10", style: TextStyle(
-                        color: Color(0xFFf85149),
-                        fontSize: 16,
-                      )),
-                    ],
-                  ),
-                  Text("id: 123456 / 1.24MB / 960x1400", style: Theme.of(context).textTheme.labelMedium),
-                ],
-              ),
-              SizedBox(
-                width: 100,
-                height: 100,
-                child: Thumbnail(HydrusImage(182638344)),
-              ),
+              _Info(),
+              Obx(() {
+                return SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Thumbnail(images.$[page.i]),
+                );
+              }),
             ],
           ),
         ),
@@ -74,21 +81,19 @@ class _EditorState extends State<Editor> {
                   children: [
                     ClipRect(
                       child: Scrollbar(
-                        controller: scrollControllerUp,
+                        controller: scrollUp,
                         child: ListView.builder(
                           itemCount: 21,
                           shrinkWrap: true,
                           reverse: true,
-                          controller: scrollControllerUp,
+                          controller: scrollUp,
                           itemBuilder: (context, index) => ListTile(title: Text("$index")),
                         ),
                       ),
                     ),
                     Suggests(
                       trailing: Icon(Icons.add),
-                      onTap: () {
-                        // add to the list above
-                      },
+                      onTap: manager.add,
                     ),
                   ],
                 ),
@@ -101,6 +106,59 @@ class _EditorState extends State<Editor> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+
+class _Info extends StatelessWidget {
+  const _Info();
+
+  @override
+  Widget build(BuildContext context) {
+    final Images images = Get.find();
+    final PageGetxController page = Get.find();
+    final image = images.$[page.i];
+    final TagManager manager = Get.find();
+    return SizedBox(
+      width: 250,
+      child: Column(
+        spacing: 5,
+        crossAxisAlignment: .start,
+        children: [
+          DefaultTextStyle(
+            style: TextStyle(fontSize: 16),
+            child: Row(
+              crossAxisAlignment: .center,
+              children: [
+                Obx(() => Text("${image.length + manager.additions - manager.deletions} tags")),
+                VerticalDivider(width: 8),
+                Obx(() {
+                  if (manager.additions > 0) {
+                    return Row(
+                      children: [
+                        Text("+${manager.additions}", style: const .new(color: additions)),
+                        const VerticalDivider(width: 6),
+                      ],
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                }),
+                Obx(() => manager.deletions > 0
+                    ? Text("-10", style: const .new(color: deletions))
+                    : const SizedBox.shrink()),
+              ],
+            ),
+          ),
+          Text("id: ${image.id} / "
+              "${filesize(image.size)} / "
+              "${image.res}",
+              style: Theme.of(context).textTheme.labelMedium,
+              maxLines: 2
+          ),
+        ],
       ),
     );
   }

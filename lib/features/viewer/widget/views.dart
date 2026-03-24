@@ -40,14 +40,28 @@ class ObxHero extends StatelessWidget {
     final PageGetxController controller = Get.find();
     return Obx(() => HeroMode(
       enabled: controller.enabled(index),
-      child: Hero(
-        tag: tag,
-        createRectTween: (b, e) => RectTween(begin: b, end: e),
-        child: child,
-      ),
+      child: LinearHero(tag: tag, child: child),
     ));
   }
 }
+
+
+class LinearHero extends StatelessWidget {
+  final Object tag;
+  final Widget child;
+
+  const LinearHero({super.key, required this.tag, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: tag,
+      createRectTween: (b, e) => RectTween(begin: b, end: e),
+      child: child,
+    );
+  }
+}
+
 
 
 class ViewImage extends StatelessWidget {
