@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/features/editor/page/editor.dart';
 import 'package:hydrus_flutter/features/viewer/getx/transform.dart';
+import 'package:hydrus_flutter/features/viewer/page/tag_sheet.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -8,8 +10,8 @@ import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 import 'package:hydrus_flutter/features/gallery/getx/controllers.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
-import 'tag_sheet.dart';
 import '../widget/views.dart';
 import '../getx/page.dart';
 
@@ -118,7 +120,7 @@ class _BottomAppBarActions extends StatelessWidget {
         ),
         Expanded(child: Center()),
         FilledIconButton(
-          onPressed: () => showTagSheet(context),
+          onPressed: () => Get.to(() => Editor(), transition: .downToUp),
           icon: Icon(Icons.tag),
         ),
         FilledIconButton(
