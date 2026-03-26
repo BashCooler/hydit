@@ -96,19 +96,16 @@ class _EditorState extends State<Editor> {
                         ClipRect(
                           child: Column(
                             children: [
-                              Material(
-                                elevation: 1,
-                                child: TabBar(
-                                  isScrollable: true,
-                                  tabAlignment: .center,
-                                  onTap: $.selectServiceByIndex,
-                                  tabs: $.services.isEmpty
-                                      ? [const Tab(text: 'No services')]
-                                      : [
-                                          for (final service in $.services)
-                                            Tab(text: $.pretty(service)),
-                                        ],
-                                ),
+                              TabBar(
+                                isScrollable: true,
+                                tabAlignment: .center,
+                                onTap: $.selectServiceByIndex,
+                                tabs: $.services.isEmpty
+                                    ? [const Tab(text: 'No services')]
+                                    : [
+                                        for (final service in $.services)
+                                          Tab(text: $.pretty(service)),
+                                      ],
                               ),
                               Expanded(
                                 child: TagList(
@@ -117,9 +114,7 @@ class _EditorState extends State<Editor> {
                                       ? Icons.playlist_remove
                                       : Icons.lock_outline),
                                   scrollController: scrollUp,
-                                  onTap: $.activeServiceEditable
-                                      ? $.delete
-                                      : (_) {},
+                                  onTap: $.activeServiceEditable ? $.delete : null,
                                 ),
                               ),
                             ],
@@ -137,6 +132,7 @@ class _EditorState extends State<Editor> {
               Divider(height: 1),
               // TODO add remove and insert actions
               Obx(() => TagSearchBar(
+                enabled: manager.activeServiceEditable,
                 hintText: manager.activeServiceEditable
                     ? 'Add tags to ${manager.activeService}'
                     : 'Read-only service selected',

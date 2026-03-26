@@ -56,6 +56,15 @@ enum Diff {add, delete}
 /// UI features of this class is presented in
 /// [TagUI] extension
 class Tag {
+  static Set<String> namespaces = {
+    'system',
+    'creator',
+    'character',
+    'meta',
+    'series',
+    'studio',
+  };
+
   final String raw;
   final int? count;
   Diff? diff;
@@ -70,6 +79,14 @@ class Tag {
   String get value {
     final idx = raw.indexOf(':');
     return idx == -1 ? raw : raw.substring(idx + 1);
+  }
+
+  String get pretty {
+    final idx = raw.indexOf(':');
+    if (idx == -1) return raw;
+    final namespace = raw.substring(0 , idx);
+    if (namespaces.contains(namespace)) return value;
+    return raw;
   }
 
   @override

@@ -57,12 +57,12 @@ class TagList extends StatelessWidget {
   final Widget? trailing;
   final dynamic observable;
   final ScrollController? scrollController;
-  final void Function(Tag tag) onTap;
+  final void Function(Tag tag)? onTap;
 
   const TagList({
     super.key,
     this.trailing,
-    required this.onTap,
+    this.onTap,
     this.scrollController,
     required this.observable,
   });
@@ -94,7 +94,7 @@ class _SearchEntry extends StatelessWidget {
   final int index;
   final Widget? trailing;
   final dynamic observable;
-  final void Function(Tag tag) onTap;
+  final void Function(Tag tag)? onTap;
 
   const _SearchEntry({
     required this.index,
@@ -124,14 +124,15 @@ class _SearchEntry extends StatelessWidget {
     }
 
     return ListTile(
+      enabled: onTap != null,
       tileColor: tileColor,
       minTileHeight: AppTheme.fieldHeight,
-      title: Text(tag.value, style: TextStyle(color: color)),
+      title: Text(tag.pretty, style: TextStyle(color: color)),
       trailing: icon ?? trailing ?? Text(
         tag.count?.toString() ?? '0',
         style: TextStyle(color: color, fontSize: 14.0),
       ),
-      onTap: () => onTap.call(tag),
+      onTap: () => onTap?.call(tag),
     );
   }
 }

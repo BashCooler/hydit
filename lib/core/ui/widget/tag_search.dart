@@ -5,14 +5,16 @@ import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 
 
 class TagSearchBar extends StatefulWidget {
-  final bool? autofocus;
+  final bool enabled;
+  final bool autofocus;
   final String? hintText;
   final Widget? actions;
   final void Function() onSubmitted;
 
   const TagSearchBar({
     super.key,
-    this.autofocus,
+    this.enabled = true,
+    this.autofocus = false,
     this.hintText,
     this.actions,
     required this.onSubmitted,
@@ -39,8 +41,9 @@ class _TagSearchBarState extends State<TagSearchBar> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      enabled: widget.enabled,
       textAlignVertical: .center,
-      autofocus: widget.autofocus ?? false,
+      autofocus: widget.autofocus,
       focusNode: _focusNode,
       controller: controller.$,
       decoration: InputDecoration(
