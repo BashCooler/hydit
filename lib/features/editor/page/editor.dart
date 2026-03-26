@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:filesize/filesize.dart';
-import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/features/editor/getx/tags.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 import 'package:split_view/split_view.dart';
@@ -30,7 +29,7 @@ class _EditorState extends State<Editor> {
   final scrollDown = ScrollController();
 
   final Images images = Get.find();
-  final TagManager manager = Get.put(TagManager());
+  final TagManager manager = TagManager();
   final PageGetxController page = Get.find();
 
   @override
@@ -65,9 +64,13 @@ class _EditorState extends State<Editor> {
           titleSpacing: 0,
           toolbarHeight: 100,
           title: Row(
+            crossAxisAlignment: .center,
             mainAxisAlignment: .spaceBetween,
             children: [
-              _Info(),
+              Container(
+                constraints: BoxConstraints(maxWidth: 250, maxHeight: 100),
+                child: _Info(manager),
+              ),
               Obx(() {
                 return SizedBox(
                   width: 100,
@@ -82,26 +85,28 @@ class _EditorState extends State<Editor> {
           child: Column(
             children: [
               Expanded(
-                child: SplitView(
-                  viewMode: .Vertical,
-                  gripSize: 16,
-                  indicator: SplitIndicator(viewMode: SplitViewMode.Vertical),
-                  children: [
-                    ClipRect(
-                      // TODO Add tabs for services
-                      // TODO paint tags to remove red
-                      child: TagList(
-                        observable: manager.tags,
-                        trailing: const Icon(Icons.playlist_remove),
-                        scrollController: scrollUp,
-                        onTap: manager.delete,
+                child: GetBuilder(
+                  init: manager,
+                  builder: ($) => SplitView(
+                    viewMode: .Vertical,
+                    gripSize: 16,
+                    indicator: SplitIndicator(viewMode: SplitViewMode.Vertical),
+                    children: [
+                      ClipRect(
+                        // TODO Add tabs for services
+                        child: TagList(
+                          observable: $.tags,
+                          trailing: const Icon(Icons.playlist_remove),
+                          scrollController: scrollUp,
+                          onTap: $.delete,
+                        ),
                       ),
-                    ),
-                    Suggests(
-                      trailing: Icon(Icons.add),
-                      onTap: manager.add,
-                    ),
-                  ],
+                      Suggests(
+                        trailing: Icon(Icons.add),
+                        onTap: $.add,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Divider(height: 1),
@@ -121,18 +126,20 @@ class _EditorState extends State<Editor> {
 
 
 class _Info extends StatelessWidget {
-  const _Info();
+  final TagManager manager;
+
+  const _Info(this.manager);
 
   @override
   Widget build(BuildContext context) {
     final Images images = Get.find();
     final PageGetxController page = Get.find();
     final image = images.$[page.i];
-    final TagManager manager = Get.find();
     return SizedBox(
       width: 250,
       child: Column(
         spacing: 5,
+        mainAxisAlignment: .center,
         crossAxisAlignment: .start,
         children: [
           DefaultTextStyle(

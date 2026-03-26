@@ -6,6 +6,10 @@ import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 
 
+const additions = Color(0xFF3fb950);
+const deletions = Color(0xFFf85149);
+
+
 class Suggests extends StatelessWidget {
   final Widget? trailing;
   final bool expanded;
@@ -101,12 +105,29 @@ class _SearchEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tag = observable[index];
+    final tag = observable[index] as Tag;
     final color = namespaceColors[tag.namespace] ?? namespaceColors['_'];
+
+    final Icon? icon;
+    final Color? tileColor;
+
+    switch (tag.diff) {
+      case .add:
+        icon = Icon(Icons.playlist_remove);
+        tileColor = additions;
+      case .delete:
+        icon = Icon(Icons.undo);
+        tileColor = deletions;
+      case _:
+        icon = null;
+        tileColor = null;
+    }
+
     return ListTile(
+      tileColor: tileColor,
       minTileHeight: AppTheme.fieldHeight,
       title: Text(tag.value, style: TextStyle(color: color)),
-      trailing: trailing ?? Text(
+      trailing: icon ?? trailing ?? Text(
         tag.count?.toString() ?? '0',
         style: TextStyle(color: color, fontSize: 14.0),
       ),

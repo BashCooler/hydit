@@ -27,14 +27,17 @@ class HydrusImage {
   List<Tag> get all => service.values.first.entries;
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
 
+  HydrusImage(this.id);
+
   set mime(String value) {
     final m = value.split('/');
     type = m.first;
     ext = m.last;
   }
-
-  HydrusImage(this.id);
 }
+
+
+enum Diff {add, delete}
 
 
 /// Contains information about a hydrus tag
@@ -55,8 +58,9 @@ class HydrusImage {
 class Tag {
   final String raw;
   final int? count;
+  Diff? diff;
 
-  const Tag(this.raw, {this.count});
+  Tag(this.raw, {this.count, this.diff});
 
   String get namespace {
     final idx = raw.indexOf(':');

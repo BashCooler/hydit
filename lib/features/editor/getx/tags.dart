@@ -12,16 +12,31 @@ class TagManager extends GetxController {
   int get deletions => tagsToDelete.length;
 
   void add(Tag tag) {
-    // TODO add to tags list
+    if (tag.diff == .add) {
+      tag.diff = null;
+      tags.remove(tag);
+      tagsToAdd.remove(tag);
+      update();
+      return;
+    }
+    tag.diff = Diff.add;
+    tags.addIf(!tags.contains(tag), tag);
     tagsToAdd.addIf(!tagsToAdd.contains(tag), tag);
+    update();
   }
 
   void delete(Tag tag) {
     if (tagsToDelete.contains(tag)) {
-      // TODO remove from tags list
+      tag.diff = null;
       tagsToDelete.remove(tag);
-    } else {
+    } else if (tag.diff == null) {
+      tag.diff = Diff.delete;
       tagsToDelete.add(tag);
+    } else if (tag.diff == .add) {
+      tag.diff = null;
+      tags.remove(tag);
+      tagsToAdd.remove(tag);
     }
+    update();
   }
 }
