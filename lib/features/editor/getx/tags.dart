@@ -3,40 +3,124 @@ import 'package:hydrus_flutter/core/logic/entities.dart';
 
 
 class TagManager extends GetxController {
-  // TODO convert to <TagService, Tag>
-  final tags = <Tag>[].obs;
-  final tagsToAdd = <Tag>[].obs;
-  final tagsToDelete = <Tag>[].obs;
+  static const readOnlyServices = [
+    'all known tags',
+    'public tag repository',
+  ];
 
-  int get additions => tagsToAdd.length;
-  int get deletions => tagsToDelete.length;
+  final services = <String>[].obs;
+  final selectedService = ''.obs;
 
-  void add(Tag tag) {
-    if (tag.diff == .add) {
-      tag.diff = null;
-      tags.remove(tag);
-      tagsToAdd.remove(tag);
+  final Map<String, RxList<Tag>> _tags = {};
+  final Map<String, RxList<Tag>> _tagsToAdd = {};
+  final Map<String, RxList<Tag>> _tagsToDelete = {};
+
+  String get activeService => selectedService.value;
+
+  int get activeIndex {
+    if (services.isEmpty) return 0;
+    final index = services.indexOf(selectedService.value);
+    if (index < 0) return 0;
+    return index;
+  }
+
+  RxList<Tag> get activeTags => _tags[selectedService.value]!;
+
+  int get serviceAdditions => _tagsToAdd[selectedService.value]!.length;
+  int get serviceDeletions => _tagsToDelete[selectedService.value]!.length;
+  int get tagCount => activeTags.length;
+
+  bool get activeServiceEditable => isServiceEditable(selectedService.value);
+  bool isServiceEditable(String service) => !readOnlyServices.contains(service);
+
+  void init(Map<String, TagService> servicesMap) {
+    services
+      ..clear()
+      ..addAll(servicesMap.keys);
+    _tags.clear();
+    _tagsToAdd.clear();
+    _tagsToDelete.clear();
+
+    for (final entry in servicesMap.entries) {
+      _tags[entry.key] = entry.value.entries
+          .map((tag) => Tag(tag.raw, count: tag.count))
+          .toList()
+          .obs;
+      _tagsToAdd[entry.key] = <Tag>[].obs;
+      _tagsToDelete[entry.key] = <Tag>[].obs;
+    }
+
+    selectedService.value = services.isNotEmpty ? services.first : '';
+    update();
+  }
+
+  void selectServiceByIndex(int index) {
+    if (index < 0 || index >= services.length) return;
+    selectedService.value = services[index];
+    update();
+  }
+
+  void add(Tag tag) => addToService(selectedService.value, tag);
+  void delete(Tag tag) => deleteFromService(selectedService.value, tag);
+
+  void addToService(String service, Tag tag) {
+    if (!isServiceEditable(service)) return;
+
+    final tags = _tags[service]!;
+    final tagsToAdd = _tagsToAdd[service]!;
+    final tagsToDelete = _tagsToDelete[service]!;
+
+    final existing = _findByRaw(tags, tag.raw);
+    if (existing != null) {
+      if (existing.diff == .delete) {
+        existing.diff = null;
+        tagsToDelete.remove(existing);
+      }
       update();
       return;
     }
-    tag.diff = Diff.add;
-    tags.addIf(!tags.contains(tag), tag);
-    tagsToAdd.addIf(!tagsToAdd.contains(tag), tag);
+
+    final newTag = Tag(tag.raw, count: tag.count, diff: .add);
+    tags.insert(0, newTag);
+    tagsToAdd.insert(0, newTag);
     update();
   }
 
-  void delete(Tag tag) {
-    if (tagsToDelete.contains(tag)) {
-      tag.diff = null;
-      tagsToDelete.remove(tag);
-    } else if (tag.diff == null) {
-      tag.diff = Diff.delete;
-      tagsToDelete.add(tag);
-    } else if (tag.diff == .add) {
-      tag.diff = null;
-      tags.remove(tag);
-      tagsToAdd.remove(tag);
+  void deleteFromService(String service, Tag tag) {
+    if (!isServiceEditable(service)) return;
+
+    final tags = _tags[service]!;
+    final tagsToAdd = _tagsToAdd[service]!;
+    final tagsToDelete = _tagsToDelete[service]!;
+
+    final target = _findByRaw(tags, tag.raw);
+    if (target == null) return;
+
+    switch (target.diff) {
+      case .delete:
+        target.diff = null;
+        tagsToDelete.remove(target);
+      case .add:
+        target.diff = null;
+        tags.remove(target);
+        tagsToAdd.remove(target);
+      case _:
+        target.diff = .delete;
+        tagsToDelete.addIf(!tagsToDelete.contains(target), target);
     }
     update();
   }
+
+  Tag? _findByRaw(List<Tag> tags, String raw) {
+    for (final tag in tags) {
+      if (tag.raw == raw) return tag;
+    }
+    return null;
+  }
+
+  String pretty(String service) => switch (service) {
+    'all known tags' => 'All',
+    'public tag repository' => 'PTR',
+    _ => service,
+  };
 }

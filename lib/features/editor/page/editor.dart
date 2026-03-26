@@ -26,7 +26,6 @@ class Editor extends StatefulWidget {
 
 class _EditorState extends State<Editor> {
   final scrollUp = ScrollController();
-  final scrollDown = ScrollController();
 
   final Images images = Get.find();
   final TagManager manager = TagManager();
@@ -35,13 +34,12 @@ class _EditorState extends State<Editor> {
   @override
   void initState() {
     super.initState();
-    manager.tags.assignAll(images.$[page.i].all);
+    manager.init(images.$[page.i].service);
   }
 
   @override
   void dispose() {
     scrollUp.dispose();
-    scrollDown.dispose();
     super.dispose();
   }
 
@@ -87,34 +85,63 @@ class _EditorState extends State<Editor> {
               Expanded(
                 child: GetBuilder(
                   init: manager,
-                  builder: ($) => SplitView(
-                    viewMode: .Vertical,
-                    gripSize: 16,
-                    indicator: SplitIndicator(viewMode: SplitViewMode.Vertical),
-                    children: [
-                      ClipRect(
-                        // TODO Add tabs for services
-                        child: TagList(
-                          observable: $.tags,
-                          trailing: const Icon(Icons.playlist_remove),
-                          scrollController: scrollUp,
-                          onTap: $.delete,
+                  builder: ($) => DefaultTabController(
+                    length: $.services.isEmpty ? 1 : $.services.length,
+                    initialIndex: $.activeIndex,
+                    child: SplitView(
+                      viewMode: .Vertical,
+                      gripSize: 16,
+                      indicator: SplitIndicator(viewMode: .Vertical),
+                      children: [
+                        ClipRect(
+                          child: Column(
+                            children: [
+                              Material(
+                                elevation: 1,
+                                child: TabBar(
+                                  isScrollable: true,
+                                  tabAlignment: .center,
+                                  onTap: $.selectServiceByIndex,
+                                  tabs: $.services.isEmpty
+                                      ? [const Tab(text: 'No services')]
+                                      : [
+                                          for (final service in $.services)
+                                            Tab(text: $.pretty(service)),
+                                        ],
+                                ),
+                              ),
+                              Expanded(
+                                child: TagList(
+                                  observable: $.activeTags,
+                                  trailing: Icon($.activeServiceEditable
+                                      ? Icons.playlist_remove
+                                      : Icons.lock_outline),
+                                  scrollController: scrollUp,
+                                  onTap: $.activeServiceEditable
+                                      ? $.delete
+                                      : (_) {},
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Suggests(
-                        trailing: Icon(Icons.add),
-                        onTap: $.add,
-                      ),
-                    ],
+                        Suggests(
+                          trailing: Icon($.activeServiceEditable ? Icons.add : Icons.lock_outline),
+                          onTap: $.activeServiceEditable ? $.add : (_) {},
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
               Divider(height: 1),
               // TODO add remove and insert actions
-              TagSearchBar(
-                hintText: 'Add tags',
+              Obx(() => TagSearchBar(
+                hintText: manager.activeServiceEditable
+                    ? 'Add tags to ${manager.activeService}'
+                    : 'Read-only service selected',
                 onSubmitted: () {},
-              ),
+              )),
               // TODO confirm button
             ],
           ),
@@ -126,9 +153,9 @@ class _EditorState extends State<Editor> {
 
 
 class _Info extends StatelessWidget {
-  final TagManager manager;
+  final TagManager $;
 
-  const _Info(this.manager);
+  const _Info(this.$);
 
   @override
   Widget build(BuildContext context) {
@@ -147,13 +174,13 @@ class _Info extends StatelessWidget {
             child: Row(
               crossAxisAlignment: .center,
               children: [
-                Obx(() => Text("${image.length + manager.additions - manager.deletions} tags")),
+                Obx(() => Text("${$.tagCount} tags")),
                 VerticalDivider(width: 8),
                 Obx(() {
-                  if (manager.additions > 0) {
+                  if ($.serviceAdditions > 0) {
                     return Row(
                       children: [
-                        Text("+${manager.additions}", style: const .new(color: additions)),
+                        Text("+${$.serviceAdditions}", style: const .new(color: additions)),
                         const VerticalDivider(width: 6),
                       ],
                     );
@@ -161,12 +188,17 @@ class _Info extends StatelessWidget {
                     return SizedBox.shrink();
                   }
                 }),
-                Obx(() => manager.deletions > 0
-                    ? Text("-${manager.deletions}", style: const .new(color: deletions))
+                Obx(() => $.serviceDeletions > 0
+                    ? Text("-${$.serviceDeletions}", style: const .new(color: deletions))
                     : const SizedBox.shrink()),
               ],
             ),
           ),
+          Obx(() => Text("service: ${$.activeService}",
+            style: Theme.of(context).textTheme.labelMedium,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          )),
           Text("id: ${image.id} / "
               "${filesize(image.size)} / "
               "${image.res}",
