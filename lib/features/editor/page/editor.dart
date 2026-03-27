@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:filesize/filesize.dart';
 import 'package:hydrus_flutter/features/editor/getx/tags.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
-import 'package:split_view/split_view.dart';
+import 'package:multi_split_view/multi_split_view.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/ui/widget/images.dart';
@@ -50,6 +50,15 @@ class _EditorState extends State<Editor> {
     );
   }
 
+  final controller = MultiSplitViewController(areas: [
+    Area(
+        min: 0.35,
+        flex: 1.4,
+        max: 2.375,
+        builder: (context, area) => Up()),
+    Area(flex: 1, builder: (context, area) => Down()),
+  ]);
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -66,8 +75,10 @@ class _EditorState extends State<Editor> {
             mainAxisAlignment: .spaceBetween,
             children: [
               Container(
-                constraints: BoxConstraints(maxWidth: 250, maxHeight: 100),
-                child: _Info(manager),
+                constraints: const BoxConstraints(
+                  maxWidth: 250,
+                  maxHeight: 100),
+                child: Info(manager),
               ),
               Obx(() {
                 return SizedBox(
@@ -88,43 +99,13 @@ class _EditorState extends State<Editor> {
                   builder: ($) => DefaultTabController(
                     length: $.services.isEmpty ? 1 : $.services.length,
                     initialIndex: $.activeIndex,
-                    child: SplitView(
-                      viewMode: .Vertical,
-                      gripSize: 16,
-                      indicator: SplitIndicator(viewMode: .Vertical),
-                      children: [
-                        ClipRect(
-                          child: Column(
-                            children: [
-                              TabBar(
-                                isScrollable: true,
-                                tabAlignment: .center,
-                                onTap: $.selectServiceByIndex,
-                                tabs: $.services.isEmpty
-                                    ? [const Tab(text: 'No services')]
-                                    : [
-                                        for (final service in $.services)
-                                          Tab(text: $.pretty(service)),
-                                      ],
-                              ),
-                              Expanded(
-                                child: TagList(
-                                  observable: $.activeTags,
-                                  trailing: Icon($.activeServiceEditable
-                                      ? Icons.playlist_remove
-                                      : Icons.lock_outline),
-                                  scrollController: scrollUp,
-                                  onTap: $.activeServiceEditable ? $.delete : null,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Suggests(
-                          trailing: Icon($.activeServiceEditable ? Icons.add : Icons.lock_outline),
-                          onTap: $.activeServiceEditable ? $.add : (_) {},
-                        ),
-                      ],
+                    child: MultiSplitView(
+                      axis: .vertical,
+                      resizable: true,
+                      controller: controller,
+                      dividerBuilder: (_, _, _, drag, hover, _) {
+                        return Container(color: Get.theme.dividerColor);
+                      },
                     ),
                   ),
                 ),
@@ -148,10 +129,66 @@ class _EditorState extends State<Editor> {
 }
 
 
-class _Info extends StatelessWidget {
+class Up extends StatelessWidget {
+  final scrollUp = ScrollController();
+
+  Up({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder(
+      init: Get.find<TagManager>(),
+      builder: ($) => Column(
+        children: [
+          TabBar(
+            isScrollable: true,
+            tabAlignment: .center,
+            onTap: $.selectServiceByIndex,
+            tabs: $.services.isEmpty
+                ? [ const Tab(text: 'No services') ]
+                : [ for (final service in $.services) Tab(text: $.pretty(service)) ],
+          ),
+          Expanded(
+            child: TagList(
+              observable: $.activeTags,
+              trailing: Icon($.activeServiceEditable
+                  ? Icons.playlist_remove
+                  : Icons.lock_outline),
+              scrollController: scrollUp,
+              onTap: $.activeServiceEditable ? $.delete : null,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class Down extends StatelessWidget {
+  const Down({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder(
+      init: Get.find<TagManager>(),
+      builder: ($) => Suggests(
+        trailing: Icon($.activeServiceEditable
+            ? Icons.add
+            : Icons.lock_outline),
+        onTap: $.activeServiceEditable
+            ? $.add
+            : (_) {},
+      )
+    );
+  }
+}
+
+
+class Info extends StatelessWidget {
   final TagManager $;
 
-  const _Info(this.$);
+  const Info(this.$, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -166,12 +203,12 @@ class _Info extends StatelessWidget {
         crossAxisAlignment: .start,
         children: [
           DefaultTextStyle(
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
             child: Row(
               crossAxisAlignment: .center,
               children: [
                 Obx(() => Text("${$.tagCount} tags")),
-                VerticalDivider(width: 8),
+                const VerticalDivider(width: 8),
                 Obx(() {
                   if ($.serviceAdditions > 0) {
                     return Row(
