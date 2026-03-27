@@ -23,10 +23,10 @@ class HydrusImage {
   late String type;
   late String ext;
   late int duration;
-  late Map<String, TagService> service;
+  late Map<String, List<Tag>> service;
 
-  int get length => service.values.first.entries.length;
-  List<Tag> get all => service.values.first.entries;
+  int get length => service.values.first.length;
+  List<Tag> get all => service.values.first;
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
 
   HydrusImage(this.id);
@@ -96,17 +96,4 @@ class Tag extends Equatable {
 
   @override
   List<Object?> get props => [raw];
-}
-
-
-class TagService {
-  final String service;
-  final List<Tag> entries;
-
-  TagService({required this.service, required this.entries});
-
-  @override
-  String toString() {
-    return 'service: $service, entries: $entries';
-  }
 }

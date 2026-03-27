@@ -45,11 +45,11 @@ class TagSheet extends StatelessWidget {
                     child: TabBarView(
                       children: namespaces.map((name) {
                         return ListView.builder(
-                          itemCount: service[name]!.entries.length,
+                          itemCount: service[name]!.length,
                           reverse: true,
                           shrinkWrap: true,
                           itemBuilder: (context, i) {
-                            final tag = service[name]!.entries[i];
+                            final tag = service[name]![i];
                             return ListTile(title: tag.label);
                           },
                         );

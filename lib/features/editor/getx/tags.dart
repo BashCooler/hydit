@@ -33,7 +33,7 @@ class TagManager extends GetxController {
   bool get activeServiceEditable => isServiceEditable(selectedService.value);
   bool isServiceEditable(String service) => !readOnlyServices.contains(service);
 
-  void init(Map<String, TagService> servicesMap) {
+  void init(Map<String, List<Tag>> servicesMap) {
     services
       ..clear()
       ..addAll(servicesMap.keys);
@@ -42,7 +42,7 @@ class TagManager extends GetxController {
     _tagsToDelete.clear();
 
     for (final entry in servicesMap.entries) {
-      _tags[entry.key] = entry.value.entries
+      _tags[entry.key] = entry.value
           .map((tag) => Tag(tag.raw, count: tag.count))
           .toList()
           .obs;
