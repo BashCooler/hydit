@@ -5,14 +5,14 @@ import 'package:flutter/scheduler.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:hydrus_flutter/utils/theme.dart';
-import 'package:hydrus_flutter/core/data/hydrus.dart';
+import 'utils/theme.dart';
+import 'core/data/api.dart';
+import 'core/data/repository.dart';
 import 'features/gallery/page/gallery.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final prefs = await SharedPreferences.getInstance();
 
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(
@@ -23,8 +23,9 @@ void main() async {
     ),
   );
 
-  Get.put<SharedPreferences>(prefs);
-  Get.put<Client>(Client());
+  final prefs = await SharedPreferences.getInstance();
+  Get.put(prefs);
+  Get.put(Repo(Client()));
 
   MediaKit.ensureInitialized();
 

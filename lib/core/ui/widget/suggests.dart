@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';

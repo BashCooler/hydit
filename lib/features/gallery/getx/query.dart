@@ -1,19 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydrus_flutter/core/data/hydrus.dart';
-import 'package:hydrus_flutter/core/data/parser.dart';
-import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/core/data/api.dart';
+import 'package:hydrus_flutter/core/data/mapper.dart';
+import 'package:hydrus_flutter/core/data/repository.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-
-void updateClient() {
-  final prefs = Get.find<SharedPreferences>();
-  final key = prefs.getString('Hydrus API key') ?? '';
-  final uri = Uri.parse(prefs.getString('URL') ?? '');
-  Get.find<Client>().updateClient(key: key, uri: uri);
-}
 
 
 class QueryController extends GetxController {
@@ -32,7 +24,7 @@ class QueryController extends GetxController {
 
   bool hasTag(Tag tag) => values.contains(tag.raw);
 
-  final client = Get.find<Client>();
+  final repo = Get.find<Repo>();
   final textController = TextEditingController();
 
   @override
@@ -67,13 +59,13 @@ class QueryController extends GetxController {
       final int id = ++_requestId;
       String response;
       try {
-        response = await client.getSearchTags(q);
+        response = await repo.api.getSearchTags(q);
       } catch (e) {
         return;
       }
       if (id != _requestId) return;
       _suggestVisible.value = true;
-      final List<Tag> parsed = parseSearchResults(response);
+      final List<Tag> parsed = Mapper.parseSearchResults(response);
       suggests.assignAll(parsed);
     }
     isLoading.value = false;
@@ -94,7 +86,7 @@ class QueryController extends GetxController {
     final imageController = Get.find<Images>();
     List<int> ids = [];
     try {
-      ids = await client.getSearchFiles(_tags.map((t) => t.raw).toList());
+      ids = await repo.api.getSearchFiles(_tags.map((t) => t.raw).toList());
     } catch (e) {
       handleException(e);
       return;

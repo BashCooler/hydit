@@ -1,11 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import '../../../core/external/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
+import 'package:hydrus_flutter/core/data/repository.dart';
 import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/features/settings/settings.dart';
+import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 
 import 'search_sheet.dart';
 import '../getx/query.dart';
@@ -20,12 +21,11 @@ class Gallery extends StatefulWidget {
 }
 
 class _GalleryState extends State<Gallery> {
-
   @override
   void initState() {
     super.initState();
-    updateClient();
     Get
+      ..find<Repo>().updateClient()
       ..put(Images())
       ..put(QueryController())
       ..put(ScrollToHideController())

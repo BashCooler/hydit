@@ -8,7 +8,7 @@
 /// moved to a dedicated `entities_ext.dart` file
 ///
 /// This way we can test API requests or parser functions by
-/// running `hydrus.dart`, `parser.dart`, etc. as console
+/// running `api.dart`, `mapper.dart`, etc. as console
 /// applications
 library;
 
@@ -51,12 +51,7 @@ enum Diff {add, delete}
 /// - [namespace]
 /// - [value]
 ///
-/// [TagUi] extension getters:
-/// - [color]
-/// - [label] - Text widget with namespace [color]
-///
-/// UI features of this class is presented in
-/// [TagUI] extension
+/// ignore: must_be_immutable
 class Tag extends Equatable {
   static Set<String> namespaces = {
     'system',

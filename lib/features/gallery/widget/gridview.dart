@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/core/data/repository.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 
-import 'package:hydrus_flutter/core/data/hydrus.dart';
-import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/ui/widget/images.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
@@ -52,21 +52,19 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
 
 class _TileFutureBuilder extends StatelessWidget {
   final int index;
-  final client = Get.find<Client>();
-  final imageController = Get.find<Images>();
 
-  _TileFutureBuilder(this.index);
+  const _TileFutureBuilder(this.index);
 
   @override
   Widget build(BuildContext context) {
-    final image = imageController.images[index];
+    final image = Get.find<Images>().images[index];
 
     if (image.width != -1) {
       return _Tile(index, image);
     }
 
     return FutureBuilder(
-      future: client.writeMetadata(image, includeServicesObject: false),
+      future: Get.find<Repo>().setMetadataFor(image),
       builder: (_, snapshot) {
         if (snapshot.connectionState == .done) {
           return _Tile(index, image);

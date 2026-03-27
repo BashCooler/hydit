@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:hydrus_flutter/core/data/hydrus.dart';
-import 'package:hydrus_flutter/core/logic/entities.dart';
+import 'package:hydrus_flutter/core/data/repository.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 
 
 class Thumbnail extends StatelessWidget {
@@ -13,11 +13,11 @@ class Thumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final client = Get.find<Client>();
+    final repo = Get.find<Repo>();
     return AspectRatio(
       aspectRatio: 1.0,
       child: CachedNetworkImage(
-        imageUrl: client.buildUrl(image.id, thumbnail: true),
+        imageUrl: repo.buildUrl(image.id, thumbnail: true),
         placeholder: (context, url) => ColoredBox(color: Colors.white10),
         fit: .cover,
       ),
@@ -33,18 +33,18 @@ class HighResImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final client = Get.find<Client>();
+    final repo = Get.find<Repo>();
     final aspectRatio = image.width/image.height;
     return ImageStack(
       aspectRatio: aspectRatio,
       children: [
         CachedNetworkImage(
-          imageUrl: client.buildUrl(image.id, thumbnail: true),
+          imageUrl: repo.buildUrl(image.id, thumbnail: true),
           placeholder: (_, _) => SizedBox.shrink(),
           fit: .cover,
         ),
         CachedNetworkImage(
-          imageUrl: client.buildUrl(image.id),
+          imageUrl: repo.buildUrl(image.id),
           placeholder: (_, _) => SizedBox.shrink(),
           fit: .cover,
         ),

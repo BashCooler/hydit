@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
-import 'package:hydrus_flutter/core/logic/entities_ext.dart';
+import 'package:hydrus_flutter/core/domain/entities_ext.dart';
 import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
 import '../getx/page.dart';
 

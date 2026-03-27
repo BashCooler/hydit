@@ -2,8 +2,6 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' show Response, get, post;
-import 'package:hydrus_flutter/core/data/parser.dart';
-import 'package:hydrus_flutter/core/logic/entities.dart';
 import 'package:hydrus_flutter/utils/dictionaries.dart';
 
 
@@ -11,7 +9,7 @@ Future<void> main() async {
   final client = Client(accessKey: '86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
   // my_tags 6c6f63616c2074616773
   // all known tags 616c6c206b6e6f776e2074616773
-  final response = await client._postAddTags(182560646, "6c6f63616c2074616773", Action.deleteFromLocalFileDomain, ["test"]);
+  final response = await client.getServices();
   print(response);
   // var tags = ['creator:呵呜阿花', 'title:白丝秦喵喵。'];
 }
@@ -82,14 +80,6 @@ class Client {
     return response;
   }
 
-  // MARK: BUILD URL
-
-  String buildUrl(int id, {bool thumbnail = false}) => ""
-      "http://$host:$port/get_files/"
-      "${thumbnail ? "thumbnail" : "file"}"
-      "?file_id=$id"
-      "&Hydrus-Client-API-Access-Key=$accessKey";
-
   // Documentation: https://hydrusnetwork.github.io/hydrus/developer_api.html
 
   // MARK: ACCESS MANAGEMENT
@@ -111,6 +101,10 @@ class Client {
 
   Future<String> getVerifyAccessKey() {
     return request('get', 'verify_access_key');
+  }
+
+  Future<String> getServices() {
+    return request('get', 'get_services');
   }
 
   // MARK: SEARCHING AND FETCHING FILES
@@ -155,7 +149,7 @@ class Client {
     return (decoded['file_ids'] as List).cast<int>();
   }
 
-  Future<void> writeMetadata(HydrusImage image, {
+  Future<String> getFileMetadata(List<int> ids, {
     bool? createNewFileIds,
     bool? onlyReturnIdentifiers,
     bool? onlyReturnBasicInformation,
@@ -166,7 +160,7 @@ class Client {
     bool? includeServicesObject,
   }) async {
     final Map<String, dynamic> params = {
-      'file_ids': [image.id],
+      'file_ids': ids,
       'only_return_identifiers': onlyReturnIdentifiers,
       'only_return_basic_information': onlyReturnBasicInformation,
       'detailed_url_information': detailedUrlInformation,
@@ -177,8 +171,7 @@ class Client {
     };
     params.removeWhere((k, v) => (v == null));
 
-    final response = await request('get', '/get_files/file_metadata', params);
-    parseMetadataThenWrite(response, image);
+    return await request('get', '/get_files/file_metadata', params);
   }
 
   // MARK: GET FILE

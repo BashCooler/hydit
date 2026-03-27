@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 
-import 'package:hydrus_flutter/core/data/hydrus.dart';
+import 'package:hydrus_flutter/core/data/api.dart';
+import 'package:hydrus_flutter/core/data/repository.dart';
 
 
 class SettingsPage extends StatefulWidget {
@@ -117,7 +117,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final prefs = Get.find<SharedPreferences>();
     prefs.setString('URL', _urlController.text);
     prefs.setString('Hydrus API key', _keyController.text);
-    updateClient();  // update client
+    Get.find<Repo>().updateClient();
     setState(() {
       _urlError = _keyError = null;
       _urlHint = _keyHint = 'Saved';
