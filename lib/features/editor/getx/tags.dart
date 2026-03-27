@@ -70,7 +70,7 @@ class TagManager extends GetxController {
     final tagsToAdd = _tagsToAdd[service]!;
     final tagsToDelete = _tagsToDelete[service]!;
 
-    final existing = _findByRaw(tags, tag.raw);
+    final existing = tags.firstWhereOrNull((t) => t == tag);
     if (existing != null) {
       if (existing.diff == .delete) {
         existing.diff = null;
@@ -80,6 +80,8 @@ class TagManager extends GetxController {
       return;
     }
 
+    /// If we create new Tag here the ListTile in search won't
+    /// change it's color
     final newTag = Tag(tag.raw, count: tag.count, diff: .add);
     tags.insert(0, newTag);
     tagsToAdd.insert(0, newTag);
@@ -93,7 +95,7 @@ class TagManager extends GetxController {
     final tagsToAdd = _tagsToAdd[service]!;
     final tagsToDelete = _tagsToDelete[service]!;
 
-    final target = _findByRaw(tags, tag.raw);
+    final target = tags.firstWhereOrNull((t) => t == tag);
     if (target == null) return;
 
     switch (target.diff) {
@@ -109,13 +111,6 @@ class TagManager extends GetxController {
         tagsToDelete.addIf(!tagsToDelete.contains(target), target);
     }
     update();
-  }
-
-  Tag? _findByRaw(List<Tag> tags, String raw) {
-    for (final tag in tags) {
-      if (tag.raw == raw) return tag;
-    }
-    return null;
   }
 
   String pretty(String service) => switch (service) {

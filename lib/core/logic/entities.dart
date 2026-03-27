@@ -12,6 +12,8 @@
 /// applications
 library;
 
+import 'package:equatable/equatable.dart';
+
 
 class HydrusImage {
   final int id;
@@ -55,7 +57,7 @@ enum Diff {add, delete}
 ///
 /// UI features of this class is presented in
 /// [TagUI] extension
-class Tag {
+class Tag extends Equatable {
   static Set<String> namespaces = {
     'system',
     'creator',
@@ -91,6 +93,9 @@ class Tag {
 
   @override
   String toString() => raw;
+
+  @override
+  List<Object?> get props => [raw];
 }
 
 
