@@ -8,28 +8,23 @@ import 'package:hydrus_flutter/features/settings/data/model.dart';
 
 
 class SettingsController extends GetxController {
-  static const defaultUrl = 'http://127.0.0.1:45869/';
-
   final _settings = AppSettings(
-    url: defaultUrl,
+    url: '',
     key: '',
   ).obs;
 
-  final _urlHint = ''.obs;
-  final _keyHint = ''.obs;
+  final _urlHelper = ''.obs;
+  final _keyHelper = ''.obs;
   final _urlError = ''.obs;
   final _keyError = ''.obs;
-  final _processing = false.obs;
+  final processing = false.obs;
 
   AppSettings get $ => _settings.value;
-  bool get processing => _processing.value;
 
-  String? get urlHint => _getStringOrNull(_urlHint.value);
-  String? get keyHint => _getStringOrNull(_keyHint.value);
+  String? get urlHelper => _getStringOrNull(_urlHelper.value);
+  String? get keyHelper => _getStringOrNull(_keyHelper.value);
   String? get urlError => _getStringOrNull(_urlError.value);
   String? get keyError => _getStringOrNull(_keyError.value);
-
-  set processing(bool state) => _processing.value;
 
   @override
   void onInit() {
@@ -39,24 +34,33 @@ class SettingsController extends GetxController {
 
   void loadSettings() {
     final box = GetStorage();
-    final url = box.read('URL') ?? defaultUrl;
-    final key = box.read('Hydrus API key') ?? '';
+    final url = box.read('url') ?? '';
+    final key = box.read('key') ?? '';
     _settings.value = AppSettings(
       url: url,
       key: key,
     );
   }
 
+  void updateUrl(String value) {
+    _urlHelper.value = _urlError.value = '';
+    _settings.value = _settings.value.copyWith(url: value);
+  }
+  void updateKey(String value) {
+    _keyHelper.value = _keyError.value = '';
+    _settings.value = _settings.value.copyWith(key: value);
+  }
+
   String? _getStringOrNull(String value) {
     return value == '' ? null : value;
   }
+}
 
-  void updateUrl(String value) => _settings.value = _settings.value.copyWith(url: value);
-  void updateKey(String value) => _settings.value = _settings.value.copyWith(key: value);
 
+extension Verify on SettingsController {
   Future<void> verify() async {
-    _processing.value = true;
-    _urlHint.value = _keyHint.value = '';
+    processing.value = true;
+    _urlHelper.value = _keyHelper.value = '';
     _urlError.value = _keyError.value = '';
 
     final uri = Uri.tryParse($.url);
@@ -107,6 +111,6 @@ class SettingsController extends GetxController {
     Get.find<Repo>().updateClient();
 
     _urlError.value = _keyError.value = '';
-    _urlHint.value = _keyHint.value = 'Saved';
+    _urlHelper.value = _keyHelper.value = 'Saved';
   }
 }
