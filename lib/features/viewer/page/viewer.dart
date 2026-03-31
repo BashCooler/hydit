@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
-import 'package:hydrus_flutter/core/ui/widget/widgets.dart';
-import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
+import 'package:hydrus_flutter/core/ui/widgets.dart';
+import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/editor/page/editor.dart';
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';

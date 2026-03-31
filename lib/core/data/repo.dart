@@ -1,6 +1,5 @@
-import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hydrus_flutter/core/data/api.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'mapper.dart';
 import '../domain/entities.dart';
@@ -12,9 +11,10 @@ class Repo {
   Repo(this.api);
 
   void updateClient() {
-    final prefs = Get.find<SharedPreferences>();
-    final key = prefs.getString('Hydrus API key') ?? '';
-    final uri = Uri.parse(prefs.getString('URL') ?? '');
+    final box = GetStorage();
+    final key = box.read('Hydrus API key') ?? '';
+    final url = box.read('URL') ?? '';
+    final uri = Uri.parse(url);
     api.updateClient(key: key, uri: uri);
   }
 

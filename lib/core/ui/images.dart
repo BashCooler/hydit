@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:hydrus_flutter/core/data/repository.dart';
+import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 
 

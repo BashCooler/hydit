@@ -4,9 +4,9 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:hydrus_flutter/core/data/repository.dart';
-import 'package:hydrus_flutter/core/ui/widget/images.dart';
-import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
+import 'package:hydrus_flutter/core/data/repo.dart';
+import 'package:hydrus_flutter/core/ui/images.dart';
+import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/transform.dart';
 import '../getx/page.dart';
 

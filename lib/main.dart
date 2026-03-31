@@ -3,17 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'utils/theme.dart';
 import 'core/data/api.dart';
-import 'core/data/repository.dart';
+import 'core/data/repo.dart';
 import 'features/gallery/page/gallery.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
 
+  await enableEdgeToEdge();
+
+  Get.put(Repo(Client()));
+
+  timeDilation = 1.0;
+  runApp(const App());
+}
+
+
+Future<void> enableEdgeToEdge() async {
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -22,15 +32,6 @@ void main() async {
       systemNavigationBarContrastEnforced: false,
     ),
   );
-
-  final prefs = await SharedPreferences.getInstance();
-  Get.put(prefs);
-  Get.put(Repo(Client()));
-
-  MediaKit.ensureInitialized();
-
-  timeDilation = 1.0;
-  runApp(const App());
 }
 
 

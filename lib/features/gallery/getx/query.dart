@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'package:hydrus_flutter/core/data/api.dart';
 import 'package:hydrus_flutter/core/data/mapper.dart';
-import 'package:hydrus_flutter/core/data/repository.dart';
+import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
-import 'package:hydrus_flutter/core/ui/getx/controllers.dart';
+import 'package:hydrus_flutter/core/domain/di/images.dart';
 
 
 class QueryController extends GetxController {

@@ -32,7 +32,6 @@ dependencies:
     sdk: flutter
   http: ^1.6.0
   get: ^4.7.3
-  shared_preferences: ^2.5.4
   scrollview_observer: ^1.26.3
   media_kit: ^1.2.6
   media_kit_video: ^2.0.1
@@ -46,6 +45,7 @@ dependencies:
   filesize: ^2.0.1
   multi_split_view: ^3.6.1
   equatable: ^2.0.8
+  get_storage: ^2.1.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
