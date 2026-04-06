@@ -99,7 +99,7 @@ class _EditorState extends State<Editor> {
                   init: manager,
                   builder: ($) => DefaultTabController(
                     length: $.services.isEmpty ? 1 : $.services.length,
-                    initialIndex: $.activeIndex,
+                    initialIndex: $.index,
                     child: MultiSplitView(
                       axis: .vertical,
                       resizable: true,
@@ -114,9 +114,9 @@ class _EditorState extends State<Editor> {
               Divider(height: 1),
               // TODO add remove and insert actions
               Obx(() => TagSearchBar(
-                enabled: manager.activeServiceEditable,
-                hintText: manager.activeServiceEditable
-                    ? 'Add tags to ${manager.activeService}'
+                enabled: manager.editable,
+                hintText: manager.editable
+                    ? 'Add tags to ${manager.service}'
                     : 'Read-only service selected',
                 onSubmitted: () {},
                 actions: _TagSearchBarActions(),
@@ -152,12 +152,12 @@ class Up extends StatelessWidget {
           ),
           Expanded(
             child: TagList(
-              observable: $.activeTags,
-              trailing: Icon($.activeServiceEditable
+              observable: $.tags,
+              trailing: Icon($.editable
                   ? Icons.playlist_remove
                   : Icons.lock_outline),
               scrollController: scrollUp,
-              onTap: $.activeServiceEditable ? $.delete : null,
+              onTap: $.editable ? $.delete : null,
             ),
           ),
         ],
@@ -175,10 +175,10 @@ class Down extends StatelessWidget {
     return GetBuilder(
       init: Get.find<TagManager>(),
       builder: ($) => Suggests(
-        trailing: Icon($.activeServiceEditable
+        trailing: Icon($.editable
             ? Icons.add
             : Icons.lock_outline),
-        onTap: $.activeServiceEditable
+        onTap: $.editable
             ? $.add
             : (_) {},
       )
@@ -209,13 +209,13 @@ class Info extends StatelessWidget {
             child: Row(
               crossAxisAlignment: .center,
               children: [
-                Obx(() => Text("${$.tagCount} tags")),
+                Obx(() => Text("${$.count} tags")),
                 const VerticalDivider(width: 8),
                 Obx(() {
-                  if ($.serviceAdditions > 0) {
+                  if ($.additionsCount > 0) {
                     return Row(
                       children: [
-                        Text("+${$.serviceAdditions}", style: const .new(color: additions)),
+                        Text("+${$.additionsCount}", style: const .new(color: additions)),
                         const VerticalDivider(width: 6),
                       ],
                     );
@@ -223,13 +223,13 @@ class Info extends StatelessWidget {
                     return SizedBox.shrink();
                   }
                 }),
-                Obx(() => $.serviceDeletions > 0
-                    ? Text("-${$.serviceDeletions}", style: const .new(color: deletions))
+                Obx(() => $.deletionsCount > 0
+                    ? Text("-${$.deletionsCount}", style: const .new(color: deletions))
                     : const SizedBox.shrink()),
               ],
             ),
           ),
-          Obx(() => Text("service: ${$.activeService}",
+          Obx(() => Text("service: ${$.service}",
             style: Theme.of(context).textTheme.labelMedium,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

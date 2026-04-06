@@ -1,67 +1,41 @@
 import 'package:get/get.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 
+const readOnlyServices = ['all known tags', 'public tag repository'];
+
 
 class TagManager extends GetxController {
-  static const readOnlyServices = [
-    'all known tags',
-    'public tag repository',
-  ];
-
-  final services = <String>[].obs;
+  final services = <String>[];
   final selectedService = ''.obs;
+  final sort = Sort.alphabeticalAsc.obs;
 
   final Map<String, RxList<Tag>> _tags = {};
   final Map<String, RxList<Tag>> _tagsToAdd = {};
   final Map<String, RxList<Tag>> _tagsToDelete = {};
 
-  String get activeService => selectedService.value;
-
-  int get activeIndex {
+  /// Selected service
+  String get service => selectedService.value;
+  /// Selected service's tags
+  List<Tag> get tags => _tags[service] ?? [];
+  /// Selected service's index
+  int get index {
     if (services.isEmpty) return 0;
-    final index = services.indexOf(selectedService.value);
+    final index = services.indexOf(service);
     if (index < 0) return 0;
     return index;
   }
 
-  RxList<Tag> get activeTags => _tags[selectedService.value]!;
+  /// Selected service's tags length
+  int get count => tags.length;
+  /// Selected service's tags to add length
+  int get additionsCount => _tagsToAdd[service]!.length;
+  /// Selected service's tags to delete length
+  int get deletionsCount => _tagsToDelete[service]!.length;
+  /// If selected service is editable returns true
+  bool get editable => isServiceEditable(service);
 
-  int get serviceAdditions => _tagsToAdd[selectedService.value]!.length;
-  int get serviceDeletions => _tagsToDelete[selectedService.value]!.length;
-  int get tagCount => activeTags.length;
-
-  bool get activeServiceEditable => isServiceEditable(selectedService.value);
-  bool isServiceEditable(String service) => !readOnlyServices.contains(service);
-
-  void init(Map<String, List<Tag>> servicesMap) {
-    services
-      ..clear()
-      ..addAll(servicesMap.keys);
-    _tags.clear();
-    _tagsToAdd.clear();
-    _tagsToDelete.clear();
-
-    for (final entry in servicesMap.entries) {
-      _tags[entry.key] = entry.value
-          .map((tag) => Tag(tag.raw, count: tag.count))
-          .toList()
-          .obs;
-      _tagsToAdd[entry.key] = <Tag>[].obs;
-      _tagsToDelete[entry.key] = <Tag>[].obs;
-    }
-
-    selectedService.value = services.isNotEmpty ? services.first : '';
-    update();
-  }
-
-  void selectServiceByIndex(int index) {
-    if (index < 0 || index >= services.length) return;
-    selectedService.value = services[index];
-    update();
-  }
-
-  void add(Tag tag) => addToService(selectedService.value, tag);
-  void delete(Tag tag) => deleteFromService(selectedService.value, tag);
+  void add(Tag tag) => addToService(service, tag);
+  void delete(Tag tag) => deleteFromService(service, tag);
 
   void addToService(String service, Tag tag) {
     if (!isServiceEditable(service)) return;
@@ -112,10 +86,67 @@ class TagManager extends GetxController {
     }
     update();
   }
+}
+
+
+extension Init on TagManager {
+  void init(Map<String, List<Tag>> servicesMap) {
+    services
+      ..clear()
+      ..addAll(servicesMap.keys);
+    _tags.clear();
+    _tagsToAdd.clear();
+    _tagsToDelete.clear();
+
+    for (final entry in servicesMap.entries) {
+      _tags[entry.key] = entry.value
+          .map((tag) => Tag(tag.raw, count: tag.count))
+          .toList()
+          .obs;
+      _tagsToAdd[entry.key] = <Tag>[].obs;
+      _tagsToDelete[entry.key] = <Tag>[].obs;
+    }
+
+    selectedService.value = services.isNotEmpty ? services.first : '';
+    update();
+
+    ever(selectedService, (_) => sortTags());
+  }
+}
+
+
+extension ServiceUtils on TagManager {
+  bool isServiceEditable(String service) {
+    return !readOnlyServices.contains(service);
+  }
+
+  void selectServiceByIndex(int index) {
+    if (index < 0 || index >= services.length) return;
+    selectedService.value = services[index];
+    update();
+  }
 
   String pretty(String service) => switch (service) {
     'all known tags' => 'All',
     'public tag repository' => 'PTR',
     _ => service,
   };
+}
+
+
+enum Sort {
+  alphabeticalAsc,
+  alphabeticalDesc,
+}
+
+extension Sorting on TagManager {
+  void sortTags() {
+    switch (sort.value) {
+      case .alphabeticalAsc:
+        tags.sort((a, b) => a.raw.compareTo(b.raw));
+      case .alphabeticalDesc:
+        tags.sort((a, b) => b.raw.compareTo(a.raw));
+    }
+    update();
+  }
 }
