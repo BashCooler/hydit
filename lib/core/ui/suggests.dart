@@ -6,8 +6,8 @@ import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 
 
-const additions = Color(0xFF3fb950);
-const deletions = Color(0xFFf85149);
+const additions = Color(0x333fb950);
+const deletions = Color(0x33f85149);
 
 
 class Suggests extends StatelessWidget {

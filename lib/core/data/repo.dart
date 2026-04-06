@@ -12,8 +12,8 @@ class Repo {
 
   void updateClient() {
     final box = GetStorage();
-    final key = box.read('Hydrus API key') ?? '';
-    final url = box.read('URL') ?? '';
+    final key = box.read('key') ?? '';
+    final url = box.read('url') ?? '';
     final uri = Uri.parse(url);
     api.updateClient(key: key, uri: uri);
   }

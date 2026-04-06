@@ -48,6 +48,7 @@ class UrlField extends StatelessWidget {
     final SettingsController settings = Get.find();
     return Obx(() => TextFormField(
       initialValue: settings.$.url,
+      enabled: !settings.processing.value,
       onChanged: settings.updateUrl,
       onTapOutside: (_) => Get.focusScope?.unfocus(),
       decoration: InputDecoration(
@@ -69,6 +70,7 @@ class KeyField extends StatelessWidget {
     final SettingsController settings = Get.find();
     return Obx(() => TextFormField(
       initialValue: settings.$.key,
+      enabled: !settings.processing.value,
       onChanged: settings.updateKey,
       onTapOutside: (_) => Get.focusScope?.unfocus(),
       decoration: InputDecoration(

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:filesize/filesize.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart' show Tag;
 import 'package:multi_split_view/multi_split_view.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
@@ -118,6 +119,7 @@ class _EditorState extends State<Editor> {
                     ? 'Add tags to ${manager.activeService}'
                     : 'Read-only service selected',
                 onSubmitted: () {},
+                actions: _TagSearchBarActions(),
               )),
               // TODO confirm button
             ],
@@ -240,6 +242,37 @@ class Info extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+
+class _TagSearchBarActions extends StatelessWidget {
+  const _TagSearchBarActions();
+
+  @override
+  Widget build(BuildContext context) {
+    final query = Get.find<QueryController>();
+    return Row(
+      mainAxisSize: .min,
+      spacing: 5.0,
+      mainAxisAlignment: .end,
+      children: [
+        IconButton(
+          onPressed: query.clear,
+          icon: const Icon(Icons.clear),
+          tooltip: 'Clear',
+        ),
+        IconButton(
+          onPressed: () {
+            Get.find<TagManager>().add(Tag(query.text));
+            query.clear();
+          },
+          icon: const Icon(Icons.arrow_drop_up),
+          tooltip: 'Insert input as tag',
+        ),
+        const VerticalDivider(width: 0.0),
+      ],
     );
   }
 }
