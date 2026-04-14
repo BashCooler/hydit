@@ -61,7 +61,7 @@ class Client {
             headers: {
               'Hydrus-Client-API-Access-Key' : accessKey ?? ''
             },
-          );
+          ).timeout(Duration(seconds: 5));
         case 'post':
           response = await post(
             Uri.http('$host:$port', path),
@@ -70,7 +70,7 @@ class Client {
               'Content-Type': 'application/json',
             },
             body: jsonEncode(params),
-          );
+          ).timeout(Duration(seconds: 5));
         default:
           throw Exception('No such http method "$method"');
       }

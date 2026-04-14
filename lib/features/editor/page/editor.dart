@@ -198,7 +198,7 @@ class Info extends StatelessWidget {
     final PageGetxController page = Get.find();
     final image = images.$[page.i];
     return SizedBox(
-      width: 250,
+      width: 200,
       child: Column(
         spacing: 5,
         mainAxisAlignment: .center,
