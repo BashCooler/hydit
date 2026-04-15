@@ -13,18 +13,13 @@ class SettingsController extends GetxController {
     key: '',
   ).obs;
 
-  final _urlHelper = ''.obs;
-  final _keyHelper = ''.obs;
-  final _urlError = ''.obs;
-  final _keyError = ''.obs;
+  final urlHelper = ''.obs;
+  final keyHelper = ''.obs;
+  final urlError = ''.obs;
+  final keyError = ''.obs;
   final processing = false.obs;
 
   AppSettings get $ => _settings.value;
-
-  String? get urlHelper => _getStringOrNull(_urlHelper.value);
-  String? get keyHelper => _getStringOrNull(_keyHelper.value);
-  String? get urlError => _getStringOrNull(_urlError.value);
-  String? get keyError => _getStringOrNull(_keyError.value);
 
   @override
   void onInit() {
@@ -43,16 +38,12 @@ class SettingsController extends GetxController {
   }
 
   void updateUrl(String value) {
-    _urlHelper.value = _urlError.value = '';
+    urlHelper.value = urlError.value = '';
     _settings.value = _settings.value.copyWith(url: value);
   }
   void updateKey(String value) {
-    _keyHelper.value = _keyError.value = '';
+    keyHelper.value = keyError.value = '';
     _settings.value = _settings.value.copyWith(key: value);
-  }
-
-  String? _getStringOrNull(String value) {
-    return value == '' ? null : value;
   }
 }
 
@@ -60,12 +51,12 @@ class SettingsController extends GetxController {
 extension Verify on SettingsController {
   Future<void> verify() async {
     processing.value = true;
-    _urlHelper.value = _keyHelper.value = '';
-    _urlError.value = _keyError.value = '';
+    urlHelper.value = keyHelper.value = '';
+    urlError.value = keyError.value = '';
 
     final uri = Uri.tryParse($.url);
     if (uri == null) {
-      _urlError.value = 'Invalid URL';
+      urlError.value = 'Invalid URL';
       return;
     }
 
@@ -74,19 +65,19 @@ extension Verify on SettingsController {
     try {
       response = await client.getVerifyAccessKey();
     } on HydrusUnknownHostException {
-      _urlError.value = 'Host is unknown, probably wrong URL';
+      urlError.value = 'Host is unknown, probably wrong URL';
       return;
     } on HydrusNoServiceException {
-      _urlError.value = 'No connection with Hydrus. Is your client running?';
+      urlError.value = 'No connection with Hydrus. Is your client running?';
       return;
     } on HydrusTimeoutException {
-      _urlError.value = 'No response (timeout). Is this the correct host?';
+      urlError.value = 'No response (timeout). Is this the correct host?';
       return;
     } on HydrusUnknownException {
-      _urlError.value = 'Unknown error';
+      urlError.value = 'Error';
       return;
     } catch (e) {
-      _urlError.value = 'Invalid URL';
+      urlError.value = 'Invalid URL';
       return;
     }
 
@@ -97,10 +88,10 @@ extension Verify on SettingsController {
         case 401:
         case 403:
         case 419:
-          _keyError.value = decoded['error'];
+          keyError.value = decoded['error'];
           return;
         default:
-          _keyError.value = 'Unknown error';
+          keyError.value = 'Unknown error';
           return;
       }
     }
@@ -110,7 +101,7 @@ extension Verify on SettingsController {
     box.write('key', $.key);
     Get.find<Repo>().updateClient();
 
-    _urlError.value = _keyError.value = '';
-    _urlHelper.value = _keyHelper.value = 'Saved';
+    urlError.value = keyError.value = '';
+    urlHelper.value = keyHelper.value = 'Saved';
   }
 }

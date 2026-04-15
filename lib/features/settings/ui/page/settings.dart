@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
@@ -23,8 +25,20 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           spacing: 15,
           children: [
-            UrlField(),
-            KeyField(),
+            UrlOrKeyField(
+              label: 'Url',
+              onChanged: settings.updateUrl,
+              helper: settings.urlHelper,
+              error: settings.urlError,
+              initial: settings.$.url,
+            ),
+            UrlOrKeyField(
+              label: 'API Key',
+              onChanged: settings.updateKey,
+              helper: settings.keyHelper,
+              error: settings.keyError,
+              initial: settings.$.key,
+            ),
             Obx(() => OutlinedButton(
               onPressed: settings.processing.value ? null : () async {
                 await settings.verify();
@@ -40,46 +54,62 @@ class _SettingsPageState extends State<SettingsPage> {
 }
 
 
-class UrlField extends StatelessWidget {
-  const UrlField({super.key});
+class UrlOrKeyField extends HookWidget {
+  final String label;
+  final void Function(String) onChanged;
+  final RxString helper, error;
+  final String? initial;
+
+  const UrlOrKeyField({
+    super.key,
+    required this.label,
+    required this.onChanged,
+    required this.helper,
+    required this.error,
+    this.initial,
+  });
+
+  void paste(TextEditingController controller) async {
+    final data = await Clipboard.getData(Clipboard.kTextPlain);
+    if (data?.text != null) controller.text = data!.text!;
+  }
 
   @override
   Widget build(BuildContext context) {
+
     final SettingsController settings = Get.find();
-    return Obx(() => TextFormField(
-      initialValue: settings.$.url,
+    final text = useTextEditingController(text: initial);
+
+    final focus = useState(false);
+    final node = useFocusNode();
+    node.addListener(() => focus.value = node.hasFocus);
+
+    return Obx(() => TextField(
       enabled: !settings.processing.value,
-      onChanged: settings.updateUrl,
-      onTapOutside: (_) => Get.focusScope?.unfocus(),
+      onChanged: onChanged,
+      onTapOutside: (_) => node.unfocus(),
+      controller: text,
+      focusNode: node,
       decoration: InputDecoration(
-        labelText: 'URL',
-        helperText: settings.urlHelper,
-        errorText: settings.urlError,
+        labelText: label,
+        helperText: helper.value == '' ? null : helper.value,
+        errorText: error.value == '' ? null : error.value,
         floatingLabelBehavior: .always,
+        suffixIcon: !focus.value ? const SizedBox.shrink() : Row(
+          spacing: 5,
+          mainAxisSize: .min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.paste),
+              onPressed: () => paste(text),
+            ),
+            IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: () => text.clear(),
+            ),
+          ],
+        ),
       ),
     ));
   }
 }
-
-
-class KeyField extends StatelessWidget {
-  const KeyField({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final SettingsController settings = Get.find();
-    return Obx(() => TextFormField(
-      initialValue: settings.$.key,
-      enabled: !settings.processing.value,
-      onChanged: settings.updateKey,
-      onTapOutside: (_) => Get.focusScope?.unfocus(),
-      decoration: InputDecoration(
-        labelText: 'API key',
-        helperText: settings.keyHelper,
-        errorText: settings.keyError,
-        floatingLabelBehavior: .always,
-      ),
-    ));
-  }
-}
-
