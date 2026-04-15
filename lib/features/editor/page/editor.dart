@@ -112,7 +112,6 @@ class _EditorState extends State<Editor> {
                 ),
               ),
               Divider(height: 1),
-              // TODO add remove and insert actions
               Obx(() => TagSearchBar(
                 enabled: manager.editable,
                 hintText: manager.editable
@@ -121,10 +120,17 @@ class _EditorState extends State<Editor> {
                 onSubmitted: () {},
                 actions: _TagSearchBarActions(),
               )),
-              // TODO confirm button
             ],
           ),
         ),
+        floatingActionButton: Padding(
+          padding: .only(bottom: 60),
+          child: FloatingActionButton(
+            onPressed: Get.back,
+            child: const Icon(Icons.check),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       ),
     );
   }
