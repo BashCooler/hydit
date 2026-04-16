@@ -1,4 +1,4 @@
-import 'package:get_storage/get_storage.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:hydrus_flutter/core/data/api.dart';
 
 import 'mapper.dart';
@@ -11,9 +11,9 @@ class Repo {
   Repo(this.api);
 
   void updateClient() {
-    final box = GetStorage();
-    final key = box.read('key') ?? '';
-    final url = box.read('url') ?? '';
+    final box = Hive.box('settings');
+    final key = box.get('key') ?? '';
+    final url = box.get('url') ?? '';
     final uri = Uri.parse(url);
     api.updateClient(key: key, uri: uri);
   }

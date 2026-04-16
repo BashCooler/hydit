@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:hive_ce/hive.dart';
 
 import 'package:hydrus_flutter/core/data/api.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
@@ -28,9 +28,9 @@ class SettingsController extends GetxController {
   }
 
   void loadSettings() {
-    final box = GetStorage();
-    final url = box.read('url') ?? '';
-    final key = box.read('key') ?? '';
+    final box = Hive.box('settings');
+    final url = box.get('url') ?? '';
+    final key = box.get('key') ?? '';
     _settings.value = AppSettings(
       url: url,
       key: key,
@@ -96,9 +96,9 @@ extension Verify on SettingsController {
       }
     }
 
-    final box = GetStorage();
-    box.write('url', $.url);
-    box.write('key', $.key);
+    final box = Hive.box('settings');
+    box.put('url', $.url);
+    box.put('key', $.key);
     Get.find<Repo>().updateClient();
 
     urlError.value = keyError.value = '';

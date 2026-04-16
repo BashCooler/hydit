@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 import 'package:media_kit/media_kit.dart';
 
 import 'utils/theme.dart';
@@ -13,6 +14,8 @@ import 'features/gallery/page/gallery.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox('settings');
 
   await enableEdgeToEdge();
 
