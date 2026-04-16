@@ -6,18 +6,12 @@ import 'package:flutter/material.dart';
 import '../getx/controller.dart';
 
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
-  final settings = Get.put(SettingsController());
-
-  @override
   Widget build(BuildContext context) {
+    final settings = Get.put(SettingsController());
     return Scaffold(
       appBar: AppBar(title: Text('Settings')),
       body: Padding(
@@ -52,7 +46,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
-
 
 class UrlOrKeyField extends HookWidget {
   final String label;
