@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.6.0
-  get: ^4.7.3
+  get: 4.7.3
   scrollview_observer: ^1.26.3
   media_kit: ^1.2.6
   media_kit_video: ^2.0.1
