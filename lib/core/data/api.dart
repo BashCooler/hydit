@@ -107,6 +107,15 @@ class Client {
     return request('get', 'get_services');
   }
 
+  Future<String> getService({String? name, String? key}) {
+    final Map<String, dynamic> params = {};
+
+    if (key != null) params['key'] = key;
+    if (name != null) params['service_name'] = name;
+
+    return request('get', 'get_service', params);
+  }
+
   // MARK: SEARCHING AND FETCHING FILES
 
   Future<List<int>> getSearchFiles(List<String> tags, {
@@ -211,7 +220,7 @@ class Client {
     return await request('get', '/add_tags/search_tags', params);
   }
 
-  Future<int> _postAddTags(int id, String service, int action, List<String> tags) async {
+  Future<int> postAddTags(int id, String service, int action, List<String> tags) async {
     final Map<String, dynamic> params = {
       'file_ids': [id],
       'service_keys_to_actions_to_tags': {
@@ -221,14 +230,6 @@ class Client {
       }
     };
     return await requestStatus('post', '/add_tags/add_tags', params);
-  }
-
-  Future<int> addTags(int id, String service, List<String> tags) async {
-    return await _postAddTags(id, service, Action.addToLocalFileDomain, tags);
-  }
-
-  Future<int> removeTags(int id, String service, List<String> tags) async {
-    return await _postAddTags(id, service, Action.deleteFromLocalFileDomain, tags);
   }
 }
 

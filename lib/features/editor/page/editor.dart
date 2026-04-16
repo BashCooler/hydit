@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:filesize/filesize.dart';
@@ -16,6 +18,13 @@ import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 
 const additions = Color(0xFF3fb950);
 const deletions = Color(0xFFf85149);
+
+
+enum Action {
+  save,
+  discard,
+  cancel
+}
 
 
 class Editor extends StatefulWidget {
@@ -44,7 +53,59 @@ class _EditorState extends State<Editor> {
     super.dispose();
   }
 
-  void onLeave(bool didPop, Object? result) {
+  Future<Action?> showPopDialog(BuildContext context, String message) {
+    final actions = <Widget>[
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(Action.save),
+        child: const Text('Save'),
+      ),
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(Action.discard),
+        child: const Text('Discard'),
+      ),
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(Action.cancel),
+        child: const Text('Cancel'),
+      ),
+    ];
+
+    return showDialog<Action>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          actionsAlignment: .center,
+          icon: const Icon(Icons.save),
+          title: const Text('Save changes?'),
+          content: Text(message),
+          actions: actions,
+        );
+      },
+    );
+  }
+
+  Future<void> onLeave(bool didPop, Object? result) async {
+    if (didPop) return;
+    final message = manager.summarize();
+    if (message == 'No changes') {
+      Navigator.of(context).pop();
+    } else {
+      final result = await showPopDialog(context, message);
+
+      switch (result) {
+        case .save:
+          await manager.save(images.$[page.i]);
+          clearQuery();
+          if (context.mounted) Navigator.of(context).pop();
+        case .discard:
+          clearQuery();
+          if (context.mounted) Navigator.of(context).pop();
+        case _:
+          break;
+      }
+    }
+  }
+
+  void clearQuery() {
     Future.delayed(
       AppTheme.duration,
       Get.find<QueryController>().clear,
@@ -63,7 +124,7 @@ class _EditorState extends State<Editor> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      // TODO confirm dialog
+      canPop: false,
       onPopInvokedWithResult: onLeave,
       child: Scaffold(
         appBar: AppBar(
@@ -126,7 +187,7 @@ class _EditorState extends State<Editor> {
         floatingActionButton: Padding(
           padding: .only(bottom: 60),
           child: FloatingActionButton(
-            onPressed: Get.back,
+            onPressed: Navigator.of(context).maybePop,
             child: const Icon(Icons.check),
           ),
         ),

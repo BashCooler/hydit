@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
+import 'package:hydrus_flutter/core/data/repo.dart';
+import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 
 const readOnlyServices = ['all known tags', 'public tag repository'];
@@ -9,9 +13,9 @@ class TagManager extends GetxController {
   final selectedService = ''.obs;
   final sort = Sort.alphabeticalAsc.obs;
 
-  final Map<String, RxList<Tag>> _tags = {};
-  final Map<String, RxList<Tag>> _tagsToAdd = {};
-  final Map<String, RxList<Tag>> _tagsToDelete = {};
+  final Map<String, List<Tag>> _tags = {};
+  final Map<String, List<Tag>> _tagsToAdd = {};
+  final Map<String, List<Tag>> _tagsToDelete = {};
 
   /// Selected service
   String get service => selectedService.value;
@@ -111,6 +115,68 @@ extension Init on TagManager {
     update();
 
     ever(selectedService, (_) => sortTags());
+  }
+}
+
+
+extension Save on TagManager {
+  /// Removes entries with empty lists from map
+  Map<String, List<Tag>> removeEmpty(Map<String, List<Tag>> map) =>
+      Map.from(map)..removeWhere((k, v) => v.isEmpty);
+
+  /// Returns "No changes" if no changes were made, otherwise returns:
+  /// ```
+  /// Add X tags to Y services
+  /// Remove X tags from Y services
+  /// ```
+  /// if X and Y are not zero.
+  String summarize() {
+    final toAdd = removeEmpty(_tagsToAdd);
+    final toRem = removeEmpty(_tagsToDelete);
+
+    if (toAdd.isEmpty && toRem.isEmpty) {
+      return 'No changes';
+    }
+
+    final sb = StringBuffer();
+
+    final addCount = toAdd.values.fold(0, (sum, list) => (sum + list.length).toInt());
+    final serCount = toAdd.length;
+    if (addCount > 0) {
+      sb.writeln('Add $addCount tags to $serCount services');
+    }
+
+    final remCount = toRem.values.fold(0, (sum, list) => (sum + list.length).toInt());
+    final serRem = toRem.length;
+    if (remCount > 0) {
+      sb.writeln('Remove $remCount tags from $serRem services');
+    }
+
+    return sb.toString();
+  }
+
+  /// Send request to Hydrus to add/remove tags
+  Future<void> save(HydrusImage image) async {
+    final toAdd = removeEmpty(_tagsToAdd);
+    final toRem = removeEmpty(_tagsToDelete);
+
+    final repo = Get.find<Repo>();
+
+    for (final entry in toAdd.entries) {
+      var service = entry.key;
+      service = await repo.getServiceByName(service);
+      final tags = entry.value.map((e) => e.raw).toList();
+      await repo.addTags(image.id, service, tags);
+    }
+
+    for (final entry in toRem.entries) {
+      var service = entry.key;
+      service = await repo.getServiceByName(service);
+      final tags = entry.value.map((e) => e.raw).toList();
+      await repo.removeTags(image.id, service, tags);
+    }
+
+    await repo.setMetadataFor(image);
   }
 }
 
