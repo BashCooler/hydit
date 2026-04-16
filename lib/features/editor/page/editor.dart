@@ -54,30 +54,40 @@ class _EditorState extends State<Editor> {
   }
 
   Future<Action?> showPopDialog(BuildContext context, String message) {
-    final actions = <Widget>[
-      TextButton(
-        onPressed: () => Navigator.of(context).pop(Action.save),
-        child: const Text('Save'),
-      ),
-      TextButton(
-        onPressed: () => Navigator.of(context).pop(Action.discard),
-        child: const Text('Discard'),
-      ),
-      TextButton(
-        onPressed: () => Navigator.of(context).pop(Action.cancel),
-        child: const Text('Cancel'),
-      ),
-    ];
+    bool isLoading = false;
 
     return showDialog<Action>(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          actionsAlignment: .center,
-          icon: const Icon(Icons.save),
-          title: const Text('Save changes?'),
-          content: Text(message),
-          actions: actions,
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              actionsAlignment: .center,
+              icon: const Icon(Icons.save),
+              title: isLoading ? const Text('Saving...') : const Text('Save changes?'),
+              content: isLoading
+                  ? LinearProgressIndicator()
+                  : Text(message),
+              actions: isLoading ? [] : [
+                TextButton(
+                  onPressed: () async {
+                    setState(() => isLoading = true);
+                    await manager.save(images.$[page.i]);
+                    Navigator.of(context).pop(Action.save);
+                  },
+                  child: const Text('Save'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(Action.discard),
+                  child: const Text('Discard'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(Action.cancel),
+                  child: const Text('Cancel'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -93,7 +103,6 @@ class _EditorState extends State<Editor> {
 
       switch (result) {
         case .save:
-          await manager.save(images.$[page.i]);
           clearQuery();
           if (context.mounted) Navigator.of(context).pop();
         case .discard:
