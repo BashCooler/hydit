@@ -52,9 +52,9 @@ class FrostedGlass extends StatelessWidget {
 
 
 class FilledIconButton extends StatelessWidget {
-  final VoidCallback onPressed;
   final Icon icon;
   final EdgeInsets? padding;
+  final VoidCallback onPressed;
 
   const FilledIconButton({
     super.key,
@@ -91,6 +91,47 @@ class FilledIconButton extends StatelessWidget {
     );
   }
 }
+
+
+class FilledTextButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+
+  const FilledTextButton({
+    super.key,
+    required this.onPressed,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PhysicalModel(
+      elevation: 2,
+      shape: .circle,
+      color: Colors.transparent,
+      child: RepaintBoundary(
+        child: ClipRRect(
+          borderRadius: .circular(50),
+          clipBehavior: .hardEdge,
+          child: BackdropFilter(
+            filter: AppTheme.backdropFilter,
+            child: Material(
+              color: AppColors.blackWithAlpha,
+              child: SizedBox(
+                height: AppTheme.buttonSize,
+                child: TextButton(
+                  onPressed: onPressed,
+                  child: Text(text),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 
 /// Makes [PageView] scroll more responsive. Still not perfect.

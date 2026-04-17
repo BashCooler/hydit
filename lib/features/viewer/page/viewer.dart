@@ -97,25 +97,31 @@ class _BottomAppBarActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pageController = Get.find<PageGetxController>().controller;
+    final PageGetxController page = Get.find();
+    final Images images = Get.find();
     return Row(
       mainAxisAlignment: .spaceBetween,
       spacing: 10.0,
       children: [
         FilledIconButton(
-          onPressed: () => pageController.previousPage(
+          onPressed: () => page.$.previousPage(
             duration: const Duration(milliseconds: 150),
             curve: Curves.decelerate,
           ),
           icon: Icon(Icons.keyboard_arrow_left),
         ),
-        Expanded(child: Center()),
-        FilledIconButton(
-          onPressed: () => Get.to(() => Editor(), transition: .downToUp),
-          icon: Icon(Icons.tag),
+        Expanded(
+          child: Obx(() => FilledTextButton(
+            text: '${images.$[page.i].length} tags',
+            onPressed: () {},
+          )),
         ),
         FilledIconButton(
-          onPressed: () => pageController.nextPage(
+          onPressed: () => Get.to(() => Editor(), transition: .downToUp),
+          icon: Icon(Icons.edit_note),
+        ),
+        FilledIconButton(
+          onPressed: () => page.$.nextPage(
             duration: const Duration(milliseconds: 150),
             curve: Curves.decelerate,
           ),
