@@ -1,22 +1,21 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 
 
 class TransformController extends GetxController {
-  final blockScroll = false.obs;
   final blockViewer = false.obs;
-  final _pointers = RxSet<int>();
 
   final double minScale;
   final double maxScale;
 
   final controller = TransformationController();
+  final page = Get.find<PageGetxController>();
+
   late AnimationController _animationController;
   Animation<Matrix4>? _animation;
 
-  bool get _pinch => _pointers.length > 1;
   bool get _zoom => scale > minScale + 0.1;
-  bool get noScroll => blockScroll.value;
   double get scale => controller.value.row0.x;
 
   TransformationController get $ => controller;
@@ -32,12 +31,6 @@ class TransformController extends GetxController {
       ..addListener(_onAnimationFrame)
       ..addStatusListener(_onStatusUpdate);
     controller.addListener(_onMatrixChange);
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    ever(_pointers, _everPointers);
   }
 
   @override
@@ -65,20 +58,7 @@ class TransformController extends GetxController {
     }
   }
 
-  void registerPointer(Object details) {
-    if (details is PointerDownEvent) _pointers.add(details.pointer);
-    if (details is PointerUpEvent) _pointers.remove(details.pointer);
-  }
-
-  void _everPointers(Set<int> callback) {
-    _updateBlockScroll();
-  }
-
-  void _updateBlockScroll() {
-    blockScroll.value = _zoom || _pinch;
-  }
-
-  void _onMatrixChange() => _updateBlockScroll();
+  void _onMatrixChange() => page.zoom.value = _zoom;
 
   void handleDoubleTap(TapDownDetails details) {
     final pos = details.localPosition;

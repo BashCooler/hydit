@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
-import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 
 const readOnlyServices = ['all known tags', 'public tag repository'];

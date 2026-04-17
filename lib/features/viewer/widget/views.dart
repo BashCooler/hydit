@@ -1,3 +1,4 @@
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
@@ -64,7 +65,7 @@ class LinearHero extends StatelessWidget {
 
 
 
-class ViewImage extends StatelessWidget {
+class ViewImage extends HookWidget {
   final int index;
 
   const ViewImage(this.index, {super.key});
@@ -72,7 +73,11 @@ class ViewImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final image = Get.find<Images>().$[index];
-    final TransformController transform = Get.find();
+
+    final ticker = useSingleTickerProvider();
+    final transform = useMemoized(() =>
+        TransformController(minScale: 1.0, maxScale: 4.0, vsync: ticker));
+
     return GestureDetector(
       onDoubleTapDown: transform.handleDoubleTap,
       child: Obx(() => InteractiveViewer(

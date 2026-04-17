@@ -1,16 +1,14 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:filesize/filesize.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart' show Tag;
 import 'package:multi_split_view/multi_split_view.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
-import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/ui/suggests.dart';
 import 'package:hydrus_flutter/core/ui/tag_search.dart';
+import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 import 'package:hydrus_flutter/features/editor/getx/tags.dart';
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';
@@ -73,7 +71,7 @@ class _EditorState extends State<Editor> {
                   onPressed: () async {
                     setState(() => isLoading = true);
                     await manager.save(images.$[page.i]);
-                    Navigator.of(context).pop(Action.save);
+                    if (context.mounted) Navigator.of(context).pop(Action.save);
                   },
                   child: const Text('Save'),
                 ),
@@ -104,9 +102,11 @@ class _EditorState extends State<Editor> {
       switch (result) {
         case .save:
           clearQuery();
+          // ignore: use_build_context_synchronously
           if (context.mounted) Navigator.of(context).pop();
         case .discard:
           clearQuery();
+          // ignore: use_build_context_synchronously
           if (context.mounted) Navigator.of(context).pop();
         case _:
           break;

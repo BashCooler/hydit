@@ -8,7 +8,6 @@ import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/editor/page/editor.dart';
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
-import 'package:hydrus_flutter/features/viewer/getx/transform.dart';
 
 import '../widget/views.dart';
 import '../getx/page.dart';
@@ -24,8 +23,7 @@ class Viewer extends StatefulWidget {
 }
 
 class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
-  late final TransformController transform;
-  late final PageGetxController controller;
+  late final PageGetxController page;
 
   static const scroll = SnappyPageScrollPhysics();
   static const noScroll = NeverScrollableScrollPhysics();
@@ -33,12 +31,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    controller = Get.put(PageGetxController(initial: widget.index));
-    transform = Get.put(TransformController(
-      minScale: 1.0,
-      maxScale: 4.0,
-      vsync: this,
-    ));
+    page = Get.put(PageGetxController(initial: widget.index));
   }
 
   void showSearchBar(_, _) {
@@ -78,12 +71,12 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
           ],
         ),
         body: Listener(
-          onPointerUp: transform.registerPointer,
-          onPointerDown: transform.registerPointer,
+          onPointerUp: page.registerPointer,
+          onPointerDown: page.registerPointer,
           child: Obx(() => PreloadPageView.builder(
-            onPageChanged: controller.onPageChanged,
-            physics: transform.noScroll ? noScroll : scroll,
-            controller: controller.$,
+            onPageChanged: page.onPageChanged,
+            physics: page.noScroll ? noScroll : scroll,
+            controller: page.$,
             itemCount: images.$.length,
             preloadPagesCount: 3,
             itemBuilder: (_, index) => ViewFile(index),

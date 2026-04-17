@@ -2,14 +2,13 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' show Response, get, post;
-import 'package:hydrus_flutter/utils/dictionaries.dart';
-
 
 Future<void> main() async {
   final client = Client(accessKey: '86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
   // my_tags 6c6f63616c2074616773
   // all known tags 616c6c206b6e6f776e2074616773
   final response = await client.getServices();
+  // ignore: avoid_print
   print(response);
   // var tags = ['creator:呵呜阿花', 'title:白丝秦喵喵。'];
 }

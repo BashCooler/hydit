@@ -5,6 +5,13 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 
 
 class PageGetxController extends GetxController {
+  final _pinch = false.obs;
+  final _pointers = RxSet<int>();
+
+  final zoom = false.obs;
+
+  bool get noScroll => _pinch.value || zoom.value;
+
   final PreloadPageController controller;
   final observerController = Get.find<GridObserverController>();
 
@@ -17,6 +24,21 @@ class PageGetxController extends GetxController {
   PageGetxController({required int initial})
       : index = initial.obs,
         controller = PreloadPageController(initialPage: initial);
+
+  @override
+  void onInit() {
+    super.onInit();
+    ever(_pointers, _everPointers);
+  }
+
+  void _everPointers(Set<int> callback) {
+    _pinch.value = _pointers.length > 1;
+  }
+
+  void registerPointer(Object details) {
+    if (details is PointerDownEvent) _pointers.add(details.pointer);
+    if (details is PointerUpEvent) _pointers.remove(details.pointer);
+  }
 
   void onPageChanged(int page) {
     index.value = page;
