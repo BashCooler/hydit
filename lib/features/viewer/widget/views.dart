@@ -169,7 +169,7 @@ class _ViewVideoState extends State<ViewVideo> {
             ),
             AnimatedOpacity(
               opacity: ready ? 1 : 0,
-              duration: Duration(milliseconds: 150),
+              duration: const Duration(milliseconds: 150),
               curve: Curves.easeInQuint,
               child: Video(
                 controller: controller,

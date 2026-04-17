@@ -25,7 +25,7 @@ class Repo {
     final response = await api.getFileMetadata(
       [image.id],
       includeServicesObject: false);
-    Mapper.writeMetadata(response, image);
+    await Mapper.writeMetadata(response, image);
   }
 
   String buildUrl(int id, {bool thumbnail = false}) => ""

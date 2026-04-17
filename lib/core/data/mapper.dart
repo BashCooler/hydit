@@ -4,7 +4,7 @@ import 'package:hydrus_flutter/core/domain/entities.dart';
 
 
 class Mapper {
-  static void writeMetadata(String rawJson, HydrusImage image) {
+  static Future<void> writeMetadata(String rawJson, HydrusImage image) async {
     final json = jsonDecode(rawJson);
     Pick getMeta(String property) => pick(json, 'metadata', 0, property);
 
