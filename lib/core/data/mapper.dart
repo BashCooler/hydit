@@ -23,7 +23,7 @@ class Mapper {
 
     tags.forEach((serviceKey, properties) {
       final name = properties['name'];
-      final entries = (properties['display_tags']['0'] as List?)?.cast<String>();
+      final entries = (properties['storage_tags']['0'] as List?)?.cast<String>();
 
       if (entries == null) return;  // <- continue
       services[name as String] = entries.map((s) => Tag(s)).toList();
