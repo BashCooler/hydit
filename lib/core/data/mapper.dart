@@ -15,7 +15,7 @@ class Mapper {
     image.duration = getMeta('duration').asIntOrNull() ?? 0;
 
     final tags = getMeta('tags').asMapOrEmpty<String, dynamic>();
-    image.service = _parseTags(tags);
+    image.service..clear()..addAll(_parseTags(tags));
   }
 
   static Map<String, List<Tag>> _parseTags(Map<String, dynamic> tags) {

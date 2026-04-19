@@ -23,9 +23,9 @@ class HydrusImage {
   late String type;
   late String ext;
   int duration = 0;
-  late Map<String, List<Tag>> service;
+  final Map<String, List<Tag>> service = {};
 
-  int get length => service.values.first.length;
+  int get length => service['all known tags']?.length ?? 0;
   List<Tag> get all => service.values.first;
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
 
