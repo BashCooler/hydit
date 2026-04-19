@@ -29,9 +29,9 @@ class TagManager extends GetxController {
   /// Selected service's tags length
   int get count => tags.length;
   /// Selected service's tags to add length
-  int get additionsCount => _tagsToAdd[service]!.length;
+  int get additionsCount => _tagsToAdd[service]?.length ?? 0;
   /// Selected service's tags to delete length
-  int get deletionsCount => _tagsToDelete[service]!.length;
+  int get deletionsCount => _tagsToDelete[service]?.length ?? 0;
   /// If selected service is editable returns true
   bool get editable => isServiceEditable(service);
 
@@ -92,20 +92,25 @@ class TagManager extends GetxController {
 
 extension Init on TagManager {
   void init(Map<String, List<Tag>> servicesMap) {
+    final all = Get.find<Repo>().services;
+
     services
       ..clear()
-      ..addAll(servicesMap.keys);
+      ..addAll(all);
     _tags.clear();
     _tagsToAdd.clear();
     _tagsToDelete.clear();
 
     for (final entry in servicesMap.entries) {
-      _tags[entry.key] = entry.value
-          .map((tag) => Tag(tag.raw, count: tag.count))
-          .toList()
-          .obs;
-      _tagsToAdd[entry.key] = <Tag>[].obs;
-      _tagsToDelete[entry.key] = <Tag>[].obs;
+      _tags[entry.key] = entry.value;
+      _tagsToAdd[entry.key] = <Tag>[];
+      _tagsToDelete[entry.key] = <Tag>[];
+    }
+
+    for (final service in all) {
+      _tags.putIfAbsent(service, () => <Tag>[]);
+      _tagsToAdd.putIfAbsent(service, () => <Tag>[]);
+      _tagsToDelete.putIfAbsent(service, () => <Tag>[]);
     }
 
     selectedService.value = services.isNotEmpty ? services.first : '';

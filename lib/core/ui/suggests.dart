@@ -74,7 +74,7 @@ class TagList extends StatelessWidget {
       color: Colors.transparent,
       child: Scrollbar(
         controller: scrollController,
-        child: Obx(() => ListView.builder(
+        child:  ListView.builder(
           reverse: true,
           itemCount: observable.length,
           controller: scrollController,
@@ -84,7 +84,7 @@ class TagList extends StatelessWidget {
             trailing: trailing,
             onTap: onTap,
           ),
-        )),
+        ),
       ),
     );
   }

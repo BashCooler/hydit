@@ -1,6 +1,7 @@
 import 'dart:convert';
-
 import 'package:hive_ce/hive.dart';
+import 'package:deep_pick/deep_pick.dart';
+
 import 'package:hydrus_flutter/core/data/api.dart';
 import 'package:hydrus_flutter/utils/dictionaries.dart';
 
@@ -10,6 +11,7 @@ import '../domain/entities.dart';
 
 class Repo {
   final Client api;
+  final List<String> services = [];
 
   Repo(this.api);
 
@@ -46,5 +48,18 @@ class Repo {
 
   Future<int> removeTags(int id, String service, List<String> tags) async {
     return await api.postAddTags(id, service, Action.deleteFromLocalFileDomain, tags);
+  }
+
+  Future<void> updateServiceNames() async {
+    final response = await api.getServices();
+    final json = jsonDecode(response);
+    final localTags = json['local_tags'] as List<dynamic>;
+    final local = localTags.map((e) => '${e['name']}').toList();
+    final ptr = pick(json, 'tag_repositories', 0, 'name').asStringOrNull();
+    services
+      ..clear()
+      ..add(pick(json, 'all_known_tags', 0, 'name').asStringOrThrow())
+      ..addAll(local);
+    if (ptr != null) services.add(ptr);
   }
 }

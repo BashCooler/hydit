@@ -87,6 +87,7 @@ class QueryController extends GetxController {
     List<int> ids = [];
     try {
       ids = await repo.api.getSearchFiles(_tags.map((t) => t.raw).toList());
+      await repo.updateServiceNames();
     } catch (e) {
       handleException(e);
       return;
