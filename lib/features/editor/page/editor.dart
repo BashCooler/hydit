@@ -228,7 +228,7 @@ class Up extends StatelessWidget {
           ),
           Expanded(
             child: TagList(
-              observable: $.tags,
+              tags: $.tags,
               trailing: Icon($.editable
                   ? Icons.playlist_remove
                   : Icons.lock_outline),

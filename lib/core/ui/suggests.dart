@@ -29,21 +29,47 @@ class Suggests extends StatelessWidget {
     final controller = Get.find<QueryController>();
     return Obx(() {
       if (!controller.suggestsVisible) {
-        return const _Hint();
+        return const Hint();
       }
       return TagList(
         trailing: trailing,
         onTap: onTap,
         scrollController: scrollController,
-        observable: controller.suggests);
+        tags: controller.suggests);
     });
+  }
+}
+
+
+class Hint extends StatelessWidget {
+  const Hint({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: .bottomCenter,
+      child: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
+        child: Padding(
+          padding: .only(bottom: 45),
+          child: Column(
+            mainAxisAlignment: .center,
+            spacing: 15,
+            children: [
+              Icon(Icons.search, size: 96),
+              Text('Start typing to search tags'),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
 
 /// [ListView] of [Tag]s.
 ///
-/// The [observable] should be of type [RxList] or [RxSet] and should
+/// The [tags] should be of type [RxList] or [RxSet] and should
 /// contain [Tag]s.
 ///
 /// Parameters [trailing] and [onTap] apply to each [ListTile] in
@@ -55,7 +81,7 @@ class Suggests extends StatelessWidget {
 /// usually used to add tag to some [RxList] or [RxSet].
 class TagList extends StatelessWidget {
   final Widget? trailing;
-  final dynamic observable;
+  final dynamic tags;
   final ScrollController? scrollController;
   final void Function(Tag tag)? onTap;
 
@@ -64,7 +90,7 @@ class TagList extends StatelessWidget {
     this.trailing,
     this.onTap,
     this.scrollController,
-    required this.observable,
+    required this.tags,
   });
 
   @override
@@ -72,17 +98,22 @@ class TagList extends StatelessWidget {
     return Material(
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
-      child: Scrollbar(
-        controller: scrollController,
-        child:  ListView.builder(
-          reverse: true,
-          itemCount: observable.length,
+      child: MediaQuery.removePadding(
+        context: context,
+        removeBottom: true,
+        child: Scrollbar(
           controller: scrollController,
-          itemBuilder: (_, index) => _SearchEntry(
-            index: index,
-            observable: observable,
-            trailing: trailing,
-            onTap: onTap,
+          child:  ListView.builder(
+            padding: .zero,
+            reverse: true,
+            itemCount: tags.length,
+            controller: scrollController,
+            itemBuilder: (_, index) => SearchEntry(
+              index: index,
+              tags: tags,
+              trailing: trailing,
+              onTap: onTap,
+            ),
           ),
         ),
       ),
@@ -90,22 +121,23 @@ class TagList extends StatelessWidget {
   }
 }
 
-class _SearchEntry extends StatelessWidget {
+class SearchEntry extends StatelessWidget {
   final int index;
   final Widget? trailing;
-  final dynamic observable;
+  final dynamic tags;
   final void Function(Tag tag)? onTap;
 
-  const _SearchEntry({
+  const SearchEntry({
+    super.key,
     required this.index,
     this.trailing,
     required this.onTap,
-    this.observable,
+    this.tags,
   });
 
   @override
   Widget build(BuildContext context) {
-    final tag = observable[index] as Tag;
+    final tag = tags[index] as Tag;
     final color = namespaceColors[tag.namespace] ?? namespaceColors['_'];
 
     final Icon? icon;
@@ -133,32 +165,6 @@ class _SearchEntry extends StatelessWidget {
         style: TextStyle(color: color, fontSize: 14.0),
       ),
       onTap: () => onTap?.call(tag),
-    );
-  }
-}
-
-
-class _Hint extends StatelessWidget {
-  const _Hint();
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: .bottomCenter,
-      child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        child: Padding(
-          padding: .only(bottom: 45),
-          child: Column(
-            mainAxisAlignment: .center,
-            spacing: 15,
-            children: [
-              Icon(Icons.search, size: 96),
-              Text('Start typing to search tags'),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

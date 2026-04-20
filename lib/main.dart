@@ -1,3 +1,4 @@
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,11 +44,13 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Flutter App',
-      debugShowCheckedModeBanner: false,
-      theme: darkTheme(),
-      home: Gallery(),
+    return Portal(
+      child: GetMaterialApp(
+        title: 'Flutter App',
+        debugShowCheckedModeBanner: false,
+        theme: darkTheme(),
+        home: Gallery(),
+      ),
     );
   }
 }

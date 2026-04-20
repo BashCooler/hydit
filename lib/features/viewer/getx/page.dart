@@ -9,8 +9,9 @@ class PageGetxController extends GetxController {
   final _pointers = RxSet<int>();
 
   final zoom = false.obs;
+  final overlay = false.obs;
 
-  bool get noScroll => _pinch.value || zoom.value;
+  bool get noScroll => _pinch.value || zoom.value || overlay.value;
 
   final PreloadPageController controller;
   final observerController = Get.find<GridObserverController>();

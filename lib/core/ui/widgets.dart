@@ -54,7 +54,7 @@ class FrostedGlass extends StatelessWidget {
 class FilledIconButton extends StatelessWidget {
   final Icon icon;
   final EdgeInsets? padding;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   const FilledIconButton({
     super.key,
