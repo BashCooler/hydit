@@ -60,8 +60,8 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
           child: Obx(() => PreloadPageView.builder(
             onPageChanged: page.onPageChanged,
             physics: page.noScroll ? noScroll : scroll,
-            controller: page.$,
-            itemCount: images.$.length,
+            controller: page.controller,
+            itemCount: images.length,
             preloadPagesCount: 3,
             itemBuilder: (_, index) => ViewFile(index),
           )),
@@ -98,7 +98,7 @@ class _BottomAppBar extends HookWidget {
             borderRadius: .circular(AppTheme.radius),
             child: TagList(
               trailing: const SizedBox.shrink(),
-              tags: images.$[page.i].service['all known tags'],
+              tags: images[page.i].service['all known tags'],
             ),
           ),
         ),
@@ -110,7 +110,7 @@ class _BottomAppBar extends HookWidget {
           spacing: 10.0,
           children: [
             FilledIconButton(
-              onPressed: !page.overlay.value ? () => page.$.previousPage(
+              onPressed: !page.overlay.value ? () => page.controller.previousPage(
                 duration: const Duration(milliseconds: 150),
                 curve: Curves.decelerate,
               ) : null,
@@ -118,7 +118,7 @@ class _BottomAppBar extends HookWidget {
             ),
             Expanded(
               child: Obx(() => FilledTextButton(
-                text: '${images.$[page.i].length} tags',
+                text: '${images[page.i].length} tags',
                 onPressed: () => page.overlay.value = !page.overlay.value,
               )),
             ),
@@ -130,7 +130,7 @@ class _BottomAppBar extends HookWidget {
               icon: Icon(Icons.edit_note),
             ),
             FilledIconButton(
-              onPressed: !page.overlay.value ? () => page.$.nextPage(
+              onPressed: !page.overlay.value ? () => page.controller.nextPage(
                 duration: const Duration(milliseconds: 150),
                 curve: Curves.decelerate,
               ) : null,

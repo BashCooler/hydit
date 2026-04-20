@@ -2,12 +2,13 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:filesize/filesize.dart';
 import 'package:multi_split_view/multi_split_view.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
-import 'package:hydrus_flutter/core/ui/suggests.dart';
 import 'package:hydrus_flutter/core/ui/search.dart';
+import 'package:hydrus_flutter/core/ui/suggests.dart';
+import 'package:hydrus_flutter/core/ui/tag_list.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 import 'package:hydrus_flutter/features/editor/getx/tags.dart';
@@ -42,7 +43,7 @@ class _EditorState extends State<Editor> {
   @override
   void initState() {
     super.initState();
-    manager.init(images.$[page.i].service);
+    manager.init(images[page.i].service);
   }
 
   @override
@@ -70,7 +71,7 @@ class _EditorState extends State<Editor> {
                 TextButton(
                   onPressed: () async {
                     setState(() => isLoading = true);
-                    await manager.save(images.$[page.i]);
+                    await manager.save(images[page.i]);
                     if (context.mounted) Navigator.of(context).pop(Action.save);
                   },
                   child: const Text('Save'),
@@ -155,7 +156,7 @@ class _EditorState extends State<Editor> {
                 return SizedBox(
                   width: 100,
                   height: 100,
-                  child: Thumbnail(images.$[page.i]),
+                  child: Thumbnail(images[page.i]),
                 );
               }),
             ],
@@ -264,15 +265,15 @@ class Down extends StatelessWidget {
 
 
 class Info extends StatelessWidget {
-  final TagManager $;
+  final TagManager manager;
 
-  const Info(this.$, {super.key});
+  const Info(this.manager, {super.key});
 
   @override
   Widget build(BuildContext context) {
     final Images images = Get.find();
     final PageGetxController page = Get.find();
-    final image = images.$[page.i];
+    final image = images[page.i];
     return SizedBox(
       width: 200,
       child: Column(
@@ -285,13 +286,13 @@ class Info extends StatelessWidget {
             child: Row(
               crossAxisAlignment: .center,
               children: [
-                Obx(() => Text("${$.count} tags")),
+                Obx(() => Text("${manager.count} tags")),
                 const VerticalDivider(width: 8),
                 Obx(() {
-                  if ($.additionsCount > 0) {
+                  if (manager.additionsCount > 0) {
                     return Row(
                       children: [
-                        Text("+${$.additionsCount}", style: const .new(color: additions)),
+                        Text("+${manager.additionsCount}", style: const .new(color: additions)),
                         const VerticalDivider(width: 6),
                       ],
                     );
@@ -299,13 +300,13 @@ class Info extends StatelessWidget {
                     return SizedBox.shrink();
                   }
                 }),
-                Obx(() => $.deletionsCount > 0
-                    ? Text("-${$.deletionsCount}", style: const .new(color: deletions))
+                Obx(() => manager.deletionsCount > 0
+                    ? Text("-${manager.deletionsCount}", style: const .new(color: deletions))
                     : const SizedBox.shrink()),
               ],
             ),
           ),
-          Obx(() => Text("service: ${$.service}",
+          Obx(() => Text("service: ${manager.service}",
             style: Theme.of(context).textTheme.labelMedium,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

@@ -5,5 +5,6 @@ import 'package:hydrus_flutter/core/domain/entities.dart';
 class Images extends GetxController {
   final images = <HydrusImage>[].obs;
 
-  RxList<HydrusImage> get $ => images;
+  int get length => images.length;
+  HydrusImage operator [](int index) => images[index];
 }

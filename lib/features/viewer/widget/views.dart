@@ -19,7 +19,7 @@ class ViewFile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final file = Get.find<Images>().$[index];
+    final file = Get.find<Images>()[index];
     return switch (file.type) {
       'image' => ViewImage(index),
       'video' => ViewVideo(index),
@@ -72,7 +72,7 @@ class ViewImage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = Get.find<Images>().$[index];
+    final image = Get.find<Images>()[index];
 
     final ticker = useSingleTickerProvider();
     final transform = useMemoized(() =>
@@ -84,7 +84,7 @@ class ViewImage extends HookWidget {
         minScale: transform.minScale,
         maxScale: transform.maxScale,
         panEnabled: !transform.blockViewer.value,
-        transformationController: transform.$,
+        transformationController: transform.controller,
         child: Center(
           child: ObxHero(
             index: index,
@@ -122,7 +122,7 @@ class _ViewVideoState extends State<ViewVideo> {
   @override
   void initState() {
     super.initState();
-    final id = images.$[widget.index].id;
+    final id = images[widget.index].id;
     player.open(
       Media(repo.buildUrl(id)),
       play: pageController.enabled(widget.index),
@@ -154,7 +154,7 @@ class _ViewVideoState extends State<ViewVideo> {
 
   @override
   Widget build(BuildContext context) {
-    var video = images.$[widget.index];
+    var video = images[widget.index];
     return Center(
       child: ObxHero(
         index: widget.index,

@@ -26,7 +26,7 @@ class TagSearchBar extends StatefulWidget {
 
 class _TagSearchBarState extends State<TagSearchBar> {
   final _focusNode = FocusNode();
-  final QueryController controller = Get.find();
+  final QueryController query = Get.find();
 
   @override
   void dispose() {
@@ -45,7 +45,7 @@ class _TagSearchBarState extends State<TagSearchBar> {
       textAlignVertical: .center,
       autofocus: widget.autofocus,
       focusNode: _focusNode,
-      controller: controller.$,
+      controller: query.textController,
       decoration: InputDecoration(
         hintText: widget.hintText,
         filled: true,
@@ -53,7 +53,7 @@ class _TagSearchBarState extends State<TagSearchBar> {
         suffixIcon: widget.actions,
         border: .none,
       ),
-      onChanged: controller.onChange,
+      onChanged: query.onChange,
       onSubmitted: (_) => widget.onSubmitted(),
       onTapOutside: keepFocus,
     );
