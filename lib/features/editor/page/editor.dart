@@ -124,7 +124,7 @@ class _EditorState extends State<Editor> {
 
   final controller = MultiSplitViewController(areas: [
     Area(
-        min: 0.35,
+        min: 0,
         flex: 1.4,
         max: 2.375,
         builder: (context, area) => Up()),
@@ -171,13 +171,27 @@ class _EditorState extends State<Editor> {
                   builder: ($) => DefaultTabController(
                     length: $.services.isEmpty ? 1 : $.services.length,
                     initialIndex: $.index,
-                    child: MultiSplitView(
-                      axis: .vertical,
-                      resizable: true,
-                      controller: controller,
-                      dividerBuilder: (_, _, _, drag, hover, _) {
-                        return Container(color: Get.theme.dividerColor);
-                      },
+                    child: Column(
+                      children: [
+                        TabBar(
+                          isScrollable: true,
+                          tabAlignment: .center,
+                          onTap: $.selectServiceByIndex,
+                          tabs: $.services.isEmpty
+                              ? [ const Tab(text: 'No services') ]
+                              : [ for (final service in $.services) Tab(text: $.pretty(service)) ],
+                        ),
+                        Expanded(
+                          child: MultiSplitView(
+                            axis: .vertical,
+                            resizable: true,
+                            controller: controller,
+                            dividerBuilder: (_, _, _, drag, hover, _) {
+                              return Container(color: Get.theme.dividerColor);
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -217,27 +231,13 @@ class Up extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder(
       init: Get.find<TagManager>(),
-      builder: ($) => Column(
-        children: [
-          TabBar(
-            isScrollable: true,
-            tabAlignment: .center,
-            onTap: $.selectServiceByIndex,
-            tabs: $.services.isEmpty
-                ? [ const Tab(text: 'No services') ]
-                : [ for (final service in $.services) Tab(text: $.pretty(service)) ],
-          ),
-          Expanded(
-            child: TagList(
-              tags: $.tags,
-              trailing: Icon($.editable
-                  ? Icons.playlist_remove
-                  : Icons.lock_outline),
-              scrollController: scrollUp,
-              onTap: $.editable ? $.delete : null,
-            ),
-          ),
-        ],
+      builder: ($) => TagList(
+        tags: $.tags,
+        trailing: Icon($.editable
+            ? Icons.playlist_remove
+            : Icons.lock_outline),
+        scrollController: scrollUp,
+        onTap: $.editable ? $.delete : null,
       ),
     );
   }
