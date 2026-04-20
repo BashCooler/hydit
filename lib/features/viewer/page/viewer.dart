@@ -48,7 +48,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final images = Get.find<Images>();
+    final Images images = Get.find();
     return PopScope(
       onPopInvokedWithResult: showSearchBar,
       child: Scaffold(
@@ -66,15 +66,17 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
             itemBuilder: (_, index) => ViewFile(index),
           )),
         ),
-        bottomNavigationBar: _BottomAppBar(),
+        bottomNavigationBar: const TagOverlay(actions: BottomActions()),
       ),
     );
   }
 }
 
 
-class _BottomAppBar extends HookWidget {
-  const _BottomAppBar();
+class TagOverlay extends HookWidget {
+  final Widget actions;
+
+  const TagOverlay({super.key, required this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +91,7 @@ class _BottomAppBar extends HookWidget {
         behavior: .opaque,
         onTap: () => page.overlay.value = false,
         child: Container(
-          padding: .symmetric(horizontal: AppTheme.outerPadding),
+          padding: const .symmetric(horizontal: AppTheme.outerPadding),
           constraints: BoxConstraints(
             maxHeight: MediaQuery.of(context).size.height * 0.82,
           ),
@@ -103,42 +105,56 @@ class _BottomAppBar extends HookWidget {
           ),
         ),
       ),
-      child: BottomAppBar(
-        color: Colors.transparent,
-        child: Row(
-          mainAxisAlignment: .spaceBetween,
-          spacing: 10.0,
-          children: [
-            FilledIconButton(
-              onPressed: !page.overlay.value ? () => page.controller.previousPage(
-                duration: const Duration(milliseconds: 150),
-                curve: Curves.decelerate,
-              ) : null,
-              icon: Icon(Icons.keyboard_arrow_left),
-            ),
-            Expanded(
-              child: Obx(() => FilledTextButton(
-                text: '${images[page.i].length} tags',
-                onPressed: () => page.overlay.value = !page.overlay.value,
-              )),
-            ),
-            FilledIconButton(
-              onPressed: () {
-                page.overlay.value = false;
-                Get.to(() => Editor(), transition: .downToUp);
-              },
-              icon: Icon(Icons.edit_note),
-            ),
-            FilledIconButton(
-              onPressed: !page.overlay.value ? () => page.controller.nextPage(
-                duration: const Duration(milliseconds: 150),
-                curve: Curves.decelerate,
-              ) : null,
-              icon: const Icon(Icons.keyboard_arrow_right),
-            ),
-          ],
-        ),
-      ),
+      child: actions,
     ));
+  }
+}
+
+
+class BottomActions extends StatelessWidget {
+  const BottomActions({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+
+    final PageGetxController page = Get.find();
+    final Images images = Get.find();
+
+    return BottomAppBar(
+      color: Colors.transparent,
+      child: Row(
+        mainAxisAlignment: .spaceBetween,
+        spacing: 10.0,
+        children: [
+          Obx(() => FilledIconButton(
+            onPressed: !page.overlay.value ? () => page.$.previousPage(
+              duration: const Duration(milliseconds: 150),
+              curve: Curves.decelerate,
+            ) : null,
+            icon: Icon(Icons.keyboard_arrow_left),
+          )),
+          Expanded(
+            child: Obx(() => FilledTextButton(
+              text: '${images[page.i].length} tags',
+              onPressed: () => page.overlay.value = !page.overlay.value,
+            )),
+          ),
+          FilledIconButton(
+            onPressed: () {
+              page.overlay.value = false;
+              Get.to(() => Editor(), transition: .downToUp);
+            },
+            icon: Icon(Icons.edit_note),
+          ),
+          Obx(() => FilledIconButton(
+            onPressed: !page.overlay.value ? () => page.$.nextPage(
+              duration: const Duration(milliseconds: 150),
+              curve: Curves.decelerate,
+            ) : null,
+            icon: const Icon(Icons.keyboard_arrow_right),
+          )),
+        ],
+      ),
+    );
   }
 }

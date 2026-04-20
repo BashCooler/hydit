@@ -83,7 +83,7 @@ class QueryController extends GetxController {
   void clearTags() => _tags.clear();
 
   Future<void> searchForFiles() async {
-    final imageController = Get.find<Images>();
+    final Images images = Get.find();
     List<int> ids = [];
     try {
       ids = await repo.api.getSearchFiles(_tags.map((t) => t.raw).toList());
@@ -93,7 +93,7 @@ class QueryController extends GetxController {
       return;
     }
     var list = ids.map((id) => HydrusImage(id)).toList();
-    imageController.images.assignAll(list);
+    images.assignAll(list);
   }
 
   void handleException(Object e) {

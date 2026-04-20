@@ -6,6 +6,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:hydrus_flutter/core/data/repo.dart';
+import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/transform.dart';
@@ -43,23 +44,6 @@ class ObxHero extends StatelessWidget {
       enabled: controller.enabled(index),
       child: LinearHero(tag: tag, child: child),
     ));
-  }
-}
-
-
-class LinearHero extends StatelessWidget {
-  final Object tag;
-  final Widget child;
-
-  const LinearHero({super.key, required this.tag, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Hero(
-      tag: tag,
-      createRectTween: (b, e) => RectTween(begin: b, end: e),
-      child: child,
-    );
   }
 }
 
@@ -113,7 +97,7 @@ class _ViewVideoState extends State<ViewVideo> {
     ..setVolume(0.0);
   late final controller = VideoController(player);
 
-  final images = Get.find<Images>();
+  final Images images = Get.find();
   final repo = Get.find<Repo>();
   final pageController = Get.find<PageGetxController>();
 

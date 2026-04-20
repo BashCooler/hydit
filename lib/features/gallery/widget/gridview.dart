@@ -1,47 +1,49 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
-import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 
-import 'package:hydrus_flutter/core/domain/entities.dart';
+import 'package:hydrus_flutter/core/data/repo.dart';
+import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
 import '../getx/query.dart';
 
 
-class ImageGridViewBuilder extends StatefulWidget {
+class ImageGridViewBuilder extends StatelessWidget {
   const ImageGridViewBuilder({super.key});
 
   @override
-  State<ImageGridViewBuilder> createState() => _ImageGridViewBuilderState();
-}
-
-class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
-  final imageController = Get.find<Images>();
-  final queryController = Get.find<QueryController>();
-  final gridController = Get.find<GridObserverController>();
-
-  @override
   Widget build(BuildContext context) {
+
+    final Images images = Get.find();
+    final QueryController query = Get.find();
+    final GridObserverController grid = Get.find();
+
+    const physics = BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics());
+
+    const delegate = SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2,
+      mainAxisSpacing: 5.0,
+      crossAxisSpacing: 5.0,
+    );
+
     return Padding(
       padding: .symmetric(horizontal: 5.0),
       child: GridViewObserver(
-        controller: gridController,
+        controller: grid,
         child: RefreshIndicator(
           displacement: 100.0,
-          onRefresh: () async => queryController.searchForFiles(),
+          onRefresh: () async => query.searchForFiles(),
           child: Obx(() => GridView.builder(
-            physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            controller: gridController.controller,
-            itemCount: imageController.images.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 5.0,
-              crossAxisSpacing: 5.0,
-            ),
-            itemBuilder: (context, index) => _TileFutureBuilder(index),
+            physics: physics,
+            controller: grid.controller,
+            itemCount: images.length,
+            gridDelegate: delegate,
+            itemBuilder: (_, index) => _TileBuilder(index),
           )),
         ),
       ),
@@ -49,11 +51,10 @@ class _ImageGridViewBuilderState extends State<ImageGridViewBuilder> {
   }
 }
 
-
-class _TileFutureBuilder extends StatelessWidget {
+class _TileBuilder extends StatelessWidget {
   final int index;
 
-  const _TileFutureBuilder(this.index);
+  const _TileBuilder(this.index);
 
   @override
   Widget build(BuildContext context) {
@@ -85,12 +86,12 @@ class _Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final badgeVisible = Get.find<QueryController>().badgeVisible;
+    final query = Get.find<QueryController>();
     return GestureDetector(
       key: ValueKey(image.id),
       onTap: () {
         Get.find<ScrollToHideController>().hide();
-        badgeVisible.value = false;
+        query.badgeVisible.value = false;
         Get.to(() => Viewer(index),
             transition: .fadeIn,
             curve: Curves.easeInCubic);
@@ -98,12 +99,13 @@ class _Tile extends StatelessWidget {
       child: Stack(
         alignment: .bottomRight,
         children: [
-          Hero(
+          LinearHero(
             tag: image.id,
-            createRectTween: (b, e) => RectTween(begin: b, end: e),
             child: Thumbnail(image),
           ),
-          Obx(() => badgeVisible.value ? _TileBadges(image) : SizedBox.shrink()),
+          Obx(() => query.badgeVisible.value
+              ? _TileBadges(image)
+              : const SizedBox.shrink()),
         ],
       ),
     );
