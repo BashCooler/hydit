@@ -7,7 +7,7 @@ import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/ui/suggests.dart';
-import 'package:hydrus_flutter/core/ui/tag_search.dart';
+import 'package:hydrus_flutter/core/ui/search.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 import 'package:hydrus_flutter/features/editor/getx/tags.dart';

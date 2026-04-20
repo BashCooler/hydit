@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 import 'package:hydrus_flutter/core/ui/suggests.dart';
-import 'package:hydrus_flutter/core/ui/tag_search.dart';
+import 'package:hydrus_flutter/core/ui/search.dart';
 import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 import 'package:hydrus_flutter/utils/theme.dart';
 
