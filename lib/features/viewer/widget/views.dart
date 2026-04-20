@@ -59,8 +59,12 @@ class ViewImage extends HookWidget {
     final image = Get.find<Images>()[index];
 
     final ticker = useSingleTickerProvider();
-    final transform = useMemoized(() =>
-        TransformController(minScale: 1.0, maxScale: 4.0, vsync: ticker));
+    final transform = useMemoized(() => TransformController(
+      minScale: 1.0,
+      zoomScale: 2.5,
+      maxScale: 4.0,
+      vsync: ticker,
+    ));
 
     return GestureDetector(
       onDoubleTapDown: transform.handleDoubleTap,

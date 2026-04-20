@@ -39,6 +39,8 @@ dependencies:
   # Widgets
   smooth_sheets: ^0.16.0
   flutter_portal: ^1.1.4
+  dismissible_page:
+    git: https://github.com/itsezlife/Flutter_dismissible_page/
   multi_split_view: ^3.6.1
   preload_page_view: ^0.2.0
   cached_network_image: ^3.4.1

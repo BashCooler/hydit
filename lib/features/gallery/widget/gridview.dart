@@ -94,7 +94,8 @@ class _Tile extends StatelessWidget {
         query.badgeVisible.value = false;
         Get.to(() => Viewer(index),
             transition: .fadeIn,
-            curve: Curves.easeInCubic);
+            curve: Curves.easeInCubic,
+            opaque: false);
       },
       child: Stack(
         alignment: .bottomRight,

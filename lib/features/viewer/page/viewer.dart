@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_portal/flutter_portal.dart';
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
@@ -28,9 +29,6 @@ class Viewer extends StatefulWidget {
 class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   late final PageGetxController page;
 
-  static const scroll = SnappyPageScrollPhysics();
-  static const noScroll = NeverScrollableScrollPhysics();
-
   @override
   void initState() {
     super.initState();
@@ -44,30 +42,55 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
     });
   }
 
-  // MARK: BUILD
-
   @override
   Widget build(BuildContext context) {
-    final Images images = Get.find();
     return PopScope(
       onPopInvokedWithResult: showSearchBar,
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
-        body: Listener(
-          onPointerUp: page.registerPointer,
-          onPointerDown: page.registerPointer,
-          child: Obx(() => PreloadPageView.builder(
-            onPageChanged: page.onPageChanged,
-            physics: page.noScroll ? noScroll : scroll,
-            controller: page.controller,
-            itemCount: images.length,
-            preloadPagesCount: 3,
-            itemBuilder: (_, index) => ViewFile(index),
-          )),
-        ),
+        body: Obx(() => DismissiblePage(
+          disabled: page.noScroll,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          onDismissed: () => Navigator.of(context).pop(),
+          direction: .vertical,
+          interactionMode: .gesture,
+          minScale: 0,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return const Pages();
+          },
+        )),
         bottomNavigationBar: const TagOverlay(actions: BottomActions()),
       ),
+    );
+  }
+}
+
+
+class Pages extends StatelessWidget {
+  const Pages({super.key});
+
+  static const scroll = SnappyPageScrollPhysics();
+  static const noScroll = NeverScrollableScrollPhysics();
+
+  @override
+  Widget build(BuildContext context) {
+
+    final Images images = Get.find();
+    final PageGetxController page = Get.find();
+
+    return Listener(
+      onPointerUp: page.registerPointer,
+      onPointerDown: page.registerPointer,
+      child: Obx(() => PreloadPageView.builder(
+        onPageChanged: page.onPageChanged,
+        physics: page.noScroll ? noScroll : scroll,
+        controller: page.controller,
+        itemCount: images.length,
+        preloadPagesCount: 3,
+        itemBuilder: (_, index) => ViewFile(index),
+      )),
     );
   }
 }

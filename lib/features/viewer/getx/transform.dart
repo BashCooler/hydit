@@ -7,6 +7,7 @@ class TransformController extends GetxController {
   final blockViewer = false.obs;
 
   final double minScale;
+  final double zoomScale;
   final double maxScale;
 
   final controller = TransformationController();
@@ -22,6 +23,7 @@ class TransformController extends GetxController {
 
   TransformController({
     required this.minScale,
+    required this.zoomScale,
     required this.maxScale,
     required TickerProvider vsync,
   }) {
@@ -63,7 +65,7 @@ class TransformController extends GetxController {
   void handleDoubleTap(TapDownDetails details) {
     final pos = details.localPosition;
 
-    final target = (scale <= minScale) ? maxScale : minScale;
+    final target = (scale <= minScale) ? zoomScale : minScale;
 
     final offsetX = target == minScale
         ? 0.0
