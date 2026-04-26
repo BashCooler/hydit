@@ -12,6 +12,7 @@ import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/editor/page/editor.dart';
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
+import 'package:snapping_sheet/snapping_sheet.dart';
 
 import '../widget/views.dart';
 import '../getx/page.dart';
@@ -33,6 +34,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     page = Get.put(PageGetxController(initial: widget.index));
+    Get.put(SnappingSheetController());
   }
 
   void showSearchBar(_, _) {
@@ -54,14 +56,14 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
           disabled: page.noScroll,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           onDismissed: () => Navigator.of(context).pop(),
-          direction: .vertical,
+          direction: .down,
           interactionMode: .gesture,
           minScale: 0,
           builder: (BuildContext context, ScrollController scrollController) {
             return const Pages();
           },
         )),
-        bottomNavigationBar: const TagOverlay(actions: BottomActions()),
+        bottomNavigationBar: const BottomActions(),
       ),
     );
   }
@@ -96,44 +98,6 @@ class Pages extends StatelessWidget {
 }
 
 
-class TagOverlay extends HookWidget {
-  final Widget actions;
-
-  const TagOverlay({super.key, required this.actions});
-
-  @override
-  Widget build(BuildContext context) {
-
-    final PageGetxController page = Get.find();
-    final Images images = Get.find();
-
-    return Obx(() => PortalTarget(
-      visible: page.overlay.value,
-      anchor: const Aligned(follower: .bottomLeft, target: .topLeft),
-      portalFollower: GestureDetector(
-        behavior: .opaque,
-        onTap: () => page.overlay.value = false,
-        child: Container(
-          padding: const .symmetric(horizontal: AppTheme.outerPadding),
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.82,
-          ),
-          child: Material(
-            color: AppColors.blackWithAlpha,
-            borderRadius: .circular(AppTheme.radius),
-            child: TagList(
-              trailing: const SizedBox.shrink(),
-              tags: images[page.i].service['all known tags'],
-            ),
-          ),
-        ),
-      ),
-      child: actions,
-    ));
-  }
-}
-
-
 class BottomActions extends StatelessWidget {
   const BottomActions({super.key});
 
@@ -149,33 +113,32 @@ class BottomActions extends StatelessWidget {
         mainAxisAlignment: .spaceBetween,
         spacing: 10.0,
         children: [
-          Obx(() => FilledIconButton(
-            onPressed: !page.overlay.value ? () => page.$.previousPage(
+          FilledIconButton(
+            onPressed: () => page.$.previousPage(
               duration: const Duration(milliseconds: 150),
               curve: Curves.decelerate,
-            ) : null,
+            ),
             icon: Icon(Icons.keyboard_arrow_left),
-          )),
+          ),
           Expanded(
             child: Obx(() => FilledTextButton(
               text: '${images[page.i].length} tags',
-              onPressed: () => page.overlay.value = !page.overlay.value,
+              onPressed: () {}, // TODO открывать теги отсюда
             )),
           ),
           FilledIconButton(
             onPressed: () {
-              page.overlay.value = false;
               Get.to(() => Editor(), transition: .downToUp);
             },
             icon: Icon(Icons.edit_note),
           ),
-          Obx(() => FilledIconButton(
-            onPressed: !page.overlay.value ? () => page.$.nextPage(
+          FilledIconButton(
+            onPressed: () => page.$.nextPage(
               duration: const Duration(milliseconds: 150),
               curve: Curves.decelerate,
-            ) : null,
+            ),
             icon: const Icon(Icons.keyboard_arrow_right),
-          )),
+          ),
         ],
       ),
     );

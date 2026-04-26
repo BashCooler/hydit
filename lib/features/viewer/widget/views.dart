@@ -10,23 +10,65 @@ import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/transform.dart';
+import 'package:snapping_sheet/snapping_sheet.dart';
 import '../getx/page.dart';
 import 'image_view.dart';
 
 
-class ViewFile extends StatelessWidget {
+class ViewFile extends HookWidget {
   final int index;
 
   const ViewFile(this.index, {super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(_) {
     final file = Get.find<Images>()[index];
-    return switch (file.type) {
+
+    final content = switch (file.type) {
       'image' => ViewImageX(index),
       'video' => ViewVideo(index),
       _ => _NotSupported(file.type),
     };
+
+    final scrollAbove = useScrollController();
+    final scrollBelow = useScrollController();
+
+    return IgnorePointer(
+      ignoring: false, // TODO переключать для активации/деактивации Dismissable
+      child: SnappingSheet(
+        controller: Get.find<SnappingSheetController>(),
+        onSheetMoved: (positionData) {
+          final page = Get.find<PageGetxController>();
+          if (positionData.relativeToSheetHeight > 0) {
+            page.block.value = true;
+          } else {
+            page.block.value = false;
+          }
+        },
+        lockOverflowDrag: true,
+        initialSnappingPosition: .factor(positionFactor: 0.0),
+        snappingPositions: [
+          .factor(positionFactor: 0.0),
+          .factor(positionFactor: 0.5),
+        ],
+        grabbingHeight: 0,
+        sheetAbove: SnappingSheetContent(
+          draggable: true,
+          child: content,
+        ),
+        sheetBelow: SnappingSheetContent(
+          draggable: true,
+          childScrollController: scrollBelow,
+          child: Material(
+            child: ListView.builder(
+              itemCount: 21,
+              controller: scrollBelow,
+              itemBuilder: (context, index) => ListTile(title: Text('$index')),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
