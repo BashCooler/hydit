@@ -11,6 +11,7 @@ import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/transform.dart';
 import '../getx/page.dart';
+import 'image_view.dart';
 
 
 class ViewFile extends StatelessWidget {
@@ -22,7 +23,7 @@ class ViewFile extends StatelessWidget {
   Widget build(BuildContext context) {
     final file = Get.find<Images>()[index];
     return switch (file.type) {
-      'image' => ViewImage(index),
+      'image' => ViewImageX(index),
       'video' => ViewVideo(index),
       _ => _NotSupported(file.type),
     };

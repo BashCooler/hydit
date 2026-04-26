@@ -9,10 +9,10 @@ import 'package:hydrus_flutter/features/viewer/widget/views.dart';
 import '../getx/page.dart';
 
 
-class ViewImage2 extends StatelessWidget {
+class ViewImageX extends StatelessWidget {
   final int index;
 
-  const ViewImage2(this.index, {super.key});
+  const ViewImageX(this.index, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +149,12 @@ class _ZoomableImageViewState extends State<_ZoomableImageView>
       return _maxScale + (value - _maxScale) * _elasticScaleFactor;
     }
     return value;
+  }
+
+  Offset _offsetForScaleKeepingViewportCenter(double targetScale) {
+    if (_scale.abs() < 0.0001) return Offset.zero;
+    final scaleRatio = targetScale / _scale;
+    return _offset * scaleRatio;
   }
 
   Offset _applyElasticOffset(Offset value, double scale) {
@@ -322,7 +328,10 @@ class _ZoomableImageViewState extends State<_ZoomableImageView>
 
   void _finalizeGesture() {
     final clampedScale = _clampScale(_scale);
-    final clampedOffset = _clampOffset(_offset, clampedScale);
+    final targetOffset = (clampedScale - _scale).abs() > 0.0001
+        ? _offsetForScaleKeepingViewportCenter(clampedScale)
+        : _offset;
+    final clampedOffset = _clampOffset(targetOffset, clampedScale);
 
     final needsSpringBack = (clampedScale - _scale).abs() > 0.0001 ||
         (clampedOffset - _offset).distance > 0.1;
