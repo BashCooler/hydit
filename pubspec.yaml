@@ -48,7 +48,7 @@ dependencies:
   media_kit: ^1.2.6
   media_kit_video: ^2.0.1
   media_kit_libs_video: ^1.0.7
-  snapping_sheet: ^3.1.0
+  snapping_sheet_2: ^3.1.5
   # Other packages
   http: ^1.6.0
   scrollview_observer: ^1.26.3

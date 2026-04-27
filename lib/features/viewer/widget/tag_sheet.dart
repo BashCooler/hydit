@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:snapping_sheet/snapping_sheet.dart';
+import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import '../getx/page.dart';
 
@@ -34,11 +34,11 @@ class TagSheet extends HookWidget {
         ],
         grabbingHeight: 0,
         sheetAbove: SnappingSheetContent(
-          draggable: true,
+          draggable: (_) => true,
           child: child,
         ),
         sheetBelow: SnappingSheetContent(
-          draggable: true,
+          draggable: (_) => true,
           childScrollController: scrollBelow,
           child: Material(
             child: ListView.builder(
