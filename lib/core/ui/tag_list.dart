@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:hydrus_flutter/core/ui/suggests.dart';
 import 'package:hydrus_flutter/utils/theme.dart';
-import '../domain/entities.dart';
 
+import '../domain/entities.dart';
 
 
 /// [ListView] of [Tag]s.
@@ -20,9 +20,11 @@ import '../domain/entities.dart';
 /// usually used to add tag to some [RxList] or [RxSet].
 class TagList extends StatelessWidget {
   final Widget? trailing;
-  final dynamic tags;
+  final List<Tag> tags;
   final ScrollController? scrollController;
   final void Function(Tag tag)? onTap;
+  final bool removeBottomPadding;
+  final bool reverse;
 
   const TagList({
     super.key,
@@ -30,6 +32,8 @@ class TagList extends StatelessWidget {
     this.onTap,
     this.scrollController,
     required this.tags,
+    this.removeBottomPadding = true,
+    this.reverse = true,
   });
 
   @override
@@ -39,12 +43,13 @@ class TagList extends StatelessWidget {
       color: Colors.transparent,
       child: MediaQuery.removePadding(
         context: context,
-        removeBottom: true,
+        removeTop: true,
+        removeBottom: removeBottomPadding,
         child: Scrollbar(
           controller: scrollController,
           child:  ListView.builder(
-            padding: .zero,
-            reverse: true,
+            padding: removeBottomPadding ? .zero : null,
+            reverse: reverse,
             itemCount: tags.length,
             controller: scrollController,
             itemBuilder: (_, index) => SearchEntry(

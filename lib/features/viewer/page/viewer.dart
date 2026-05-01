@@ -44,15 +44,20 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+
+    final Images images = Get.find();
+    final PageGetxController page = Get.find();
+
     return PopScope(
       onPopInvokedWithResult: showSearchBar,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
-        body: TagSheet(
+        body: Obx(() => TagSheet(
+          tags: images[page.i].all,
           child: const Pages(),
-        ),
+        )),
         bottomNavigationBar: const BottomActions(),
       ),
     );

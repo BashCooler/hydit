@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
+import 'package:hydrus_flutter/core/domain/entities.dart';
+import 'package:hydrus_flutter/core/ui/tag_list.dart';
+
 import '../getx/page.dart';
 
 
 class TagSheet extends HookWidget {
   final Widget child;
+  final List<Tag> tags;
 
-  const TagSheet({super.key, required this.child});
+  const TagSheet({super.key, required this.child, required this.tags});
 
   static const snaps = <SnappingPosition>[
         .factor(positionFactor: 0.0),
@@ -47,10 +51,12 @@ class TagSheet extends HookWidget {
         draggable: (_) => true,
         childScrollController: scrollBelow,
         child: Material(
-          child: ListView.builder(
-            itemCount: 21,
-            controller: scrollBelow,
-            itemBuilder: (context, index) => ListTile(title: Text('$index')),
+          child: TagList(
+            reverse: false,
+            removeBottomPadding: false,
+            scrollController: scrollBelow,
+            trailing: const SizedBox.shrink(),
+            tags: tags,
           ),
         ),
       ),
