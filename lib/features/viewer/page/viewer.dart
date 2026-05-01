@@ -26,12 +26,13 @@ class Viewer extends StatefulWidget {
 
 class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   late final PageGetxController page;
+  late final SnappingSheetController sheet;
 
   @override
   void initState() {
     super.initState();
     page = Get.put(PageGetxController(initial: widget.index));
-    Get.put(SnappingSheetController());
+    sheet = Get.put(SnappingSheetController());
   }
 
   void showSearchBar(_, _) {
@@ -49,17 +50,9 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
-        body: Obx(() => DismissiblePage(
-          disabled: page.noScroll,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          onDismissed: () => Navigator.of(context).pop(),
-          direction: .down,
-          interactionMode: .gesture,
-          minScale: 0,
-          builder: (BuildContext context, ScrollController scrollController) {
-            return const Pages();
-          },
-        )),
+        body: TagSheet(
+          child: const Pages(),
+        ),
         bottomNavigationBar: const BottomActions(),
       ),
     );
@@ -88,7 +81,15 @@ class Pages extends StatelessWidget {
         controller: page.controller,
         itemCount: images.length,
         preloadPagesCount: 3,
-        itemBuilder: (_, index) => TagSheet(child: ViewFile(index)),
+        itemBuilder: (_, index) => DismissiblePage(
+          disabled: page.noScroll,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          onDismissed: () => Navigator.of(context).pop(),
+          direction: .vertical,
+          interactionMode: .gesture,
+          minScale: 0,
+          builder: (context, scrollController) => ViewFile(index),
+        ),
       )),
     );
   }
@@ -120,7 +121,10 @@ class BottomActions extends StatelessWidget {
           Expanded(
             child: Obx(() => FilledTextButton(
               text: '${images[page.i].length} tags',
-              onPressed: () {}, // TODO открывать теги отсюда
+              onPressed: () {
+                final SnappingSheetController sheet = Get.find();
+                sheet.snapToPosition(.factor(positionFactor: 0.5));
+              },
             )),
           ),
           FilledIconButton(
