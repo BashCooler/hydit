@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
-import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/ui/tag_list.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
+import 'package:hydrus_flutter/features/editor/page/editor.dart';
 
 import '../getx/page.dart';
 
@@ -30,12 +31,18 @@ class TagSheet extends HookWidget {
     }
   }
 
+  void openEditor() {
+    Get.to(() => const Editor(), transition: .downToUp);
+  }
+
   @override
   Widget build(BuildContext context) {
 
     final scrollBelow = useScrollController();
     final sheet = Get.find<SnappingSheetController>();
     final page = Get.find<PageGetxController>();
+
+    const background = Material(child: Center());
 
     return SnappingSheet(
       controller: sheet,
@@ -51,13 +58,29 @@ class TagSheet extends HookWidget {
       sheetBelow: SnappingSheetContent(
         draggable: (_) => true,
         childScrollController: scrollBelow,
-        child: Material(
-          child: SafeArea(
-            child: TagList(
-              scrollController: scrollBelow,
-              tags: tags,
+        child: Stack(
+          children: [
+            background,
+            SafeArea(
+              top: false,
+              child: ClipRect(
+                child: Scaffold(
+                  body: TagList(
+                    scrollController: scrollBelow,
+                    tags: tags,
+                  ),
+                  floatingActionButton: Padding(
+                    padding: const .only(bottom: 18),
+                    child: FloatingActionButton(
+                      onPressed: openEditor,
+                      child: const Icon(Icons.edit_note),
+                    ),
+                  ),
+                  floatingActionButtonLocation: .miniEndFloat,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

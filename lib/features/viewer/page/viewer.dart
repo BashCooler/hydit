@@ -7,7 +7,6 @@ import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
-import 'package:hydrus_flutter/features/editor/page/editor.dart';
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 import 'package:hydrus_flutter/features/viewer/widget/tag_sheet.dart';
 
@@ -114,10 +113,6 @@ class BottomActions extends StatelessWidget {
     sheet.snapToPosition(.factor(positionFactor: 0.5));
   }
 
-  void openEditor() {
-    Get.to(() => const Editor(), transition: .downToUp);
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -160,11 +155,6 @@ class BottomActions extends StatelessWidget {
               onPressed: openSheet,
               child: Text('${images[page.i].length} tags'),
             )),
-          ),
-          IconButton(
-            color: Colors.white,
-            onPressed: openEditor,
-            icon: const Icon(Icons.edit_note),
           ),
           IconButton(
             color: Colors.white,

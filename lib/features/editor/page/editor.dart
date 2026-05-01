@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:filesize/filesize.dart';
+import 'package:hydrus_flutter/features/editor/page/preview.dart';
+import 'package:hydrus_flutter/features/viewer/widget/views.dart';
 import 'package:multi_split_view/multi_split_view.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
@@ -50,6 +52,14 @@ class _EditorState extends State<Editor> {
   void dispose() {
     scrollUp.dispose();
     super.dispose();
+  }
+
+  void openPreview() {
+    Get.to(() => Preview(index: page.i),
+      transition: .fadeIn,
+      curve: Curves.easeInCubic,
+      opaque: false,
+    );
   }
 
   Future<Action?> showPopDialog(BuildContext context, String message) {
@@ -153,10 +163,17 @@ class _EditorState extends State<Editor> {
                 child: Info(manager),
               ),
               Obx(() {
-                return SizedBox(
-                  width: 100,
-                  height: 100,
-                  child: Thumbnail(images[page.i]),
+                return GestureDetector(
+                  onTap: openPreview,
+                  child: SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: ObxHero(
+                      index: page.i,
+                      tag: images[page.i].id,
+                      child: Thumbnail(images[page.i]),
+                    ),
+                  ),
                 );
               }),
             ],
