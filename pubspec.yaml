@@ -44,6 +44,8 @@ dependencies:
   multi_split_view: ^3.6.1
   preload_page_view: ^0.2.0
   cached_network_image: ^3.4.1
+  scroll_to_hide:
+    git: https://github.com/BashCooler/scroll_to_hide
   # Video player
   media_kit: ^1.2.6
   media_kit_video: ^2.0.1

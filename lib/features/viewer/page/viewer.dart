@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -8,7 +9,6 @@ import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/editor/page/editor.dart';
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';
-import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 import 'package:hydrus_flutter/features/viewer/widget/tag_sheet.dart';
 
 import '../widget/views.dart';

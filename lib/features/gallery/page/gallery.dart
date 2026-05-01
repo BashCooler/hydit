@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/settings/ui/page/settings.dart';
-import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 
 import 'search_sheet.dart';
 import '../getx/query.dart';

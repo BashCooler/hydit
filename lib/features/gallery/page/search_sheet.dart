@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:scroll_to_hide/scroll_to_hide.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/ui/search.dart';
 import 'package:hydrus_flutter/core/ui/suggests.dart';
-import 'package:hydrus_flutter/core/external/scroll_to_hide.dart';
 
 import '../getx/query.dart';
 import '../widget/tag_panel.dart';
