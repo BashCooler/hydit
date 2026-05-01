@@ -38,7 +38,7 @@ class TagSheet extends HookWidget {
       lockOverflowDrag: true,
       initialSnappingPosition: .factor(positionFactor: 0.0),
       snappingPositions: snaps,
-      grabbingHeight: 0,
+      grabbingHeight: -1,
       sheetAbove: SnappingSheetContent(
         draggable: (_) => true,
         child: child,
