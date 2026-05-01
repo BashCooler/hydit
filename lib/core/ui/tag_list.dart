@@ -101,7 +101,7 @@ class SearchEntry extends StatelessWidget {
       minTileHeight: AppTheme.fieldHeight,
       title: Text(tag.pretty, style: TextStyle(color: color)),
       trailing: trailing ?? icon ?? Text(
-        tag.count?.toString() ?? '0',
+        tag.count?.toString() ?? '',
         style: TextStyle(color: color, fontSize: 14.0),
       ),
       onTap: () => onTap?.call(tag),

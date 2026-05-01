@@ -9,9 +9,11 @@ class PageGetxController extends GetxController {
   final _pointers = RxSet<int>();
 
   final zoom = false.obs;
-  final blockDismiss = false.obs;
+  final _blockDismiss = false.obs;
 
   bool get noScroll => _pinch.value || zoom.value;
+  bool get blockDismiss => _blockDismiss.value || zoom.value;
+  set blockDismiss(bool block) => _blockDismiss.value = block;
 
   final PreloadPageController controller;
   final observerController = Get.find<GridObserverController>();

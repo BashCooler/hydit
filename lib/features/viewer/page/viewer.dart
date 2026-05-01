@@ -87,9 +87,9 @@ class Pages extends StatelessWidget {
         itemCount: images.length,
         preloadPagesCount: 3,
         itemBuilder: (_, index) => Obx(() => DismissiblePage(
-          disabled: page.blockDismiss.value,
+          disabled: page.blockDismiss,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          onDismissed: () => Navigator.of(context).pop(),
+          onDismissed: Navigator.of(context).pop,
           direction: .vertical,
           interactionMode: .gesture,
           minScale: 0,

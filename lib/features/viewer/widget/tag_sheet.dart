@@ -24,9 +24,9 @@ class TagSheet extends HookWidget {
     final PageGetxController page = Get.find();
 
     if (positionData.relativeToSheetHeight > 0) {
-      page.blockDismiss.value = true;
+      page.blockDismiss = true;
     } else {
-      page.blockDismiss.value = false;
+      page.blockDismiss = false;
     }
   }
 
@@ -35,6 +35,7 @@ class TagSheet extends HookWidget {
 
     final scrollBelow = useScrollController();
     final sheet = Get.find<SnappingSheetController>();
+    final page = Get.find<PageGetxController>();
 
     return SnappingSheet(
       controller: sheet,
@@ -44,7 +45,7 @@ class TagSheet extends HookWidget {
       snappingPositions: snaps,
       grabbingHeight: -1,
       sheetAbove: SnappingSheetContent(
-        draggable: (_) => true,
+        draggable: (_) => !page.zoom.value,
         child: child,
       ),
       sheetBelow: SnappingSheetContent(
@@ -53,7 +54,6 @@ class TagSheet extends HookWidget {
         child: Material(
           child: TagList(
             scrollController: scrollBelow,
-            trailing: const SizedBox.shrink(),
             tags: tags,
           ),
         ),
