@@ -26,7 +26,7 @@ class HydrusImage {
   final Map<String, List<Tag>> service = {};
 
   int get length => service['all known tags']?.length ?? 0;
-  List<Tag> get all => service.values.first;
+  List<Tag> get all => service['all known tags'] ?? [];
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
 
   HydrusImage(this.id);
