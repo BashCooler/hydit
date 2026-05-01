@@ -34,10 +34,15 @@ class _GalleryState extends State<Gallery> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: Get.mediaQuery.viewInsets.top,
+        backgroundColor: Get.theme.scaffoldBackgroundColor.withAlpha(90),
+      ),
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
-      body: Stack(
+      body: const Stack(
         alignment: .bottomRight,
         children: [
           ImageGridViewBuilder(),

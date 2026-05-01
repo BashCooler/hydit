@@ -51,6 +51,11 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
     return PopScope(
       onPopInvokedWithResult: showSearchBar,
       child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          toolbarHeight: Get.mediaQuery.viewInsets.top,
+          backgroundColor: Get.theme.scaffoldBackgroundColor.withAlpha(90),
+        ),
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
@@ -104,6 +109,15 @@ class Pages extends StatelessWidget {
 class BottomActions extends StatelessWidget {
   const BottomActions({super.key});
 
+  void openSheet() {
+    final SnappingSheetController sheet = Get.find();
+    sheet.snapToPosition(.factor(positionFactor: 0.5));
+  }
+
+  void openEditor() {
+    Get.to(() => const Editor(), transition: .downToUp);
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -111,34 +125,49 @@ class BottomActions extends StatelessWidget {
     final Images images = Get.find();
 
     return BottomAppBar(
-      color: Colors.transparent,
+      elevation: 8,
+      padding: .zero,
+      color: Get.theme.scaffoldBackgroundColor.withAlpha(90),
+      height: 42,
       child: Row(
         mainAxisAlignment: .spaceBetween,
         spacing: 10.0,
         children: [
-          FilledIconButton(
+          IconButton(
+            color: Colors.white,
             onPressed: () => page.$.previousPage(
               duration: const Duration(milliseconds: 150),
               curve: Curves.decelerate,
             ),
-            icon: Icon(Icons.keyboard_arrow_left),
+            icon: const Icon(Icons.keyboard_arrow_left),
           ),
           Expanded(
-            child: Obx(() => FilledTextButton(
-              text: '${images[page.i].length} tags',
-              onPressed: () {
-                final SnappingSheetController sheet = Get.find();
-                sheet.snapToPosition(.factor(positionFactor: 0.5));
-              },
+            child: Obx(() => TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                textStyle: TextStyle(
+                  fontSize: 15,
+                  fontWeight: .w500,
+                  shadows: const <Shadow>[
+                    .new(
+                      color: Colors.black,
+                      blurRadius: 24,
+                      offset: Offset(0, 0),
+                    ),
+                  ]
+                ),
+              ),
+              onPressed: openSheet,
+              child: Text('${images[page.i].length} tags'),
             )),
           ),
-          FilledIconButton(
-            onPressed: () {
-              Get.to(() => Editor(), transition: .downToUp);
-            },
-            icon: Icon(Icons.edit_note),
+          IconButton(
+            color: Colors.white,
+            onPressed: openEditor,
+            icon: const Icon(Icons.edit_note),
           ),
-          FilledIconButton(
+          IconButton(
+            color: Colors.white,
             onPressed: () => page.$.nextPage(
               duration: const Duration(milliseconds: 150),
               curve: Curves.decelerate,

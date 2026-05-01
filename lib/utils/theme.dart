@@ -6,6 +6,11 @@ ThemeData darkTheme() => ThemeData(
   brightness: .dark,
   colorSchemeSeed: Colors.black,
 
+  appBarTheme: const AppBarThemeData(
+    elevation: 0,
+    scrolledUnderElevation: 0,
+  ),
+
   tooltipTheme: const TooltipThemeData(
     preferBelow: false,
     showDuration: Duration(milliseconds: 0),
@@ -17,6 +22,7 @@ ThemeData darkTheme() => ThemeData(
     radius: .circular(3),
   ),
 );
+
 
 abstract class AppColors {
   static const filled = Color(0xFF32353a);

@@ -52,9 +52,11 @@ class TagSheet extends HookWidget {
         draggable: (_) => true,
         childScrollController: scrollBelow,
         child: Material(
-          child: TagList(
-            scrollController: scrollBelow,
-            tags: tags,
+          child: SafeArea(
+            child: TagList(
+              scrollController: scrollBelow,
+              tags: tags,
+            ),
           ),
         ),
       ),
