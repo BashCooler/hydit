@@ -24,9 +24,9 @@ class TagSheet extends HookWidget {
     final PageGetxController page = Get.find();
 
     if (positionData.relativeToSheetHeight > 0) {
-      page.block.value = true;
+      page.blockDismiss.value = true;
     } else {
-      page.block.value = false;
+      page.blockDismiss.value = false;
     }
   }
 

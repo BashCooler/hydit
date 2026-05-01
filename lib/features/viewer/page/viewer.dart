@@ -86,15 +86,15 @@ class Pages extends StatelessWidget {
         controller: page.controller,
         itemCount: images.length,
         preloadPagesCount: 3,
-        itemBuilder: (_, index) => DismissiblePage(
-          disabled: page.noScroll,
+        itemBuilder: (_, index) => Obx(() => DismissiblePage(
+          disabled: page.blockDismiss.value,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           onDismissed: () => Navigator.of(context).pop(),
           direction: .vertical,
           interactionMode: .gesture,
           minScale: 0,
           builder: (context, scrollController) => ViewFile(index),
-        ),
+        )),
       )),
     );
   }
