@@ -35,7 +35,9 @@ class Suggests extends StatelessWidget {
         trailing: trailing,
         onTap: onTap,
         scrollController: scrollController,
-        tags: controller.suggests);
+        tags: controller.suggests,
+        reverse: true,
+      );
     });
   }
 }

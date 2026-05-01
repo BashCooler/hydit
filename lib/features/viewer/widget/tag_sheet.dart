@@ -52,8 +52,6 @@ class TagSheet extends HookWidget {
         childScrollController: scrollBelow,
         child: Material(
           child: TagList(
-            reverse: false,
-            removeBottomPadding: false,
             scrollController: scrollBelow,
             trailing: const SizedBox.shrink(),
             tags: tags,

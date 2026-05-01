@@ -238,6 +238,7 @@ class Up extends StatelessWidget {
             : Icons.lock_outline),
         scrollController: scrollUp,
         onTap: $.editable ? $.delete : null,
+        reverse: true,
       ),
     );
   }

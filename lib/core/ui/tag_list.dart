@@ -23,7 +23,6 @@ class TagList extends StatelessWidget {
   final List<Tag> tags;
   final ScrollController? scrollController;
   final void Function(Tag tag)? onTap;
-  final bool removeBottomPadding;
   final bool reverse;
 
   const TagList({
@@ -32,8 +31,7 @@ class TagList extends StatelessWidget {
     this.onTap,
     this.scrollController,
     required this.tags,
-    this.removeBottomPadding = true,
-    this.reverse = true,
+    this.reverse = false,
   });
 
   @override
@@ -44,11 +42,9 @@ class TagList extends StatelessWidget {
       child: MediaQuery.removePadding(
         context: context,
         removeTop: true,
-        removeBottom: removeBottomPadding,
         child: Scrollbar(
           controller: scrollController,
           child:  ListView.builder(
-            padding: removeBottomPadding ? .zero : null,
             reverse: reverse,
             itemCount: tags.length,
             controller: scrollController,
