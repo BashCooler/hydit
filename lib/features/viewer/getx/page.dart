@@ -25,8 +25,8 @@ class PageGetxController extends GetxController {
   bool enabled(int index) => index == i;
 
   PageGetxController({required int initial})
-      : index = initial.obs,
-        controller = PreloadPageController(initialPage: initial);
+    : index = initial.obs,
+      controller = PreloadPageController(initialPage: initial);
 
   @override
   void onInit() {
@@ -46,6 +46,18 @@ class PageGetxController extends GetxController {
   void onPageChanged(int page) {
     index.value = page;
     jumpToPageInBackground(page);
+  }
+
+  /// Navigates the visible [PageView] and keeps the background [GridView]
+  /// centered on the same image.
+  void navigateToPage(int page) {
+    if (page == i) return;
+
+    index.value = page;
+    jumpToPageInBackground(page);
+
+    if (!controller.hasClients) return;
+    controller.jumpToPage(page);
   }
 
   /// Jumps to corresponding item in [GridView].

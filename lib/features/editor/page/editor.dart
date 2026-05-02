@@ -1,26 +1,18 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
-import 'package:hydrus_flutter/features/search/getx/query.dart';
 
 import '../getx/tags.dart';
 import '../widget/app_bar.dart';
 import '../widget/search_bar.dart';
 import '../widget/tab_builder.dart';
 
-
 const additions = Color(0xFF3fb950);
 const deletions = Color(0xFFf85149);
 
-
-enum Action {
-  save,
-  discard,
-  cancel
-}
+enum Action { save, discard, cancel }
 
 
 class Editor extends StatefulWidget {
@@ -49,12 +41,16 @@ class _EditorState extends State<Editor> {
     super.dispose();
   }
 
-  void safePop() {
-    if (context.mounted) Navigator.of(context).pop();
-  }
+  Future<void> navigateToPage(int target) async {
+    if (target < 0) return;
+    if (target >= images.length) return;
 
-  void clearQuery() =>
-      Future.delayed(AppTheme.duration, Get.find<QueryController>().clear);
+    final shouldSwitch = await confirmPendingChanges();
+    if (!shouldSwitch || !mounted) return;
+
+    page.navigateToPage(target);
+    manager.init(images[page.i].service);
+  }
 
   // MARK: BUILD
 
@@ -75,13 +71,13 @@ class _EditorState extends State<Editor> {
                   IconButton(
                     tooltip: 'Previous page',
                     icon: const Icon(Icons.keyboard_arrow_left),
-                    onPressed: () {},
+                    onPressed: () => navigateToPage(page.i - 1),
                   ),
                   const Expanded(child: EditorTagSearchBar()),
                   IconButton(
                     tooltip: 'Next page',
                     icon: const Icon(Icons.keyboard_arrow_right),
-                    onPressed: () {},
+                    onPressed: () => navigateToPage(page.i + 1),
                   ),
                 ],
               ),
@@ -104,28 +100,31 @@ class _EditorState extends State<Editor> {
 
   Future<void> onLeave(bool didPop, Object? result) async {
     if (didPop) return;
-    final message = manager.summarize();
-    if (message == 'No changes') {
+    final shouldLeave = await confirmPendingChanges();
+    if (shouldLeave && mounted) {
       Navigator.of(context).pop();
-    } else {
-      final result = await showPopDialog(context, message);
+    }
+  }
 
-      switch (result) {
-        case .save:
-          clearQuery();
-          safePop();
-        case .discard:
-          clearQuery();
-          safePop();
-        case _:
-          break;
-      }
+  Future<bool> confirmPendingChanges() async {
+    final message = manager.summarize();
+    if (message == 'No changes') return true;
+
+    final result = await showPopDialog(context, message, page.i);
+
+    switch (result) {
+      case .save:
+        return true;
+      case .discard:
+        return true;
+      case _:
+        return false;
     }
   }
 
   // MARK: DIALOG
 
-  Future<Action?> showPopDialog(BuildContext context, String message) {
+  Future<Action?> showPopDialog(BuildContext context, String message, int index) {
     bool isLoading = false;
 
     return showDialog<Action>(
@@ -133,6 +132,28 @@ class _EditorState extends State<Editor> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
+
+            final actions = <Widget>[
+              TextButton(
+                onPressed: () async {
+                  setState(() => isLoading = true);
+                  await manager.save(images[index]);
+                  if (context.mounted) {
+                    Navigator.of(context).pop(Action.save);
+                  }
+                },
+                child: const Text('Save'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(Action.discard),
+                child: const Text('Discard'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(Action.cancel),
+                child: const Text('Cancel'),
+              ),
+            ];
+
             return AlertDialog(
               actionsAlignment: .center,
               icon: const Icon(Icons.save),
@@ -142,24 +163,7 @@ class _EditorState extends State<Editor> {
               content: isLoading
                   ? const LinearProgressIndicator()
                   : Text(message),
-              actions: isLoading ? <Widget>[] : <Widget>[
-                TextButton(
-                  onPressed: () async {
-                    setState(() => isLoading = true);
-                    await manager.save(images[page.i]);
-                    if (context.mounted) Navigator.of(context).pop(Action.save);
-                  },
-                  child: const Text('Save'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(Action.discard),
-                  child: const Text('Discard'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(Action.cancel),
-                  child: const Text('Cancel'),
-                ),
-              ],
+              actions: isLoading ? <Widget>[] : actions,
             );
           },
         );

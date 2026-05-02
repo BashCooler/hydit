@@ -45,11 +45,13 @@ class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: SizedBox(
               width: 100,
               height: 100,
-              child: ObxHero(
-                index: page.i,
-                tag: images[page.i].id,
-                child: Thumbnail(images[page.i]),
-              ),
+              child: Obx(() {
+                return ObxHero(
+                  index: page.i,
+                  tag: images[page.i].id,
+                  child: Thumbnail(images[page.i]),
+                );
+              }),
             ),
           ),
         ],

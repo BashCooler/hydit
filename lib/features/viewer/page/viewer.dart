@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:scroll_to_hide/scroll_to_hide.dart';
+import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';

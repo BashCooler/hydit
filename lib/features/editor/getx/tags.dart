@@ -16,8 +16,10 @@ class TagManager extends GetxController {
 
   /// Selected service
   String get service => selectedService.value;
+
   /// Selected service's tags
   List<Tag> get tags => _tags[service] ?? [];
+
   /// Selected service's index
   int get index {
     if (services.isEmpty) return 0;
@@ -28,15 +30,24 @@ class TagManager extends GetxController {
 
   /// Selected service's tags length
   int get count => tags.length;
+
   /// Selected service's tags to add length
   int get additionsCount => _tagsToAdd[service]?.length ?? 0;
+
   /// Selected service's tags to delete length
   int get deletionsCount => _tagsToDelete[service]?.length ?? 0;
+
   /// If selected service is editable returns true
   bool get editable => isServiceEditable(service);
 
   void add(Tag tag) => addToService(service, tag);
   void delete(Tag tag) => deleteFromService(service, tag);
+
+  @override
+  void onInit() {
+    super.onInit();
+    ever(selectedService, (_) => sortTags());
+  }
 
   void addToService(String service, Tag tag) {
     if (!isServiceEditable(service)) return;
@@ -102,7 +113,9 @@ extension Init on TagManager {
     _tagsToDelete.clear();
 
     for (final entry in servicesMap.entries) {
-      _tags[entry.key] = entry.value;
+      _tags[entry.key] = entry.value
+          .map((tag) => Tag(tag.raw, count: tag.count))
+          .toList();
       _tagsToAdd[entry.key] = <Tag>[];
       _tagsToDelete[entry.key] = <Tag>[];
     }
@@ -113,13 +126,12 @@ extension Init on TagManager {
       _tagsToDelete.putIfAbsent(service, () => <Tag>[]);
     }
 
-    selectedService.value = services.isNotEmpty ? services.first : '';
+    selectedService.value = selectedService.value != ''
+        ? selectedService.value
+        : services.first;
     update();
-
-    ever(selectedService, (_) => sortTags());
   }
 }
-
 
 extension Save on TagManager {
   /// Removes entries with empty lists from map
@@ -142,13 +154,19 @@ extension Save on TagManager {
 
     final sb = StringBuffer();
 
-    final addCount = toAdd.values.fold(0, (sum, list) => (sum + list.length).toInt());
+    final addCount = toAdd.values.fold(
+      0,
+      (sum, list) => (sum + list.length).toInt(),
+    );
     final serCount = toAdd.length;
     if (addCount > 0) {
       sb.writeln('Add $addCount tags to $serCount services');
     }
 
-    final remCount = toRem.values.fold(0, (sum, list) => (sum + list.length).toInt());
+    final remCount = toRem.values.fold(
+      0,
+      (sum, list) => (sum + list.length).toInt(),
+    );
     final serRem = toRem.length;
     if (remCount > 0) {
       sb.writeln('Remove $remCount tags from $serRem services');
@@ -202,10 +220,7 @@ extension ServiceUtils on TagManager {
 }
 
 
-enum Sort {
-  alphabeticalAsc,
-  alphabeticalDesc,
-}
+enum Sort { alphabeticalAsc, alphabeticalDesc }
 
 extension Sorting on TagManager {
   void sortTags() {
