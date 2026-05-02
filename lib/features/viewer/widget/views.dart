@@ -21,7 +21,7 @@ class ViewFile extends StatelessWidget {
   const ViewFile(this.index, {super.key});
 
   @override
-  Widget build(_) {
+  Widget build(BuildContext context) {
     final file = Get.find<Images>()[index];
 
     final content = switch (file.type) {

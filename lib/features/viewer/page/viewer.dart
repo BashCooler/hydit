@@ -77,32 +77,58 @@ class Pages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final Images images = Get.find();
     final PageGetxController page = Get.find();
 
     return Listener(
       onPointerUp: page.registerPointer,
       onPointerDown: page.registerPointer,
-      child: Obx(() => PreloadPageView.builder(
-        onPageChanged: page.onPageChanged,
-        physics: page.noScroll ? noScroll : scroll,
-        controller: page.controller,
-        itemCount: images.length,
-        preloadPagesCount: 3,
-        itemBuilder: (_, index) => Obx(() => DismissiblePage(
-          disabled: page.blockDismiss,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          onDismissed: Navigator.of(context).pop,
-          direction: .vertical,
-          interactionMode: .gesture,
-          minScale: 0,
-          builder: (context, scrollController) => ViewFile(index),
-        )),
-      )),
+      child: Obx(() {
+        return PreloadPageView.builder(
+          onPageChanged: page.onPageChanged,
+          physics: page.noScroll ? noScroll : scroll,
+          controller: page.controller,
+          itemCount: images.length,
+          preloadPagesCount: 3,
+          itemBuilder: (_, index) {
+            return DismissibleFile(index);
+          },
+        );
+      }),
     );
   }
 }
+
+
+class DismissibleFile extends StatelessWidget {
+  final int index;
+
+  const DismissibleFile(this.index, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final PageGetxController page = Get.find();
+
+    return Obx(() {
+      return DismissiblePage(
+        disabled: page.blockDismiss,
+        backgroundColor: Theme
+            .of(context)
+            .scaffoldBackgroundColor,
+        onDismissed: Navigator
+            .of(context)
+            .pop,
+        direction: .vertical,
+        interactionMode: .gesture,
+        minScale: 0,
+        builder: (context, scrollController) {
+          return ViewFile(index);
+        },
+      );
+    });
+  }
+}
+
 
 
 class BottomActions extends StatelessWidget {
