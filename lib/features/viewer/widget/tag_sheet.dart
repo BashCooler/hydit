@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
+import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/ui/tag_list.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
@@ -34,7 +35,7 @@ class TagSheet extends HookWidget {
 
   void openEditor() => Get.to(() => const Editor(),
     transition: .topLevel,
-    duration: const Duration(milliseconds: 450),
+    duration: AppTheme.duration,
     curve: Curves.easeInOutCubic,
     binding: BindingsBuilder.put(
       () => QueryController(),
