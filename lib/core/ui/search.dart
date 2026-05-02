@@ -10,6 +10,7 @@ class TagSearchBar extends StatefulWidget {
   final String? hintText;
   final Widget? actions;
   final void Function()? onSubmitted;
+  final String? tag;
 
   const TagSearchBar({
     super.key,
@@ -18,6 +19,7 @@ class TagSearchBar extends StatefulWidget {
     this.hintText,
     this.actions,
     required this.onSubmitted,
+    this.tag,
   });
 
   @override
@@ -26,7 +28,13 @@ class TagSearchBar extends StatefulWidget {
 
 class _TagSearchBarState extends State<TagSearchBar> {
   final _focusNode = FocusNode();
-  final QueryController query = Get.find();
+  late final QueryController query;
+
+  @override
+  void initState() {
+    super.initState();
+    query = Get.find(tag: widget.tag);
+  }
 
   @override
   void dispose() {

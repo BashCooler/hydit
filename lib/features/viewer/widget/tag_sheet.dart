@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import 'package:hydrus_flutter/core/ui/tag_list.dart';
@@ -35,6 +36,10 @@ class TagSheet extends HookWidget {
     transition: .topLevel,
     duration: const Duration(milliseconds: 450),
     curve: Curves.easeInOutCubic,
+    binding: BindingsBuilder.put(
+      () => QueryController(),
+      tag: 'Editor',
+    ),
   );
 
   @override

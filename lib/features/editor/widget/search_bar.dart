@@ -23,6 +23,7 @@ class EditorTagSearchBar extends StatelessWidget {
             : 'Read-only service selected',
         onSubmitted: null,
         actions: const EditorTagSearchBarActions(),
+        tag: 'Editor',
       );
     });
   }

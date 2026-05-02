@@ -15,6 +15,7 @@ class Suggests extends StatelessWidget {
   final bool expanded;
   final ScrollController? scrollController;
   final void Function(Tag tag)? onTap;
+  final String? tag;
 
   const Suggests({
     super.key,
@@ -22,11 +23,12 @@ class Suggests extends StatelessWidget {
     this.scrollController,
     this.trailing,
     required this.onTap,
+    this.tag,
   });
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<QueryController>();
+    final QueryController controller = Get.find(tag: tag);
     return Obx(() {
       if (!controller.suggestsVisible) {
         return const Hint();

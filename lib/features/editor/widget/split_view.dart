@@ -73,6 +73,7 @@ class Down extends StatelessWidget {
       init: Get.find<TagManager>(),
       builder: (manager) {
         return Suggests(
+          tag: 'Editor',
           trailing: Icon(manager.editable
               ? Icons.add
               : Icons.lock_outline),

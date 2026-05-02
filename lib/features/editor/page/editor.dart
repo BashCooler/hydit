@@ -40,8 +40,7 @@ class _EditorState extends State<Editor> {
   @override
   void initState() {
     super.initState();
-    manager = Get.put(TagManager());
-    manager.init(images[page.i].service);
+    manager = Get.put(TagManager()..init(images[page.i].service));
   }
 
   @override
