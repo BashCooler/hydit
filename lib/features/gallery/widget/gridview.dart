@@ -8,8 +8,8 @@ import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
-import '../getx/query.dart';
 
 
 class ImageGridViewBuilder extends StatelessWidget {

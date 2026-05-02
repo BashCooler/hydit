@@ -7,7 +7,7 @@ import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
-import 'package:hydrus_flutter/features/gallery/getx/query.dart';
+import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/viewer/widget/tag_sheet.dart';
 
 import '../widget/views.dart';

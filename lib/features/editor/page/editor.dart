@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
-import 'package:hydrus_flutter/features/gallery/getx/query.dart';
+import 'package:hydrus_flutter/features/search/getx/query.dart';
 
 import '../getx/tags.dart';
 import '../widget/app_bar.dart';

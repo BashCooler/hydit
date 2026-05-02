@@ -35,6 +35,8 @@ abstract class AppColors {
   static const fontDark = Color(0xFF000000);
   static const fontLight = Colors.white70;
   static const blackWithAlpha = Color.fromARGB(96, 0, 0, 0);
+  static const addition = Color(0x333fb950);
+  static const deletion = Color(0x33f85149);
 }
 
 

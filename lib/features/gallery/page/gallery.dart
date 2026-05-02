@@ -6,10 +6,10 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/settings/ui/page/settings.dart';
 
 import 'search_sheet.dart';
-import '../getx/query.dart';
 import '../widget/gridview.dart';
 
 

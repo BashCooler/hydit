@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:hydrus_flutter/core/ui/suggests.dart';
 import 'package:hydrus_flutter/utils/theme.dart';
-
-import '../domain/entities.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 
 
 /// [ListView] of [Tag]s.
@@ -86,10 +83,10 @@ class SearchEntry extends StatelessWidget {
     switch (tag.diff) {
       case .add:
         icon = Icon(Icons.playlist_remove);
-        tileColor = additions;
+        tileColor = AppColors.addition;
       case .delete:
         icon = Icon(Icons.undo);
-        tileColor = deletions;
+        tileColor = AppColors.deletion;
       case _:
         icon = null;
         tileColor = null;

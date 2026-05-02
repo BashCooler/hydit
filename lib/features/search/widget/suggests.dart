@@ -1,14 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
+import 'package:hydrus_flutter/core/ui/tag_list.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
-import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 
-import 'tag_list.dart';
-
-
-const additions = Color(0x333fb950);
-const deletions = Color(0x33f85149);
+import '../getx/query.dart';
 
 
 class Suggests extends StatelessWidget {
