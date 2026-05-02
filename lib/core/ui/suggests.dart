@@ -14,7 +14,7 @@ class Suggests extends StatelessWidget {
   final Widget? trailing;
   final bool expanded;
   final ScrollController? scrollController;
-  final void Function(Tag tag) onTap;
+  final void Function(Tag tag)? onTap;
 
   const Suggests({
     super.key,

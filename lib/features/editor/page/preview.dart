@@ -18,6 +18,11 @@ class Preview extends StatelessWidget {
     return PopScope(
       child: Obx(() {
         return DismissiblePage(
+          /*
+          * TODO hitting global controller from here is wrong
+          * Make a separate controller just for preview not
+          * to mess with Viewer state
+          */
           disabled: page.zoom.value,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           onDismissed: Navigator.of(context).pop,

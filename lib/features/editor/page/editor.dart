@@ -1,20 +1,15 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:filesize/filesize.dart';
-import 'package:hydrus_flutter/features/editor/page/preview.dart';
-import 'package:hydrus_flutter/features/viewer/widget/views.dart';
-import 'package:multi_split_view/multi_split_view.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
-import 'package:hydrus_flutter/core/ui/images.dart';
-import 'package:hydrus_flutter/core/ui/search.dart';
-import 'package:hydrus_flutter/core/ui/suggests.dart';
-import 'package:hydrus_flutter/core/ui/tag_list.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
-import 'package:hydrus_flutter/features/editor/getx/tags.dart';
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';
+
+import '../getx/tags.dart';
+import '../widget/app_bar.dart';
+import '../widget/search_bar.dart';
+import '../widget/tab_builder.dart';
 
 
 const additions = Color(0xFF3fb950);
@@ -39,12 +34,13 @@ class _EditorState extends State<Editor> {
   final scrollUp = ScrollController();
 
   final Images images = Get.find();
-  final TagManager manager = TagManager();
+  late final TagManager manager;
   final PageGetxController page = Get.find();
 
   @override
   void initState() {
     super.initState();
+    manager = Get.put(TagManager());
     manager.init(images[page.i].service);
   }
 
@@ -54,13 +50,67 @@ class _EditorState extends State<Editor> {
     super.dispose();
   }
 
-  void openPreview() {
-    Get.to(() => Preview(index: page.i),
-      transition: .fadeIn,
-      curve: Curves.easeInCubic,
-      opaque: false,
+  void safePop() {
+    if (context.mounted) Navigator.of(context).pop();
+  }
+
+  void clearQuery() =>
+      Future.delayed(AppTheme.duration, Get.find<QueryController>().clear);
+
+  // MARK: BUILD
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: onLeave,
+      child: Scaffold(
+        appBar: const EditorAppBar(toolbarHeight: 100),
+        body: const SafeArea(
+          child: Column(
+            children: <Widget>[
+              TabBuilder(),
+              Divider(height: 1),
+              EditorTagSearchBar(),
+            ],
+          ),
+        ),
+        floatingActionButton: Padding(
+          padding: const .only(bottom: 60),
+          child: FloatingActionButton(
+            onPressed: Navigator.of(context).maybePop,
+            child: const Icon(Icons.check),
+          ),
+        ),
+        floatingActionButtonLocation: .miniEndFloat,
+      ),
     );
   }
+
+  // MARK: LEAVE
+
+  Future<void> onLeave(bool didPop, Object? result) async {
+    if (didPop) return;
+    final message = manager.summarize();
+    if (message == 'No changes') {
+      Navigator.of(context).pop();
+    } else {
+      final result = await showPopDialog(context, message);
+
+      switch (result) {
+        case .save:
+          clearQuery();
+          safePop();
+        case .discard:
+          clearQuery();
+          safePop();
+        case _:
+          break;
+      }
+    }
+  }
+
+  // MARK: DIALOG
 
   Future<Action?> showPopDialog(BuildContext context, String message) {
     bool isLoading = false;
@@ -73,11 +123,13 @@ class _EditorState extends State<Editor> {
             return AlertDialog(
               actionsAlignment: .center,
               icon: const Icon(Icons.save),
-              title: isLoading ? const Text('Saving...') : const Text('Save changes?'),
+              title: isLoading
+                  ? const Text('Saving...')
+                  : const Text('Save changes?'),
               content: isLoading
-                  ? LinearProgressIndicator()
+                  ? const LinearProgressIndicator()
                   : Text(message),
-              actions: isLoading ? [] : [
+              actions: isLoading ? <Widget>[] : <Widget>[
                 TextButton(
                   onPressed: () async {
                     setState(() => isLoading = true);
@@ -99,275 +151,6 @@ class _EditorState extends State<Editor> {
           },
         );
       },
-    );
-  }
-
-  Future<void> onLeave(bool didPop, Object? result) async {
-    if (didPop) return;
-    final message = manager.summarize();
-    if (message == 'No changes') {
-      Navigator.of(context).pop();
-    } else {
-      final result = await showPopDialog(context, message);
-
-      switch (result) {
-        case .save:
-          clearQuery();
-          // ignore: use_build_context_synchronously
-          if (context.mounted) Navigator.of(context).pop();
-        case .discard:
-          clearQuery();
-          // ignore: use_build_context_synchronously
-          if (context.mounted) Navigator.of(context).pop();
-        case _:
-          break;
-      }
-    }
-  }
-
-  void clearQuery() {
-    Future.delayed(
-      AppTheme.duration,
-      Get.find<QueryController>().clear,
-    );
-  }
-
-  final controller = MultiSplitViewController(areas: [
-    Area(
-        min: 0,
-        flex: 1.4,
-        max: 2.375,
-        builder: (context, area) => Up()),
-    Area(flex: 1, builder: (context, area) => Down()),
-  ]);
-
-  @override
-  Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: onLeave,
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 2,
-          scrolledUnderElevation: 0,
-          titleSpacing: 0,
-          toolbarHeight: 100,
-          title: Row(
-            crossAxisAlignment: .center,
-            mainAxisAlignment: .spaceBetween,
-            children: [
-              Container(
-                constraints: const BoxConstraints(
-                  maxWidth: 250,
-                  maxHeight: 100),
-                child: Info(manager),
-              ),
-              Obx(() {
-                return GestureDetector(
-                  onTap: openPreview,
-                  child: SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: ObxHero(
-                      index: page.i,
-                      tag: images[page.i].id,
-                      child: Thumbnail(images[page.i]),
-                    ),
-                  ),
-                );
-              }),
-            ],
-          ),
-        ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: GetBuilder(
-                  init: manager,
-                  builder: ($) => DefaultTabController(
-                    length: $.services.isEmpty ? 1 : $.services.length,
-                    initialIndex: $.index,
-                    child: Column(
-                      children: [
-                        TabBar(
-                          isScrollable: true,
-                          tabAlignment: .center,
-                          onTap: $.selectServiceByIndex,
-                          tabs: $.services.isEmpty
-                              ? [ const Tab(text: 'No services') ]
-                              : [ for (final service in $.services) Tab(text: $.pretty(service)) ],
-                        ),
-                        Expanded(
-                          child: MultiSplitView(
-                            axis: .vertical,
-                            resizable: true,
-                            controller: controller,
-                            dividerBuilder: (_, _, _, drag, hover, _) {
-                              return Container(color: Get.theme.dividerColor);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Divider(height: 1),
-              Obx(() => TagSearchBar(
-                enabled: manager.editable,
-                hintText: manager.editable
-                    ? 'Add tags to ${manager.service}'
-                    : 'Read-only service selected',
-                onSubmitted: () {},
-                actions: _TagSearchBarActions(),
-              )),
-            ],
-          ),
-        ),
-        floatingActionButton: Padding(
-          padding: .only(bottom: 60),
-          child: FloatingActionButton(
-            onPressed: Navigator.of(context).maybePop,
-            child: const Icon(Icons.check),
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-      ),
-    );
-  }
-}
-
-
-class Up extends StatelessWidget {
-  final scrollUp = ScrollController();
-
-  Up({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GetBuilder(
-      init: Get.find<TagManager>(),
-      builder: ($) => TagList(
-        tags: $.tags,
-        trailing: Icon($.editable
-            ? Icons.playlist_remove
-            : Icons.lock_outline),
-        scrollController: scrollUp,
-        onTap: $.editable ? $.delete : null,
-        reverse: true,
-      ),
-    );
-  }
-}
-
-
-class Down extends StatelessWidget {
-  const Down({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GetBuilder(
-      init: Get.find<TagManager>(),
-      builder: ($) => Suggests(
-        trailing: Icon($.editable
-            ? Icons.add
-            : Icons.lock_outline),
-        onTap: $.editable
-            ? $.add
-            : (_) {},
-      )
-    );
-  }
-}
-
-
-class Info extends StatelessWidget {
-  final TagManager manager;
-
-  const Info(this.manager, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final Images images = Get.find();
-    final PageGetxController page = Get.find();
-    final image = images[page.i];
-    return SizedBox(
-      width: 200,
-      child: Column(
-        spacing: 5,
-        mainAxisAlignment: .center,
-        crossAxisAlignment: .start,
-        children: [
-          DefaultTextStyle(
-            style: const TextStyle(fontSize: 16),
-            child: Row(
-              crossAxisAlignment: .center,
-              children: [
-                Obx(() => Text("${manager.count} tags")),
-                const VerticalDivider(width: 8),
-                Obx(() {
-                  if (manager.additionsCount > 0) {
-                    return Row(
-                      children: [
-                        Text("+${manager.additionsCount}", style: const .new(color: additions)),
-                        const VerticalDivider(width: 6),
-                      ],
-                    );
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                }),
-                Obx(() => manager.deletionsCount > 0
-                    ? Text("-${manager.deletionsCount}", style: const .new(color: deletions))
-                    : const SizedBox.shrink()),
-              ],
-            ),
-          ),
-          Obx(() => Text("service: ${manager.service}",
-            style: Theme.of(context).textTheme.labelMedium,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          )),
-          Text("id: ${image.id} / "
-              "${filesize(image.size)} / "
-              "${image.res}",
-              style: Theme.of(context).textTheme.labelMedium,
-              maxLines: 2
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-
-class _TagSearchBarActions extends StatelessWidget {
-  const _TagSearchBarActions();
-
-  @override
-  Widget build(BuildContext context) {
-    final query = Get.find<QueryController>();
-    return Row(
-      mainAxisSize: .min,
-      spacing: 5.0,
-      mainAxisAlignment: .end,
-      children: [
-        IconButton(
-          onPressed: query.clear,
-          icon: const Icon(Icons.clear),
-          tooltip: 'Clear',
-        ),
-        IconButton(
-          onPressed: () {
-            Get.find<TagManager>().add(Tag(query.text));
-            query.clear();
-          },
-          icon: const Icon(Icons.arrow_drop_up),
-          tooltip: 'Insert input as tag',
-        ),
-        const VerticalDivider(width: 0.0),
-      ],
     );
   }
 }

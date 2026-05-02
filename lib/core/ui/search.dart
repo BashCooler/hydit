@@ -9,7 +9,7 @@ class TagSearchBar extends StatefulWidget {
   final bool autofocus;
   final String? hintText;
   final Widget? actions;
-  final void Function() onSubmitted;
+  final void Function()? onSubmitted;
 
   const TagSearchBar({
     super.key,
@@ -54,7 +54,7 @@ class _TagSearchBarState extends State<TagSearchBar> {
         border: .none,
       ),
       onChanged: query.onChange,
-      onSubmitted: (_) => widget.onSubmitted(),
+      onSubmitted: (_) => widget.onSubmitted?.call(),
       onTapOutside: keepFocus,
     );
   }
