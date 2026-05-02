@@ -1,10 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:hydrus_flutter/features/gallery/getx/query.dart';
 
 
-class TagSearchBar extends StatefulWidget {
+class TagSearchBar extends HookWidget {
   final bool enabled;
   final bool autofocus;
   final String? hintText;
@@ -22,48 +23,31 @@ class TagSearchBar extends StatefulWidget {
     this.tag,
   });
 
-  @override
-  State<TagSearchBar> createState() => _TagSearchBarState();
-}
-
-class _TagSearchBarState extends State<TagSearchBar> {
-  final _focusNode = FocusNode();
-  late final QueryController query;
-
-  @override
-  void initState() {
-    super.initState();
-    query = Get.find(tag: widget.tag);
-  }
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  void keepFocus(PointerDownEvent event) {
-    setState(() => _focusNode.requestFocus());
+  void keepFocus(FocusNode node) {
+    node.requestFocus();
   }
 
   @override
   Widget build(BuildContext context) {
+    final node = useFocusNode();
+    final QueryController query = Get.find(tag: tag);
+
     return TextField(
-      enabled: widget.enabled,
+      enabled: enabled,
       textAlignVertical: .center,
-      autofocus: widget.autofocus,
-      focusNode: _focusNode,
+      autofocus: autofocus,
+      focusNode: node,
       controller: query.textController,
       decoration: InputDecoration(
-        hintText: widget.hintText,
+        hintText: hintText,
         filled: true,
         fillColor: Colors.transparent,
-        suffixIcon: widget.actions,
+        suffixIcon: actions,
         border: .none,
       ),
       onChanged: query.onChange,
-      onSubmitted: (_) => widget.onSubmitted?.call(),
-      onTapOutside: keepFocus,
+      onSubmitted: (_) => onSubmitted?.call(),
+      onTapOutside: (_) => keepFocus(node),
     );
   }
 }
