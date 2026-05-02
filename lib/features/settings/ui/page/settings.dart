@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:settings_tiles/settings_tiles.dart';
 
 import '../getx/controller.dart';
 import '../widget/text_field.dart';
@@ -58,27 +59,28 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Settings')),
-      body: Padding(
-        padding: const .all(15),
-        child: Column(
-          spacing: 15,
-          children: [
-            SettingsTextField(
-              label: 'Url',
-              onChanged: settings.updateUrl,
-              initial: settings.$.url,
-            ),
-            SettingsTextField(
-              label: 'API Key',
-              onChanged: settings.updateKey,
-              initial: settings.$.key,
-            ),
-            Obx(() => OutlinedButton(
-              onPressed: settings.processing.value ? null : verify,
-              child: Text('Verify key and save'),
-            )),
-          ],
-        ),
+      body: Column(
+        spacing: 15,
+        children: [
+          SettingsTextField(
+            label: 'Url',
+            onChanged: settings.updateUrl,
+            initial: settings.$.url,
+          ),
+          SettingsTextField(
+            label: 'API Key',
+            onChanged: settings.updateKey,
+            initial: settings.$.key,
+          ),
+          Obx(() {
+            return SettingActionTile(
+              enabled: !settings.processing.value,
+              icon: SettingTileIcon(Icons.save),
+              title: Text('Verify key and save'),
+              onTap: verify,
+            );
+          }),
+        ],
       ),
     );
   }

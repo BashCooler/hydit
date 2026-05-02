@@ -32,30 +32,56 @@ class SettingsTextField extends HookWidget {
     final node = useFocusNode();
     node.addListener(() => focus.value = node.hasFocus);
 
-    return Obx(() => TextField(
-      enabled: !settings.processing.value,
-      onChanged: onChanged,
-      onTapOutside: (_) => node.unfocus(),
-      controller: text,
-      focusNode: node,
-      decoration: InputDecoration(
-        labelText: label,
-        floatingLabelBehavior: .always,
-        suffixIcon: !focus.value ? const SizedBox.shrink() : Row(
-          spacing: 5,
-          mainAxisSize: .min,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.paste),
-              onPressed: () => paste(text),
+    return Padding(
+      padding: .symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: .start,
+        spacing: 4,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 16.5,
             ),
-            IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: () => text.clear(),
-            ),
-          ],
-        ),
+          ),
+          Obx(() {
+            return TextField(
+              enabled: !settings.processing.value,
+              onChanged: onChanged,
+              onTapOutside: (_) => node.unfocus(),
+              controller: text,
+              focusNode: node,
+              textAlignVertical: .center,
+              decoration: InputDecoration(
+                // labelText: label,
+                contentPadding: .symmetric(vertical: 0, horizontal: 8),
+                border: OutlineInputBorder(
+                  borderSide: .none,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                floatingLabelBehavior: .always,
+                filled: true,
+                suffixIcon: !focus.value
+                    ? const SizedBox.shrink()
+                    : Row(
+                        spacing: 5,
+                        mainAxisSize: .min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.paste),
+                            onPressed: () => paste(text),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () => text.clear(),
+                          ),
+                        ],
+                      ),
+              ),
+            );
+          }),
+        ],
       ),
-    ));
+    );
   }
 }

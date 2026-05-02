@@ -46,6 +46,7 @@ dependencies:
   cached_network_image: ^3.4.1
   scroll_to_hide:
     git: https://github.com/BashCooler/scroll_to_hide
+  settings_tiles: ^6.0.1
   # Video player
   media_kit: ^1.2.6
   media_kit_video: ^2.0.1
