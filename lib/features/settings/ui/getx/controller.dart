@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:string_validator/string_validator.dart';
 
 import 'package:hydrus_flutter/core/data/api.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/features/settings/data/model.dart';
+
+enum Result { success, error }
 
 
 class SettingsController extends GetxController {
@@ -13,10 +16,6 @@ class SettingsController extends GetxController {
     key: '',
   ).obs;
 
-  final urlHelper = ''.obs;
-  final keyHelper = ''.obs;
-  final urlError = ''.obs;
-  final keyError = ''.obs;
   final processing = false.obs;
 
   AppSettings get $ => _settings.value;
@@ -38,62 +37,52 @@ class SettingsController extends GetxController {
   }
 
   void updateUrl(String value) {
-    urlHelper.value = urlError.value = '';
     _settings.value = _settings.value.copyWith(url: value);
   }
   void updateKey(String value) {
-    keyHelper.value = keyError.value = '';
     _settings.value = _settings.value.copyWith(key: value);
   }
 }
 
 
-extension Verify on SettingsController {
-  Future<void> verify() async {
+extension Verify on SettingsController
+{
+  Future<(Result, String)> verify() async {
     processing.value = true;
-    urlHelper.value = keyHelper.value = '';
-    urlError.value = keyError.value = '';
 
     final uri = Uri.tryParse($.url);
-    if (uri == null) {
-      urlError.value = 'Invalid URL';
-      return;
-    }
+    if (uri == null) return (Result.error, 'Invalid URL');
+    if (!uri.host.isIP()) return (Result.error, 'Invalid IP');
 
-    final client = Client(accessKey: $.key, host: uri.host, port: uri.port);
+    final client = Client(
+      accessKey: $.key,
+      host: uri.host,
+      port: uri.port,
+    );
     String response;
+
     try {
       response = await client.getVerifyAccessKey();
     } on HydrusUnknownHostException {
-      urlError.value = 'Host is unknown, probably wrong URL';
-      return;
+      final message = 'Host is unknown, probably wrong URL';
+      return (Result.error, message);
     } on HydrusNoServiceException {
-      urlError.value = 'No connection with Hydrus. Is your client running?';
-      return;
+      final message = 'No connection with Hydrus. Is your client running?';
+      return (Result.error, message);
     } on HydrusTimeoutException {
-      urlError.value = 'No response (timeout). Is this the correct host?';
-      return;
+      final message = 'No response (timeout). Is this the correct host?';
+      return (Result.error, message);
     } on HydrusUnknownException {
-      urlError.value = 'Error';
-      return;
+      final message = 'Unknown error';
+      return (Result.error, message);
     } catch (e) {
-      urlError.value = 'Invalid URL';
-      return;
+      final message = e.toString();
+      return (Result.error, message);
     }
 
     final decoded = jsonDecode(response) as Map<String, dynamic>;
     if (decoded['error'] != null) {
-      switch (decoded['status_code']) {
-        case 400:
-        case 401:
-        case 403:
-        case 419:
-          keyError.value = decoded['error'];
-          return;
-        default:
-          keyError.value = 'Unknown error';
-          return;
-      }
+      return decoded['error'];
     }
 
     final box = Hive.box('settings');
@@ -101,7 +90,6 @@ extension Verify on SettingsController {
     box.put('key', $.key);
     Get.find<Repo>().updateClient();
 
-    urlError.value = keyError.value = '';
-    urlHelper.value = keyHelper.value = 'Saved';
+    return (Result.success, 'URL and key successfully saved');
   }
 }

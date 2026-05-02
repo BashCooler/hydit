@@ -57,6 +57,7 @@ dependencies:
   deep_pick: ^1.1.0
   filesize: ^2.0.1
   equatable: ^2.0.8
+  string_validator: ^1.2.0
   # unused
   # flutter_spinkit: ^5.2.2
 
