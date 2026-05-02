@@ -146,10 +146,7 @@ class BottomActions extends StatelessWidget {
     final Images images = Get.find();
 
     return BottomAppBar(
-      elevation: 8,
-      padding: .zero,
       color: Get.theme.scaffoldBackgroundColor.withAlpha(90),
-      height: 42,
       child: Row(
         mainAxisAlignment: .spaceBetween,
         spacing: 10.0,

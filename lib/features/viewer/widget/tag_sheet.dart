@@ -31,9 +31,11 @@ class TagSheet extends HookWidget {
     }
   }
 
-  void openEditor() {
-    Get.to(() => const Editor(), transition: .downToUp);
-  }
+  void openEditor() => Get.to(() => const Editor(),
+    transition: .topLevel,
+    duration: const Duration(milliseconds: 450),
+    curve: Curves.easeInOutCubic,
+  );
 
   @override
   Widget build(BuildContext context) {

@@ -66,12 +66,26 @@ class _EditorState extends State<Editor> {
       onPopInvokedWithResult: onLeave,
       child: Scaffold(
         appBar: const EditorAppBar(toolbarHeight: 100),
-        body: const SafeArea(
+        body: SafeArea(
           child: Column(
             children: <Widget>[
-              TabBuilder(),
-              Divider(height: 1),
-              EditorTagSearchBar(),
+              const TabBuilder(),
+              const Divider(height: 1),
+              Row(
+                children: [
+                  IconButton(
+                    tooltip: 'Previous page',
+                    icon: const Icon(Icons.keyboard_arrow_left),
+                    onPressed: () {},
+                  ),
+                  const Expanded(child: EditorTagSearchBar()),
+                  IconButton(
+                    tooltip: 'Next page',
+                    icon: const Icon(Icons.keyboard_arrow_right),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
             ],
           ),
         ),

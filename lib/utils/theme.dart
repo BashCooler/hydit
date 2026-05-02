@@ -11,6 +11,12 @@ ThemeData darkTheme() => ThemeData(
     scrolledUnderElevation: 0,
   ),
 
+  bottomAppBarTheme: const BottomAppBarThemeData(
+    height: 42,
+    padding: .zero,
+    elevation: 8,
+  ),
+
   tooltipTheme: const TooltipThemeData(
     preferBelow: false,
     showDuration: Duration(milliseconds: 0),
