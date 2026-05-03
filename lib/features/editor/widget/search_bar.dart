@@ -35,10 +35,10 @@ class EditorTagSearchBarActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final query = Get.find<QueryController>();
+    final QueryController query = Get.find(tag: 'Editor');
     return Row(
       mainAxisSize: .min,
-      spacing: 5.0,
+      spacing: 5,
       mainAxisAlignment: .end,
       children: [
         IconButton(
@@ -54,7 +54,7 @@ class EditorTagSearchBarActions extends StatelessWidget {
           icon: const Icon(Icons.arrow_drop_up),
           tooltip: 'Insert input as tag',
         ),
-        const VerticalDivider(width: 0.0),
+        const VerticalDivider(width: 0),
       ],
     );
   }
