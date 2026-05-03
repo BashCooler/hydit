@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:niku/namespace.dart' as n;
 import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:dismissible_page/dismissible_page.dart';
@@ -14,25 +15,14 @@ import '../widget/views.dart';
 import '../getx/page.dart';
 
 
-class Viewer extends StatefulWidget {
+class Viewer extends StatelessWidget {
   final int index;
   final String tag;
 
   const Viewer(this.index, {super.key, required this.tag});
 
-  @override
-  State<Viewer> createState() => _ViewerState();
-}
-
-class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void showSearchBar(_, _) async {
+  void showSearchBar(bool didPop, dynamic result) async {
     Future.delayed(Duration(milliseconds: 250), () {
-      if (!mounted) return;
       Get.find<QueryController>().badgeVisible.value = true;
       Get.find<ScrollToHideController>().show();
     });
@@ -41,7 +31,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final Images images = Get.find();
-    final PageGetxController page = Get.find(tag: widget.tag);
+    final PageGetxController page = Get.find(tag: tag);
 
     return PopScope(
       onPopInvokedWithResult: showSearchBar,
@@ -57,16 +47,15 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
         body: Obx(() {
           return TagSheet(
             tags: images[page.i].all,
-            tag: widget.tag,
-            child: Pages(tag: widget.tag),
+            tag: tag,
+            child: Pages(tag: tag),
           );
         }),
-        bottomNavigationBar: BottomActions(tag: widget.tag),
+        bottomNavigationBar: BottomActions(tag: tag),
       ),
     );
   }
 }
-
 
 class Pages extends StatelessWidget {
   final String tag;
@@ -113,7 +102,6 @@ class DismissibleFile extends StatelessWidget {
 
     return Obx(() {
       return DismissiblePage(
-
         disabled: page.blockDismiss,
         backgroundColor: Theme
             .of(context)
@@ -163,26 +151,16 @@ class BottomActions extends StatelessWidget {
             ),
             icon: const Icon(Icons.keyboard_arrow_left),
           ),
-          Expanded(
-            child: Obx(() => TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                textStyle: TextStyle(
-                  fontSize: 15,
-                  fontWeight: .w500,
-                  shadows: const <Shadow>[
-                    .new(
-                      color: Colors.black,
-                      blurRadius: 24,
-                      offset: Offset(0, 0),
-                    ),
-                  ]
-                ),
-              ),
-              onPressed: openSheet,
-              child: Text('${images[page.i].length} tags'),
-            )),
-          ),
+          Obx(() {
+            return n.Button('${images[page.i].length} tags'.n)
+              ..foregroundColor = Colors.white
+              ..overlayColor = Colors.white.withAlpha(32)
+              ..fontSize = 15
+              ..fontWeight = .w500
+              ..shadows = [Shadow(blurRadius: 24)]
+              ..onPressed = openSheet
+              ..expanded;
+          }),
           IconButton(
             color: Colors.white,
             onPressed: () => page.$.nextPage(
