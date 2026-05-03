@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/features/gallery/getx/selection.dart';
+import 'package:niku/namespace.dart' as n;
 import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -61,29 +62,29 @@ class BottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GridObserverController grid = Get.find();
+    final ScrollToHideController hide = Get.find();
+
     return ScrollToHide(
-      scrollController: Get.find<GridObserverController>().controller!,
-      controller: Get.find<ScrollToHideController>(),
+      scrollController: grid.controller!,
+      controller: hide,
       hideDirection: .vertical,
       height: MediaQuery.of(context).viewPadding.bottom * 2,
       duration: const Duration(milliseconds: 150),
-      child: Padding(
-        padding: .only(left: 15.0, right: 15.0, bottom: 15.0),
-        child: Row(
-          mainAxisAlignment: .spaceBetween,
-          children: [
-            FilledIconButton(
-              onPressed: () =>
-                  Get.to(() => const SettingsPage(), transition: .downToUp),
-              icon: const Icon(Icons.settings),
-            ),
-            FilledIconButton(
-              onPressed: () => showSearchSheet(context),
-              icon: const Icon(Icons.search),
-            ),
-          ],
+      child: n.Row([
+        FilledIconButton(
+          onPressed: () {
+            Get.to(() => const SettingsPage(), transition: .downToUp);
+          },
+          icon: const Icon(Icons.settings),
         ),
-      ),
+        FilledIconButton(
+          onPressed: () => showSearchSheet(context),
+          icon: const Icon(Icons.search),
+        ),
+      ])
+        ..mainAxisAlignment = .spaceBetween
+        ..n.padding = .only(left: 15.0, right: 15.0, bottom: 15.0),
     );
   }
 }

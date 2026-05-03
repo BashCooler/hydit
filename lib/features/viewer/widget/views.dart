@@ -30,7 +30,7 @@ class ViewFile extends StatelessWidget {
     final content = switch (file.type) {
       'image' => ViewImageX(index, tag: tag),
       'video' => ViewVideo(index, tag: tag),
-      _ => _NotSupported(file.type),
+      _ => NotSupported(file.type),
     };
 
     return content;
@@ -61,7 +61,6 @@ class ObxHero extends StatelessWidget {
     ));
   }
 }
-
 
 
 class ViewImage extends HookWidget {
@@ -116,7 +115,6 @@ class ViewVideo extends StatefulWidget {
 }
 
 class _ViewVideoState extends State<ViewVideo> {
-
   late final player = Player(configuration: PlayerConfiguration())
     ..setVolume(0.0);
   late final controller = VideoController(player);
@@ -217,10 +215,10 @@ class _ViewVideoState extends State<ViewVideo> {
 }
 
 
-class _NotSupported extends StatelessWidget {
+class NotSupported extends StatelessWidget {
   final String? type;
 
-  const _NotSupported(this.type);
+  const NotSupported(this.type, {super.key});
 
   @override
   Widget build(BuildContext context) {

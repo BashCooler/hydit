@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:niku/namespace.dart' as n;
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:scroll_to_hide/scroll_to_hide.dart';
 
@@ -17,7 +16,6 @@ import '../widget/tag_panel.dart';
 void showSearchSheet(BuildContext context) {
   Get.find<ScrollToHideController>().hide();
   Get.find<Repo>().updateClient();
-  log(Get.find<Repo>().api.host.toString());
   Navigator.push(
     context,
     ModalSheetRoute(
@@ -38,21 +36,23 @@ class SearchSheet extends StatefulWidget {
 }
 
 class _SearchSheetState extends State<SearchSheet> {
-  final QueryController controller = Get.find();
+  final QueryController query = Get.find();
+
+  static const behaviour = SheetKeyboardDismissBehavior
+      .onDragDown(isContentScrollAware: true);
 
   void searchThenBack() {
-    if (controller.tags.isEmpty) {
-      controller.add(controller.text);
+    if (query.tags.isEmpty) {
+      query.add(query.text);
     }
-    controller.clear();
-    controller.searchForFiles();
+    query..clear()..searchForFiles();
     Get.back();
   }
 
   void onLeave(bool didPop, Object? result) {
     Future.delayed(AppTheme.duration, () {
       Get.find<ScrollToHideController>().show();
-      Get.find<QueryController>().clear();
+      query.clear();
     });
   }
 
@@ -61,31 +61,29 @@ class _SearchSheetState extends State<SearchSheet> {
     return PopScope(
       onPopInvokedWithResult: onLeave,
       child: SheetKeyboardDismissible(
-        dismissBehavior: const .onDragDown(isContentScrollAware: true),
+        dismissBehavior: behaviour,
         child: Sheet(
           child: Material(
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: .end,
-                children: [
-                  Expanded(
-                    child: Suggests(
-                      onTap: (tag) => Get.find<QueryController>()
-                        ..clear()
-                        ..add(tag.raw),
-                    ),
-                  ),
-                  const Divider(height: 1),
-                  const TagPanel(),
-                  TagSearchBar(
-                    autofocus: true,
-                    hintText: 'Enter tags here',
-                    actions: const _TagSearchBarActions(),
-                    onSubmitted: searchThenBack,
-                  ),
-                ],
+            child: n.Column([
+              Suggests(
+                onTap: (tag) {
+                  query
+                    ..clear()
+                    ..add(tag.raw);
+                },
+              ).niku
+                ..expanded,
+              const Divider(height: 1),
+              const TagPanel(),
+              TagSearchBar(
+                autofocus: true,
+                hintText: 'Enter tags here',
+                actions: const _TagSearchBarActions(),
+                onSubmitted: searchThenBack,
               ),
-            ),
+            ])
+              ..mainAxisAlignment = .end
+              ..safe,
           ),
         ),
       ),
@@ -99,27 +97,28 @@ class _TagSearchBarActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final queryController = Get.find<QueryController>();
+    final QueryController query = Get.find();
     return Row(
       mainAxisSize: .min,
       spacing: 5.0,
       mainAxisAlignment: .end,
       children: [
         IconButton(
-          onPressed: queryController.clear,
+          onPressed: query.clear,
           icon: const Icon(Icons.clear),
           tooltip: 'Clear',
         ),
         IconButton(
           tooltip: 'Search',
           onPressed: () {
-            queryController.clear();
-            queryController.searchForFiles();
+            query
+              ..clear()
+              ..searchForFiles();
             Get.back();
           },
           icon: const Icon(Icons.search),
         ),
-        const VerticalDivider(width: 0.0),
+        const VerticalDivider(width: 0),
       ],
     );
   }

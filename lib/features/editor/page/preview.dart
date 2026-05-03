@@ -24,7 +24,7 @@ class Preview extends StatelessWidget {
       child: Obx(() {
         return DismissiblePage(
           disabled: page.zoom.value,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: Get.theme.scaffoldBackgroundColor,
           onDismissed: Navigator.of(context).pop,
           direction: .vertical,
           interactionMode: .gesture,

@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:niku/extra/primitive.dart';
 import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -98,7 +97,6 @@ class _Tile extends StatelessWidget {
         switch (selection.selectionMode) {
           case true:
             selection.toggle(image.id);
-            log(selection.selectedIds.toString());
           case false:
             final tag = 'viewer-${DateTime.now().microsecondsSinceEpoch}';
             Get.find<ScrollToHideController>().hide();
@@ -111,10 +109,7 @@ class _Tile extends StatelessWidget {
             );
         }
       },
-      onLongPress: () {
-        selection.toggle(image.id);
-        log(selection.selectedIds.toString());
-      },
+      onLongPress: () => selection.toggle(image.id),
       child: Stack(
         alignment: .bottomRight,
         children: [
@@ -133,7 +128,6 @@ class _Tile extends StatelessWidget {
           }),
           Obx(() {
             final selected = selection.isSelected(image.id);
-
             return AnimatedContainer(
               duration: const Duration(milliseconds: 75),
               decoration: BoxDecoration(
@@ -164,18 +158,24 @@ class _TileBadges extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> badges = [];
-    if (image.duration > 0) {
-      final duration = Duration(milliseconds: image.duration).toString();
-      final t = duration.split('.')[0].split(':');
-      if (t[0] == '0') t.removeAt(0);
-      final badge = Badge(
-        label: Text(t.join(':')),
-      );
-      badges.add(badge);
-    }
+    addTime(badges);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(mainAxisAlignment: .end, children: badges),
     );
+  }
+
+  void addTime(List<Widget> badges) {
+    if (image.duration <= 0) return;
+    final duration = Duration(milliseconds: image.duration);
+    final time = stripHoursIfZero('$duration');
+    badges.add(Badge(label: time.n));
+  }
+
+  String stripHoursIfZero(String duration) {
+    final t = duration.split('.')[0].split(':');
+    if (t[0] == '0') t.removeAt(0);
+    return t.join(':');
   }
 }

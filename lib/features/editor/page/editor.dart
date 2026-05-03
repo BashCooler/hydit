@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:niku/namespace.dart' as n;
 
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
@@ -67,37 +68,30 @@ class _EditorState extends State<Editor> {
           toolbarHeight: 100,
           tag: widget.tag,
         ),
-        body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              const TabBuilder(),
-              const Divider(height: 1),
-              Row(
-                children: [
-                  IconButton(
-                    tooltip: 'Previous page',
-                    icon: const Icon(Icons.keyboard_arrow_left),
-                    onPressed: () => navigateToPage(page.i - 1),
-                  ),
-                  const Expanded(child: EditorTagSearchBar()),
-                  IconButton(
-                    tooltip: 'Next page',
-                    icon: const Icon(Icons.keyboard_arrow_right),
-                    onPressed: () => navigateToPage(page.i + 1),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton: Padding(
-          padding: const .only(bottom: 60),
-          child: FloatingActionButton(
-            onPressed: Navigator.of(context).maybePop,
-            child: const Icon(Icons.check),
-          ),
-        ),
+        body: n.Column([
+          const TabBuilder(),
+          const Divider(height: 1),
+          n.Row([
+            IconButton(
+              tooltip: 'Previous page',
+              icon: const Icon(Icons.keyboard_arrow_left),
+              onPressed: () => navigateToPage(page.i - 1),
+            ),
+            const EditorTagSearchBar().niku
+              ..expanded,
+            IconButton(
+              tooltip: 'Next page',
+              icon: const Icon(Icons.keyboard_arrow_right),
+              onPressed: () => navigateToPage(page.i + 1),
+            ),
+          ]),
+        ])
+          ..safe,
         floatingActionButtonLocation: .miniEndFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: Navigator.of(context).maybePop,
+          child: const Icon(Icons.check),
+        ).niku.paddingOnly(bottom: 60),
       ),
     );
   }
@@ -130,7 +124,11 @@ class _EditorState extends State<Editor> {
 
   // MARK: DIALOG
 
-  Future<Action?> showPopDialog(BuildContext context, String message, int index) {
+  Future<Action?> showPopDialog(
+    BuildContext context,
+    String message,
+    int index,
+  ) {
     bool isLoading = false;
 
     return showDialog<Action>(
@@ -138,26 +136,18 @@ class _EditorState extends State<Editor> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
-
+            final nav = Navigator.of(context);
             final actions = <Widget>[
-              TextButton(
-                onPressed: () async {
+              n.Button('Save'.n)
+                ..onPressed = () async {
                   setState(() => isLoading = true);
                   await manager.save(images[index]);
-                  if (context.mounted) {
-                    Navigator.of(context).pop(Action.save);
-                  }
+                  if (context.mounted) nav.pop(Action.save);
                 },
-                child: const Text('Save'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(Action.discard),
-                child: const Text('Discard'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(Action.cancel),
-                child: const Text('Cancel'),
-              ),
+              n.Button('Discard'.n)
+                ..onPressed = () => nav.pop(Action.discard),
+              n.Button('Cancel'.n)
+                ..onPressed = () => nav.pop(Action.cancel),
             ];
 
             return AlertDialog(

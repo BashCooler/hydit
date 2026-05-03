@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
@@ -25,8 +26,8 @@ class TagSheet extends HookWidget {
   });
 
   static const snaps = <SnappingPosition>[
-        .factor(positionFactor: 0.0),
-        .factor(positionFactor: 0.5),
+    SnappingPosition.factor(positionFactor: 0.0),
+    SnappingPosition.factor(positionFactor: 0.5),
   ];
 
   void syncPageLock(dynamic positionData) {
@@ -52,7 +53,6 @@ class TagSheet extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final scrollBelow = useScrollController();
     final SnappingSheetController sheet = Get.find(tag: tag);
     final PageGetxController page = Get.find(tag: tag);
@@ -63,7 +63,7 @@ class TagSheet extends HookWidget {
       controller: sheet,
       onSheetMoved: syncPageLock,
       lockOverflowDrag: true,
-      initialSnappingPosition: .factor(positionFactor: 0.0),
+      initialSnappingPosition: snaps[0],
       snappingPositions: snaps,
       grabbingHeight: -1,
       sheetAbove: SnappingSheetContent(
@@ -73,30 +73,23 @@ class TagSheet extends HookWidget {
       sheetBelow: SnappingSheetContent(
         draggable: (_) => true,
         childScrollController: scrollBelow,
-        child: Stack(
-          children: [
-            background,
-            SafeArea(
-              top: false,
-              child: ClipRect(
-                child: Scaffold(
-                  body: TagList(
-                    scrollController: scrollBelow,
-                    tags: tags,
-                  ),
-                  floatingActionButton: Padding(
-                    padding: const .only(bottom: 18),
-                    child: FloatingActionButton(
-                      onPressed: openEditor,
-                      child: const Icon(Icons.edit_note),
-                    ),
-                  ),
-                  floatingActionButtonLocation: .miniEndFloat,
-                ),
-              ),
+        child: n.Stack([
+          background,
+          Scaffold(
+            body: TagList(
+              scrollController: scrollBelow,
+              tags: tags,
             ),
-          ],
-        ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: openEditor,
+              child: const Icon(Icons.edit_note),
+            ).niku
+              ..padding = .only(bottom: 18),
+            floatingActionButtonLocation: .miniEndFloat,
+          ).niku
+            ..rect
+            ..safeBottom,
+        ]),
       ),
     );
   }
