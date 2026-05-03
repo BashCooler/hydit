@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/features/gallery/getx/selection.dart';
+import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -10,6 +14,7 @@ import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
+import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 
 class ImageGridViewBuilder extends StatelessWidget {
@@ -78,6 +83,19 @@ class _TileBuilder extends StatelessWidget {
 }
 
 
+class ViewerBindings implements Bindings {
+  final int index;
+
+  const ViewerBindings(this.index);
+
+  @override
+  void dependencies() {
+    Get.put(PageGetxController(initial: index));
+    Get.put(SnappingSheetController());
+  }
+}
+
+
 class _Tile extends StatelessWidget {
   final int index;
   final HydrusImage image;
@@ -86,16 +104,30 @@ class _Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final query = Get.find<QueryController>();
+    final QueryController query = Get.find();
+    final SelectionController selection = Get.find();
+
     return GestureDetector(
       key: ValueKey(image.id),
       onTap: () {
-        Get.find<ScrollToHideController>().hide();
-        query.badgeVisible.value = false;
-        Get.to(() => Viewer(index),
-            transition: .fadeIn,
-            curve: Curves.easeInCubic,
-            opaque: false);
+        switch (selection.selectionMode) {
+          case true:
+            selection.toggle(image.id);
+            log(selection.selectedIds.toString());
+          case false:
+            Get.find<ScrollToHideController>().hide();
+            query.badgeVisible.value = false;
+            Get.to(() => Viewer(index),
+              transition: .fadeIn,
+              curve: Curves.easeInCubic,
+              opaque: false,
+              binding: ViewerBindings(index),
+            );
+        }
+      },
+      onLongPress: () {
+        selection.toggle(image.id);
+        log(selection.selectedIds.toString());
       },
       child: Stack(
         alignment: .bottomRight,
@@ -104,9 +136,33 @@ class _Tile extends StatelessWidget {
             tag: image.id,
             child: Thumbnail(image),
           ),
-          Obx(() => query.badgeVisible.value
-              ? _TileBadges(image)
-              : const SizedBox.shrink()),
+          Obx(() {
+            final visible = query.badgeVisible.value;
+            return AnimatedOpacity(
+              opacity: visible ? 1 : 0,
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInQuint,
+              child: _TileBadges(image),
+            );
+          }),
+          Obx(() {
+            final selected = selection.isSelected(image.id);
+
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 75),
+              decoration: BoxDecoration(
+                border: .all(
+                  color: selected
+                      ? Colors.pink
+                      : Colors.transparent,
+                  width: 3,
+                ),
+                color: selected
+                    ? Colors.black.withAlpha(32)
+                    : Colors.transparent,
+              ),
+            );
+          }),
         ],
       ),
     );
@@ -126,7 +182,10 @@ class _TileBadges extends StatelessWidget {
       final duration = Duration(milliseconds: image.duration).toString();
       final t = duration.split('.')[0].split(':');
       if (t[0] == '0') t.removeAt(0);
-      badges.add(Text(t.join(':')));
+      final badge = Badge(
+        label: Text(t.join(':')),
+      );
+      badges.add(badge);
     }
     return Padding(
       padding: const EdgeInsets.all(8.0),

@@ -127,7 +127,7 @@ class _ViewVideoState extends State<ViewVideo> {
   void playWhenLoaded(Duration d) {
     if (ready) return;
     if (d < Duration(milliseconds: 500)) return;
-    setState(() => ready = true);
+    if (mounted) setState(() => ready = true);
   }
 
   void setPageChangeListener() => ever(pageController.index, (i) {
@@ -140,9 +140,9 @@ class _ViewVideoState extends State<ViewVideo> {
   });
 
   @override
-  void dispose() async {
+  void dispose() {
     super.dispose();
-    await player.dispose();
+    player.dispose();
   }
 
   @override

@@ -25,17 +25,12 @@ class Viewer extends StatefulWidget {
 }
 
 class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
-  late final PageGetxController page;
-  late final SnappingSheetController sheet;
-
   @override
   void initState() {
     super.initState();
-    page = Get.put(PageGetxController(initial: widget.index));
-    sheet = Get.put(SnappingSheetController());
   }
 
-  void showSearchBar(_, _) {
+  void showSearchBar(_, _) async {
     Future.delayed(Duration(milliseconds: 250), () {
       Get.find<QueryController>().badgeVisible.value = true;
       Get.find<ScrollToHideController>().show();
@@ -112,6 +107,7 @@ class DismissibleFile extends StatelessWidget {
 
     return Obx(() {
       return DismissiblePage(
+
         disabled: page.blockDismiss,
         backgroundColor: Theme
             .of(context)

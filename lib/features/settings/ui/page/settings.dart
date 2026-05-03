@@ -76,7 +76,7 @@ class _SettingsPageState extends State<SettingsPage> {
             return SettingActionTile(
               enabled: !settings.processing.value,
               icon: SettingTileIcon(Icons.save),
-              title: Text('Verify key and save'),
+              title: Text('Verify and save'),
               onTap: verify,
             );
           }),

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/features/gallery/getx/selection.dart';
 import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -29,6 +30,7 @@ class _GalleryState extends State<Gallery> {
       ..put(Images())
       ..put(QueryController())
       ..put(ScrollToHideController())
+      ..put(SelectionController())
       ..put(GridObserverController(controller: ScrollController()));
   }
 
