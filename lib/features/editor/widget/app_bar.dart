@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:niku/extra/extra.dart';
+import 'package:niku/namespace.dart' as n;
 import 'package:filesize/filesize.dart';
 
 import 'package:hydrus_flutter/core/ui/images.dart';
@@ -108,74 +110,58 @@ class Info extends StatelessWidget {
 
 extension Builders on Info
 {
-  Text buildMeta(BuildContext context, String tag) {
+  Widget buildMeta(BuildContext context, String tag) {
     final Images images = Get.find();
     final PageGetxController page = Get.find(tag: tag);
     final image = images[page.i];
 
-    return Text("id: ${image.id} / "
-        "${filesize(image.size)} / "
-        "${image.res}",
-      style: Theme
-          .of(context)
-          .textTheme
-          .labelMedium,
-      maxLines: 2,
-    );
+    return 'id: ${image.id} / ${filesize(image.size)} / ${image.res}'.n
+      ..labelMedium
+      ..maxLines = 2;
   }
 
-  Text buildService(BuildContext context, TagManager manager) {
-    return Text("service: ${manager.service}",
-      style: Theme
-          .of(context)
-          .textTheme
-          .labelMedium,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    );
+  Widget buildService(BuildContext context, TagManager manager) {
+    return 'service: ${manager.service}'.n
+      ..labelMedium
+      ..maxLines = 1
+      ..overflow = .ellipsis;
   }
 
-  DefaultTextStyle buildDiff(TagManager manager) {
-    return DefaultTextStyle(
-      style: const TextStyle(fontSize: 16),
-      child: Row(
-        crossAxisAlignment: .center,
-        children: [
-          Text("${manager.count} tags"),
-          const VerticalDivider(width: 8),
-          buildAdditions(manager),
-          buildDeletions(manager),
-        ],
-      ),
+  Widget buildDiff(TagManager manager) {
+    return Row(
+      crossAxisAlignment: .center,
+      children: [
+        '${manager.count} tags'.n
+          ..fontSize = 16,
+        const VerticalDivider(width: 8),
+        buildAdditions(manager),
+        buildDeletions(manager),
+      ],
     );
   }
 
   Widget buildAdditions(TagManager manager) {
     switch (manager.additionsCount) {
       case > 0:
-        return Row(
-          children: [
-            Text(
-              "+${manager.additionsCount}",
-              style: const .new(color: additions),
-            ),
-            const VerticalDivider(width: 6),
-          ],
-        );
+        return n.Row([
+          '+${manager.additionsCount}'.n
+            ..fontSize = 16
+            ..color = additions,
+          const VerticalDivider(width: 6),
+        ]);
       default:
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
     }
   }
 
   Widget buildDeletions(TagManager manager) {
     switch (manager.deletionsCount) {
       case > 0:
-        return Text(
-          "-${manager.deletionsCount}",
-          style: const .new(color: deletions),
-        );
+        return '-${manager.deletionsCount}'.n
+          ..fontSize = 16
+          ..color = deletions;
       default:
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
     }
   }
 }
