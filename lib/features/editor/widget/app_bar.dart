@@ -14,11 +14,16 @@ import '../page/editor.dart';
 
 class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double toolbarHeight;
+  final String tag;
 
-  const EditorAppBar({super.key, required this.toolbarHeight});
+  const EditorAppBar({
+    super.key,
+    required this.toolbarHeight,
+    required this.tag,
+  });
 
   void openPreview(int index) {
-    Get.to(() => Preview(index: index),
+    Get.to(() => Preview(index: index, tag: tag),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
       opaque: false,
@@ -28,7 +33,7 @@ class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final Images images = Get.find();
-    final PageGetxController page = Get.find();
+    final PageGetxController page = Get.find(tag: tag);
 
     return AppBar(
       elevation: 2,
@@ -39,7 +44,7 @@ class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
         crossAxisAlignment: .center,
         mainAxisAlignment: .spaceBetween,
         children: [
-          const Info(),
+          Info(tag: tag),
           GestureDetector(
             onTap: () => openPreview(page.i),
             child: SizedBox(
@@ -48,7 +53,8 @@ class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Obx(() {
                 return ObxHero(
                   index: page.i,
-                  tag: images[page.i].id,
+                  heroTag: images[page.i].id,
+                  getTag: tag,
                   child: Thumbnail(images[page.i]),
                 );
               }),
@@ -65,7 +71,9 @@ class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 
 class Info extends StatelessWidget {
-  const Info({super.key});
+  final String tag;
+
+  const Info({super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +92,7 @@ class Info extends StatelessWidget {
             children: <Widget>[
               buildDiff(manager),
               buildService(context, manager),
-              buildMeta(context),
+              buildMeta(context, tag),
             ],
           );
         },
@@ -96,9 +104,9 @@ class Info extends StatelessWidget {
 
 extension Builders on Info
 {
-  Text buildMeta(BuildContext context) {
+  Text buildMeta(BuildContext context, String tag) {
     final Images images = Get.find();
-    final PageGetxController page = Get.find();
+    final PageGetxController page = Get.find(tag: tag);
     final image = images[page.i];
 
     return Text("id: ${image.id} / "

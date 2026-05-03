@@ -8,12 +8,17 @@ import 'package:hydrus_flutter/features/viewer/widget/views.dart';
 
 class Preview extends StatelessWidget {
   final int index;
+  final String tag;
 
-  const Preview({super.key, required this.index});
+  const Preview({
+    super.key,
+    required this.index,
+    required this.tag,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final PageGetxController page = Get.find();
+    final PageGetxController page = Get.find(tag: tag);
 
     return PopScope(
       child: Obx(() {
@@ -30,7 +35,7 @@ class Preview extends StatelessWidget {
           interactionMode: .gesture,
           minScale: 0,
           builder: (context, scrollController) {
-            return ViewFile(index);
+            return ViewFile(index, tag: tag);
           },
         );
       }),

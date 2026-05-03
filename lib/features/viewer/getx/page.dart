@@ -7,6 +7,7 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 class PageGetxController extends GetxController {
   final _pinch = false.obs;
   final _pointers = RxSet<int>();
+  late final Worker _pointersWorker;
 
   final zoom = false.obs;
   final _blockDismiss = false.obs;
@@ -31,7 +32,14 @@ class PageGetxController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    ever(_pointers, _everPointers);
+    _pointersWorker = ever(_pointers, _everPointers);
+  }
+
+  @override
+  void onClose() {
+    _pointersWorker.dispose();
+    controller.dispose();
+    super.onClose();
   }
 
   void _everPointers(Set<int> callback) {

@@ -15,8 +15,14 @@ import '../getx/page.dart';
 class TagSheet extends HookWidget {
   final Widget child;
   final List<Tag> tags;
+  final String tag;
 
-  const TagSheet({super.key, required this.child, required this.tags});
+  const TagSheet({
+    super.key,
+    required this.child,
+    required this.tags,
+    required this.tag,
+  });
 
   static const snaps = <SnappingPosition>[
         .factor(positionFactor: 0.0),
@@ -24,7 +30,8 @@ class TagSheet extends HookWidget {
   ];
 
   void syncPageLock(dynamic positionData) {
-    final PageGetxController page = Get.find();
+    if (!Get.isRegistered<PageGetxController>(tag: tag)) return;
+    final PageGetxController page = Get.find(tag: tag);
 
     if (positionData.relativeToSheetHeight > 0) {
       page.blockDismiss = true;
@@ -33,7 +40,7 @@ class TagSheet extends HookWidget {
     }
   }
 
-  void openEditor() => Get.to(() => const Editor(),
+  void openEditor() => Get.to(() => Editor(tag: tag),
     transition: .topLevel,
     duration: AppTheme.duration,
     curve: Curves.easeInOutCubic,
@@ -47,8 +54,8 @@ class TagSheet extends HookWidget {
   Widget build(BuildContext context) {
 
     final scrollBelow = useScrollController();
-    final sheet = Get.find<SnappingSheetController>();
-    final page = Get.find<PageGetxController>();
+    final SnappingSheetController sheet = Get.find(tag: tag);
+    final PageGetxController page = Get.find(tag: tag);
 
     const background = Material(child: Center());
 

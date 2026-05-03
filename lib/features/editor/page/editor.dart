@@ -16,7 +16,9 @@ enum Action { save, discard, cancel }
 
 
 class Editor extends StatefulWidget {
-  const Editor({super.key});
+  final String tag;
+
+  const Editor({super.key, required this.tag});
 
   @override
   State<Editor> createState() => _EditorState();
@@ -27,11 +29,12 @@ class _EditorState extends State<Editor> {
 
   final Images images = Get.find();
   late final TagManager manager;
-  final PageGetxController page = Get.find();
+  late final PageGetxController page;
 
   @override
   void initState() {
     super.initState();
+    page = Get.find(tag: widget.tag);
     manager = Get.put(TagManager()..init(images[page.i].service));
   }
 
@@ -60,7 +63,10 @@ class _EditorState extends State<Editor> {
       canPop: false,
       onPopInvokedWithResult: onLeave,
       child: Scaffold(
-        appBar: const EditorAppBar(toolbarHeight: 100),
+        appBar: EditorAppBar(
+          toolbarHeight: 100,
+          tag: widget.tag,
+        ),
         body: SafeArea(
           child: Column(
             children: <Widget>[

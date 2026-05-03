@@ -1,6 +1,7 @@
 import 'dart:math' hide log;
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
@@ -11,8 +12,9 @@ import '../getx/page.dart';
 
 class ViewImageX extends StatelessWidget {
   final int index;
+  final String tag;
 
-  const ViewImageX(this.index, {super.key});
+  const ViewImageX(this.index, {super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class ViewImageX extends StatelessWidget {
       key: ObjectKey(index),
       index: index,
       image: image,
+      tag: tag,
     );
   }
 }
@@ -29,11 +32,13 @@ class ViewImageX extends StatelessWidget {
 class _ZoomableImageView extends StatefulWidget {
   final int index;
   final HydrusImage image;
+  final String tag;
 
   const _ZoomableImageView({
     super.key,
     required this.index,
     required this.image,
+    required this.tag,
   });
 
   @override
@@ -50,7 +55,7 @@ class _ZoomableImageViewState extends State<_ZoomableImageView>
   static const double _elasticOffsetFactor = 0.35;
 
   final Map<int, Offset> _pointers = {};
-  final PageGetxController _pageController = Get.find();
+  late final PageGetxController _pageController;
 
   late final AnimationController _animationController;
   Animation<double>? _scaleAnimation;
@@ -78,6 +83,7 @@ class _ZoomableImageViewState extends State<_ZoomableImageView>
   @override
   void initState() {
     super.initState();
+    _pageController = Get.find(tag: widget.tag);
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 150),
@@ -368,14 +374,15 @@ class _ZoomableImageViewState extends State<_ZoomableImageView>
                 child: Transform(
                   alignment: Alignment.center,
                   transform: Matrix4.identity()
-                    ..translate(_offset.dx, _offset.dy)
-                    ..scale(_scale),
+                    ..translateByDouble(_offset.dx, _offset.dy, 0, 1)
+                    ..scaleByDouble(_scale, _scale, _scale, 1),
                   child: SizedBox(
                     width: _baseImageSize.width,
                     height: _baseImageSize.height,
                     child: ObxHero(
                       index: widget.index,
-                      tag: image.id,
+                      heroTag: image.id,
+                      getTag: widget.tag,
                       child: HighResImage(image: image),
                     ),
                   ),

@@ -9,9 +9,10 @@ class TransformController extends GetxController {
   final double minScale;
   final double zoomScale;
   final double maxScale;
+  final String viewerTag;
 
   final controller = TransformationController();
-  final page = Get.find<PageGetxController>();
+  late final page = Get.find<PageGetxController>(tag: viewerTag);
 
   late AnimationController _animationController;
   Animation<Matrix4>? _animation;
@@ -26,6 +27,7 @@ class TransformController extends GetxController {
     required this.zoomScale,
     required this.maxScale,
     required TickerProvider vsync,
+    required this.viewerTag,
   }) {
     _animationController = AnimationController(
         vsync: vsync,

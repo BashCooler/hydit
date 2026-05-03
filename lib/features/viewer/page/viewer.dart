@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:scroll_to_hide/scroll_to_hide.dart';
-import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -17,8 +16,9 @@ import '../getx/page.dart';
 
 class Viewer extends StatefulWidget {
   final int index;
+  final String tag;
 
-  const Viewer(this.index, {super.key});
+  const Viewer(this.index, {super.key, required this.tag});
 
   @override
   State<Viewer> createState() => _ViewerState();
@@ -32,6 +32,7 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
 
   void showSearchBar(_, _) async {
     Future.delayed(Duration(milliseconds: 250), () {
+      if (!mounted) return;
       Get.find<QueryController>().badgeVisible.value = true;
       Get.find<ScrollToHideController>().show();
     });
@@ -39,9 +40,8 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-
     final Images images = Get.find();
-    final PageGetxController page = Get.find();
+    final PageGetxController page = Get.find(tag: widget.tag);
 
     return PopScope(
       onPopInvokedWithResult: showSearchBar,
@@ -54,11 +54,14 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
-        body: Obx(() => TagSheet(
-          tags: images[page.i].all,
-          child: const Pages(),
-        )),
-        bottomNavigationBar: const BottomActions(),
+        body: Obx(() {
+          return TagSheet(
+            tags: images[page.i].all,
+            tag: widget.tag,
+            child: Pages(tag: widget.tag),
+          );
+        }),
+        bottomNavigationBar: BottomActions(tag: widget.tag),
       ),
     );
   }
@@ -66,7 +69,9 @@ class _ViewerState extends State<Viewer> with SingleTickerProviderStateMixin {
 
 
 class Pages extends StatelessWidget {
-  const Pages({super.key});
+  final String tag;
+
+  const Pages({super.key, required this.tag});
 
   static const scroll = SnappyPageScrollPhysics();
   static const noScroll = NeverScrollableScrollPhysics();
@@ -74,7 +79,7 @@ class Pages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Images images = Get.find();
-    final PageGetxController page = Get.find();
+    final PageGetxController page = Get.find(tag: tag);
 
     return Listener(
       onPointerUp: page.registerPointer,
@@ -87,7 +92,7 @@ class Pages extends StatelessWidget {
           itemCount: images.length,
           preloadPagesCount: 3,
           itemBuilder: (_, index) {
-            return DismissibleFile(index);
+            return DismissibleFile(index, tag: tag);
           },
         );
       }),
@@ -98,12 +103,13 @@ class Pages extends StatelessWidget {
 
 class DismissibleFile extends StatelessWidget {
   final int index;
+  final String tag;
 
-  const DismissibleFile(this.index, {super.key});
+  const DismissibleFile(this.index, {super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
-    final PageGetxController page = Get.find();
+    final PageGetxController page = Get.find(tag: tag);
 
     return Obx(() {
       return DismissiblePage(
@@ -119,7 +125,7 @@ class DismissibleFile extends StatelessWidget {
         interactionMode: .gesture,
         minScale: 0,
         builder: (context, scrollController) {
-          return ViewFile(index);
+          return ViewFile(index, tag: tag);
         },
       );
     });
@@ -129,17 +135,18 @@ class DismissibleFile extends StatelessWidget {
 
 
 class BottomActions extends StatelessWidget {
-  const BottomActions({super.key});
+  final String tag;
+
+  const BottomActions({super.key, required this.tag});
 
   void openSheet() {
-    final SnappingSheetController sheet = Get.find();
+    final SnappingSheetController sheet = Get.find(tag: tag);
     sheet.snapToPosition(.factor(positionFactor: 0.5));
   }
 
   @override
   Widget build(BuildContext context) {
-
-    final PageGetxController page = Get.find();
+    final PageGetxController page = Get.find(tag: tag);
     final Images images = Get.find();
 
     return BottomAppBar(

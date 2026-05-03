@@ -2,10 +2,11 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/features/gallery/getx/selection.dart';
-import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 import 'package:scroll_to_hide/scroll_to_hide.dart';
+import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
+import 'package:hydrus_flutter/features/viewer/getx/page.dart';
+import 'package:hydrus_flutter/features/gallery/getx/selection.dart';
 
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/ui/common.dart';
@@ -14,7 +15,6 @@ import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
-import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 
 class ImageGridViewBuilder extends StatelessWidget {
@@ -85,13 +85,17 @@ class _TileBuilder extends StatelessWidget {
 
 class ViewerBindings implements Bindings {
   final int index;
+  final String tag;
 
-  const ViewerBindings(this.index);
+  const ViewerBindings({
+    required this.index,
+    required this.tag,
+  });
 
   @override
   void dependencies() {
-    Get.put(PageGetxController(initial: index));
-    Get.put(SnappingSheetController());
+    Get.put(PageGetxController(initial: index), tag: tag);
+    Get.put(SnappingSheetController(), tag: tag);
   }
 }
 
@@ -115,13 +119,14 @@ class _Tile extends StatelessWidget {
             selection.toggle(image.id);
             log(selection.selectedIds.toString());
           case false:
+            final tag = 'viewer-${DateTime.now().microsecondsSinceEpoch}';
             Get.find<ScrollToHideController>().hide();
             query.badgeVisible.value = false;
-            Get.to(() => Viewer(index),
+            Get.to(() => Viewer(index, tag: tag),
               transition: .fadeIn,
               curve: Curves.easeInCubic,
               opaque: false,
-              binding: ViewerBindings(index),
+              binding: ViewerBindings(index: index, tag: tag),
             );
         }
       },

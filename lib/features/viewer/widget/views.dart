@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
@@ -17,16 +19,17 @@ import 'image_view.dart';
 
 class ViewFile extends StatelessWidget {
   final int index;
+  final String tag;
 
-  const ViewFile(this.index, {super.key});
+  const ViewFile(this.index, {super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
     final file = Get.find<Images>()[index];
 
     final content = switch (file.type) {
-      'image' => ViewImageX(index),
-      'video' => ViewVideo(index),
+      'image' => ViewImageX(index, tag: tag),
+      'video' => ViewVideo(index, tag: tag),
       _ => _NotSupported(file.type),
     };
 
@@ -37,17 +40,24 @@ class ViewFile extends StatelessWidget {
 
 class ObxHero extends StatelessWidget {
   final int index;
-  final Object tag;
+  final Object heroTag;
+  final String getTag;
   final Widget child;
 
-  const ObxHero({super.key, required this.index, required this.tag, required this.child});
+  const ObxHero({
+    super.key,
+    required this.index,
+    required this.heroTag,
+    required this.getTag,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final PageGetxController controller = Get.find();
+    final PageGetxController controller = Get.find(tag: getTag);
     return Obx(() => HeroMode(
       enabled: controller.enabled(index),
-      child: LinearHero(tag: tag, child: child),
+      child: LinearHero(tag: heroTag, child: child),
     ));
   }
 }
@@ -56,8 +66,9 @@ class ObxHero extends StatelessWidget {
 
 class ViewImage extends HookWidget {
   final int index;
+  final String tag;
 
-  const ViewImage(this.index, {super.key});
+  const ViewImage(this.index, {super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +80,9 @@ class ViewImage extends HookWidget {
       zoomScale: 2.5,
       maxScale: 4.0,
       vsync: ticker,
+      viewerTag: tag,
     ));
+    useEffect(() => transform.dispose, [transform]);
 
     return GestureDetector(
       onDoubleTapDown: transform.handleDoubleTap,
@@ -81,7 +94,8 @@ class ViewImage extends HookWidget {
         child: Center(
           child: ObxHero(
             index: index,
-            tag: image.id,
+            heroTag: image.id,
+            getTag: tag,
             child: HighResImage(image: image),
           ),
         ),
@@ -93,8 +107,9 @@ class ViewImage extends HookWidget {
 
 class ViewVideo extends StatefulWidget {
   final int index;
+  final String tag;
 
-  const ViewVideo(this.index, {super.key});
+  const ViewVideo(this.index, {super.key, required this.tag});
 
   @override
   State<ViewVideo> createState() => _ViewVideoState();
@@ -108,19 +123,26 @@ class _ViewVideoState extends State<ViewVideo> {
 
   final Images images = Get.find();
   final repo = Get.find<Repo>();
-  final pageController = Get.find<PageGetxController>();
+  late final PageGetxController pageController;
+
+  StreamSubscription<Duration>? _bufferSubscription;
+  Worker? _pageChangeWorker;
+  bool _disposed = false;
 
   bool ready = false;
 
   @override
   void initState() {
     super.initState();
+    pageController = Get.find(tag: widget.tag);
     final id = images[widget.index].id;
-    player.open(
-      Media(repo.buildUrl(id)),
-      play: pageController.enabled(widget.index),
+    unawaited(
+      player.open(
+        Media(repo.buildUrl(id)),
+        play: pageController.enabled(widget.index),
+      ).catchError((_) {}),
     );
-    player.stream.buffer.listen(playWhenLoaded);
+    _bufferSubscription = player.stream.buffer.listen(playWhenLoaded);
     setPageChangeListener();
   }
 
@@ -130,19 +152,35 @@ class _ViewVideoState extends State<ViewVideo> {
     if (mounted) setState(() => ready = true);
   }
 
-  void setPageChangeListener() => ever(pageController.index, (i) {
-    if (i == widget.index) {
-      player.play();
-    } else {
-      player.pause();
-      player.seek(Duration.zero);
+  void setPageChangeListener() {
+    _pageChangeWorker = ever<int>(pageController.index, (i) {
+      if (_disposed) return;
+      if (i == widget.index) {
+        _usePlayer(player.play);
+      } else {
+        _usePlayer(player.pause);
+        _usePlayer(() => player.seek(Duration.zero));
+      }
+    });
+  }
+
+  void _usePlayer(Future<void> Function() action) {
+    if (_disposed) return;
+    try {
+      unawaited(action().catchError((_) {}));
+    } on AssertionError {
+      // media_kit can assert if a late page-change
+      // callback reaches a disposed player.
     }
-  });
+  }
 
   @override
   void dispose() {
+    _disposed = true;
+    _pageChangeWorker?.dispose();
+    unawaited(_bufferSubscription?.cancel());
+    unawaited(player.dispose().catchError((_) {}));
     super.dispose();
-    player.dispose();
   }
 
   @override
@@ -151,7 +189,8 @@ class _ViewVideoState extends State<ViewVideo> {
     return Center(
       child: ObxHero(
         index: widget.index,
-        tag: video.id,
+        heroTag: video.id,
+        getTag: widget.tag,
         child: ImageStack(
           aspectRatio: video.width /video.height,
           children: [
