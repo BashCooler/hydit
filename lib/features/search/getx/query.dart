@@ -83,7 +83,7 @@ class QueryController extends GetxController {
   void clearTags() => _tags.clear();
 
   Future<void> searchForFiles() async {
-    final Images images = Get.find();
+    final Images images = Get.find()..clear();
     List<int> ids = [];
     try {
       ids = await repo.api.getSearchFiles(_tags.map((t) => t.raw).toList());

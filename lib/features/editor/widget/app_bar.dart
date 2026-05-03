@@ -23,11 +23,15 @@ class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   void openPreview(int index) {
-    Get.to(() => Preview(index: index, tag: tag),
+    final previewTag = 'preview-${DateTime.now().microsecondsSinceEpoch}';
+    Get.to(() => Preview(index: index, tag: previewTag),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
       opaque: false,
-    );
+      binding: BindingsBuilder.put(
+        () => PageGetxController(initial: index),
+        tag: previewTag,
+      ));
   }
 
   @override

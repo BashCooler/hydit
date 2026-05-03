@@ -8,5 +8,6 @@ class Images extends GetxController {
   int get length => images.length;
   HydrusImage operator [](int index) => images[index];
 
+  void clear() => images.clear();
   void assignAll(Iterable<HydrusImage> items) => images.assignAll(items);
 }
