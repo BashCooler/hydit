@@ -87,7 +87,7 @@ class BottomActions extends StatelessWidget {
       return AnimatedContainer(
         curve: Curves.easeOutCubic,
         duration: const Duration(milliseconds: 350),
-        height: gallery.actionsVisible.value
+        height: gallery.actionsVisible
             ? MediaQuery.of(context).viewPadding.bottom * 2
             : 0,
         child: n.Wrap([

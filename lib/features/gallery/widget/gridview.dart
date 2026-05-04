@@ -49,6 +49,7 @@ class ImageGridViewBuilder extends StatelessWidget {
             case .done:
             case .canceled:
               gallery.refreshing.value = false;
+              gallery.show();
             case _:
               gallery.refreshing.value = true;
           }
@@ -117,6 +118,9 @@ class _Tile extends StatelessWidget {
         switch (selection.selectionMode) {
           case true:
             selection.toggle(image.id);
+            if (!selection.selectionMode) {
+              gallery..unlock()..show();
+            }
           case false:
             final tag = 'viewer-${DateTime.now().microsecondsSinceEpoch}';
             Get.find<GalleryController>().hide();
@@ -129,7 +133,13 @@ class _Tile extends StatelessWidget {
             );
         }
       },
-      onLongPress: () => selection.toggle(image.id),
+      onLongPress: () {
+        if (gallery.refreshing.value) return;
+        selection.toggle(image.id);
+        if (selection.selectionMode) {
+          gallery..hide()..lock();
+        }
+      },
       child: Stack(
         alignment: .bottomRight,
         children: [

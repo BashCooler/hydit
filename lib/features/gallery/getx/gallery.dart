@@ -1,15 +1,17 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 
 class GalleryController extends GetxController {
-  final actionsVisible = true.obs;
+  bool _actionsLocked = false;
+  final _actionsVisible = true.obs;
   final refreshing = false.obs;
 
   final ScrollController scroll;
 
   GalleryController({required this.scroll});
+
+  bool get actionsVisible => _actionsVisible.value;
 
   @override
   void onInit() {
@@ -19,13 +21,18 @@ class GalleryController extends GetxController {
 
   void listener() {
     final direction = scroll.position.userScrollDirection;
-    if (direction == ScrollDirection.forward) {
-      actionsVisible.value = true;
-    } else if (direction == ScrollDirection.reverse) {
-      actionsVisible.value = false;
+    switch (direction) {
+      case .forward:
+        show();
+      case .reverse:
+        hide();
+      case _:
+        break;
     }
   }
 
-  void show() => actionsVisible.value = true;
-  void hide() => actionsVisible.value = false;
+  void show() => _actionsLocked ? null : _actionsVisible.value = true;
+  void hide() => _actionsLocked ? null : _actionsVisible.value = false;
+  void lock() => _actionsLocked = true;
+  void unlock() => _actionsLocked = false;
 }
