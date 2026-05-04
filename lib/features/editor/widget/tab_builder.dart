@@ -6,7 +6,9 @@ import 'split_view.dart';
 
 
 class TabBuilder extends StatelessWidget {
-  const TabBuilder({super.key});
+  final String tag;
+
+  const TabBuilder({super.key, required this.tag});
 
   List<Widget> getTabs(TagManager manager) => manager.services
       .map((service) => Tab(text: manager.pretty(service)))
@@ -29,7 +31,7 @@ class TabBuilder extends StatelessWidget {
                   onTap: manager.selectServiceByIndex,
                   tabs: getTabs(manager),
                 ),
-                const EditorSplitView(),
+                EditorSplitView(tag: tag),
               ],
             ),
           );

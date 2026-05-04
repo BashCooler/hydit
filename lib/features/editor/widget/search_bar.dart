@@ -9,7 +9,9 @@ import '../getx/tags.dart';
 
 
 class EditorTagSearchBar extends StatelessWidget {
-  const EditorTagSearchBar({super.key});
+  final String tag;
+
+  const EditorTagSearchBar({super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +24,8 @@ class EditorTagSearchBar extends StatelessWidget {
             ? 'Add tags to ${manager.service}'
             : 'Read-only service selected',
         onSubmitted: null,
-        actions: const EditorTagSearchBarActions(),
-        tag: 'Editor',
+        actions: EditorTagSearchBarActions(tag: tag),
+        tag: tag,
       );
     });
   }
@@ -31,11 +33,13 @@ class EditorTagSearchBar extends StatelessWidget {
 
 
 class EditorTagSearchBarActions extends StatelessWidget {
-  const EditorTagSearchBarActions({super.key});
+  final String tag;
+
+  const EditorTagSearchBarActions({super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
-    final QueryController query = Get.find(tag: 'Editor');
+    final QueryController query = Get.find(tag: tag);
     return Row(
       mainAxisSize: .min,
       spacing: 5,

@@ -1,6 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
+import 'package:hydrus_flutter/features/editor/page/editor.dart';
+import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -132,6 +135,16 @@ class FloatingActions extends StatelessWidget {
 class SelectActions extends StatelessWidget {
   const SelectActions({super.key});
 
+  void openEditor() {
+    final tag = 'Editor-${DateTime.now().microsecondsSinceEpoch}';
+    Get.to(() => Editor(tag: tag),
+      transition: .topLevel,
+      duration: AppTheme.duration,
+      curve: Curves.easeInOutCubic,
+      binding: EditorBindings(tag: tag),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final SelectionController selection = Get.find();
@@ -152,7 +165,7 @@ class SelectActions extends StatelessWidget {
             tooltip: 'Edit tags',
             icon: const Icon(Icons.edit),
             color: Colors.white,
-            onPressed: () {},
+            onPressed: openEditor,
           ),
           Obx(() {
             switch (selection.rangeSelected.value) {

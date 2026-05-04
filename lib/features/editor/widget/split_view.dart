@@ -10,13 +10,15 @@ import '../getx/tags.dart';
 
 
 class EditorSplitView extends HookWidget {
-  const EditorSplitView({super.key});
+  final String tag;
+
+  const EditorSplitView({super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
     final areas = [
       Area(min: 0, flex: 1.4, max: 2.375, builder: (_, area) => Up()),
-      Area(flex: 1, builder: (_, area) => Down()),
+      Area(flex: 1, builder: (_, area) => Down(tag: tag)),
     ];
 
     final controller = useMemoized(() {
@@ -65,7 +67,9 @@ class Up extends StatelessWidget {
 
 
 class Down extends StatelessWidget {
-  const Down({super.key});
+  final String tag;
+
+  const Down({super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +77,7 @@ class Down extends StatelessWidget {
       init: Get.find<TagManager>(),
       builder: (manager) {
         return Suggests(
-          tag: 'Editor',
+          tag: tag,
           trailing: Icon(manager.editable
               ? Icons.add
               : Icons.lock_outline),

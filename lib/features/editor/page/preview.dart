@@ -25,7 +25,7 @@ class Preview extends StatelessWidget {
         return DismissiblePage(
           disabled: page.zoom.value,
           backgroundColor: Get.theme.scaffoldBackgroundColor,
-          onDismissed: Navigator.of(context).pop,
+          onDismissed: Get.back,
           direction: .vertical,
           interactionMode: .gesture,
           minScale: 0,

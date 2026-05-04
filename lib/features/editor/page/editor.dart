@@ -35,7 +35,7 @@ class _EditorState extends State<Editor> {
   @override
   void initState() {
     super.initState();
-    page = Get.find(tag: widget.tag);
+    page = Get.find<PageGetxController>(tag: widget.tag);
     manager = Get.put(TagManager()..init(images[page.i].service));
   }
 
@@ -69,7 +69,7 @@ class _EditorState extends State<Editor> {
           tag: widget.tag,
         ),
         body: n.Column([
-          const TabBuilder(),
+          TabBuilder(tag: widget.tag),
           const Divider(height: 1),
           n.Row([
             IconButton(
@@ -77,7 +77,7 @@ class _EditorState extends State<Editor> {
               icon: const Icon(Icons.keyboard_arrow_left),
               onPressed: () => navigateToPage(page.i - 1),
             ),
-            const EditorTagSearchBar().niku
+            EditorTagSearchBar(tag: widget.tag).niku
               ..expanded,
             IconButton(
               tooltip: 'Next page',

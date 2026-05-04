@@ -122,7 +122,7 @@ class Tile extends StatelessWidget {
               gallery..unlock()..show();
             }
           case false:
-            final tag = 'viewer-${DateTime.now().microsecondsSinceEpoch}';
+            final tag = 'Viewer-${DateTime.now().microsecondsSinceEpoch}';
             Get.find<GalleryController>().hide();
             query.badgeVisible.value = false;
             Get.to(() => Viewer(index, tag: tag),
