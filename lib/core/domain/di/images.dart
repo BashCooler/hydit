@@ -9,5 +9,10 @@ class Images extends GetxController {
   HydrusImage operator [](int index) => images[index];
 
   void clear() => images.clear();
+
   void assignAll(Iterable<HydrusImage> items) => images.assignAll(items);
+
+  int indexWhere(bool Function(HydrusImage) test, [int start = 0]) {
+    return images.indexWhere(test, start);
+  }
 }

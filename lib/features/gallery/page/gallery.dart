@@ -154,12 +154,19 @@ class SelectActions extends StatelessWidget {
             color: Colors.white,
             onPressed: () {},
           ),
-          IconButton(
-            tooltip: 'Select range',
-            icon: const Icon(Icons.select_all),
-            color: Colors.white,
-            onPressed: () {},
-          ),
+          Obx(() {
+            switch (selection.rangeSelected.value) {
+              case true:
+                return IconButton(
+                  tooltip: 'Select range',
+                  icon: const Icon(Icons.select_all),
+                  color: Colors.white,
+                  onPressed: selection.selectRange,
+                );
+              case false:
+                return const SizedBox.shrink();
+            }
+          }),
         ])
           ..gap = 10
           ..padding = .only(right: 10),

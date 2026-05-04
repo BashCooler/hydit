@@ -158,8 +158,7 @@ class Tile extends StatelessWidget {
           }),
           Obx(() {
             final selected = selection.isSelected(image.id);
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 75),
+            return Container(
               decoration: BoxDecoration(
                 border: .all(
                   color: selected
