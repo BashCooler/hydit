@@ -26,34 +26,14 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
-  final scrollUp = ScrollController();
-
-  final Images images = Get.find();
   late final TagManager manager;
-  late final PageGetxController page;
 
   @override
   void initState() {
     super.initState();
-    page = Get.find<PageGetxController>(tag: widget.tag);
+    final page = Get.find<PageGetxController>(tag: widget.tag);
+    final Images images = Get.find();
     manager = Get.put(TagManager()..init(images[page.i].service));
-  }
-
-  @override
-  void dispose() {
-    scrollUp.dispose();
-    super.dispose();
-  }
-
-  Future<void> navigateToPage(int target) async {
-    if (target < 0) return;
-    if (target >= images.length) return;
-
-    final shouldSwitch = await confirmPendingChanges();
-    if (!shouldSwitch || !mounted) return;
-
-    page.navigateToPage(target);
-    manager.init(images[page.i].service);
   }
 
   // MARK: BUILD
@@ -71,20 +51,10 @@ class _EditorState extends State<Editor> {
         body: n.Column([
           TabBuilder(tag: widget.tag),
           const Divider(height: 1),
-          n.Row([
-            IconButton(
-              tooltip: 'Previous page',
-              icon: const Icon(Icons.keyboard_arrow_left),
-              onPressed: () => navigateToPage(page.i - 1),
-            ),
-            EditorTagSearchBar(tag: widget.tag).niku
-              ..expanded,
-            IconButton(
-              tooltip: 'Next page',
-              icon: const Icon(Icons.keyboard_arrow_right),
-              onPressed: () => navigateToPage(page.i + 1),
-            ),
-          ]),
+          PagedEditorBottomActions(
+            tag: widget.tag,
+            callback: confirmPendingChanges,
+          ),
         ])
           ..safe,
         floatingActionButtonLocation: .miniEndFloat,
@@ -110,6 +80,7 @@ class _EditorState extends State<Editor> {
     final message = manager.summarize();
     if (message == 'No changes') return true;
 
+    final page = Get.find<PageGetxController>(tag: widget.tag);
     final result = await showPopDialog(context, message, page.i);
 
     switch (result) {
@@ -130,6 +101,7 @@ class _EditorState extends State<Editor> {
     int index,
   ) {
     bool isLoading = false;
+    final Images images = Get.find();
 
     return showDialog<Action>(
       context: context,
@@ -167,3 +139,50 @@ class _EditorState extends State<Editor> {
     );
   }
 }
+
+
+class PagedEditorBottomActions extends StatelessWidget {
+  final String tag;
+  final Future<bool> Function() callback;
+
+  const PagedEditorBottomActions({
+    super.key,
+    required this.tag,
+    required this.callback,
+  });
+
+  Future<void> navigateToPage(int target) async {
+    final Images images = Get.find();
+    final TagManager manager = Get.find();
+    final PageGetxController page = Get.find(tag: tag);
+
+    if (target < 0) return;
+    if (target >= images.length) return;
+
+    final shouldSwitch = await callback();
+    if (!shouldSwitch) return;
+
+    page.navigateToPage(target);
+    manager.init(images[page.i].service);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final PageGetxController page = Get.find(tag: tag);
+    return n.Row([
+      IconButton(
+        tooltip: 'Previous page',
+        icon: const Icon(Icons.keyboard_arrow_left),
+        onPressed: () => navigateToPage(page.i - 1),
+      ),
+      EditorTagSearchBar(tag: tag).niku
+        ..expanded,
+      IconButton(
+        tooltip: 'Next page',
+        icon: const Icon(Icons.keyboard_arrow_right),
+        onPressed: () => navigateToPage(page.i + 1),
+      ),
+    ]);
+  }
+}
+
