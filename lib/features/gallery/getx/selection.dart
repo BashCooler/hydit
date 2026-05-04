@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 class SelectionController extends GetxController {
   final selectedIds = <int>{}.obs;
 
-  bool get selectionMode => selectedIds.isNotEmpty;
+  bool get on => selectedIds.isNotEmpty;
 
   void toggle(int id) {
     switch (selectedIds.contains(id)) {

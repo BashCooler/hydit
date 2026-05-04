@@ -144,6 +144,7 @@ class BottomActions extends StatelessWidget {
         spacing: 10.0,
         children: [
           IconButton(
+            tooltip: 'Previous page',
             color: Colors.white,
             onPressed: () => page.$.previousPage(
               duration: const Duration(milliseconds: 150),
@@ -153,15 +154,17 @@ class BottomActions extends StatelessWidget {
           ),
           Obx(() {
             return n.Button('${images[page.i].length} tags'.n)
+              ..tooltip = 'Show tags'
               ..foregroundColor = Colors.white
               ..overlayColor = Colors.white.withAlpha(32)
-              ..fontSize = 15
+              ..fontSize = 16
               ..fontWeight = .w500
               ..shadows = [Shadow(blurRadius: 24)]
               ..onPressed = openSheet
               ..expanded;
           }),
           IconButton(
+            tooltip: 'Next page',
             color: Colors.white,
             onPressed: () => page.$.nextPage(
               duration: const Duration(milliseconds: 150),

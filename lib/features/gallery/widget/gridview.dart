@@ -42,7 +42,7 @@ class ImageGridViewBuilder extends StatelessWidget {
       controller: grid,
       child: ExpressiveRefreshIndicator(
         displacement: 100.0,
-        notificationPredicate: (_) => !selection.selectionMode,
+        notificationPredicate: (_) => !selection.on,
         onRefresh: () => query.searchForFiles(),
         onStatusChange: (status) {
           switch (status) {
@@ -82,14 +82,14 @@ class _TileBuilder extends StatelessWidget {
     final image = Get.find<Images>().images[index];
 
     if (image.width != -1) {
-      return _Tile(index, image);
+      return Tile(index, image);
     }
 
     return FutureBuilder(
       future: Get.find<Repo>().setMetadataFor(image),
       builder: (_, snapshot) {
         if (snapshot.connectionState == .done) {
-          return _Tile(index, image);
+          return Tile(index, image);
         } else {
           return const ColoredBox(color: Colors.white10);
         }
@@ -99,11 +99,11 @@ class _TileBuilder extends StatelessWidget {
 }
 
 
-class _Tile extends StatelessWidget {
+class Tile extends StatelessWidget {
   final int index;
   final HydrusImage image;
 
-  const _Tile(this.index, this.image);
+  const Tile(this.index, this.image, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -115,10 +115,10 @@ class _Tile extends StatelessWidget {
       key: ValueKey(image.id),
       onTap: () {
         if (gallery.refreshing.value) return;
-        switch (selection.selectionMode) {
+        switch (selection.on) {
           case true:
             selection.toggle(image.id);
-            if (!selection.selectionMode) {
+            if (!selection.on) {
               gallery..unlock()..show();
             }
           case false:
@@ -136,7 +136,7 @@ class _Tile extends StatelessWidget {
       onLongPress: () {
         if (gallery.refreshing.value) return;
         selection.toggle(image.id);
-        if (selection.selectionMode) {
+        if (selection.on) {
           gallery..hide()..lock();
         }
       },
@@ -153,7 +153,7 @@ class _Tile extends StatelessWidget {
               opacity: visible ? 1 : 0,
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeInQuint,
-              child: _TileBadges(image),
+              child: TileBadges(image),
             );
           }),
           Obx(() {
@@ -180,10 +180,10 @@ class _Tile extends StatelessWidget {
 }
 
 
-class _TileBadges extends StatelessWidget {
+class TileBadges extends StatelessWidget {
   final HydrusImage image;
 
-  const _TileBadges(this.image);
+  const TileBadges(this.image, {super.key});
 
   @override
   Widget build(BuildContext context) {

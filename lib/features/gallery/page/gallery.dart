@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
@@ -41,44 +42,60 @@ class _GalleryState extends State<Gallery> {
   @override
   Widget build(BuildContext context) {
     final SelectionController selection = Get.find();
-    return Obx(() {
-      return Scaffold(
-        appBar: AppBar(
-          title: selection.selectionMode
-              ? '${selection.selectedIds.length} selected'.n
-              : null,
-          toolbarHeight: selection.selectionMode
-              ? null
-              : Get.mediaQuery.viewInsets.top,
-          backgroundColor: Get
-              .theme
-              .scaffoldBackgroundColor
-              .withAlpha(90),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (selection.on) {
+          selection.clear();
+          return;
+        }
+
+        final alert = AlertDialog(
+          actionsAlignment: .center,
+          icon: const Icon(Icons.close),
+          title: 'Close application?'.n,
           actions: [
-            IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: selection.clear,
-            ),
+            n.Button('No'.n)
+              ..onPressed = () => Get.back(),
+            n.Button('Yes'.n)
+              ..onPressed = () => SystemNavigator.pop(),
           ],
-          automaticallyImplyLeading: false,
-        ),
-        resizeToAvoidBottomInset: false,
-        extendBodyBehindAppBar: true,
-        body: const Stack(
-          alignment: .bottomRight,
-          children: [
-            ImageGridViewBuilder(),
-            BottomActions(),
-          ],
-        ),
-      );
-    });
+        );
+
+        n.showDialog(
+          context: context,
+          builder: (context) => alert,
+        );
+      },
+      child: Obx(() {
+        return Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            toolbarHeight: Get.mediaQuery.viewInsets.top,
+            backgroundColor: Get.theme.scaffoldBackgroundColor.withAlpha(90),
+          ),
+          resizeToAvoidBottomInset: false,
+          extendBodyBehindAppBar: true,
+          extendBody: true,
+          body: const Stack(
+            alignment: .bottomRight,
+            children: [
+              ImageGridViewBuilder(),
+              FloatingActions(),
+            ],
+          ),
+          bottomNavigationBar: selection.on
+              ? const SelectActions()
+              : null,
+        );
+      }),
+    );
   }
 }
 
 
-class BottomActions extends StatelessWidget {
-  const BottomActions({super.key});
+class FloatingActions extends StatelessWidget {
+  const FloatingActions({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -108,5 +125,46 @@ class BottomActions extends StatelessWidget {
         ]),
       );
     });
+  }
+}
+
+
+class SelectActions extends StatelessWidget {
+  const SelectActions({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final SelectionController selection = Get.find();
+    return BottomAppBar(
+      color: Get.theme.scaffoldBackgroundColor.withAlpha(90),
+      child: n.Row([
+        Obx(() {
+          return '${selection.selectedIds.length} selected'.n
+            ..expanded
+            ..color = Colors.white
+            ..fontSize = 16
+            ..fontWeight = .w500
+            ..shadows = [Shadow(blurRadius: 24)]
+            ..textAlign = .center;
+        }),
+        n.Row([
+          IconButton(
+            tooltip: 'Edit tags',
+            icon: const Icon(Icons.edit),
+            color: Colors.white,
+            onPressed: () {},
+          ),
+          IconButton(
+            tooltip: 'Select range',
+            icon: const Icon(Icons.select_all),
+            color: Colors.white,
+            onPressed: () {},
+          ),
+        ])
+          ..gap = 10
+          ..padding = .only(right: 10),
+      ])
+        ..mainAxisAlignment = .spaceBetween,
+    );
   }
 }
