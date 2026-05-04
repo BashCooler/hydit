@@ -37,22 +37,39 @@ class _GalleryState extends State<Gallery> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: Get.mediaQuery.viewInsets.top,
-        backgroundColor: Get.theme.scaffoldBackgroundColor.withAlpha(90),
-      ),
-      resizeToAvoidBottomInset: false,
-      extendBodyBehindAppBar: true,
-      body: const Stack(
-        alignment: .bottomRight,
-        children: [
-          ImageGridViewBuilder(),
-          BottomActions(),
-        ],
-      ),
-    );
+    final SelectionController selection = Get.find();
+    return Obx(() {
+      return Scaffold(
+        appBar: AppBar(
+          title: selection.selectionMode
+              ? '${selection.selectedIds.length} selected'.n
+              : null,
+          toolbarHeight: selection.selectionMode
+              ? null
+              : Get.mediaQuery.viewInsets.top,
+          backgroundColor: Get
+              .theme
+              .scaffoldBackgroundColor
+              .withAlpha(90),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: selection.clear,
+            ),
+          ],
+          automaticallyImplyLeading: false,
+        ),
+        resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: true,
+        body: const Stack(
+          alignment: .bottomRight,
+          children: [
+            ImageGridViewBuilder(),
+            BottomActions(),
+          ],
+        ),
+      );
+    });
   }
 }
 

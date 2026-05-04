@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/extra/primitive.dart';
+import 'package:niku/namespace.dart' as n;
 import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -33,21 +34,24 @@ class ImageGridViewBuilder extends StatelessWidget {
       crossAxisSpacing: 5.0,
     );
 
-    return Padding(
-      padding: .symmetric(horizontal: 5.0),
-      child: GridViewObserver(
-        controller: grid,
-        child: RefreshIndicator(
-          displacement: 100.0,
-          onRefresh: () async => query.searchForFiles(),
-          child: Obx(() => GridView.builder(
-            physics: physics,
-            controller: grid.controller,
-            itemCount: images.length,
-            gridDelegate: delegate,
-            itemBuilder: (_, index) => _TileBuilder(index),
-          )),
-        ),
+    return GridViewObserver(
+      controller: grid,
+      child: RefreshIndicator(
+        displacement: 100.0,
+        onRefresh: () async => query.searchForFiles(),
+        child: Obx(() => GridView.builder(
+          padding: .only(
+            top: Get.mediaQuery.viewPadding.top,
+            right: 5,
+            left: 5,
+            bottom: 5,
+          ),
+          physics: physics,
+          controller: grid.controller,
+          itemCount: images.length,
+          gridDelegate: delegate,
+          itemBuilder: (_, index) => _TileBuilder(index),
+        )),
       ),
     );
   }
