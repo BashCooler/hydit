@@ -85,8 +85,8 @@ class BottomActions extends StatelessWidget {
     final GalleryController gallery = Get.find();
     return Obx(() {
       return AnimatedContainer(
-        curve: Curves.linear,
-        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeOutCubic,
+        duration: const Duration(milliseconds: 350),
         height: gallery.actionsVisible.value
             ? MediaQuery.of(context).viewPadding.bottom * 2
             : 0,
