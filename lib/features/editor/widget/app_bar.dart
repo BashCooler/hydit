@@ -14,11 +14,11 @@ import '../getx/tags.dart';
 import '../page/editor.dart';
 
 
-class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
+class PagedEditorAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double toolbarHeight;
   final String tag;
 
-  const EditorAppBar({
+  const PagedEditorAppBar({
     super.key,
     required this.toolbarHeight,
     required this.tag,

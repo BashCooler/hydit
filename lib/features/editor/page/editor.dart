@@ -7,7 +7,7 @@ import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 
 import '../getx/tags.dart';
 import '../widget/app_bar.dart';
-import '../widget/search_bar.dart';
+import '../widget/bottom_bar.dart';
 import '../widget/tab_builder.dart';
 
 const additions = Color(0xFF3fb950);
@@ -34,14 +34,14 @@ class _EditorState extends State<Editor> {
       canPop: false,
       onPopInvokedWithResult: onLeave,
       child: Scaffold(
-        appBar: EditorAppBar(
+        appBar: PagedEditorAppBar(
           toolbarHeight: 100,
           tag: widget.tag,
         ),
         body: n.Column([
           TabBuilder(tag: widget.tag),
           const Divider(height: 1),
-          PagedEditorBottomActions(
+          PagedEditorBottomBar(
             tag: widget.tag,
             callback: confirmPendingChanges,
           ),
@@ -131,51 +131,5 @@ class _EditorState extends State<Editor> {
         );
       },
     );
-  }
-}
-
-
-class PagedEditorBottomActions extends StatelessWidget {
-  final String tag;
-  final Future<bool> Function(String tag) callback;
-
-  const PagedEditorBottomActions({
-    super.key,
-    required this.tag,
-    required this.callback,
-  });
-
-  Future<void> navigateToPage(int target) async {
-    final Images images = Get.find();
-    final TagManager manager = Get.find();
-    final PageGetxController page = Get.find(tag: tag);
-
-    if (target < 0) return;
-    if (target >= images.length) return;
-
-    final shouldSwitch = await callback(tag);
-    if (!shouldSwitch) return;
-
-    page.navigateToPage(target);
-    manager.init(images[page.i].service);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final PageGetxController page = Get.find(tag: tag);
-    return n.Row([
-      IconButton(
-        tooltip: 'Previous page',
-        icon: const Icon(Icons.keyboard_arrow_left),
-        onPressed: () => navigateToPage(page.i - 1),
-      ),
-      EditorTagSearchBar(tag: tag).niku
-        ..expanded,
-      IconButton(
-        tooltip: 'Next page',
-        icon: const Icon(Icons.keyboard_arrow_right),
-        onPressed: () => navigateToPage(page.i + 1),
-      ),
-    ]);
   }
 }
