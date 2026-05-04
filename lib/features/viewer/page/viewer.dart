@@ -24,7 +24,7 @@ class Viewer extends StatelessWidget {
   void showSearchBar(bool didPop, dynamic result) async {
     Future.delayed(Duration(milliseconds: 250), () {
       Get.find<QueryController>().badgeVisible.value = true;
-      Get.find<ScrollToHideController>().show();
+      // Get.find<ScrollToHideController>().show();
     });
   }
 

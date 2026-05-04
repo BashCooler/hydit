@@ -103,7 +103,7 @@ class _Tile extends StatelessWidget {
             selection.toggle(image.id);
           case false:
             final tag = 'viewer-${DateTime.now().microsecondsSinceEpoch}';
-            Get.find<ScrollToHideController>().hide();
+            // Get.find<ScrollToHideController>().hide();
             query.badgeVisible.value = false;
             Get.to(() => Viewer(index, tag: tag),
               transition: .fadeIn,

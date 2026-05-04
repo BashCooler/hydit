@@ -14,7 +14,7 @@ import '../widget/tag_panel.dart';
 
 
 void showSearchSheet(BuildContext context) {
-  Get.find<ScrollToHideController>().hide();
+  // Get.find<ScrollToHideController>().hide();
   Get.find<Repo>().updateClient();
   Navigator.push(
     context,
@@ -51,7 +51,7 @@ class _SearchSheetState extends State<SearchSheet> {
 
   void onLeave(bool didPop, Object? result) {
     Future.delayed(AppTheme.duration, () {
-      Get.find<ScrollToHideController>().show();
+      // Get.find<ScrollToHideController>().show();
       query.clear();
     });
   }

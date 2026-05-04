@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/features/gallery/getx/selection.dart';
+import 'package:flutter/rendering.dart';
 import 'package:niku/namespace.dart' as n;
-import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/core/data/repo.dart';
@@ -12,6 +11,7 @@ import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/settings/ui/page/settings.dart';
 
 import 'search_sheet.dart';
+import '../getx/selection.dart';
 import '../widget/gridview.dart';
 
 
@@ -23,6 +23,8 @@ class Gallery extends StatefulWidget {
 }
 
 class _GalleryState extends State<Gallery> {
+  late final GridObserverController grid;
+
   @override
   void initState() {
     super.initState();
@@ -30,9 +32,9 @@ class _GalleryState extends State<Gallery> {
       ..find<Repo>().updateClient()
       ..put(Images())
       ..put(QueryController())
-      ..put(ScrollToHideController())
-      ..put(SelectionController())
-      ..put(GridObserverController(controller: ScrollController()));
+      ..put(SelectionController());
+    final scroll = ScrollController();
+    grid = Get.put(GridObserverController(controller: scroll));
   }
 
   @override
@@ -61,11 +63,11 @@ class _GalleryState extends State<Gallery> {
         ),
         resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
-        body: const Stack(
+        body: Stack(
           alignment: .bottomRight,
           children: [
-            ImageGridViewBuilder(),
-            BottomActions(),
+            const ImageGridViewBuilder(),
+            BottomActions(controller: grid.controller!),
           ],
         ),
       );
@@ -74,34 +76,57 @@ class _GalleryState extends State<Gallery> {
 }
 
 
-class BottomActions extends StatelessWidget {
-  const BottomActions({super.key});
+class BottomActions extends StatefulWidget {
+  final ScrollController controller;
+
+  const BottomActions({super.key, required this.controller});
+
+  @override
+  State<BottomActions> createState() => _BottomActionsState();
+}
+
+class _BottomActionsState extends State<BottomActions> {
+  var visible = true;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(listener);
+  }
+
+  void listener() {
+    final direction = widget.controller.position.userScrollDirection;
+    if (direction == ScrollDirection.forward) {
+      setState(() => visible = true);
+    } else if (direction == ScrollDirection.reverse) {
+      setState(() => visible = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final GridObserverController grid = Get.find();
-    final ScrollToHideController hide = Get.find();
-
-    return ScrollToHide(
-      scrollController: grid.controller!,
-      controller: hide,
-      hideDirection: .vertical,
-      height: MediaQuery.of(context).viewPadding.bottom * 2,
+    return AnimatedContainer(
+      curve: Curves.linear,
       duration: const Duration(milliseconds: 150),
-      child: n.Row([
-        FilledIconButton(
-          onPressed: () {
-            Get.to(() => const SettingsPage(), transition: .downToUp);
-          },
-          icon: const Icon(Icons.settings),
-        ),
-        FilledIconButton(
-          onPressed: () => showSearchSheet(context),
-          icon: const Icon(Icons.search),
-        ),
-      ])
-        ..mainAxisAlignment = .spaceBetween
-        ..n.padding = .only(left: 15.0, right: 15.0, bottom: 15.0),
+      height: visible
+          ? MediaQuery.of(context).viewPadding.bottom * 2
+          : 0,
+      child: n.Wrap([
+        n.Row([
+          FilledIconButton(
+            onPressed: () {
+              Get.to(() => const SettingsPage(), transition: .downToUp);
+            },
+            icon: const Icon(Icons.settings),
+          ),
+          FilledIconButton(
+            onPressed: () => showSearchSheet(context),
+            icon: const Icon(Icons.search),
+          ),
+        ])
+          ..mainAxisAlignment = .spaceBetween
+          ..n.padding = .only(left: 15.0, right: 15.0, bottom: 15.0),
+      ]),
     );
   }
 }
