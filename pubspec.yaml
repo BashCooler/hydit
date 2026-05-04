@@ -45,6 +45,7 @@ dependencies:
   preload_page_view: ^0.2.0
   cached_network_image: ^3.4.1
   settings_tiles: ^6.0.1
+  expressive_refresh: ^0.1.2
   # Video player
   media_kit: ^1.2.6
   media_kit_video: ^2.0.1

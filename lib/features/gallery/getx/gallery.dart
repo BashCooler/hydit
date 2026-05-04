@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 
 class GalleryController extends GetxController {
   final actionsVisible = true.obs;
+  final refreshing = false.obs;
 
   final ScrollController scroll;
 

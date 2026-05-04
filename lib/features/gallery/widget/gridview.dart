@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:niku/extra/primitive.dart';
+import 'package:expressive_refresh/expressive_refresh.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/core/data/repo.dart';
@@ -25,6 +26,8 @@ class ImageGridViewBuilder extends StatelessWidget {
     final Images images = Get.find();
     final QueryController query = Get.find();
     final GridObserverController grid = Get.find();
+    final SelectionController selection = Get.find();
+    final GalleryController gallery = Get.find();
 
     const physics = BouncingScrollPhysics(
         parent: AlwaysScrollableScrollPhysics());
@@ -37,9 +40,19 @@ class ImageGridViewBuilder extends StatelessWidget {
 
     return GridViewObserver(
       controller: grid,
-      child: RefreshIndicator(
+      child: ExpressiveRefreshIndicator(
         displacement: 100.0,
-        onRefresh: () async => query.searchForFiles(),
+        notificationPredicate: (_) => !selection.selectionMode,
+        onRefresh: () => query.searchForFiles(),
+        onStatusChange: (status) {
+          switch (status) {
+            case .done:
+            case .canceled:
+              gallery.refreshing.value = false;
+            case _:
+              gallery.refreshing.value = true;
+          }
+        },
         child: Obx(() => GridView.builder(
           padding: .only(
             top: Get.mediaQuery.viewPadding.top,
@@ -95,10 +108,12 @@ class _Tile extends StatelessWidget {
   Widget build(BuildContext context) {
     final QueryController query = Get.find();
     final SelectionController selection = Get.find();
+    final GalleryController gallery = Get.find();
 
     return GestureDetector(
       key: ValueKey(image.id),
       onTap: () {
+        if (gallery.refreshing.value) return;
         switch (selection.selectionMode) {
           case true:
             selection.toggle(image.id);
