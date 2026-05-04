@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:niku/extra/primitive.dart';
 import 'package:niku/namespace.dart' as n;
-import 'package:scroll_to_hide/scroll_to_hide.dart';
+import 'package:niku/extra/primitive.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/core/data/repo.dart';
@@ -13,7 +12,9 @@ import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
 import 'package:hydrus_flutter/features/viewer/getx/bindings.dart';
-import 'package:hydrus_flutter/features/gallery/getx/selection.dart';
+
+import '../getx/gallery.dart';
+import '../getx/selection.dart';
 
 
 class ImageGridViewBuilder extends StatelessWidget {
@@ -103,7 +104,7 @@ class _Tile extends StatelessWidget {
             selection.toggle(image.id);
           case false:
             final tag = 'viewer-${DateTime.now().microsecondsSinceEpoch}';
-            // Get.find<ScrollToHideController>().hide();
+            Get.find<GalleryController>().hide();
             query.badgeVisible.value = false;
             Get.to(() => Viewer(index, tag: tag),
               transition: .fadeIn,

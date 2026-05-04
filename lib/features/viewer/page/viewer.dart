@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
-import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -9,10 +8,11 @@ import 'package:preload_page_view/preload_page_view.dart';
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
-import 'package:hydrus_flutter/features/viewer/widget/tag_sheet.dart';
+import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
 
-import '../widget/views.dart';
 import '../getx/page.dart';
+import '../widget/views.dart';
+import '../widget/tag_sheet.dart';
 
 
 class Viewer extends StatelessWidget {
@@ -24,7 +24,7 @@ class Viewer extends StatelessWidget {
   void showSearchBar(bool didPop, dynamic result) async {
     Future.delayed(Duration(milliseconds: 250), () {
       Get.find<QueryController>().badgeVisible.value = true;
-      // Get.find<ScrollToHideController>().show();
+      Get.find<GalleryController>().show();
     });
   }
 

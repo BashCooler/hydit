@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:smooth_sheets/smooth_sheets.dart';
-import 'package:scroll_to_hide/scroll_to_hide.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
@@ -10,11 +9,12 @@ import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/search/widget/search.dart';
 import 'package:hydrus_flutter/features/search/widget/suggests.dart';
 
+import '../getx/gallery.dart';
 import '../widget/tag_panel.dart';
 
 
 void showSearchSheet(BuildContext context) {
-  // Get.find<ScrollToHideController>().hide();
+  Get.find<GalleryController>().hide();
   Get.find<Repo>().updateClient();
   Navigator.push(
     context,
@@ -51,7 +51,7 @@ class _SearchSheetState extends State<SearchSheet> {
 
   void onLeave(bool didPop, Object? result) {
     Future.delayed(AppTheme.duration, () {
-      // Get.find<ScrollToHideController>().show();
+      Get.find<GalleryController>().show();
       query.clear();
     });
   }

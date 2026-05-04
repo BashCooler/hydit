@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -11,6 +10,7 @@ import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/settings/ui/page/settings.dart';
 
 import 'search_sheet.dart';
+import '../getx/gallery.dart';
 import '../getx/selection.dart';
 import '../widget/gridview.dart';
 
@@ -28,13 +28,14 @@ class _GalleryState extends State<Gallery> {
   @override
   void initState() {
     super.initState();
+    final scroll = ScrollController();
     Get
       ..find<Repo>().updateClient()
       ..put(Images())
       ..put(QueryController())
-      ..put(SelectionController());
-    final scroll = ScrollController();
-    grid = Get.put(GridObserverController(controller: scroll));
+      ..put(SelectionController())
+      ..put(GridObserverController(controller: scroll))
+      ..put(GalleryController(scroll: scroll));
   }
 
   @override
@@ -63,11 +64,11 @@ class _GalleryState extends State<Gallery> {
         ),
         resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
-        body: Stack(
+        body: const Stack(
           alignment: .bottomRight,
           children: [
-            const ImageGridViewBuilder(),
-            BottomActions(controller: grid.controller!),
+            ImageGridViewBuilder(),
+            BottomActions(),
           ],
         ),
       );
@@ -76,57 +77,36 @@ class _GalleryState extends State<Gallery> {
 }
 
 
-class BottomActions extends StatefulWidget {
-  final ScrollController controller;
-
-  const BottomActions({super.key, required this.controller});
-
-  @override
-  State<BottomActions> createState() => _BottomActionsState();
-}
-
-class _BottomActionsState extends State<BottomActions> {
-  var visible = true;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.controller.addListener(listener);
-  }
-
-  void listener() {
-    final direction = widget.controller.position.userScrollDirection;
-    if (direction == ScrollDirection.forward) {
-      setState(() => visible = true);
-    } else if (direction == ScrollDirection.reverse) {
-      setState(() => visible = false);
-    }
-  }
+class BottomActions extends StatelessWidget {
+  const BottomActions({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      curve: Curves.linear,
-      duration: const Duration(milliseconds: 150),
-      height: visible
-          ? MediaQuery.of(context).viewPadding.bottom * 2
-          : 0,
-      child: n.Wrap([
-        n.Row([
-          FilledIconButton(
-            onPressed: () {
-              Get.to(() => const SettingsPage(), transition: .downToUp);
-            },
-            icon: const Icon(Icons.settings),
-          ),
-          FilledIconButton(
-            onPressed: () => showSearchSheet(context),
-            icon: const Icon(Icons.search),
-          ),
-        ])
-          ..mainAxisAlignment = .spaceBetween
-          ..n.padding = .only(left: 15.0, right: 15.0, bottom: 15.0),
-      ]),
-    );
+    final GalleryController gallery = Get.find();
+    return Obx(() {
+      return AnimatedContainer(
+        curve: Curves.linear,
+        duration: const Duration(milliseconds: 150),
+        height: gallery.actionsVisible.value
+            ? MediaQuery.of(context).viewPadding.bottom * 2
+            : 0,
+        child: n.Wrap([
+          n.Row([
+            FilledIconButton(
+              onPressed: () {
+                Get.to(() => const SettingsPage(), transition: .downToUp);
+              },
+              icon: const Icon(Icons.settings),
+            ),
+            FilledIconButton(
+              onPressed: () => showSearchSheet(context),
+              icon: const Icon(Icons.search),
+            ),
+          ])
+            ..mainAxisAlignment = .spaceBetween
+            ..n.padding = .only(left: 15.0, right: 15.0, bottom: 15.0),
+        ]),
+      );
+    });
   }
 }
