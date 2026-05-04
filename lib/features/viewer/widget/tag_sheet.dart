@@ -1,15 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
-import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/ui/tag_list.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
-import 'package:hydrus_flutter/features/search/getx/query.dart';
-import 'package:hydrus_flutter/features/editor/page/editor.dart';
+import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
 
 import '../getx/page.dart';
 
@@ -42,15 +39,6 @@ class TagSheet extends HookWidget {
     }
   }
 
-  void openEditor() {
-    Get.to(() => Editor(tag: tag),
-      transition: .leftToRight,
-      duration: AppTheme.duration,
-      curve: Curves.easeInOutCubic,
-      binding: EditorBindings(tag: tag),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final scrollBelow = useScrollController();
@@ -81,7 +69,7 @@ class TagSheet extends HookWidget {
               tags: tags,
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: openEditor,
+              onPressed: () => toEditor(tag, .paged),
               child: const Icon(Icons.edit_note),
             ).niku
               ..padding = .only(bottom: 18),

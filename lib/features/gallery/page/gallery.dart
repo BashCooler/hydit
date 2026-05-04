@@ -1,9 +1,6 @@
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
-import 'package:hydrus_flutter/features/editor/page/editor.dart';
-import 'package:hydrus_flutter/utils/theme.dart';
+import 'package:flutter/services.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -11,6 +8,7 @@ import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
+import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
 import 'package:hydrus_flutter/features/settings/ui/page/settings.dart';
 
 import 'search_sheet.dart';
@@ -135,16 +133,6 @@ class FloatingActions extends StatelessWidget {
 class SelectActions extends StatelessWidget {
   const SelectActions({super.key});
 
-  void openEditor() {
-    final tag = 'Editor-${DateTime.now().microsecondsSinceEpoch}';
-    Get.to(() => Editor(tag: tag),
-      transition: .topLevel,
-      duration: AppTheme.duration,
-      curve: Curves.easeInOutCubic,
-      binding: EditorBindings(tag: tag),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final SelectionController selection = Get.find();
@@ -165,10 +153,13 @@ class SelectActions extends StatelessWidget {
             tooltip: 'Edit tags',
             icon: const Icon(Icons.edit),
             color: Colors.white,
-            onPressed: openEditor,
+            onPressed: () {
+              final tag = 'Editor-${DateTime.now().microsecondsSinceEpoch}';
+              toEditor(tag, .batch);
+            },
           ),
           Obx(() {
-            switch (selection.rangeSelected.value) {
+            switch (selection.rangeSelected) {
               case true:
                 return IconButton(
                   tooltip: 'Select range',

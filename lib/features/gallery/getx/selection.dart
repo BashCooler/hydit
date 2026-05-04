@@ -5,9 +5,7 @@ import 'package:hydrus_flutter/core/domain/di/images.dart';
 class SelectionController extends GetxController {
   final selectedIds = <int>{}.obs;
 
-  int? beginId;
-  int? endId;
-  final rangeSelected = false.obs;
+  bool get rangeSelected => selectedIds.length == 2;
 
   bool get on => selectedIds.isNotEmpty;
 
@@ -15,20 +13,8 @@ class SelectionController extends GetxController {
     switch (selectedIds.contains(id)) {
       case true:
         selectedIds.remove(id);
-        if (selectedIds.length < 2) rangeSelected.value = false;
       case false:
         selectedIds.add(id);
-        switch (selectedIds.length) {
-          case 1:
-            beginId = id;
-            endId = null;
-          case 2:
-            endId = id;
-          case _:
-            beginId = null;
-            endId = null;
-        }
-        rangeSelected.value = beginId != null && endId != null;
     }
   }
 
@@ -37,11 +23,11 @@ class SelectionController extends GetxController {
   bool isSelected(int id) => selectedIds.contains(id);
 
   void selectRange() {
-    if (!rangeSelected.value) return;
+    if (!rangeSelected) return;
     final Images images = Get.find();
 
-    final index1 = images.indexWhere((e) => e.id == beginId);
-    final index2 = images.indexWhere((e) => e.id == endId);
+    final index1 = images.indexWhere((e) => e.id == selectedIds.first);
+    final index2 = images.indexWhere((e) => e.id == selectedIds.last);
 
     if (index1 < 0 || index2 < 0) return;
 

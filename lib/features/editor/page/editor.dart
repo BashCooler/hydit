@@ -14,12 +14,14 @@ const additions = Color(0xFF3fb950);
 const deletions = Color(0xFFf85149);
 
 enum Action { save, discard, cancel }
+enum Mode { paged, batch }
 
 
 class Editor extends StatefulWidget {
   final String tag;
+  final Mode mode;
 
-  const Editor({super.key, required this.tag});
+  const Editor({super.key, required this.tag, required this.mode});
 
   @override
   State<Editor> createState() => _EditorState();
@@ -34,17 +36,11 @@ class _EditorState extends State<Editor> {
       canPop: false,
       onPopInvokedWithResult: onLeave,
       child: Scaffold(
-        appBar: PagedEditorAppBar(
-          toolbarHeight: 100,
-          tag: widget.tag,
-        ),
+        appBar: buildAppBar(),
         body: n.Column([
           TabBuilder(tag: widget.tag),
           const Divider(height: 1),
-          PagedEditorBottomBar(
-            tag: widget.tag,
-            callback: confirmPendingChanges,
-          ),
+          buildBottomBar(),
         ])
           ..safe,
         floatingActionButtonLocation: .miniEndFloat,
@@ -54,6 +50,30 @@ class _EditorState extends State<Editor> {
         ).niku.paddingOnly(bottom: 60),
       ),
     );
+  }
+
+  PreferredSizeWidget buildAppBar() {
+    switch (widget.mode) {
+      case .paged:
+        return PagedEditorAppBar(
+          toolbarHeight: 100,
+          tag: widget.tag,
+        );
+      case .batch:
+        return AppBar();
+    }
+  }
+
+  Widget buildBottomBar() {
+    switch (widget.mode) {
+      case .paged:
+        return PagedEditorBottomBar(
+          tag: widget.tag,
+          callback: confirmPendingChanges,
+        );
+      case .batch:
+        return const Placeholder();
+    }
   }
 
   // MARK: LEAVE
