@@ -26,16 +26,6 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
-  late final TagManager manager;
-
-  @override
-  void initState() {
-    super.initState();
-    final page = Get.find<PageGetxController>(tag: widget.tag);
-    final Images images = Get.find();
-    manager = Get.put(TagManager()..init(images[page.i].service));
-  }
-
   // MARK: BUILD
 
   @override
@@ -70,18 +60,20 @@ class _EditorState extends State<Editor> {
 
   Future<void> onLeave(bool didPop, Object? result) async {
     if (didPop) return;
-    final shouldLeave = await confirmPendingChanges();
+    final shouldLeave = await confirmPendingChanges(widget.tag);
     if (shouldLeave && mounted) {
       Navigator.of(context).pop();
     }
   }
 
-  Future<bool> confirmPendingChanges() async {
+  Future<bool> confirmPendingChanges(String tag) async {
+    final TagManager manager = Get.find();
+
     final message = manager.summarize();
     if (message == 'No changes') return true;
 
     final page = Get.find<PageGetxController>(tag: widget.tag);
-    final result = await showPopDialog(context, message, page.i);
+    final result = await showPopDialog(context, message, page.i, tag);
 
     switch (result) {
       case .save:
@@ -99,9 +91,11 @@ class _EditorState extends State<Editor> {
     BuildContext context,
     String message,
     int index,
+    String tag,
   ) {
     bool isLoading = false;
     final Images images = Get.find();
+    final TagManager manager = Get.find();
 
     return showDialog<Action>(
       context: context,
@@ -143,7 +137,7 @@ class _EditorState extends State<Editor> {
 
 class PagedEditorBottomActions extends StatelessWidget {
   final String tag;
-  final Future<bool> Function() callback;
+  final Future<bool> Function(String tag) callback;
 
   const PagedEditorBottomActions({
     super.key,
@@ -159,7 +153,7 @@ class PagedEditorBottomActions extends StatelessWidget {
     if (target < 0) return;
     if (target >= images.length) return;
 
-    final shouldSwitch = await callback();
+    final shouldSwitch = await callback(tag);
     if (!shouldSwitch) return;
 
     page.navigateToPage(target);
@@ -185,4 +179,3 @@ class PagedEditorBottomActions extends StatelessWidget {
     ]);
   }
 }
-
