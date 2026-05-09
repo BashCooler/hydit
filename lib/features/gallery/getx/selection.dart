@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 
@@ -16,6 +18,7 @@ class SelectionController extends GetxController {
       case false:
         selectedIds.add(id);
     }
+    log(selectedIds.toString());
   }
 
   void clear() => selectedIds.clear();
@@ -38,8 +41,13 @@ class SelectionController extends GetxController {
         ? index2
         : index1;
 
+    final lastId = selectedIds.last;
+    selectedIds.remove(lastId);
+
     for (int i = begin; i < end; i++) {
       selectedIds.add(images[i].id);
     }
+
+    selectedIds.add(lastId);
   }
 }
