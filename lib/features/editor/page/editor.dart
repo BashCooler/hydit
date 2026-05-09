@@ -2,8 +2,11 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
+import 'package:hydrus_flutter/core/ui/common.dart';
+import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
+import 'package:hydrus_flutter/features/editor/page/preview.dart';
 
 import '../getx/tags.dart';
 import '../widget/app_bar.dart';
@@ -28,8 +31,6 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
-  // MARK: BUILD
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -40,7 +41,11 @@ class _EditorState extends State<Editor> {
         body: n.Column([
           TabBuilder(tag: widget.tag),
           const Divider(height: 1),
-          buildBottomBar(),
+          EditorBottomBar(
+            tag: widget.tag,
+            mode: widget.mode,
+            callback: confirmPendingChanges,
+          ),
         ])
           ..safe,
         floatingActionButtonLocation: .miniEndFloat,
@@ -52,31 +57,48 @@ class _EditorState extends State<Editor> {
     );
   }
 
+  // MARK: BUILDERS
+
   PreferredSizeWidget buildAppBar() {
     switch (widget.mode) {
       case .paged:
-        return PagedEditorAppBar(
+        final Images images = Get.find();
+        final PageGetxController page = Get.find(tag: widget.tag);
+        return EditorAppBar(
           toolbarHeight: 100,
           tag: widget.tag,
+          onTap: () => openPreview(page.i),
+          mode: .paged,
+          child: Obx(() {
+            return HeroMode(
+              enabled: page.enabled(page.i),
+              child: LinearHero(
+                tag: images[page.i].id,
+                child: Thumbnail(images[page.i]),
+              ),
+            );
+          }),
         );
       case .batch:
-        return AppBar();
-    }
-  }
-
-  Widget buildBottomBar() {
-    switch (widget.mode) {
-      case .paged:
-        return PagedEditorBottomBar(
+        return EditorAppBar(
+          toolbarHeight: 100,
+          mode: .batch,
           tag: widget.tag,
-          callback: confirmPendingChanges,
         );
-      case .batch:
-        return const Placeholder();
     }
   }
 
-  // MARK: LEAVE
+  // MARK: NAV
+
+  void openPreview(int index) {
+    final tag = 'Preview-${DateTime.now().microsecondsSinceEpoch}';
+    Get.to(() => Preview(index: index, tag: tag),
+      transition: .fadeIn,
+      curve: Curves.easeInCubic,
+      opaque: false,
+      binding: BindingsBuilder.put(() => PageGetxController(initial: index), tag: tag),
+    );
+  }
 
   Future<void> onLeave(bool didPop, Object? result) async {
     if (didPop) return;

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/features/editor/page/editor.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydrus_flutter/core/domain/di/images.dart';
@@ -9,14 +10,16 @@ import '../getx/tags.dart';
 import 'search_bar.dart';
 
 
-class PagedEditorBottomBar extends StatelessWidget {
+class EditorBottomBar extends StatelessWidget {
   final String tag;
   final Future<bool> Function(String tag) callback;
+  final Mode mode;
 
-  const PagedEditorBottomBar({
+  const EditorBottomBar({
     super.key,
     required this.tag,
     required this.callback,
+    required this.mode,
   });
 
   Future<void> navigateToPage(int target) async {
@@ -36,20 +39,24 @@ class PagedEditorBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PageGetxController page = Get.find(tag: tag);
-    return n.Row([
-      IconButton(
-        tooltip: 'Previous page',
-        icon: const Icon(Icons.keyboard_arrow_left),
-        onPressed: () => navigateToPage(page.i - 1),
-      ),
-      EditorTagSearchBar(tag: tag).niku
-        ..expanded,
-      IconButton(
-        tooltip: 'Next page',
-        icon: const Icon(Icons.keyboard_arrow_right),
-        onPressed: () => navigateToPage(page.i + 1),
-      ),
-    ]);
+    switch (mode) {
+      case .paged:
+        final PageGetxController page = Get.find(tag: tag);
+        return n.Row([
+          IconButton(
+            tooltip: 'Previous page',
+            icon: const Icon(Icons.keyboard_arrow_left),
+            onPressed: () => navigateToPage(page.i - 1),
+          ),
+          EditorTagSearchBar(tag: tag).niku..expanded,
+          IconButton(
+            tooltip: 'Next page',
+            icon: const Icon(Icons.keyboard_arrow_right),
+            onPressed: () => navigateToPage(page.i + 1),
+          ),
+        ]);
+      case .batch:
+        return EditorTagSearchBar(tag: tag);
+    }
   }
 }

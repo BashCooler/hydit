@@ -4,43 +4,31 @@ import 'package:niku/extra/extra.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:filesize/filesize.dart';
 
-import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
-import 'package:hydrus_flutter/features/editor/page/preview.dart';
-import 'package:hydrus_flutter/features/viewer/widget/views.dart';
 
 import '../getx/tags.dart';
 import '../page/editor.dart';
 
 
-class PagedEditorAppBar extends StatelessWidget implements PreferredSizeWidget {
+class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double toolbarHeight;
   final String tag;
+  final Widget? child;
+  final GestureTapCallback? onTap;
+  final Mode mode;
 
-  const PagedEditorAppBar({
+  const EditorAppBar({
     super.key,
     required this.toolbarHeight,
     required this.tag,
+    this.child,
+    this.onTap,
+    required this.mode,
   });
-
-  void openPreview(int index) {
-    final tag = 'Preview-${DateTime.now().microsecondsSinceEpoch}';
-    Get.to(() => Preview(index: index, tag: tag),
-      transition: .fadeIn,
-      curve: Curves.easeInCubic,
-      opaque: false,
-      binding: BindingsBuilder.put(
-        () => PageGetxController(initial: index),
-        tag: tag,
-      ));
-  }
 
   @override
   Widget build(BuildContext context) {
-    final Images images = Get.find();
-    final PageGetxController page = Get.find(tag: tag);
-
     return AppBar(
       elevation: 2,
       scrolledUnderElevation: 0,
@@ -50,20 +38,13 @@ class PagedEditorAppBar extends StatelessWidget implements PreferredSizeWidget {
         crossAxisAlignment: .center,
         mainAxisAlignment: .spaceBetween,
         children: [
-          Info(tag: tag),
+          Info(tag: tag, mode: mode),
           GestureDetector(
-            onTap: () => openPreview(page.i),
+            onTap: onTap,
             child: SizedBox(
               width: 100,
               height: 100,
-              child: Obx(() {
-                return ObxHero(
-                  index: page.i,
-                  heroTag: images[page.i].id,
-                  getTag: tag,
-                  child: Thumbnail(images[page.i]),
-                );
-              }),
+              child: child,
             ),
           ),
         ],
@@ -78,8 +59,9 @@ class PagedEditorAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 class Info extends StatelessWidget {
   final String tag;
+  final Mode mode;
 
-  const Info({super.key, required this.tag});
+  const Info({super.key, required this.tag, required this.mode});
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +80,10 @@ class Info extends StatelessWidget {
             children: <Widget>[
               buildDiff(manager),
               buildService(context, manager),
-              buildMeta(context, tag),
+              switch (mode) {
+                Mode.paged => buildMeta(context, tag),
+                Mode.batch => const SizedBox.shrink(),
+              },
             ],
           );
         },
