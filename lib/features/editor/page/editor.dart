@@ -6,7 +6,7 @@ import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/domain/di/images.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
-import 'package:hydrus_flutter/features/editor/page/preview.dart';
+import 'package:hydrus_flutter/features/viewer/page/preview.dart';
 
 import '../getx/tags.dart';
 import '../widget/app_bar.dart';

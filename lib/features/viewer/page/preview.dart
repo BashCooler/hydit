@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:dismissible_page/dismissible_page.dart';
-import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 
-import 'package:hydrus_flutter/features/viewer/widget/views.dart';
+import '../getx/page.dart';
+import '../widget/views.dart';
 
 
 class Preview extends StatelessWidget {
