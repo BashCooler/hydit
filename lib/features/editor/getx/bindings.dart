@@ -53,14 +53,9 @@ class EditorBindings extends Bindings {
 
     switch (mode) {
       case .paged:
-        try {
-          Get.find<PageGetxController>();
-        } catch (e) {
-          // This controller doesn't belong to any PageView, it
-          // serves only to connect Editor with GridView
-          Get.put(PageGetxController(initial: index!, grid: gallery.grid), tag: tag);
-        }
+        final page = PageGetxController(initial: index!, grid: gallery.grid);
         final FileRepo files = Get.find();
+        Get.put(page, tag: tag);
         Get.put(TagManager()..init(files[index!]));
       case .batch:
         final SelectionController selection = Get.find();
