@@ -7,7 +7,7 @@ import 'package:hydrus_flutter/core/domain/entities.dart';
 
 
 class Thumbnail extends StatelessWidget {
-  final HydrusImage image;
+  final HydrusFile image;
 
   const Thumbnail(this.image, {super.key});
 
@@ -27,7 +27,7 @@ class Thumbnail extends StatelessWidget {
 
 
 class HighResImage extends StatelessWidget {
-  final HydrusImage image;
+  final HydrusFile image;
 
   const HighResImage({super.key, required this.image});
 

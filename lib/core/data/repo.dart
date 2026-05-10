@@ -23,7 +23,7 @@ class Repo {
     api.updateClient(key: key, uri: uri);
   }
 
-  Future<void> setMetadataFor(HydrusImage image) async {
+  Future<void> setMetadataFor(HydrusFile image) async {
     final response = await api.getFileMetadata(
       [image.id],
       includeServicesObject: false);

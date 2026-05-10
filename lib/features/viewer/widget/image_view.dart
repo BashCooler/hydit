@@ -2,7 +2,7 @@ import 'dart:math' hide log;
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/features/viewer/widget/views.dart';
@@ -18,7 +18,7 @@ class ViewImageX extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = Get.find<Images>()[index];
+    final image = Get.find<FileRepo>()[index];
     return _ZoomableImageView(
       key: ObjectKey(index),
       index: index,
@@ -31,7 +31,7 @@ class ViewImageX extends StatelessWidget {
 
 class _ZoomableImageView extends StatefulWidget {
   final int index;
-  final HydrusImage image;
+  final HydrusFile image;
   final String tag;
 
   const _ZoomableImageView({

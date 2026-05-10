@@ -4,7 +4,7 @@ import 'package:niku/extra/extra.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:filesize/filesize.dart';
 
-import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 
 import '../getx/tags.dart';
@@ -96,11 +96,11 @@ class Info extends StatelessWidget {
 extension Builders on Info
 {
   Widget buildMeta(BuildContext context, String tag) {
-    final Images images = Get.find();
+    final FileRepo files = Get.find();
     final PageGetxController page = Get.find(tag: tag);
-    final image = images[page.i];
+    final file = files[page.i];
 
-    return 'id: ${image.id} / ${filesize(image.size)} / ${image.res}'.n
+    return 'id: ${file.id} / ${filesize(file.size)} / ${file.res}'.n
       ..labelMedium
       ..maxLines = 2;
   }

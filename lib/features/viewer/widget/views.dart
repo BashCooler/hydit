@@ -10,7 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
-import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/viewer/getx/transform.dart';
 
 import '../getx/page.dart';
@@ -25,7 +25,8 @@ class ViewFile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final file = Get.find<Images>()[index];
+    final files = Get.find<FileRepo>();
+    final file = files[index];
 
     final content = switch (file.type) {
       'image' => ViewImageX(index, tag: tag),
@@ -71,7 +72,8 @@ class ViewImage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = Get.find<Images>()[index];
+    final files = Get.find<FileRepo>();
+    final image = files[index];
 
     final ticker = useSingleTickerProvider();
     final transform = useMemoized(() => TransformController(
@@ -119,7 +121,7 @@ class _ViewVideoState extends State<ViewVideo> {
     ..setVolume(0.0);
   late final controller = VideoController(player);
 
-  final Images images = Get.find();
+  final FileRepo files = Get.find();
   final repo = Get.find<Repo>();
   late final PageGetxController pageController;
 
@@ -133,7 +135,7 @@ class _ViewVideoState extends State<ViewVideo> {
   void initState() {
     super.initState();
     pageController = Get.find(tag: widget.tag);
-    final id = images[widget.index].id;
+    final id = files[widget.index].id;
     unawaited(
       player.open(
         Media(repo.buildUrl(id)),
@@ -183,7 +185,7 @@ class _ViewVideoState extends State<ViewVideo> {
 
   @override
   Widget build(BuildContext context) {
-    var video = images[widget.index];
+    var video = files[widget.index];
     return Center(
       child: ObxHero(
         index: widget.index,

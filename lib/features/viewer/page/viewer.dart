@@ -6,7 +6,7 @@ import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydrus_flutter/core/ui/common.dart';
-import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
 
@@ -30,7 +30,7 @@ class Viewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Images images = Get.find();
+    final FileRepo files = Get.find();
     final PageGetxController page = Get.find(tag: tag);
 
     return PopScope(
@@ -46,7 +46,7 @@ class Viewer extends StatelessWidget {
         extendBody: true,
         body: Obx(() {
           return TagSheet(
-            tags: images[page.i].all,
+            tags: files[page.i].all,
             tag: tag,
             child: Pages(tag: tag),
           );
@@ -67,7 +67,7 @@ class Pages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Images images = Get.find();
+    final FileRepo files = Get.find();
     final PageGetxController page = Get.find(tag: tag);
 
     return Listener(
@@ -78,7 +78,7 @@ class Pages extends StatelessWidget {
           onPageChanged: page.onPageChanged,
           physics: page.noScroll ? noScroll : scroll,
           controller: page.controller,
-          itemCount: images.length,
+          itemCount: files.length,
           preloadPagesCount: 3,
           itemBuilder: (_, index) {
             return DismissibleFile(index, tag: tag);
@@ -135,7 +135,7 @@ class BottomActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PageGetxController page = Get.find(tag: tag);
-    final Images images = Get.find();
+    final FileRepo files = Get.find();
 
     return BottomAppBar(
       color: Get.theme.scaffoldBackgroundColor.withAlpha(90),
@@ -153,7 +153,7 @@ class BottomActions extends StatelessWidget {
             icon: const Icon(Icons.keyboard_arrow_left),
           ),
           Obx(() {
-            return n.Button('${images[page.i].length} tags'.n)
+            return n.Button('${files[page.i].length} tags'.n)
               ..tooltip = 'Show tags'
               ..foregroundColor = Colors.white
               ..overlayColor = Colors.white.withAlpha(32)

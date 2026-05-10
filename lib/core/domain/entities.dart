@@ -15,7 +15,7 @@ library;
 import 'package:equatable/equatable.dart';
 
 
-class HydrusImage {
+class HydrusFile {
   final int id;
   double width = -1;
   double height = -1;
@@ -29,7 +29,7 @@ class HydrusImage {
   List<Tag> get all => service['all known tags'] ?? [];
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
 
-  HydrusImage(this.id);
+  HydrusFile(this.id);
 
   set mime(String value) {
     final m = value.split('/');

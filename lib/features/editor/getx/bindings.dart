@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
-import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
 
@@ -35,7 +35,7 @@ class EditorBindings extends Bindings {
       .batch => 0,
     };
 
-    final Images images = Get.find();
-    Get.put(TagManager()..init(images[index].service));
+    final FileRepo files = Get.find();
+    Get.put(TagManager()..init(files[index].service));
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
-import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 
 
 class SelectionController extends GetxController {
@@ -27,10 +27,10 @@ class SelectionController extends GetxController {
 
   void selectRange() {
     if (!rangeSelected) return;
-    final Images images = Get.find();
+    final FileRepo files = Get.find();
 
-    final index1 = images.indexWhere((e) => e.id == selectedIds.first);
-    final index2 = images.indexWhere((e) => e.id == selectedIds.last);
+    final index1 = files.indexWhere((e) => e.id == selectedIds.first);
+    final index2 = files.indexWhere((e) => e.id == selectedIds.last);
 
     if (index1 < 0 || index2 < 0) return;
 
@@ -45,7 +45,7 @@ class SelectionController extends GetxController {
     selectedIds.remove(lastId);
 
     for (int i = begin; i < end; i++) {
-      selectedIds.add(images[i].id);
+      selectedIds.add(files[i].id);
     }
 
     selectedIds.add(lastId);

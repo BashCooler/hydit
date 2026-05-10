@@ -4,7 +4,7 @@ import 'package:niku/namespace.dart' as n;
 
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
-import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 import 'package:hydrus_flutter/features/viewer/page/preview.dart';
 
@@ -62,7 +62,7 @@ class _EditorState extends State<Editor> {
   PreferredSizeWidget buildAppBar() {
     switch (widget.mode) {
       case .paged:
-        final Images images = Get.find();
+        final FileRepo files = Get.find();
         final PageGetxController page = Get.find(tag: widget.tag);
         return EditorAppBar(
           toolbarHeight: 100,
@@ -73,8 +73,8 @@ class _EditorState extends State<Editor> {
             return HeroMode(
               enabled: page.enabled(page.i),
               child: LinearHero(
-                tag: images[page.i].id,
-                child: Thumbnail(images[page.i]),
+                tag: files[page.i].id,
+                child: Thumbnail(files[page.i]),
               ),
             );
           }),
@@ -136,7 +136,7 @@ class _EditorState extends State<Editor> {
     String tag,
   ) {
     bool isLoading = false;
-    final Images images = Get.find();
+    final FileRepo files = Get.find();
     final TagManager manager = Get.find();
 
     return showDialog<Action>(
@@ -149,7 +149,7 @@ class _EditorState extends State<Editor> {
               n.Button('Save'.n)
                 ..onPressed = () async {
                   setState(() => isLoading = true);
-                  await manager.save(images[index]);
+                  await manager.save(files[index]);
                   if (context.mounted) nav.pop(Action.save);
                 },
               n.Button('Discard'.n)

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/features/editor/page/editor.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 
 import '../getx/tags.dart';
@@ -23,18 +23,18 @@ class EditorBottomBar extends StatelessWidget {
   });
 
   Future<void> navigateToPage(int target) async {
-    final Images images = Get.find();
+    final FileRepo files = Get.find();
     final TagManager manager = Get.find();
     final PageGetxController page = Get.find(tag: tag);
 
     if (target < 0) return;
-    if (target >= images.length) return;
+    if (target >= files.length) return;
 
     final shouldSwitch = await callback(tag);
     if (!shouldSwitch) return;
 
     page.navigateToPage(target);
-    manager.init(images[page.i].service);
+    manager.init(files[page.i].service);
   }
 
   @override

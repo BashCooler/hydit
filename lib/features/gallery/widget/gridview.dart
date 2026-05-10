@@ -9,7 +9,7 @@ import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
-import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
 import 'package:hydrus_flutter/features/viewer/getx/bindings.dart';
@@ -23,7 +23,7 @@ class ImageGridViewBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Images images = Get.find();
+    final FileRepo files = Get.find();
     final QueryController query = Get.find();
     final GridObserverController grid = Get.find();
     final SelectionController selection = Get.find();
@@ -63,7 +63,7 @@ class ImageGridViewBuilder extends StatelessWidget {
           ),
           physics: physics,
           controller: grid.controller,
-          itemCount: images.length,
+          itemCount: files.length,
           gridDelegate: delegate,
           itemBuilder: (_, index) => _TileBuilder(index),
         )),
@@ -79,7 +79,7 @@ class _TileBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = Get.find<Images>().images[index];
+    final image = Get.find<FileRepo>().files[index];
 
     if (image.width != -1) {
       return Tile(index, image);
@@ -101,7 +101,7 @@ class _TileBuilder extends StatelessWidget {
 
 class Tile extends StatelessWidget {
   final int index;
-  final HydrusImage image;
+  final HydrusFile image;
 
   const Tile(this.index, this.image, {super.key});
 
@@ -180,7 +180,7 @@ class Tile extends StatelessWidget {
 
 
 class TileBadges extends StatelessWidget {
-  final HydrusImage image;
+  final HydrusFile image;
 
   const TileBadges(this.image, {super.key});
 

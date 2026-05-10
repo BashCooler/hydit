@@ -176,7 +176,7 @@ extension Save on TagManager {
   }
 
   /// Send request to Hydrus to add/remove tags
-  Future<void> save(HydrusImage image) async {
+  Future<void> save(HydrusFile image) async {
     final toAdd = removeEmpty(_tagsToAdd);
     final toRem = removeEmpty(_tagsToDelete);
 

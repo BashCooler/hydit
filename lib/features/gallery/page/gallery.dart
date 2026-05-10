@@ -6,7 +6,7 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/ui/common.dart';
-import 'package:hydrus_flutter/core/domain/di/images.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
 import 'package:hydrus_flutter/features/settings/ui/page/settings.dart';
@@ -33,7 +33,7 @@ class _GalleryState extends State<Gallery> {
     final scroll = ScrollController();
     Get
       ..find<Repo>().updateClient()
-      ..put(Images())
+      ..put(FileRepo())
       ..put(QueryController())
       ..put(SelectionController())
       ..put(GridObserverController(controller: scroll))
