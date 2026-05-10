@@ -233,10 +233,10 @@ extension Save on TagManager {
       await repo.removeTags(_ids.toList(), service, tags);
     }
 
-    final FileRepo fileRepo = Get.find();
+    final FileRepo files = Get.find();
 
     for (final id in _ids) {
-      await repo.setMetadataFor(fileRepo.byId(id));
+      await repo.setMetadataFor(files.byId(id));
     }
   }
 }
@@ -272,5 +272,14 @@ extension Sorting on TagManager {
         tags.sort((a, b) => b.raw.compareTo(a.raw));
     }
     update();
+  }
+
+  List<HydrusFile> slice() {
+    final FileRepo files = Get.find();
+    return _ids
+        .take(4)
+        .map((id) => files.byId(id))
+        .whereType<HydrusFile>()
+        .toList();
   }
 }

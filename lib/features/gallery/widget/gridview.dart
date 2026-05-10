@@ -17,8 +17,8 @@ import '../getx/gallery.dart';
 import '../getx/selection.dart';
 
 
-class ImageGridViewBuilder extends StatelessWidget {
-  const ImageGridViewBuilder({super.key});
+class GalleryGridView extends StatelessWidget {
+  const GalleryGridView({super.key});
 
   @override
   Widget build(BuildContext context) {

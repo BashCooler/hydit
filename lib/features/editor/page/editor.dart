@@ -12,6 +12,7 @@ import '../getx/tags.dart';
 import '../widget/app_bar.dart';
 import '../widget/bottom_bar.dart';
 import '../widget/tab_builder.dart';
+import '../widget/preview_grid.dart';
 
 const additions = Color(0xFF3fb950);
 const deletions = Color(0xFFf85149);
@@ -80,10 +81,17 @@ class _EditorState extends State<Editor> {
           }),
         );
       case .batch:
+        final TagManager manager = Get.find();
         return EditorAppBar(
           toolbarHeight: 100,
           mode: .batch,
           tag: widget.tag,
+          child: PreviewGrid(
+            manager: manager,
+            onTap: () {
+
+            },
+          ),
         );
     }
   }
