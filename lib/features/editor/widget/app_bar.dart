@@ -82,7 +82,7 @@ class Info extends StatelessWidget {
               buildService(context, manager),
               switch (mode) {
                 Mode.paged => buildMeta(context, tag),
-                Mode.batch => const SizedBox.shrink(),
+                Mode.batch => buildFileCount(manager),
               },
             ],
           );
@@ -105,6 +105,10 @@ extension Builders on Info
       ..maxLines = 2;
   }
 
+  Widget buildFileCount(TagManager manager) {
+    return 'Editing ${manager.fileCount} files'.n..labelMedium;
+  }
+
   Widget buildService(BuildContext context, TagManager manager) {
     return 'service: ${manager.service}'.n
       ..labelMedium
@@ -116,7 +120,7 @@ extension Builders on Info
     return Row(
       crossAxisAlignment: .center,
       children: [
-        '${manager.count} tags'.n
+        '${manager.tagCount} tags'.n
           ..fontSize = 16,
         const VerticalDivider(width: 8),
         buildAdditions(manager),

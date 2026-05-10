@@ -31,7 +31,10 @@ class TagManager extends GetxController {
   }
 
   /// Selected service's tags length
-  int get count => tags.length;
+  int get tagCount => tags.length;
+
+  /// Number of current files to edit
+  int get fileCount => _ids.length;
 
   /// Selected service's tags to add length
   int get additionsCount => _tagsToAdd[service]?.length ?? 0;

@@ -114,8 +114,7 @@ class _EditorState extends State<Editor> {
     final message = manager.summarize();
     if (message == 'No changes') return true;
 
-    final page = Get.find<PageGetxController>(tag: widget.tag);
-    final result = await showPopDialog(context, message, page.i, tag);
+    final result = await showPopDialog(context, message, tag);
 
     switch (result) {
       case .save:
@@ -129,12 +128,7 @@ class _EditorState extends State<Editor> {
 
   // MARK: DIALOG
 
-  Future<Action?> showPopDialog(
-    BuildContext context,
-    String message,
-    int index,
-    String tag,
-  ) {
+  Future<Action?> showPopDialog(BuildContext context, String message, String tag) {
     bool isLoading = false;
     final TagManager manager = Get.find();
 
