@@ -5,12 +5,12 @@ import 'package:smooth_sheets/smooth_sheets.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
-import 'package:hydrus_flutter/features/search/getx/query.dart';
-import 'package:hydrus_flutter/features/search/widget/search.dart';
-import 'package:hydrus_flutter/features/search/widget/suggests.dart';
+import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
+import 'package:hydrus_flutter/features/gallery/widget/tag_panel.dart';
 
-import '../getx/gallery.dart';
-import '../widget/tag_panel.dart';
+import '../getx/query.dart';
+import '../widget/search.dart';
+import '../widget/suggests.dart';
 
 
 void showSearchSheet(BuildContext context) {

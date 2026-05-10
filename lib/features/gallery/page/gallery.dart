@@ -6,9 +6,9 @@ import 'package:niku/namespace.dart' as n;
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
+import 'package:hydrus_flutter/features/search/page/search_sheet.dart';
 import 'package:hydrus_flutter/features/settings/ui/page/settings.dart';
 
-import 'search_sheet.dart';
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
 import '../widget/gridview.dart';
