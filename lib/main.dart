@@ -1,15 +1,16 @@
-import 'package:flutter_portal/flutter_portal.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hive_ce_flutter/adapters.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:hive_ce_flutter/adapters.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 
+import 'core/domain/file_repo.dart';
 import 'utils/theme.dart';
-import 'core/data/api.dart';
 import 'core/data/repo.dart';
 import 'features/gallery/page/gallery.dart';
+import 'features/gallery/getx/bindings.dart';
 
 
 void main() async {
@@ -20,7 +21,9 @@ void main() async {
 
   await enableEdgeToEdge();
 
-  Get.put(Repo(Client()));
+  Get
+    ..put(Repo())
+    ..put(FileRepo());
 
   timeDilation = 1.0;
   runApp(const App());
@@ -44,12 +47,14 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
     return Portal(
       child: GetMaterialApp(
         title: 'Flutter App',
         debugShowCheckedModeBanner: false,
         theme: darkTheme(),
         home: Gallery(),
+        initialBinding: GalleryBindings(tag: tag, mode: .full),
       ),
     );
   }

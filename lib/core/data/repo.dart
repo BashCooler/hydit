@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:hive_ce/hive.dart';
 import 'package:deep_pick/deep_pick.dart';
 
@@ -13,7 +14,9 @@ class Repo {
   final Client api;
   final List<String> services = [];
 
-  Repo(this.api);
+  Repo() : api = Client() {
+    updateClient();
+  }
 
   void updateClient() {
     final box = Hive.box('settings');

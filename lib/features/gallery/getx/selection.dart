@@ -1,9 +1,13 @@
 import 'package:get/get.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
+import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
 
 
 class SelectionController extends GetxController {
   final ids = <int>{}.obs;
+  final GalleryController gallery;
+
+  SelectionController({required this.gallery});
 
   bool get rangeSelected => ids.length == 2;
 
@@ -18,7 +22,10 @@ class SelectionController extends GetxController {
     }
   }
 
-  void clear() => ids.clear();
+  void clear() {
+    ids.clear();
+    gallery..unlockActions()..showActions();
+  }
 
   bool isSelected(int id) => ids.contains(id);
 

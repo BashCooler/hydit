@@ -2,12 +2,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:niku/namespace.dart' as n;
-import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
 import 'package:hydrus_flutter/features/settings/ui/page/settings.dart';
 
@@ -17,28 +14,8 @@ import '../getx/selection.dart';
 import '../widget/gridview.dart';
 
 
-class Gallery extends StatefulWidget {
+class Gallery extends StatelessWidget {
   const Gallery({super.key});
-
-  @override
-  State<Gallery> createState() => _GalleryState();
-}
-
-class _GalleryState extends State<Gallery> {
-  late final GridObserverController grid;
-
-  @override
-  void initState() {
-    super.initState();
-    final scroll = ScrollController();
-    Get
-      ..find<Repo>().updateClient()
-      ..put(FileRepo())
-      ..put(QueryController())
-      ..put(SelectionController())
-      ..put(GridObserverController(controller: scroll))
-      ..put(GalleryController(scroll: scroll));
-  }
 
   @override
   Widget build(BuildContext context) {
