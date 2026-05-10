@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
+import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
 import 'package:hydrus_flutter/features/gallery/getx/selection.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 
@@ -11,12 +12,22 @@ import '../page/editor.dart';
 import 'tags.dart';
 
 
-Future<dynamic>? toEditor(String tag, Mode mode, int index) {
-  return Get.to(() => Editor(tag: tag, mode: mode),
+Future<dynamic>? toEditorPaged(String tag, int index, GalleryController gallery) {
+  return Get.to(() => Editor(tag: tag, mode: .paged),
     transition: .leftToRight,
     duration: AppTheme.duration,
     curve: Curves.easeInOutCubic,
-    binding: EditorBindings(tag, mode, index),
+    binding: EditorBindings.paged(tag, index, gallery),
+  );
+}
+
+
+Future<dynamic>? toEditorBatch(String tag, List<int> ids, GalleryController gallery) {
+  return Get.to(() => Editor(tag: tag, mode: .batch),
+    transition: .leftToRight,
+    duration: AppTheme.duration,
+    curve: Curves.easeInOutCubic,
+    binding: EditorBindings.batch(tag, ids, gallery),
   );
 }
 
@@ -24,9 +35,17 @@ Future<dynamic>? toEditor(String tag, Mode mode, int index) {
 class EditorBindings extends Bindings {
   final String tag;
   final Mode mode;
-  final int index;
+  final int? index;
+  final List<int>? ids;
+  final GalleryController gallery;
 
-  EditorBindings(this.tag, this.mode, this.index);
+  EditorBindings.paged(this.tag, this.index, this.gallery)
+      : mode = .paged,
+        ids = null;
+
+  EditorBindings.batch(this.tag, this.ids, this.gallery)
+      : mode = .batch,
+        index = null;
 
   @override
   void dependencies() {
@@ -39,10 +58,10 @@ class EditorBindings extends Bindings {
         } catch (e) {
           // This controller doesn't belong to any PageView, it
           // serves only to connect Editor with GridView
-          Get.put(PageGetxController(initial: index), tag: tag);
+          Get.put(PageGetxController(initial: index!, grid: gallery.grid), tag: tag);
         }
         final FileRepo files = Get.find();
-        Get.put(TagManager()..init(files[index]));
+        Get.put(TagManager()..init(files[index!]));
       case .batch:
         final SelectionController selection = Get.find();
         Get.put(TagManager()..initBatch(selection.ids.toList()));

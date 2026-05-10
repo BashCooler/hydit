@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:scrollview_observer/scrollview_observer.dart';
 
 
 class GalleryController extends GetxController {
@@ -8,10 +9,11 @@ class GalleryController extends GetxController {
   final refreshing = false.obs;
   final _badgesVisible = true.obs;
 
-  final ScrollController scroll;
+  final GridObserverController grid;
 
-  GalleryController({required this.scroll});
+  GalleryController({required this.grid});
 
+  ScrollController get scroll => grid.controller!;
   bool get actionsVisible => _actionsVisible.value;
   bool get badgesVisible => _badgesVisible.value;
 

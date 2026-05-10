@@ -5,6 +5,7 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 
 
 class PageGetxController extends GetxController {
+  final RxInt index;
   final _pinch = false.obs;
   final _pointers = RxSet<int>();
   late final Worker _pointersWorker;
@@ -12,22 +13,21 @@ class PageGetxController extends GetxController {
   final zoom = false.obs;
   final _blockDismiss = false.obs;
 
+  final GridObserverController? grid;
+  final PreloadPageController controller;
+
+  PageGetxController({required int initial, this.grid})
+    : index = initial.obs,
+      controller = PreloadPageController(initialPage: initial);
+
   bool get noScroll => _pinch.value || zoom.value;
   bool get blockDismiss => _blockDismiss.value || zoom.value;
   set blockDismiss(bool block) => _blockDismiss.value = block;
 
-  final PreloadPageController controller;
-  final observerController = Get.find<GridObserverController>();
-
-  final RxInt index;
-
   PreloadPageController get $ => controller;
   int get i => index.value;
-  bool enabled(int index) => index == i;
 
-  PageGetxController({required int initial})
-    : index = initial.obs,
-      controller = PreloadPageController(initialPage: initial);
+  bool enabled(int index) => index == i;
 
   @override
   void onInit() {
@@ -79,6 +79,6 @@ class PageGetxController extends GetxController {
   /// If [SliverGridDelegateWithFixedCrossAxisCount.crossAxisCount] changed
   /// in settings the `-2` offset becomes irrelevant
   void jumpToPageInBackground(int page) {
-    observerController.jumpTo(index: page - 2 > 0 ? page - 2 : 0);
+    grid?.jumpTo(index: page - 2 > 0 ? page - 2 : 0);
   }
 }

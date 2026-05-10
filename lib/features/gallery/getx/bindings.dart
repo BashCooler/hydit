@@ -19,8 +19,9 @@ class GalleryBindings extends Bindings {
   @override
   void dependencies() {
     final scroll = ScrollController();
-    final gallery = Get.put(GalleryController(scroll: scroll));
-    Get.put(GridObserverController(controller: scroll));
+    final grid = GridObserverController(controller: scroll);
+
+    final gallery = Get.put(GalleryController(grid: grid));
 
     if (mode == .preview) return;
 

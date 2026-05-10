@@ -115,8 +115,9 @@ class SelectActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SelectionController selection = Get.find();
     final FileRepo files = Get.find();
+    final SelectionController selection = Get.find();
+    final GalleryController gallery = Get.find();
 
     return BottomAppBar(
       color: Get.theme.scaffoldBackgroundColor.withAlpha(90),
@@ -141,10 +142,10 @@ class SelectActions extends StatelessWidget {
                 case 1:
                   final id = selection.ids.first;
                   final index = files.indexWhere((f) => f.id == id);
-                  await toEditor(tag, .paged, index);
+                  await toEditorPaged(tag, index, gallery);
                   selection.clear();
                 case _:
-                  await toEditor(tag, .batch, 0);
+                  await toEditorBatch(tag, selection.ids.toList(), gallery);
                   selection.clear();
               }
             },

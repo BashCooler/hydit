@@ -19,7 +19,7 @@ void toViewer(int index) {
     transition: .fadeIn,
     curve: Curves.easeInCubic,
     opaque: false,
-    binding: ViewerBindings(index: index, tag: tag),
+    binding: ViewerBindings(index: index, tag: tag, gallery: gallery),
   );
 }
 
@@ -27,15 +27,18 @@ void toViewer(int index) {
 class ViewerBindings implements Bindings {
   final int index;
   final String tag;
+  final GalleryController gallery;
 
   const ViewerBindings({
     required this.index,
     required this.tag,
+    required this.gallery,
   });
 
   @override
   void dependencies() {
-    Get.put(PageGetxController(initial: index), tag: tag);
+    final page = PageGetxController(initial: index, grid: gallery.grid);
+    Get.put(page, tag: tag);
     Get.put(SnappingSheetController(), tag: tag);
   }
 }

@@ -24,7 +24,6 @@ class GalleryGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     final FileRepo files = Get.find();
     final QueryController query = Get.find();
-    final GridObserverController grid = Get.find();
     final SelectionController selection = Get.find();
     final GalleryController gallery = Get.find();
 
@@ -38,7 +37,7 @@ class GalleryGridView extends StatelessWidget {
     );
 
     return GridViewObserver(
-      controller: grid,
+      controller: gallery.grid,
       child: ExpressiveRefreshIndicator(
         displacement: 100.0,
         notificationPredicate: (_) => !selection.on,
@@ -61,7 +60,7 @@ class GalleryGridView extends StatelessWidget {
             bottom: 5,
           ),
           physics: physics,
-          controller: grid.controller,
+          controller: gallery.grid.controller,
           itemCount: files.length,
           gridDelegate: delegate,
           itemBuilder: (_, index) => _TileBuilder(index),
