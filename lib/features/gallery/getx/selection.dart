@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
 

@@ -7,7 +7,6 @@ import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
 
 import '../getx/page.dart';
@@ -23,8 +22,8 @@ class Viewer extends StatelessWidget {
 
   void showSearchBar(bool didPop, dynamic result) async {
     Future.delayed(Duration(milliseconds: 250), () {
-      Get.find<QueryController>().badgeVisible.value = true;
-      Get.find<GalleryController>().show();
+      final GalleryController gallery = Get.find();
+      gallery..showActions()..showBadges();
     });
   }
 

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hydrus_flutter/features/viewer/getx/bindings.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -50,7 +51,7 @@ class _GalleryState extends State<Gallery> {
       onPopInvokedWithResult: (didPop, result) {
         if (selection.on) {
           selection.clear();
-          gallery..unlock()..show();
+          gallery..unlockActions()..showActions();
           return;
         }
 

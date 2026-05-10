@@ -6,12 +6,14 @@ class GalleryController extends GetxController {
   bool _actionsLocked = false;
   final _actionsVisible = true.obs;
   final refreshing = false.obs;
+  final _badgesVisible = true.obs;
 
   final ScrollController scroll;
 
   GalleryController({required this.scroll});
 
   bool get actionsVisible => _actionsVisible.value;
+  bool get badgesVisible => _badgesVisible.value;
 
   @override
   void onInit() {
@@ -23,16 +25,26 @@ class GalleryController extends GetxController {
     final direction = scroll.position.userScrollDirection;
     switch (direction) {
       case .forward:
-        show();
+        showActions();
       case .reverse:
-        hide();
+        hideActions();
       case _:
         break;
     }
   }
 
-  void show() => _actionsLocked ? null : _actionsVisible.value = true;
-  void hide() => _actionsLocked ? null : _actionsVisible.value = false;
-  void lock() => _actionsLocked = true;
-  void unlock() => _actionsLocked = false;
+  void showActions() => _actionsLocked
+      ? null
+      : _actionsVisible.value = true;
+
+  void hideActions() => _actionsLocked
+      ? null
+      : _actionsVisible.value = false;
+
+  void lockActions() => _actionsLocked = true;
+
+  void unlockActions() => _actionsLocked = false;
+
+  void showBadges() => _badgesVisible.value = true;
+  void hideBadges() => _badgesVisible.value = false;
 }

@@ -11,7 +11,6 @@ import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
-import 'package:hydrus_flutter/features/viewer/page/viewer.dart';
 import 'package:hydrus_flutter/features/viewer/getx/bindings.dart';
 
 import '../getx/gallery.dart';
@@ -49,7 +48,7 @@ class ImageGridViewBuilder extends StatelessWidget {
             case .done:
             case .canceled:
               gallery.refreshing.value = false;
-              gallery.show();
+              gallery.showActions();
             case _:
               gallery.refreshing.value = true;
           }
@@ -107,7 +106,6 @@ class Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QueryController query = Get.find();
     final SelectionController selection = Get.find();
     final GalleryController gallery = Get.find();
 
@@ -119,25 +117,17 @@ class Tile extends StatelessWidget {
           case true:
             selection.toggle(image.id);
             if (!selection.on) {
-              gallery..unlock()..show();
+              gallery..unlockActions()..showActions();
             }
           case false:
-            final tag = 'Viewer-${DateTime.now().microsecondsSinceEpoch}';
-            Get.find<GalleryController>().hide();
-            query.badgeVisible.value = false;
-            Get.to(() => Viewer(index, tag: tag),
-              transition: .fadeIn,
-              curve: Curves.easeInCubic,
-              opaque: false,
-              binding: ViewerBindings(index: index, tag: tag),
-            );
+            toViewer(index);
         }
       },
       onLongPress: () {
         if (gallery.refreshing.value) return;
         selection.toggle(image.id);
         if (selection.on) {
-          gallery..hide()..lock();
+          gallery..hideActions()..lockActions();
         }
       },
       child: Stack(
@@ -148,9 +138,8 @@ class Tile extends StatelessWidget {
             child: Thumbnail(image),
           ),
           Obx(() {
-            final visible = query.badgeVisible.value;
             return AnimatedOpacity(
-              opacity: visible ? 1 : 0,
+              opacity: gallery.badgesVisible ? 1 : 0,
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeInQuint,
               child: TileBadges(image),

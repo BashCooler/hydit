@@ -14,7 +14,6 @@ class QueryController extends GetxController {
   final _tags = <Tag>[].obs;
   final isLoading = false.obs;
   final _suggestVisible = false.obs;
-  final badgeVisible = true.obs;
 
   List<Tag> get tags => _tags;
   String get text => textController.text;
