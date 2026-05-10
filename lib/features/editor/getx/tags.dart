@@ -9,6 +9,7 @@ const readOnlyServices = ['all known tags', 'public tag repository'];
 class TagManager extends GetxController {
   final services = <String>[];
   final selectedService = ''.obs;
+  final _ids = <int>{};
   final sort = Sort.alphabeticalAsc.obs;
 
   final Map<String, List<Tag>> _tags = {};
@@ -103,17 +104,22 @@ class TagManager extends GetxController {
 
 
 extension Init on TagManager {
-  void init(Map<String, List<Tag>> servicesMap) {
+  void init(HydrusFile file) {
+    final service = file.service;
+    _ids.assign(file.id);
+
     clear();
     initializeServices();
-    addToServices(servicesMap);
+    addToServices(service);
     selectCurrentService();
     update();
   }
 
   void initBatch(List<int> ids) {
     clear();
+    _ids.assignAll(ids);
     initializeServices();
+
     final FileRepo fileRepo = Get.find();
 
     for (final id in ids) {
@@ -130,6 +136,7 @@ extension Init on TagManager {
     final all = Get.find<Repo>().services;
     services..clear()..addAll(all);
 
+    _ids.clear();
     _tags.clear();
     _tagsToAdd.clear();
     _tagsToDelete.clear();
@@ -203,27 +210,31 @@ extension Save on TagManager {
   }
 
   /// Send request to Hydrus to add/remove tags
-  Future<void> save(HydrusFile image) async {
+  Future<void> save() async {
     final toAdd = removeEmpty(_tagsToAdd);
     final toRem = removeEmpty(_tagsToDelete);
 
-    final repo = Get.find<Repo>();
+    final Repo repo = Get.find();
 
     for (final entry in toAdd.entries) {
       var service = entry.key;
       service = await repo.getServiceByName(service);
       final tags = entry.value.map((e) => e.raw).toList();
-      await repo.addTags(image.id, service, tags);
+      await repo.addTags(_ids.toList(), service, tags);
     }
 
     for (final entry in toRem.entries) {
       var service = entry.key;
       service = await repo.getServiceByName(service);
       final tags = entry.value.map((e) => e.raw).toList();
-      await repo.removeTags(image.id, service, tags);
+      await repo.removeTags(_ids.toList(), service, tags);
     }
 
-    await repo.setMetadataFor(image);
+    final FileRepo fileRepo = Get.find();
+
+    for (final id in _ids) {
+      await repo.setMetadataFor(fileRepo.byId(id));
+    }
   }
 }
 

@@ -34,7 +34,7 @@ class EditorBottomBar extends StatelessWidget {
     if (!shouldSwitch) return;
 
     page.navigateToPage(target);
-    manager.init(files[page.i].service);
+    manager.init(files[page.i]);
   }
 
   @override

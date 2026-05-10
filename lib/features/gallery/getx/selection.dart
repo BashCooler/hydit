@@ -18,7 +18,6 @@ class SelectionController extends GetxController {
       case false:
         ids.add(id);
     }
-    log(ids.toString());
   }
 
   void clear() => ids.clear();

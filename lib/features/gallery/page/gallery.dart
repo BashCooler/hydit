@@ -43,11 +43,14 @@ class _GalleryState extends State<Gallery> {
   @override
   Widget build(BuildContext context) {
     final SelectionController selection = Get.find();
+    final GalleryController gallery = Get.find();
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (selection.on) {
           selection.clear();
+          gallery..unlock()..show();
           return;
         }
 

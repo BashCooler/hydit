@@ -136,7 +136,6 @@ class _EditorState extends State<Editor> {
     String tag,
   ) {
     bool isLoading = false;
-    final FileRepo files = Get.find();
     final TagManager manager = Get.find();
 
     return showDialog<Action>(
@@ -149,7 +148,7 @@ class _EditorState extends State<Editor> {
               n.Button('Save'.n)
                 ..onPressed = () async {
                   setState(() => isLoading = true);
-                  await manager.save(files[index]);
+                  await manager.save();
                   if (context.mounted) nav.pop(Action.save);
                 },
               n.Button('Discard'.n)

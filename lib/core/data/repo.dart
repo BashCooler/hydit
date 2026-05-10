@@ -23,7 +23,8 @@ class Repo {
     api.updateClient(key: key, uri: uri);
   }
 
-  Future<void> setMetadataFor(HydrusFile image) async {
+  Future<void> setMetadataFor(HydrusFile? image) async {
+    if (image == null) return;
     final response = await api.getFileMetadata(
       [image.id],
       includeServicesObject: false);
@@ -42,12 +43,12 @@ class Repo {
     return decoded['service']['service_key'];
   }
 
-  Future<int> addTags(int id, String service, List<String> tags) async {
-    return await api.postAddTags(id, service, Action.addToLocalFileDomain, tags);
+  Future<int> addTags(List<int> ids, String service, List<String> tags) async {
+    return await api.postAddTags(ids, service, Action.addToLocalFileDomain, tags);
   }
 
-  Future<int> removeTags(int id, String service, List<String> tags) async {
-    return await api.postAddTags(id, service, Action.deleteFromLocalFileDomain, tags);
+  Future<int> removeTags(List<int> ids, String service, List<String> tags) async {
+    return await api.postAddTags(ids, service, Action.deleteFromLocalFileDomain, tags);
   }
 
   Future<void> updateServiceNames() async {

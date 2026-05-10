@@ -39,7 +39,7 @@ class EditorBindings extends Bindings {
     switch (mode) {
       case .paged:
         final FileRepo files = Get.find();
-        Get.put(TagManager()..init(files[index].service));
+        Get.put(TagManager()..init(files[index]));
       case .batch:
         final SelectionController selection = Get.find();
         Get.put(TagManager()..initBatch(selection.ids.toList()));
