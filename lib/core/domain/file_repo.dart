@@ -15,4 +15,8 @@ class FileRepo extends GetxController {
   int indexWhere(bool Function(HydrusFile) test, [int start = 0]) {
     return files.indexWhere(test, start);
   }
+
+  HydrusFile? byId(int id) {
+    return files.firstWhereOrNull((f) => f.id == id);
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
+import 'package:hydrus_flutter/features/gallery/getx/selection.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
@@ -35,7 +36,13 @@ class EditorBindings extends Bindings {
       .batch => 0,
     };
 
-    final FileRepo files = Get.find();
-    Get.put(TagManager()..init(files[index].service));
+    switch (mode) {
+      case .paged:
+        final FileRepo files = Get.find();
+        Get.put(TagManager()..init(files[index].service));
+      case .batch:
+        final SelectionController selection = Get.find();
+        Get.put(TagManager()..initBatch(selection.ids.toList()));
+    }
   }
 }

@@ -5,32 +5,32 @@ import 'package:hydrus_flutter/core/domain/file_repo.dart';
 
 
 class SelectionController extends GetxController {
-  final selectedIds = <int>{}.obs;
+  final ids = <int>{}.obs;
 
-  bool get rangeSelected => selectedIds.length == 2;
+  bool get rangeSelected => ids.length == 2;
 
-  bool get on => selectedIds.isNotEmpty;
+  bool get on => ids.isNotEmpty;
 
   void toggle(int id) {
-    switch (selectedIds.contains(id)) {
+    switch (ids.contains(id)) {
       case true:
-        selectedIds.remove(id);
+        ids.remove(id);
       case false:
-        selectedIds.add(id);
+        ids.add(id);
     }
-    log(selectedIds.toString());
+    log(ids.toString());
   }
 
-  void clear() => selectedIds.clear();
+  void clear() => ids.clear();
 
-  bool isSelected(int id) => selectedIds.contains(id);
+  bool isSelected(int id) => ids.contains(id);
 
   void selectRange() {
     if (!rangeSelected) return;
     final FileRepo files = Get.find();
 
-    final index1 = files.indexWhere((e) => e.id == selectedIds.first);
-    final index2 = files.indexWhere((e) => e.id == selectedIds.last);
+    final index1 = files.indexWhere((e) => e.id == ids.first);
+    final index2 = files.indexWhere((e) => e.id == ids.last);
 
     if (index1 < 0 || index2 < 0) return;
 
@@ -41,13 +41,13 @@ class SelectionController extends GetxController {
         ? index2
         : index1;
 
-    final lastId = selectedIds.last;
-    selectedIds.remove(lastId);
+    final lastId = ids.last;
+    ids.remove(lastId);
 
     for (int i = begin; i < end; i++) {
-      selectedIds.add(files[i].id);
+      ids.add(files[i].id);
     }
 
-    selectedIds.add(lastId);
+    ids.add(lastId);
   }
 }

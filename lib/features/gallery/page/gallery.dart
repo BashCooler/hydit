@@ -140,7 +140,7 @@ class SelectActions extends StatelessWidget {
       color: Get.theme.scaffoldBackgroundColor.withAlpha(90),
       child: n.Row([
         Obx(() {
-          return '${selection.selectedIds.length} selected'.n
+          return '${selection.ids.length} selected'.n
             ..expanded
             ..color = Colors.white
             ..fontSize = 16

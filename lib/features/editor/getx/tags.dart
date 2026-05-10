@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 
 const readOnlyServices = ['all known tags', 'public tag repository'];
 
@@ -103,35 +104,61 @@ class TagManager extends GetxController {
 
 extension Init on TagManager {
   void init(Map<String, List<Tag>> servicesMap) {
-    final all = Get.find<Repo>().services;
+    clear();
+    initializeServices();
+    addToServices(servicesMap);
+    selectCurrentService();
+    update();
+  }
 
-    services
-      ..clear()
-      ..addAll(all);
+  void initBatch(List<int> ids) {
+    clear();
+    initializeServices();
+    final FileRepo fileRepo = Get.find();
+
+    for (final id in ids) {
+      final servicesMap = fileRepo.byId(id)?.service;
+      if (servicesMap == null) return;
+      addToServices(servicesMap);
+    }
+
+    selectCurrentService();
+    update();
+  }
+
+  void clear() {
+    final all = Get.find<Repo>().services;
+    services..clear()..addAll(all);
+
     _tags.clear();
     _tagsToAdd.clear();
     _tagsToDelete.clear();
+  }
 
+  void addToServices(Map<String, List<Tag>> servicesMap) {
     for (final entry in servicesMap.entries) {
-      _tags[entry.key] = entry.value
-          .map((tag) => Tag(tag.raw, count: tag.count))
+      final tags = entry.value
+          .map((tag) => Tag(tag.raw))
           .toList();
-      _tagsToAdd[entry.key] = <Tag>[];
-      _tagsToDelete[entry.key] = <Tag>[];
+      _tags[entry.key] = {...?_tags[entry.key], ...tags}.toList();
     }
+  }
 
-    for (final service in all) {
+  void initializeServices() {
+    for (final service in services) {
       _tags.putIfAbsent(service, () => <Tag>[]);
       _tagsToAdd.putIfAbsent(service, () => <Tag>[]);
       _tagsToDelete.putIfAbsent(service, () => <Tag>[]);
     }
+  }
 
+  void selectCurrentService() {
     selectedService.value = selectedService.value != ''
         ? selectedService.value
         : services.first;
-    update();
   }
 }
+
 
 extension Save on TagManager {
   /// Removes entries with empty lists from map
