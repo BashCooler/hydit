@@ -140,6 +140,8 @@ class SelectActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SelectionController selection = Get.find();
+    final FileRepo files = Get.find();
+
     return BottomAppBar(
       color: Get.theme.scaffoldBackgroundColor.withAlpha(90),
       child: n.Row([
@@ -159,7 +161,14 @@ class SelectActions extends StatelessWidget {
             color: Colors.white,
             onPressed: () {
               final tag = 'Editor-${DateTime.now().microsecondsSinceEpoch}';
-              toEditor(tag, .batch);
+              switch (selection.ids.length) {
+                case 1:
+                  final id = selection.ids.first;
+                  final index = files.indexWhere((f) => f.id == id);
+                  toEditor(tag, .paged, index);
+                case _:
+                  toEditor(tag, .batch, 0);
+              }
             },
           ),
           Obx(() {

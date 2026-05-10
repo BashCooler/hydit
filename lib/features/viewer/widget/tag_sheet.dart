@@ -69,7 +69,7 @@ class TagSheet extends HookWidget {
               tags: tags,
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () => toEditor(tag, .paged),
+              onPressed: () => toEditor(tag, .paged, page.i),
               child: const Icon(Icons.edit_note),
             ).niku
               ..padding = .only(bottom: 18),
