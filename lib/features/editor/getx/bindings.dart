@@ -11,8 +11,8 @@ import '../page/editor.dart';
 import 'tags.dart';
 
 
-void toEditor(String tag, Mode mode, int index) {
-  Get.to(() => Editor(tag: tag, mode: mode),
+Future<dynamic>? toEditor(String tag, Mode mode, int index) {
+  return Get.to(() => Editor(tag: tag, mode: mode),
     transition: .leftToRight,
     duration: AppTheme.duration,
     curve: Curves.easeInOutCubic,

@@ -159,15 +159,17 @@ class SelectActions extends StatelessWidget {
             tooltip: 'Edit tags',
             icon: const Icon(Icons.edit),
             color: Colors.white,
-            onPressed: () {
+            onPressed: () async {
               final tag = 'Editor-${DateTime.now().microsecondsSinceEpoch}';
               switch (selection.ids.length) {
                 case 1:
                   final id = selection.ids.first;
                   final index = files.indexWhere((f) => f.id == id);
-                  toEditor(tag, .paged, index);
+                  await toEditor(tag, .paged, index);
+                  selection.clear();
                 case _:
-                  toEditor(tag, .batch, 0);
+                  await toEditor(tag, .batch, 0);
+                  selection.clear();
               }
             },
           ),
