@@ -8,12 +8,10 @@ import '../page/viewer.dart';
 import 'page.dart';
 
 
-void toViewer(int index) {
-  final GalleryController gallery = Get.find();
-
+void toViewer(int index, [GalleryController? gallery]) {
   final tag = 'Viewer-${DateTime.now().microsecondsSinceEpoch}';
 
-  gallery..hideActions()..hideBadges();
+  gallery?..hideActions()..hideBadges();
 
   Get.to(() => Viewer(index, tag: tag),
     transition: .fadeIn,
@@ -27,7 +25,7 @@ void toViewer(int index) {
 class ViewerBindings implements Bindings {
   final int index;
   final String tag;
-  final GalleryController gallery;
+  final GalleryController? gallery;
 
   const ViewerBindings({
     required this.index,
@@ -37,7 +35,7 @@ class ViewerBindings implements Bindings {
 
   @override
   void dependencies() {
-    final page = PageGetxController(initial: index, grid: gallery.grid);
+    final page = PageGetxController(initial: index, grid: gallery?.grid);
     Get.put(page, tag: tag);
     Get.put(SnappingSheetController(), tag: tag);
   }

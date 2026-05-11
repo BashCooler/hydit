@@ -13,11 +13,10 @@ import 'selection.dart';
 enum Mode { full, preview }
 
 
-Future<dynamic>? toGallery(
-    {Mode mode = Mode.full, required FileRepo fileRepo}) {
+Future<dynamic>? toGallery({Mode mode = Mode.full}) {
   final tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
   return Get.to(
-    () => Gallery(mode: mode, fileRepo: fileRepo),
+    () => Gallery(tag: tag, mode: mode),
     transition: .rightToLeft,
     duration: AppTheme.duration,
     curve: Curves.easeInOutCubic,
@@ -30,19 +29,17 @@ class GalleryBindings extends Bindings {
   final String tag;
   final Mode mode;
 
-  GalleryBindings({required this.tag, required this.mode});
+  GalleryBindings({required this.tag, this.mode = .full});
 
   @override
   void dependencies() {
-    final scroll = ScrollController();
-    final grid = GridObserverController(controller: scroll);
-
-    final gallery = Get.put(GalleryController(grid: grid));
-
-    if (mode == .preview) return;
+    final fileRepo = FileRepo();
+    final gallery = GalleryController();
 
     Get
-      ..put(QueryController())
-      ..put(SelectionController(gallery: gallery));
+      ..put(gallery)
+      ..put(fileRepo, tag: tag)
+      ..put(QueryController(fileRepo: fileRepo))
+      ..put(SelectionController(gallery: gallery, fileRepo: fileRepo));
   }
 }

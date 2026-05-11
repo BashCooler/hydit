@@ -11,7 +11,8 @@ class GalleryController extends GetxController {
 
   final GridObserverController grid;
 
-  GalleryController({required this.grid});
+  GalleryController()
+      : grid = GridObserverController(controller: ScrollController());
 
   ScrollController get scroll => grid.controller!;
   bool get actionsVisible => _actionsVisible.value;

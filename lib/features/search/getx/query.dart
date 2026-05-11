@@ -16,6 +16,10 @@ class QueryController extends GetxController {
   final isLoading = false.obs;
   final _suggestVisible = false.obs;
 
+  final FileRepo? fileRepo;
+
+  QueryController({this.fileRepo});
+
   List<Tag> get tags => _tags;
   String get text => textController.text;
   TextEditingController get $ => textController;
@@ -86,14 +90,13 @@ class QueryController extends GetxController {
     final GalleryController gallery = Get.find();
     gallery.refreshing.value = true;
 
-    final FileRepo files = Get.find();
     List<int> ids = [];
 
     try {
       ids = await repo.api.getSearchFiles(_tags.map((t) => t.raw).toList());
       await repo.updateServiceNames();
       var list = ids.map((id) => HydrusFile(id)).toList();
-      files.assignAll(list);
+      fileRepo!.assignAll(list);
     } catch (e) {
       handleException(e);
       return;

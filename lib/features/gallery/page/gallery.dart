@@ -16,10 +16,10 @@ import '../widget/gridview.dart';
 
 
 class Gallery extends StatelessWidget {
+  final String tag;
   final Mode mode;
-  final FileRepo fileRepo;
 
-  const Gallery({super.key, this.mode = .full, required this.fileRepo});
+  const Gallery({super.key, required this.tag, this.mode = .full});
 
   @override
   Widget build(BuildContext context) {
@@ -69,12 +69,12 @@ class Gallery extends StatelessWidget {
           body: Stack(
             alignment: .bottomRight,
             children: [
-              GalleryGridView(fileRepo: fileRepo),
+              GalleryGridView(tag: tag),
               const FloatingActions(),
             ],
           ),
           bottomNavigationBar: selection.on
-              ? const SelectActions()
+              ? SelectActions(tag: tag)
               : null,
         );
       }),
@@ -119,11 +119,13 @@ class FloatingActions extends StatelessWidget {
 
 
 class SelectActions extends StatelessWidget {
-  const SelectActions({super.key});
+  final String tag;
+
+  const SelectActions({super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
-    final FileRepo files = Get.find();
+    final FileRepo files = Get.find(tag: tag);
     final SelectionController selection = Get.find();
     final GalleryController gallery = Get.find();
 

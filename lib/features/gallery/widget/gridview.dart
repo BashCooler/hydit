@@ -18,15 +18,17 @@ import '../getx/selection.dart';
 
 
 class GalleryGridView extends StatelessWidget {
-  final FileRepo fileRepo;
+  final String tag;
 
-  const GalleryGridView({super.key, required this.fileRepo});
+  const GalleryGridView({super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
     final QueryController query = Get.find();
     final SelectionController selection = Get.find();
     final GalleryController gallery = Get.find();
+
+    final FileRepo fileRepo = Get.find(tag: tag);
 
     const physics = BouncingScrollPhysics(
         parent: AlwaysScrollableScrollPhysics());
@@ -121,7 +123,7 @@ class Tile extends StatelessWidget {
               gallery..unlockActions()..showActions();
             }
           case false:
-            toViewer(index);
+            toViewer(index, gallery);
         }
       },
       onLongPress: () {

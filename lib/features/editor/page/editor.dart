@@ -93,7 +93,7 @@ class _EditorState extends State<Editor> {
           child: PreviewGrid(
             manager: manager,
             onTap: () {
-              toGallery(mode: .preview, fileRepo: previewFileRepo);
+              toGallery(mode: .preview);
             },
           ),
         );
