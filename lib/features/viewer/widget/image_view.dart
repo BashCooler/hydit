@@ -18,7 +18,8 @@ class ViewImageX extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = Get.find<FileRepo>()[index];
+    final FileRepo files = Get.find(tag: tag);
+    final image = files[index];
     return _ZoomableImageView(
       key: ObjectKey(index),
       index: index,

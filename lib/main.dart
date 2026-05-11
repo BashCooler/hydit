@@ -54,6 +54,8 @@ class App extends StatelessWidget {
         getPages: [
           GetPage(
             name: '/',
+            transition: .rightToLeft,
+            curve: Curves.easeInOutCubic,
             page: () => Gallery(tag: tag),
             binding: GalleryBindings(tag: tag),
           ),

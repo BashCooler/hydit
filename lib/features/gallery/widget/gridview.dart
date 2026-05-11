@@ -84,14 +84,14 @@ class _TileBuilder extends StatelessWidget {
     final file = files[index];
 
     if (file.width != -1) {
-      return Tile(index, file);
+      return Tile(index, files);
     }
 
     return FutureBuilder(
       future: Get.find<Repo>().setMetadataFor(file),
       builder: (_, snapshot) {
         if (snapshot.connectionState == .done) {
-          return Tile(index, file);
+          return Tile(index, files);
         } else {
           return const ColoredBox(color: Colors.white10);
         }
@@ -102,33 +102,35 @@ class _TileBuilder extends StatelessWidget {
 
 
 class Tile extends StatelessWidget {
+  final FileRepo files;
   final int index;
-  final HydrusFile image;
 
-  const Tile(this.index, this.image, {super.key});
+  const Tile(this.index, this.files, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    final file = files[index];
+
     final SelectionController selection = Get.find();
     final GalleryController gallery = Get.find();
 
     return GestureDetector(
-      key: ValueKey(image.id),
+      key: ValueKey(file.id),
       onTap: () {
         if (gallery.refreshing.value) return;
         switch (selection.on) {
           case true:
-            selection.toggle(image.id);
+            selection.toggle(file.id);
             if (!selection.on) {
               gallery..unlockActions()..showActions();
             }
           case false:
-            toViewer(index, gallery);
+            toViewer(index, files, gallery);
         }
       },
       onLongPress: () {
         if (gallery.refreshing.value) return;
-        selection.toggle(image.id);
+        selection.toggle(file.id);
         if (selection.on) {
           gallery..hideActions()..lockActions();
         }
@@ -137,19 +139,19 @@ class Tile extends StatelessWidget {
         alignment: .bottomRight,
         children: [
           LinearHero(
-            tag: image.id,
-            child: Thumbnail(image),
+            tag: file.id,
+            child: Thumbnail(file),
           ),
           Obx(() {
             return AnimatedOpacity(
               opacity: gallery.badgesVisible ? 1 : 0,
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeInQuint,
-              child: TileBadges(image),
+              child: TileBadges(file),
             );
           }),
           Obx(() {
-            final selected = selection.isSelected(image.id);
+            final selected = selection.isSelected(file.id);
             return Container(
               decoration: BoxDecoration(
                 border: .all(

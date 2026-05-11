@@ -25,7 +25,7 @@ class ViewFile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final files = Get.find<FileRepo>();
+    final FileRepo files = Get.find(tag: tag);
     final file = files[index];
 
     final content = switch (file.type) {

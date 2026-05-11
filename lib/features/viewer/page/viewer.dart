@@ -66,7 +66,7 @@ class Pages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FileRepo files = Get.find();
+    final FileRepo files = Get.find(tag: tag);
     final PageGetxController page = Get.find(tag: tag);
 
     return Listener(
@@ -134,7 +134,7 @@ class BottomActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PageGetxController page = Get.find(tag: tag);
-    final FileRepo files = Get.find();
+    final FileRepo files = Get.find(tag: tag);
 
     return BottomAppBar(
       color: Get.theme.scaffoldBackgroundColor.withAlpha(90),

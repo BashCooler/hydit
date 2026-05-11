@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
@@ -8,7 +9,7 @@ import '../page/viewer.dart';
 import 'page.dart';
 
 
-void toViewer(int index, [GalleryController? gallery]) {
+void toViewer(int index, FileRepo files, [GalleryController? gallery]) {
   final tag = 'Viewer-${DateTime.now().microsecondsSinceEpoch}';
 
   gallery?..hideActions()..hideBadges();
@@ -17,7 +18,7 @@ void toViewer(int index, [GalleryController? gallery]) {
     transition: .fadeIn,
     curve: Curves.easeInCubic,
     opaque: false,
-    binding: ViewerBindings(index: index, tag: tag, gallery: gallery),
+    binding: ViewerBindings(index: index, tag: tag, files: files, gallery: gallery),
   );
 }
 
@@ -26,17 +27,24 @@ class ViewerBindings implements Bindings {
   final int index;
   final String tag;
   final GalleryController? gallery;
+  final FileRepo files;
 
   const ViewerBindings({
     required this.index,
     required this.tag,
     required this.gallery,
+    required this.files,
   });
 
   @override
   void dependencies() {
     final page = PageGetxController(initial: index, grid: gallery?.grid);
-    Get.put(page, tag: tag);
-    Get.put(SnappingSheetController(), tag: tag);
+    final sheet = SnappingSheetController();
+    final fileRepo = FileRepo.copy(files);
+
+    Get
+      ..put(fileRepo, tag: tag)
+      ..put(page, tag: tag)
+      ..put(sheet, tag: tag);
   }
 }

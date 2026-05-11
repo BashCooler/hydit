@@ -5,7 +5,7 @@ import 'package:hydrus_flutter/core/domain/entities.dart';
 class FileRepo extends GetxController {
   final RxList<HydrusFile> _files;
 
-  /// Initialize empty [FileRepo]
+  /// Create empty [FileRepo]
   FileRepo() : _files = <HydrusFile>[].obs;
 
   /// Takes files from [fileRepo] with specified [ids] and
@@ -15,6 +15,12 @@ class FileRepo extends GetxController {
   /// the original and will impact the original [FileRepo].
   FileRepo.pickFrom(FileRepo fileRepo, List<int> ids)
     : _files = fileRepo.byIds(ids).obs;
+
+  /// Create file repo with the same files as given [fileRepo].
+  ///
+  /// The copy and the original [FileRepo] share the same list, so
+  /// all the changes in the copy will affect the original.
+  FileRepo.copy(FileRepo fileRepo) : _files = fileRepo._files;
 
   int get length => _files.length;
 
