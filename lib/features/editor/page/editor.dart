@@ -83,6 +83,9 @@ class _EditorState extends State<Editor> {
         );
       case .batch:
         final TagManager manager = Get.find();
+        final FileRepo fileRepo = Get.find();
+        final previewFileRepo = FileRepo.pickFrom(fileRepo, manager.fileIds);
+
         return EditorAppBar(
           toolbarHeight: 100,
           mode: .batch,
@@ -90,7 +93,7 @@ class _EditorState extends State<Editor> {
           child: PreviewGrid(
             manager: manager,
             onTap: () {
-              toGallery(mode: .preview);
+              toGallery(mode: .preview, fileRepo: previewFileRepo);
             },
           ),
         );

@@ -22,6 +22,8 @@ class TagManager extends GetxController {
   /// Selected service's tags
   List<Tag> get tags => _tags[service] ?? [];
 
+  List<int> get fileIds => _ids.toList();
+
   /// Selected service's index
   int get index {
     if (services.isEmpty) return 0;

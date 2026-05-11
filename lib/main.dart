@@ -47,13 +47,14 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final FileRepo fileRepo = Get.find();
     final tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
     return Portal(
       child: GetMaterialApp(
         title: 'Flutter App',
         debugShowCheckedModeBanner: false,
         theme: darkTheme(),
-        home: Gallery(),
+        home: Gallery(fileRepo: fileRepo),
         initialBinding: GalleryBindings(tag: tag, mode: .full),
       ),
     );

@@ -18,11 +18,12 @@ import '../getx/selection.dart';
 
 
 class GalleryGridView extends StatelessWidget {
-  const GalleryGridView({super.key});
+  final FileRepo fileRepo;
+
+  const GalleryGridView({super.key, required this.fileRepo});
 
   @override
   Widget build(BuildContext context) {
-    final FileRepo files = Get.find();
     final QueryController query = Get.find();
     final SelectionController selection = Get.find();
     final GalleryController gallery = Get.find();
@@ -61,9 +62,9 @@ class GalleryGridView extends StatelessWidget {
           ),
           physics: physics,
           controller: gallery.grid.controller,
-          itemCount: files.length,
+          itemCount: fileRepo.length,
           gridDelegate: delegate,
-          itemBuilder: (_, index) => _TileBuilder(index),
+          itemBuilder: (_, index) => _TileBuilder(fileRepo, index),
         )),
       ),
     );
@@ -71,23 +72,24 @@ class GalleryGridView extends StatelessWidget {
 }
 
 class _TileBuilder extends StatelessWidget {
+  final FileRepo files;
   final int index;
 
-  const _TileBuilder(this.index);
+  const _TileBuilder(this.files, this.index);
 
   @override
   Widget build(BuildContext context) {
-    final image = Get.find<FileRepo>().files[index];
+    final file = files[index];
 
-    if (image.width != -1) {
-      return Tile(index, image);
+    if (file.width != -1) {
+      return Tile(index, file);
     }
 
     return FutureBuilder(
-      future: Get.find<Repo>().setMetadataFor(image),
+      future: Get.find<Repo>().setMetadataFor(file),
       builder: (_, snapshot) {
         if (snapshot.connectionState == .done) {
-          return Tile(index, image);
+          return Tile(index, file);
         } else {
           return const ColoredBox(color: Colors.white10);
         }

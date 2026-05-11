@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hydrus_flutter/features/gallery/getx/bindings.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
+import 'package:hydrus_flutter/features/gallery/getx/bindings.dart';
 import 'package:hydrus_flutter/features/search/page/search_sheet.dart';
 import 'package:hydrus_flutter/features/settings/ui/page/settings.dart';
 
@@ -17,8 +17,9 @@ import '../widget/gridview.dart';
 
 class Gallery extends StatelessWidget {
   final Mode mode;
+  final FileRepo fileRepo;
 
-  const Gallery({super.key, this.mode = .full});
+  const Gallery({super.key, this.mode = .full, required this.fileRepo});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,11 @@ class Gallery extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        if (mode == .preview) Get.back();
+
+        if (mode == .preview) {
+          Get.back();
+          return;
+        }
 
         if (selection.on) {
           selection.clear();
@@ -49,10 +54,7 @@ class Gallery extends StatelessWidget {
           ],
         );
 
-        n.showDialog(
-          context: context,
-          builder: (context) => alert,
-        );
+        n.showDialog(context: context, builder: (context) => alert);
       },
       child: Obx(() {
         return Scaffold(
@@ -64,11 +66,11 @@ class Gallery extends StatelessWidget {
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
           extendBody: true,
-          body: const Stack(
+          body: Stack(
             alignment: .bottomRight,
             children: [
-              GalleryGridView(),
-              FloatingActions(),
+              GalleryGridView(fileRepo: fileRepo),
+              const FloatingActions(),
             ],
           ),
           bottomNavigationBar: selection.on

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
@@ -12,10 +13,11 @@ import 'selection.dart';
 enum Mode { full, preview }
 
 
-Future<dynamic>? toGallery({Mode mode = Mode.full}) {
+Future<dynamic>? toGallery(
+    {Mode mode = Mode.full, required FileRepo fileRepo}) {
   final tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
   return Get.to(
-    () => Gallery(mode: mode),
+    () => Gallery(mode: mode, fileRepo: fileRepo),
     transition: .rightToLeft,
     duration: AppTheme.duration,
     curve: Curves.easeInOutCubic,
