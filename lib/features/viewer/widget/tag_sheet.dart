@@ -1,14 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import 'package:hydrus_flutter/core/ui/tag_list.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
-import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
+import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
 
 import '../getx/page.dart';
 
@@ -18,6 +16,7 @@ class TagSheet extends HookWidget {
   final List<Tag> tags;
   final String tag;
   final GalleryController? gallery;
+  final void Function()? onFloatingActionButtonTap;
 
   const TagSheet({
     super.key,
@@ -25,6 +24,7 @@ class TagSheet extends HookWidget {
     required this.tags,
     required this.tag,
     required this.gallery,
+    this.onFloatingActionButtonTap,
   });
 
   static const snaps = <SnappingPosition>[
@@ -48,7 +48,6 @@ class TagSheet extends HookWidget {
     final scrollBelow = useScrollController();
     final SnappingSheetController sheet = Get.find(tag: tag);
     final PageGetxController page = Get.find(tag: tag);
-    final FileRepo files = Get.find(tag: tag);
 
     const background = Material(child: Center());
 
@@ -73,16 +72,23 @@ class TagSheet extends HookWidget {
               scrollController: scrollBelow,
               tags: tags,
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () => toEditorPaged(tag, page.i, files, gallery),
-              child: const Icon(Icons.edit_note),
-            ).niku
-              ..padding = .only(bottom: 18),
+            floatingActionButton: buildFloatingActionButton(),
             floatingActionButtonLocation: .miniEndFloat,
           ).niku
             ..rect
             ..safeBottom,
         ]),
+      ),
+    );
+  }
+
+  Widget? buildFloatingActionButton() {
+    if (onFloatingActionButtonTap == null) return null;
+    return Padding(
+      padding: .only(bottom: 18),
+      child: FloatingActionButton(
+        onPressed: onFloatingActionButtonTap,
+        child: const Icon(Icons.edit_note),
       ),
     );
   }

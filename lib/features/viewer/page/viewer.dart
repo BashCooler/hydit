@@ -8,6 +8,7 @@ import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
+import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
 import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
 
 import '../getx/page.dart';
@@ -19,12 +20,14 @@ class Viewer extends StatelessWidget {
   final int index;
   final String tag;
   final GalleryController? gallery;
+  final bool showFloatingActionButton;
 
   const Viewer({
     super.key,
     required this.index,
     required this.tag,
     required this.gallery,
+    this.showFloatingActionButton = true,
   });
 
   void showSearchBar(bool didPop, dynamic result) async {
@@ -54,6 +57,9 @@ class Viewer extends StatelessWidget {
             tags: files[page.i].all,
             tag: tag,
             gallery: gallery,
+            onFloatingActionButtonTap: showFloatingActionButton
+                ? () => toEditorPaged(tag, page.i, files, gallery)
+                : null,
             child: Pages(tag: tag),
           );
         }),
