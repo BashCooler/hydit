@@ -11,7 +11,6 @@ import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
-import 'package:hydrus_flutter/features/viewer/getx/bindings.dart';
 
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
@@ -19,26 +18,34 @@ import '../getx/selection.dart';
 
 class GalleryGridView extends StatelessWidget {
   final String tag;
+  final void Function(int id, int index)? onTap;
   final void Function(int id)? onLongPress;
 
-  const GalleryGridView({super.key, required this.tag, this.onLongPress});
+  const GalleryGridView({
+    super.key,
+    required this.tag,
+    this.onTap,
+    this.onLongPress,
+  });
+
+  static const physics = BouncingScrollPhysics(
+    parent: AlwaysScrollableScrollPhysics(),
+  );
+
+  static const delegate = SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 2,
+    mainAxisSpacing: 5.0,
+    crossAxisSpacing: 5.0,
+  );
 
   @override
   Widget build(BuildContext context) {
+    final Repo repo = Get.find();
     final QueryController query = Get.find();
-    final SelectionController selection = Get.find(tag: tag);
+
+    final FileRepo files = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
-
-    final FileRepo fileRepo = Get.find(tag: tag);
-
-    const physics = BouncingScrollPhysics(
-        parent: AlwaysScrollableScrollPhysics());
-
-    const delegate = SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 2,
-      mainAxisSpacing: 5.0,
-      crossAxisSpacing: 5.0,
-    );
+    final SelectionController selection = Get.find(tag: tag);
 
     return GridViewObserver(
       controller: gallery.grid,
@@ -65,40 +72,34 @@ class GalleryGridView extends StatelessWidget {
           ),
           physics: physics,
           controller: gallery.grid.controller,
-          itemCount: fileRepo.length,
+          itemCount: files.length,
           gridDelegate: delegate,
-          itemBuilder: (_, index) => _TileBuilder(tag, index, fileRepo, onLongPress),
+          itemBuilder: (context, index) {
+            final file = files[index];
+
+            final tile = Tile(
+              tag: tag,
+              index: index,
+              files: files,
+              onTap: onTap,
+              onLongPress: onLongPress,
+            );
+
+            if (file.width != -1) return tile;
+
+            return FutureBuilder(
+              future: repo.setMetadataFor(file),
+              builder: (_, snapshot) {
+                if (snapshot.connectionState == .done) {
+                  return tile;
+                } else {
+                  return const ColoredBox(color: Colors.white10);
+                }
+              },
+            );
+          },
         )),
       ),
-    );
-  }
-}
-
-class _TileBuilder extends StatelessWidget {
-  final String tag;
-  final FileRepo files;
-  final int index;
-  final void Function(int id)? onLongPress;
-
-  const _TileBuilder(this.tag, this.index, this.files, this.onLongPress);
-
-  @override
-  Widget build(BuildContext context) {
-    final file = files[index];
-
-    if (file.width != -1) {
-      return Tile(tag, index, files, onLongPress);
-    }
-
-    return FutureBuilder(
-      future: Get.find<Repo>().setMetadataFor(file),
-      builder: (_, snapshot) {
-        if (snapshot.connectionState == .done) {
-          return Tile(tag, index, files, onLongPress);
-        } else {
-          return const ColoredBox(color: Colors.white10);
-        }
-      },
     );
   }
 }
@@ -108,9 +109,17 @@ class Tile extends StatelessWidget {
   final String tag;
   final FileRepo files;
   final int index;
+  final void Function(int id, int index)? onTap;
   final void Function(int id)? onLongPress;
 
-  const Tile(this.tag, this.index, this.files, this.onLongPress, {super.key});
+  const Tile({
+    super.key,
+    required this.tag,
+    required this.index,
+    required this.files,
+    this.onTap,
+    this.onLongPress,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -121,18 +130,7 @@ class Tile extends StatelessWidget {
 
     return GestureDetector(
       key: ValueKey(file.id),
-      onTap: () {
-        if (gallery.refreshing.value) return;
-        switch (selection.on) {
-          case true:
-            selection.toggle(file.id);
-            if (!selection.on) {
-              gallery..unlockActions()..showActions();
-            }
-          case false:
-            toViewer(index, files, gallery);
-        }
-      },
+      onTap: () => onTap?.call(file.id, index),
       onLongPress: () => onLongPress?.call(file.id),
       child: Stack(
         alignment: .bottomRight,

@@ -9,16 +9,32 @@ import '../page/viewer.dart';
 import 'page.dart';
 
 
-void toViewer(int index, FileRepo files, [GalleryController? gallery]) {
+void toViewer({
+  required int index,
+  required FileRepo files,
+  GalleryController? gallery,
+  bool showFloatingActionButton = true,
+}) {
   final tag = 'Viewer-${DateTime.now().microsecondsSinceEpoch}';
 
   gallery?..hideActions()..hideBadges();
 
-  Get.to(() => Viewer(index: index, tag: tag, gallery: gallery),
+  Get.to(
+    () => Viewer(
+      index: index,
+      tag: tag,
+      gallery: gallery,
+      showFloatingActionButton: showFloatingActionButton,
+    ),
     transition: .fadeIn,
     curve: Curves.easeInCubic,
     opaque: false,
-    binding: ViewerBindings(index: index, tag: tag, files: files, gallery: gallery),
+    binding: ViewerBindings(
+      index: index,
+      tag: tag,
+      files: files,
+      gallery: gallery,
+    ),
   );
 }
 

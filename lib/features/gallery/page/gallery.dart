@@ -5,6 +5,7 @@ import 'package:niku/namespace.dart' as n;
 
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
+import 'package:hydrus_flutter/features/viewer/getx/bindings.dart';
 import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
 import 'package:hydrus_flutter/features/gallery/getx/bindings.dart';
 import 'package:hydrus_flutter/features/search/page/search_sheet.dart';
@@ -23,8 +24,9 @@ class Gallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SelectionController selection = Get.find(tag: tag);
+    final FileRepo files = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
+    final SelectionController selection = Get.find(tag: tag);
 
     return PopScope(
       canPop: false,
@@ -71,6 +73,24 @@ class Gallery extends StatelessWidget {
             children: [
               GalleryGridView(
                 tag: tag,
+                onTap: (id, index) {
+                  if (gallery.refreshing.value) return;
+                  switch (selection.on) {
+                    case true:
+                      selection.toggle(id);
+                      if (!selection.on) {
+                        gallery..unlockActions()..showActions();
+                      }
+                    case false:
+                      final button = mode == .full;
+                      toViewer(
+                        index: index,
+                        files: files,
+                        gallery: gallery,
+                        showFloatingActionButton: button,
+                      );
+                  }
+                },
                 onLongPress: mode == .full ? selection.selectTile : null,
               ),
               FloatingActions(tag: tag),
