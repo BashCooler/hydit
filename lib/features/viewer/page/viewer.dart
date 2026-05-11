@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydrus_flutter/core/ui/common.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
 import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
@@ -93,7 +93,11 @@ class Pages extends StatelessWidget {
           itemCount: files.length,
           preloadPagesCount: 3,
           itemBuilder: (_, index) {
-            return DismissibleFile(tag: tag, index: index, file: files[index]);
+            return DismissibleFile(
+              tag: tag,
+              index: index,
+              file: files[index],
+            );
           },
         );
       }),

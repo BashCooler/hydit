@@ -12,18 +12,21 @@
 /// applications
 library;
 
+import 'package:get/get.dart';
 import 'package:equatable/equatable.dart';
+
+import '../data/repo.dart';
 
 
 class HydrusFile {
   final int id;
   double width = -1;
   double height = -1;
-  late int size;
-  late String type;
-  late String ext;
+  int size = 0;
+  String? type;
+  String? ext;
   int duration = 0;
-  final Map<String, List<Tag>> service = {};
+  final service = <String, List<Tag>>{}.obs;
 
   int get length => service['all known tags']?.length ?? 0;
   List<Tag> get all => service['all known tags'] ?? [];
@@ -35,6 +38,12 @@ class HydrusFile {
     final m = value.split('/');
     type = m.first;
     ext = m.last;
+  }
+
+  Future<void> checkForMetadata() async {
+    if (type != null && ext != null) return;
+    final Repo repo = Get.find();
+    await repo.setMetadataFor(this);
   }
 }
 

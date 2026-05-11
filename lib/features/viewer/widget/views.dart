@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
@@ -29,13 +30,32 @@ class ViewFile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final content = switch (file.type) {
-      'image' => ViewImageX(index: index, file: file, tag: tag),
-      'video' => ViewVideo(index: index, file: file, tag: tag),
-      _ => NotSupported(file.type),
-    };
+    if (file.type != null) {
+      return buildContent(file.type!);
+    }
+    return FutureBuilder(
+      future: file.checkForMetadata(),
+      builder: (_, snapshot) {
+        if (snapshot.connectionState == .done) {
+          return buildContent(file.type!);
+        } else {
+          return const Center(
+            child: ExpressiveLoadingIndicator(),
+          );
+        }
+      },
+    );
+  }
 
-    return content;
+  Widget buildContent(String type) {
+    switch (type) {
+      case 'image':
+        return ViewImageX(index: index, file: file, tag: tag);
+      case 'video':
+        return ViewVideo(index: index, file: file, tag: tag);
+      case _:
+        return NotSupported(file.type);
+    }
   }
 }
 
