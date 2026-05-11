@@ -17,12 +17,14 @@ class TagSheet extends HookWidget {
   final Widget child;
   final List<Tag> tags;
   final String tag;
+  final GalleryController? gallery;
 
   const TagSheet({
     super.key,
     required this.child,
     required this.tags,
     required this.tag,
+    required this.gallery,
   });
 
   static const snaps = <SnappingPosition>[
@@ -47,7 +49,6 @@ class TagSheet extends HookWidget {
     final SnappingSheetController sheet = Get.find(tag: tag);
     final PageGetxController page = Get.find(tag: tag);
     final FileRepo files = Get.find(tag: tag);
-    final GalleryController gallery = Get.find();
 
     const background = Material(child: Center());
 

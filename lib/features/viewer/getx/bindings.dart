@@ -14,7 +14,7 @@ void toViewer(int index, FileRepo files, [GalleryController? gallery]) {
 
   gallery?..hideActions()..hideBadges();
 
-  Get.to(() => Viewer(index, tag: tag),
+  Get.to(() => Viewer(index: index, tag: tag, gallery: gallery),
     transition: .fadeIn,
     curve: Curves.easeInCubic,
     opaque: false,

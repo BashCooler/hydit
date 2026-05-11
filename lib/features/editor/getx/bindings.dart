@@ -12,7 +12,7 @@ import '../page/editor.dart';
 import 'tags.dart';
 
 
-Future<dynamic>? toEditorPaged(String tag, int index, FileRepo files, GalleryController gallery) {
+Future<dynamic>? toEditorPaged(String tag, int index, FileRepo files, [GalleryController? gallery]) {
   return Get.to(() => Editor(tag: tag, mode: .paged),
     transition: .leftToRight,
     duration: AppTheme.duration,
@@ -37,9 +37,9 @@ class EditorBindings extends Bindings {
   final Mode mode;
   final int? index;
   final FileRepo files;
-  final GalleryController gallery;
+  final GalleryController? gallery;
 
-  EditorBindings.paged(this.tag, this.index, this.files, this.gallery)
+  EditorBindings.paged(this.tag, this.index, this.files, [this.gallery])
       : mode = .paged;
 
   EditorBindings.batch(this.tag, this.files, this.gallery)
@@ -48,12 +48,12 @@ class EditorBindings extends Bindings {
 
   @override
   void dependencies() {
-    Get.put(QueryController(), tag: tag);
+    Get.put(QueryController(gallery: gallery), tag: tag);
     Get.put(FileRepo.copy(files), tag: tag);
 
     switch (mode) {
       case .paged:
-        final page = PageGetxController(initial: index!, grid: gallery.grid);
+        final page = PageGetxController(initial: index!, grid: gallery?.grid);
         Get.put(page, tag: tag);
         Get.put(TagManager(files)..init(files[index!]));
       case .batch:

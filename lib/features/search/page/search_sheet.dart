@@ -7,22 +7,21 @@ import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/ui/snack_bar.dart';
 import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
-import 'package:hydrus_flutter/features/gallery/widget/tag_panel.dart';
+import 'package:hydrus_flutter/features/search/widget/tag_panel.dart';
 
 import '../getx/query.dart';
 import '../widget/search.dart';
 import '../widget/suggests.dart';
 
 
-void showSearchSheet(BuildContext context) {
-  Get.find<GalleryController>().hideActions();
+void showSearchSheet(BuildContext context, String tag) {
   Get.find<Repo>().updateClient();
   Navigator.push(
     context,
     ModalSheetRoute(
       swipeDismissible: true,
       viewportBuilder: (context, child) => SheetViewport(child: child),
-      builder: (context) => SearchSheet(),
+      builder: (context) => SearchSheet(tag: tag),
       transitionDuration: AppTheme.duration,
     ),
   );
@@ -30,7 +29,9 @@ void showSearchSheet(BuildContext context) {
 
 
 class SearchSheet extends StatefulWidget {
-  const SearchSheet({super.key});
+  final String tag;
+
+  const SearchSheet({super.key, required this.tag});
 
   @override
   State<SearchSheet> createState() => _SearchSheetState();
@@ -64,7 +65,8 @@ class _SearchSheetState extends State<SearchSheet> {
 
   void onLeave(bool didPop, Object? result) {
     Future.delayed(AppTheme.duration, () {
-      Get.find<GalleryController>().showActions();
+      final GalleryController gallery = Get.find(tag: widget.tag);
+      gallery.showActions();
       query.clear();
     });
   }

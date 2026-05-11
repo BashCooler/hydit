@@ -24,7 +24,7 @@ class Gallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SelectionController selection = Get.find();
-    final GalleryController gallery = Get.find();
+    final GalleryController gallery = Get.find(tag: tag);
 
     return PopScope(
       canPop: false,
@@ -70,7 +70,7 @@ class Gallery extends StatelessWidget {
             alignment: .bottomRight,
             children: [
               GalleryGridView(tag: tag),
-              const FloatingActions(),
+              FloatingActions(tag: tag),
             ],
           ),
           bottomNavigationBar: selection.on
@@ -84,11 +84,13 @@ class Gallery extends StatelessWidget {
 
 
 class FloatingActions extends StatelessWidget {
-  const FloatingActions({super.key});
+  final String tag;
+
+  const FloatingActions({super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
-    final GalleryController gallery = Get.find();
+    final GalleryController gallery = Get.find(tag: tag);
     return Obx(() {
       return AnimatedContainer(
         curve: Curves.easeOutCubic,
@@ -105,7 +107,10 @@ class FloatingActions extends StatelessWidget {
               icon: const Icon(Icons.settings),
             ),
             FilledIconButton(
-              onPressed: () => showSearchSheet(context),
+              onPressed: () {
+                gallery.hideActions();
+                showSearchSheet(context, tag);
+              },
               icon: const Icon(Icons.search),
             ),
           ])
@@ -127,7 +132,7 @@ class SelectActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final FileRepo files = Get.find(tag: tag);
     final SelectionController selection = Get.find();
-    final GalleryController gallery = Get.find();
+    final GalleryController gallery = Get.find(tag: tag);
 
     return BottomAppBar(
       color: Get.theme.scaffoldBackgroundColor.withAlpha(90),

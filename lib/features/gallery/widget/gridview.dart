@@ -26,7 +26,7 @@ class GalleryGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     final QueryController query = Get.find();
     final SelectionController selection = Get.find();
-    final GalleryController gallery = Get.find();
+    final GalleryController gallery = Get.find(tag: tag);
 
     final FileRepo fileRepo = Get.find(tag: tag);
 
@@ -66,7 +66,7 @@ class GalleryGridView extends StatelessWidget {
           controller: gallery.grid.controller,
           itemCount: fileRepo.length,
           gridDelegate: delegate,
-          itemBuilder: (_, index) => _TileBuilder(fileRepo, index),
+          itemBuilder: (_, index) => _TileBuilder(tag, index, fileRepo),
         )),
       ),
     );
@@ -74,24 +74,25 @@ class GalleryGridView extends StatelessWidget {
 }
 
 class _TileBuilder extends StatelessWidget {
+  final String tag;
   final FileRepo files;
   final int index;
 
-  const _TileBuilder(this.files, this.index);
+  const _TileBuilder(this.tag, this.index, this.files);
 
   @override
   Widget build(BuildContext context) {
     final file = files[index];
 
     if (file.width != -1) {
-      return Tile(index, files);
+      return Tile(tag, index, files);
     }
 
     return FutureBuilder(
       future: Get.find<Repo>().setMetadataFor(file),
       builder: (_, snapshot) {
         if (snapshot.connectionState == .done) {
-          return Tile(index, files);
+          return Tile(tag, index, files);
         } else {
           return const ColoredBox(color: Colors.white10);
         }
@@ -102,17 +103,18 @@ class _TileBuilder extends StatelessWidget {
 
 
 class Tile extends StatelessWidget {
+  final String tag;
   final FileRepo files;
   final int index;
 
-  const Tile(this.index, this.files, {super.key});
+  const Tile(this.tag, this.index, this.files, {super.key});
 
   @override
   Widget build(BuildContext context) {
     final file = files[index];
 
     final SelectionController selection = Get.find();
-    final GalleryController gallery = Get.find();
+    final GalleryController gallery = Get.find(tag: tag);
 
     return GestureDetector(
       key: ValueKey(file.id),

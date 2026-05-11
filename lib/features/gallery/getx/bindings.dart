@@ -34,11 +34,11 @@ class GalleryBindings extends Bindings {
   void dependencies() {
     final fileRepo = FileRepo();
     final gallery = GalleryController();
-    final query = QueryController(fileRepo: fileRepo);
+    final query = QueryController(fileRepo: fileRepo, gallery: gallery);
     final selection = SelectionController(gallery: gallery, fileRepo: fileRepo);
 
     Get
-      ..put(gallery)
+      ..put(gallery, tag: tag)
       ..put(fileRepo, tag: tag)
       ..put(query)
       ..put(selection);

@@ -18,13 +18,18 @@ import '../widget/tag_sheet.dart';
 class Viewer extends StatelessWidget {
   final int index;
   final String tag;
+  final GalleryController? gallery;
 
-  const Viewer(this.index, {super.key, required this.tag});
+  const Viewer({
+    super.key,
+    required this.index,
+    required this.tag,
+    required this.gallery,
+  });
 
   void showSearchBar(bool didPop, dynamic result) async {
     Future.delayed(Duration(milliseconds: 250), () {
-      final GalleryController gallery = Get.find();
-      gallery..showActions()..showBadges();
+      gallery?..showActions()..showBadges();
     });
   }
 
@@ -48,6 +53,7 @@ class Viewer extends StatelessWidget {
           return TagSheet(
             tags: files[page.i].all,
             tag: tag,
+            gallery: gallery,
             child: Pages(tag: tag),
           );
         }),

@@ -17,8 +17,9 @@ class QueryController extends GetxController {
   final _suggestVisible = false.obs;
 
   final FileRepo? fileRepo;
+  final GalleryController? gallery;
 
-  QueryController({this.fileRepo});
+  QueryController({this.fileRepo, required this.gallery});
 
   List<Tag> get tags => _tags;
   String get text => textController.text;
@@ -87,8 +88,7 @@ class QueryController extends GetxController {
   void clearTags() => _tags.clear();
 
   Future<void> searchForFiles() async {
-    final GalleryController gallery = Get.find();
-    gallery.refreshing.value = true;
+    gallery!.refreshing.value = true;
 
     List<int> ids = [];
 
@@ -101,7 +101,7 @@ class QueryController extends GetxController {
       handleException(e);
       return;
     } finally {
-      gallery.refreshing.value = false;
+      gallery!.refreshing.value = false;
     }
   }
 
