@@ -51,7 +51,7 @@ class GalleryGridView extends StatelessWidget {
       controller: gallery.grid,
       child: ExpressiveRefreshIndicator(
         displacement: 100.0,
-        notificationPredicate: (_) => !selection.on,
+        notificationPredicate: (_) => selection.off,
         onRefresh: () => query.searchForFiles(),
         onStatusChange: (status) {
           switch (status) {
@@ -80,7 +80,7 @@ class GalleryGridView extends StatelessWidget {
             final tile = Tile(
               tag: tag,
               index: index,
-              files: files,
+              file: files[index],
               onTap: onTap,
               onLongPress: onLongPress,
             );
@@ -107,7 +107,7 @@ class GalleryGridView extends StatelessWidget {
 
 class Tile extends StatelessWidget {
   final String tag;
-  final FileRepo files;
+  final HydrusFile file;
   final int index;
   final void Function(int id, int index)? onTap;
   final void Function(int id)? onLongPress;
@@ -116,17 +116,15 @@ class Tile extends StatelessWidget {
     super.key,
     required this.tag,
     required this.index,
-    required this.files,
+    required this.file,
     this.onTap,
     this.onLongPress,
   });
 
   @override
   Widget build(BuildContext context) {
-    final file = files[index];
-
-    final SelectionController selection = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
+    final SelectionController selection = Get.find(tag: tag);
 
     return GestureDetector(
       key: ValueKey(file.id),

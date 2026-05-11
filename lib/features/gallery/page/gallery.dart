@@ -78,9 +78,6 @@ class Gallery extends StatelessWidget {
                   switch (selection.on) {
                     case true:
                       selection.toggle(id);
-                      if (!selection.on) {
-                        gallery..unlockActions()..showActions();
-                      }
                     case false:
                       final button = mode == .full;
                       toViewer(
@@ -91,7 +88,9 @@ class Gallery extends StatelessWidget {
                       );
                   }
                 },
-                onLongPress: mode == .full ? selection.selectTile : null,
+                onLongPress: mode == .full
+                    ? selection.selectTile
+                    : null,
               ),
               FloatingActions(tag: tag),
             ],

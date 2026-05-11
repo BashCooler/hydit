@@ -15,6 +15,7 @@ class SelectionController extends GetxController {
   bool get rangeSelected => ids.length == 2;
 
   bool get on => ids.isNotEmpty;
+  bool get off => ids.isEmpty;
 
   void toggle(int id) {
     switch (ids.contains(id)) {
@@ -22,6 +23,9 @@ class SelectionController extends GetxController {
         ids.remove(id);
       case false:
         ids.add(id);
+    }
+    if (on) {
+      gallery..unlockActions()..showActions();
     }
   }
 
