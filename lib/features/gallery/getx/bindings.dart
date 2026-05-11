@@ -42,6 +42,6 @@ class GalleryBindings extends Bindings {
       ..put(gallery, tag: tag)
       ..put(fileRepo, tag: tag)
       ..put(query)
-      ..put(selection);
+      ..put(selection, tag: tag);
   }
 }

@@ -6,7 +6,6 @@ import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';
 import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
-import 'package:hydrus_flutter/features/gallery/getx/selection.dart';
 
 import '../page/editor.dart';
 import 'tags.dart';
@@ -22,12 +21,12 @@ Future<dynamic>? toEditorPaged(String tag, int index, FileRepo files, [GalleryCo
 }
 
 
-Future<dynamic>? toEditorBatch(String tag, FileRepo files, GalleryController gallery) {
+Future<dynamic>? toEditorBatch(String tag, FileRepo files, GalleryController gallery, List<int> ids) {
   return Get.to(() => Editor(tag: tag, mode: .batch),
     transition: .leftToRight,
     duration: AppTheme.duration,
     curve: Curves.easeInOutCubic,
-    binding: EditorBindings.batch(tag, files, gallery),
+    binding: EditorBindings.batch(tag, files, gallery, ids),
   );
 }
 
@@ -36,13 +35,15 @@ class EditorBindings extends Bindings {
   final String tag;
   final Mode mode;
   final int? index;
+  final List<int>? ids;
   final FileRepo files;
   final GalleryController? gallery;
 
   EditorBindings.paged(this.tag, this.index, this.files, [this.gallery])
-      : mode = .paged;
+      : mode = .paged,
+        ids = null;
 
-  EditorBindings.batch(this.tag, this.files, this.gallery)
+  EditorBindings.batch(this.tag, this.files, this.gallery, this.ids)
       : mode = .batch,
         index = null;
 
@@ -57,8 +58,7 @@ class EditorBindings extends Bindings {
         Get.put(page, tag: tag);
         Get.put(TagManager(files)..init(files[index!]));
       case .batch:
-        final SelectionController selection = Get.find();
-        Get.put(TagManager(files)..initBatch(selection.ids.toList()));
+        Get.put(TagManager(files)..initBatch(ids!));
     }
   }
 }

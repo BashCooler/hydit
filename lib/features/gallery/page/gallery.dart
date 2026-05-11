@@ -23,7 +23,7 @@ class Gallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SelectionController selection = Get.find();
+    final SelectionController selection = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
 
     return PopScope(
@@ -131,7 +131,7 @@ class SelectActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final FileRepo files = Get.find(tag: tag);
-    final SelectionController selection = Get.find();
+    final SelectionController selection = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
 
     return BottomAppBar(
@@ -161,7 +161,7 @@ class SelectActions extends StatelessWidget {
                   selection.clear();
                 case _:
                   final fileRepo = FileRepo.pickFrom(files, selection.ids.toList());
-                  await toEditorBatch(tag, fileRepo, gallery);
+                  await toEditorBatch(tag, fileRepo, gallery, selection.ids.toList());
                   selection.clear();
               }
             },

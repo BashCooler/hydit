@@ -25,7 +25,7 @@ class GalleryGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final QueryController query = Get.find();
-    final SelectionController selection = Get.find();
+    final SelectionController selection = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
 
     final FileRepo fileRepo = Get.find(tag: tag);
@@ -113,7 +113,7 @@ class Tile extends StatelessWidget {
   Widget build(BuildContext context) {
     final file = files[index];
 
-    final SelectionController selection = Get.find();
+    final SelectionController selection = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
 
     return GestureDetector(
