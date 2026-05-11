@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:dismissible_page/dismissible_page.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 
 import '../getx/page.dart';
 import '../widget/views.dart';
@@ -9,11 +10,13 @@ import '../widget/views.dart';
 class Preview extends StatelessWidget {
   final int index;
   final String tag;
+  final HydrusFile file;
 
   const Preview({
     super.key,
     required this.index,
     required this.tag,
+    required this.file,
   });
 
   @override
@@ -30,7 +33,7 @@ class Preview extends StatelessWidget {
           interactionMode: .gesture,
           minScale: 0,
           builder: (context, scrollController) {
-            return ViewFile(index, tag: tag);
+            return ViewFile(tag: tag, index: index, file: file);
           },
         );
       }),

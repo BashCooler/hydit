@@ -3,15 +3,13 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/ui/images.dart';
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/viewer/getx/transform.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 
 import '../getx/page.dart';
 import 'image_view.dart';
@@ -19,18 +17,21 @@ import 'image_view.dart';
 
 class ViewFile extends StatelessWidget {
   final int index;
+  final HydrusFile file;
   final String tag;
 
-  const ViewFile(this.index, {super.key, required this.tag});
+  const ViewFile({
+    super.key,
+    required this.index,
+    required this.tag,
+    required this.file,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final FileRepo files = Get.find(tag: tag);
-    final file = files[index];
-
     final content = switch (file.type) {
-      'image' => ViewImageX(index, tag: tag),
-      'video' => ViewVideo(index, tag: tag),
+      'image' => ViewImageX(index: index, file: file, tag: tag),
+      'video' => ViewVideo(index: index, file: file, tag: tag),
       _ => NotSupported(file.type),
     };
 
@@ -64,53 +65,17 @@ class ObxHero extends StatelessWidget {
 }
 
 
-class ViewImage extends HookWidget {
-  final int index;
-  final String tag;
-
-  const ViewImage(this.index, {super.key, required this.tag});
-
-  @override
-  Widget build(BuildContext context) {
-    final FileRepo files = Get.find(tag: tag);
-    final image = files[index];
-
-    final ticker = useSingleTickerProvider();
-    final transform = useMemoized(() => TransformController(
-      minScale: 1.0,
-      zoomScale: 2.5,
-      maxScale: 4.0,
-      vsync: ticker,
-      viewerTag: tag,
-    ));
-    useEffect(() => transform.dispose, [transform]);
-
-    return GestureDetector(
-      onDoubleTapDown: transform.handleDoubleTap,
-      child: Obx(() => InteractiveViewer(
-        minScale: transform.minScale,
-        maxScale: transform.maxScale,
-        panEnabled: !transform.blockViewer.value,
-        transformationController: transform.controller,
-        child: Center(
-          child: ObxHero(
-            index: index,
-            heroTag: image.id,
-            getTag: tag,
-            child: HighResImage(image: image),
-          ),
-        ),
-      )),
-    );
-  }
-}
-
-
 class ViewVideo extends StatefulWidget {
   final int index;
   final String tag;
+  final HydrusFile file;
 
-  const ViewVideo(this.index, {super.key, required this.tag});
+  const ViewVideo({
+    super.key,
+    required this.index,
+    required this.tag,
+    required this.file,
+  });
 
   @override
   State<ViewVideo> createState() => _ViewVideoState();
@@ -121,7 +86,6 @@ class _ViewVideoState extends State<ViewVideo> {
     ..setVolume(0.0);
   late final controller = VideoController(player);
 
-  final FileRepo files = Get.find();
   final repo = Get.find<Repo>();
   late final PageGetxController pageController;
 
@@ -135,10 +99,9 @@ class _ViewVideoState extends State<ViewVideo> {
   void initState() {
     super.initState();
     pageController = Get.find(tag: widget.tag);
-    final id = files[widget.index].id;
     unawaited(
       player.open(
-        Media(repo.buildUrl(id)),
+        Media(repo.buildUrl(widget.file.id)),
         play: pageController.enabled(widget.index),
       ).catchError((_) {}),
     );
@@ -185,7 +148,7 @@ class _ViewVideoState extends State<ViewVideo> {
 
   @override
   Widget build(BuildContext context) {
-    var video = files[widget.index];
+    var video = widget.file;
     return Center(
       child: ObxHero(
         index: widget.index,

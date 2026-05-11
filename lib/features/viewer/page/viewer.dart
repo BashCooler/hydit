@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:dismissible_page/dismissible_page.dart';
@@ -80,7 +81,7 @@ class Pages extends StatelessWidget {
           itemCount: files.length,
           preloadPagesCount: 3,
           itemBuilder: (_, index) {
-            return DismissibleFile(index, tag: tag);
+            return DismissibleFile(tag: tag, index: index, file: files[index]);
           },
         );
       }),
@@ -91,9 +92,15 @@ class Pages extends StatelessWidget {
 
 class DismissibleFile extends StatelessWidget {
   final int index;
+  final HydrusFile file;
   final String tag;
 
-  const DismissibleFile(this.index, {super.key, required this.tag});
+  const DismissibleFile({
+    super.key,
+    required this.index,
+    required this.tag,
+    required this.file,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +119,7 @@ class DismissibleFile extends StatelessWidget {
         interactionMode: .gesture,
         minScale: 0,
         builder: (context, scrollController) {
-          return ViewFile(index, tag: tag);
+          return ViewFile(tag: tag, index: index, file: file);
         },
       );
     });

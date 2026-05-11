@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/features/gallery/getx/bindings.dart';
 import 'package:niku/namespace.dart' as n;
 
@@ -69,7 +70,7 @@ class _EditorState extends State<Editor> {
         return EditorAppBar(
           toolbarHeight: 100,
           tag: widget.tag,
-          onTap: () => openPreview(page.i),
+          onTap: () => openPreview(page.i, files[page.i]),
           mode: .paged,
           child: Obx(() {
             return HeroMode(
@@ -83,9 +84,6 @@ class _EditorState extends State<Editor> {
         );
       case .batch:
         final TagManager manager = Get.find();
-        final FileRepo files = Get.find(tag: widget.tag);
-        final previewFileRepo = FileRepo.pickFrom(files, manager.fileIds);
-
         return EditorAppBar(
           toolbarHeight: 100,
           mode: .batch,
@@ -102,9 +100,9 @@ class _EditorState extends State<Editor> {
 
   // MARK: NAV
 
-  void openPreview(int index) {
+  void openPreview(int index, HydrusFile file) {
     final tag = 'Preview-${DateTime.now().microsecondsSinceEpoch}';
-    Get.to(() => Preview(index: index, tag: tag),
+    Get.to(() => Preview(tag: tag, index: index, file: file),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
       opaque: false,
