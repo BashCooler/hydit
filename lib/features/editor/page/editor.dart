@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/features/gallery/getx/bindings.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydrus_flutter/core/ui/common.dart';
@@ -89,7 +90,7 @@ class _EditorState extends State<Editor> {
           child: PreviewGrid(
             manager: manager,
             onTap: () {
-
+              toGallery(mode: .preview);
             },
           ),
         );

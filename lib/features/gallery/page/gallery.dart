@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hydrus_flutter/features/gallery/getx/bindings.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydrus_flutter/core/ui/common.dart';
@@ -15,7 +16,9 @@ import '../widget/gridview.dart';
 
 
 class Gallery extends StatelessWidget {
-  const Gallery({super.key});
+  final Mode mode;
+
+  const Gallery({super.key, this.mode = .full});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +28,9 @@ class Gallery extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (mode == .preview) Get.back();
+
         if (selection.on) {
           selection.clear();
           gallery..unlockActions()..showActions();

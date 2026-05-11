@@ -6,6 +6,7 @@ import 'package:hydrus_flutter/core/data/mapper.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
+import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
 
 
 class QueryController extends GetxController {
@@ -82,17 +83,23 @@ class QueryController extends GetxController {
   void clearTags() => _tags.clear();
 
   Future<void> searchForFiles() async {
+    final GalleryController gallery = Get.find();
+    gallery.refreshing.value = true;
+
     final FileRepo files = Get.find();
     List<int> ids = [];
+
     try {
       ids = await repo.api.getSearchFiles(_tags.map((t) => t.raw).toList());
       await repo.updateServiceNames();
+      var list = ids.map((id) => HydrusFile(id)).toList();
+      files.assignAll(list);
     } catch (e) {
       handleException(e);
       return;
+    } finally {
+      gallery.refreshing.value = false;
     }
-    var list = ids.map((id) => HydrusFile(id)).toList();
-    files.assignAll(list);
   }
 
   void handleException(Object e) {
