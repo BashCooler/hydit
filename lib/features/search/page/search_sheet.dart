@@ -5,6 +5,7 @@ import 'package:smooth_sheets/smooth_sheets.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
+import 'package:hydrus_flutter/core/ui/snack_bar.dart';
 import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
 import 'package:hydrus_flutter/features/gallery/widget/tag_panel.dart';
 
@@ -40,6 +41,18 @@ class _SearchSheetState extends State<SearchSheet> {
 
   static const behaviour = SheetKeyboardDismissBehavior
       .onDragDown(isContentScrollAware: true);
+
+  @override
+  void initState() {
+    super.initState();
+    verify();
+  }
+
+  void verify() async {
+    final Repo repo = Get.find();
+    final result = await repo.verify();
+    showErrorOrSuccess(result, success: false);
+  }
 
   void searchThenBack() {
     if (query.tags.isEmpty) {

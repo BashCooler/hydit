@@ -9,6 +9,8 @@ import 'package:hydrus_flutter/utils/dictionaries.dart';
 import 'mapper.dart';
 import '../domain/entities.dart';
 
+enum Result { success, error }
+
 
 class Repo {
   final Client api;
@@ -65,5 +67,35 @@ class Repo {
       ..add(pick(json, 'all_known_tags', 0, 'name').asStringOrThrow())
       ..addAll(local);
     if (ptr != null) services.add(ptr);
+  }
+
+  Future<(Result, String)> verify([Client? client]) async {
+    String response;
+    try {
+      final c = client ?? api;
+      response = await c.getVerifyAccessKey();
+    } on HydrusUnknownHostException {
+      final message = 'Host is unknown, probably wrong URL';
+      return (Result.error, message);
+    } on HydrusNoServiceException {
+      final message = 'No connection with Hydrus. Is your client running?';
+      return (Result.error, message);
+    } on HydrusTimeoutException {
+      final message = 'No response (timeout)';
+      return (Result.error, message);
+    } on HydrusUnknownException {
+      final message = 'Unknown error';
+      return (Result.error, message);
+    } catch (e) {
+      final message = e.toString();
+      return (Result.error, message);
+    }
+
+    final decoded = jsonDecode(response) as Map<String, dynamic>;
+    if (decoded['error'] != null) {
+      return decoded['error'];
+    }
+
+    return (Result.success, 'Success');
   }
 }

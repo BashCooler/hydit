@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:string_validator/string_validator.dart';
@@ -6,8 +5,6 @@ import 'package:string_validator/string_validator.dart';
 import 'package:hydrus_flutter/core/data/api.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/features/settings/data/model.dart';
-
-enum Result { success, error }
 
 
 class SettingsController extends GetxController {
@@ -59,31 +56,10 @@ extension Verify on SettingsController
       host: uri.host,
       port: uri.port,
     );
-    String response;
 
-    try {
-      response = await client.getVerifyAccessKey();
-    } on HydrusUnknownHostException {
-      final message = 'Host is unknown, probably wrong URL';
-      return (Result.error, message);
-    } on HydrusNoServiceException {
-      final message = 'No connection with Hydrus. Is your client running?';
-      return (Result.error, message);
-    } on HydrusTimeoutException {
-      final message = 'No response (timeout). Is this the correct host?';
-      return (Result.error, message);
-    } on HydrusUnknownException {
-      final message = 'Unknown error';
-      return (Result.error, message);
-    } catch (e) {
-      final message = e.toString();
-      return (Result.error, message);
-    }
-
-    final decoded = jsonDecode(response) as Map<String, dynamic>;
-    if (decoded['error'] != null) {
-      return decoded['error'];
-    }
+    final Repo repo = Get.find();
+    final result = await repo.verify(client);
+    if (result.$1 == .error) return result;
 
     final box = Hive.box('settings');
     box.put('url', $.url);
