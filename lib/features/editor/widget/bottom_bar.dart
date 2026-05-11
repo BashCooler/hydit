@@ -23,7 +23,7 @@ class EditorBottomBar extends StatelessWidget {
   });
 
   Future<void> navigateToPage(int target) async {
-    final FileRepo files = Get.find();
+    final FileRepo files = Get.find(tag: tag);
     final TagManager manager = Get.find();
     final PageGetxController page = Get.find(tag: tag);
 

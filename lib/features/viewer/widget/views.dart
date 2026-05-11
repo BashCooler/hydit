@@ -72,7 +72,7 @@ class ViewImage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final files = Get.find<FileRepo>();
+    final FileRepo files = Get.find(tag: tag);
     final image = files[index];
 
     final ticker = useSingleTickerProvider();

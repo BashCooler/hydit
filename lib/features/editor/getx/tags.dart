@@ -16,6 +16,10 @@ class TagManager extends GetxController {
   final Map<String, List<Tag>> _tagsToAdd = {};
   final Map<String, List<Tag>> _tagsToDelete = {};
 
+  final FileRepo files;
+
+  TagManager(this.files);
+
   /// Selected service
   String get service => selectedService.value;
 
@@ -125,10 +129,8 @@ extension Init on TagManager {
     _ids.assignAll(ids);
     initializeServices();
 
-    final FileRepo fileRepo = Get.find();
-
     for (final id in ids) {
-      final servicesMap = fileRepo.byId(id)?.service;
+      final servicesMap = files.byId(id)?.service;
       if (servicesMap == null) return;
       addToServices(servicesMap);
     }
@@ -235,8 +237,6 @@ extension Save on TagManager {
       await repo.removeTags(_ids.toList(), service, tags);
     }
 
-    final FileRepo files = Get.find();
-
     for (final id in _ids) {
       await repo.setMetadataFor(files.byId(id));
     }
@@ -277,7 +277,6 @@ extension Sorting on TagManager {
   }
 
   List<HydrusFile> slice() {
-    final FileRepo files = Get.find();
     return _ids
         .take(4)
         .map((id) => files.byId(id))

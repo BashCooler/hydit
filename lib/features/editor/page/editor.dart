@@ -64,7 +64,7 @@ class _EditorState extends State<Editor> {
   PreferredSizeWidget buildAppBar() {
     switch (widget.mode) {
       case .paged:
-        final FileRepo files = Get.find();
+        final FileRepo files = Get.find(tag: widget.tag);
         final PageGetxController page = Get.find(tag: widget.tag);
         return EditorAppBar(
           toolbarHeight: 100,
@@ -83,8 +83,8 @@ class _EditorState extends State<Editor> {
         );
       case .batch:
         final TagManager manager = Get.find();
-        final FileRepo fileRepo = Get.find();
-        final previewFileRepo = FileRepo.pickFrom(fileRepo, manager.fileIds);
+        final FileRepo files = Get.find(tag: widget.tag);
+        final previewFileRepo = FileRepo.pickFrom(files, manager.fileIds);
 
         return EditorAppBar(
           toolbarHeight: 100,

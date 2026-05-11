@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -45,6 +46,7 @@ class TagSheet extends HookWidget {
     final scrollBelow = useScrollController();
     final SnappingSheetController sheet = Get.find(tag: tag);
     final PageGetxController page = Get.find(tag: tag);
+    final FileRepo files = Get.find(tag: tag);
     final GalleryController gallery = Get.find();
 
     const background = Material(child: Center());
@@ -71,7 +73,7 @@ class TagSheet extends HookWidget {
               tags: tags,
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () => toEditorPaged(tag, page.i, gallery),
+              onPressed: () => toEditorPaged(tag, page.i, files, gallery),
               child: const Icon(Icons.edit_note),
             ).niku
               ..padding = .only(bottom: 18),

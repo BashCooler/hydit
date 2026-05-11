@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/features/search/getx/query.dart';

@@ -152,10 +152,11 @@ class SelectActions extends StatelessWidget {
                 case 1:
                   final id = selection.ids.first;
                   final index = files.indexWhere((f) => f.id == id);
-                  await toEditorPaged(tag, index, gallery);
+                  await toEditorPaged(tag, index, files, gallery);
                   selection.clear();
                 case _:
-                  await toEditorBatch(tag, selection.ids.toList(), gallery);
+                  final fileRepo = FileRepo.pickFrom(files, selection.ids.toList());
+                  await toEditorBatch(tag, fileRepo, gallery);
                   selection.clear();
               }
             },
