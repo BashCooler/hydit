@@ -19,8 +19,9 @@ import '../getx/selection.dart';
 
 class GalleryGridView extends StatelessWidget {
   final String tag;
+  final void Function(int id)? onLongPress;
 
-  const GalleryGridView({super.key, required this.tag});
+  const GalleryGridView({super.key, required this.tag, this.onLongPress});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +67,7 @@ class GalleryGridView extends StatelessWidget {
           controller: gallery.grid.controller,
           itemCount: fileRepo.length,
           gridDelegate: delegate,
-          itemBuilder: (_, index) => _TileBuilder(tag, index, fileRepo),
+          itemBuilder: (_, index) => _TileBuilder(tag, index, fileRepo, onLongPress),
         )),
       ),
     );
@@ -77,22 +78,23 @@ class _TileBuilder extends StatelessWidget {
   final String tag;
   final FileRepo files;
   final int index;
+  final void Function(int id)? onLongPress;
 
-  const _TileBuilder(this.tag, this.index, this.files);
+  const _TileBuilder(this.tag, this.index, this.files, this.onLongPress);
 
   @override
   Widget build(BuildContext context) {
     final file = files[index];
 
     if (file.width != -1) {
-      return Tile(tag, index, files);
+      return Tile(tag, index, files, onLongPress);
     }
 
     return FutureBuilder(
       future: Get.find<Repo>().setMetadataFor(file),
       builder: (_, snapshot) {
         if (snapshot.connectionState == .done) {
-          return Tile(tag, index, files);
+          return Tile(tag, index, files, onLongPress);
         } else {
           return const ColoredBox(color: Colors.white10);
         }
@@ -106,8 +108,9 @@ class Tile extends StatelessWidget {
   final String tag;
   final FileRepo files;
   final int index;
+  final void Function(int id)? onLongPress;
 
-  const Tile(this.tag, this.index, this.files, {super.key});
+  const Tile(this.tag, this.index, this.files, this.onLongPress, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -130,13 +133,7 @@ class Tile extends StatelessWidget {
             toViewer(index, files, gallery);
         }
       },
-      onLongPress: () {
-        if (gallery.refreshing.value) return;
-        selection.toggle(file.id);
-        if (selection.on) {
-          gallery..hideActions()..lockActions();
-        }
-      },
+      onLongPress: () => onLongPress?.call(file.id),
       child: Stack(
         alignment: .bottomRight,
         children: [

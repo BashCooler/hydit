@@ -69,7 +69,10 @@ class Gallery extends StatelessWidget {
           body: Stack(
             alignment: .bottomRight,
             children: [
-              GalleryGridView(tag: tag),
+              GalleryGridView(
+                tag: tag,
+                onLongPress: mode == .full ? selection.selectTile : null,
+              ),
               FloatingActions(tag: tag),
             ],
           ),

@@ -56,4 +56,10 @@ class SelectionController extends GetxController {
 
     ids.add(lastId);
   }
+
+  void selectTile(int id) {
+    if (gallery.refreshing.value) return;
+    toggle(id);
+    if (on) gallery..hideActions()..lockActions();
+  }
 }
