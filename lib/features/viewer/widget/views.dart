@@ -1,19 +1,20 @@
 import 'dart:async';
 
-import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 
 import 'package:hydrus_flutter/core/data/repo.dart';
 import 'package:hydrus_flutter/core/ui/common.dart';
-import 'package:hydrus_flutter/core/ui/images.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
+import 'package:niku/widget/niku.dart';
 
 import '../getx/page.dart';
 import 'image_view.dart';
+import 'seekbar.dart';
 
 
 class ViewFile extends StatelessWidget {
@@ -168,36 +169,69 @@ class _ViewVideoState extends State<ViewVideo> {
 
   @override
   Widget build(BuildContext context) {
-    var video = widget.file;
-    return Center(
-      child: ObxHero(
-        index: widget.index,
-        heroTag: video.id,
-        getTag: widget.tag,
-        child: ImageStack(
-          aspectRatio: video.width /video.height,
-          children: [
-            CachedNetworkImage(
-              imageUrl: repo.buildUrl(video.id, thumbnail: true),
-              placeholder: (context, url) => SizedBox.shrink(),
-              fit: .cover,
-            ),
-            AnimatedOpacity(
-              opacity: ready ? 1 : 0,
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.easeInQuint,
-              child: Video(
-                controller: controller,
-                fill: Colors.transparent,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ],
-        ),
+    return ObxHero(
+      index: widget.index,
+      heroTag: widget.file.id,
+      getTag: widget.tag,
+      child: Stack(
+        fit: .expand,
+        children: [
+          CachedNetworkImage(
+            imageUrl: repo.buildUrl(widget.file.id, thumbnail: true),
+            placeholder: (context, url) => SizedBox.shrink(),
+            fit: .contain,
+          ),
+          AnimatedOpacity(
+            opacity: ready ? 1 : 0,
+            duration: const Duration(milliseconds: 150),
+            curve: Curves.easeInQuint,
+            child: VideoPlayer(controller: controller),
+          ),
+        ],
       ),
     );
   }
 }
+
+
+class VideoPlayer extends StatelessWidget {
+  final VideoController controller;
+
+  const VideoPlayer({super.key, required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Video(
+      fit: .contain,
+      controller: controller,
+      fill: Colors.transparent,
+      controls: (state) {
+        return Material(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisAlignment: .end,
+            children: [
+              MaterialPositionIndicator(),
+              Row(
+                crossAxisAlignment: .center,
+                children: [
+                  Padding(
+                    padding: .only(left: 12),
+                    child: MaterialPlayOrPauseButton(),
+                  ),
+                  CustomMaterialSeekBar(),
+                  // MaterialFullscreenButton(),
+                  MaterialDesktopVolumeButton(),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
 
 
 class NotSupported extends StatelessWidget {
