@@ -7,6 +7,8 @@ const readOnlyServices = ['all known tags', 'public tag repository'];
 
 
 class TagManager extends GetxController {
+  final ready = false.obs;
+
   final services = <String>[];
   final selectedService = ''.obs;
   final _ids = <int>{};
@@ -113,14 +115,22 @@ class TagManager extends GetxController {
 
 
 extension Init on TagManager {
-  void init(HydrusFile file) {
-    final service = file.service;
+  bool get loading => !ready.value;
+
+  Future<void> init(HydrusFile file) async {
     _ids.assign(file.id);
+    ready.value = false;
+    update();
+
+    await file.checkForMetadata();
+    if (file.id != _ids.first) return;
 
     clear();
     initializeServices();
-    addToServices(service);
+    addToServices(file.service);
     selectCurrentService();
+
+    ready.value = true;
     update();
   }
 

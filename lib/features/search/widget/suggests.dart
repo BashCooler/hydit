@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:hydrus_flutter/core/ui/tag_list.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
@@ -53,13 +54,15 @@ class Hint extends StatelessWidget {
         physics: NeverScrollableScrollPhysics(),
         child: Padding(
           padding: .only(bottom: 45),
-          child: Column(
-            mainAxisAlignment: .center,
-            spacing: 15,
-            children: [
-              Icon(Icons.search, size: 96),
-              Text('Start typing to search tags'),
-            ],
+          child: Skeleton.keep(
+            child: Column(
+              mainAxisAlignment: .center,
+              spacing: 15,
+              children: [
+                Icon(Icons.search, size: 96),
+                Text('Start typing to search tags'),
+              ],
+            ),
           ),
         ),
       ),

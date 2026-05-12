@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 
 import 'package:hydrus_flutter/features/search/getx/query.dart';
@@ -18,14 +19,19 @@ class EditorTagSearchBar extends StatelessWidget {
     final TagManager manager = Get.find();
 
     return Obx(() {
-      return TagSearchBar(
-        enabled: manager.editable,
-        hintText: manager.editable
-            ? 'Add tags to ${manager.service}'
-            : 'Read-only service selected',
-        onSubmitted: null,
-        actions: EditorTagSearchBarActions(tag: tag),
-        tag: tag,
+      return Skeletonizer(
+        enabled: manager.loading,
+        child: TagSearchBar(
+          enabled: manager.editable,
+          hintText: manager.editable
+              ? 'Add tags to ${manager.service}'
+              : 'Read-only service selected',
+          onSubmitted: null,
+          actions: Skeleton.shade(
+            child: EditorTagSearchBarActions(tag: tag),
+          ),
+          tag: tag,
+        ),
       );
     });
   }

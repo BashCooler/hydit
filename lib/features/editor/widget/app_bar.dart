@@ -80,10 +80,9 @@ class Info extends StatelessWidget {
           final FileRepo files = Get.find(tag: tag);
           final PageGetxController page = Get.find(tag: tag);
           final file = files[page.i];
-          log(file.ready.value.toString());
           return Obx(() {
             return Skeletonizer(
-              enabled: file.loading,
+              enabled: manager.loading,
               child: Column(
                 spacing: 5,
                 mainAxisAlignment: .center,

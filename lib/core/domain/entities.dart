@@ -45,7 +45,7 @@ class HydrusFile {
   }
 
   Future<void> checkForMetadata() async {
-    if (type != null && ext != null) return;
+    if (ready.value) return;
     final Repo repo = Get.find();
     await repo.setMetadataFor(this);
   }

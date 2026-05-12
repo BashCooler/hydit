@@ -40,27 +40,41 @@ class EditorSplitView extends HookWidget {
 }
 
 
-class Up extends StatelessWidget {
-  final scrollUp = ScrollController();
-
-  Up({super.key});
+class Up extends HookWidget {
+  const Up({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final scrollUp = useScrollController();
+
     return GetBuilder(
       init: Get.find<TagManager>(),
       builder: (manager) {
-        return TagList(
-          tags: manager.tags,
-          trailing: Icon(manager.editable
-              ? Icons.playlist_remove
-              : Icons.lock_outline),
-          scrollController: scrollUp,
-          onTap: manager.editable
-              ? manager.delete
-              : null,
-          reverse: true,
-        );
+        switch (manager.loading) {
+          case true:
+            return Skeletonizer(
+              child: ListView.builder(
+                reverse: true,
+                itemCount: 20,
+                controller: scrollUp,
+                itemBuilder: (context, index) {
+                  return ListTile(title: Text('X' * 16));
+                },
+              ),
+            );
+          case false:
+            return TagList(
+              tags: manager.tags,
+              trailing: Icon(manager.editable
+                  ? Icons.playlist_remove
+                  : Icons.lock_outline),
+              scrollController: scrollUp,
+              onTap: manager.editable
+                  ? manager.delete
+                  : null,
+              reverse: true,
+            );
+        }
       },
     );
   }
@@ -77,14 +91,18 @@ class Down extends StatelessWidget {
     return GetBuilder(
       init: Get.find<TagManager>(),
       builder: (manager) {
-        return Suggests(
-          tag: tag,
-          trailing: Icon(manager.editable
-              ? Icons.add
-              : Icons.lock_outline),
-          onTap: manager.editable
-              ? manager.add
-              : null,
+        final icon = manager.editable
+            ? Icons.add
+            : Icons.lock_outline;
+        return Skeletonizer(
+          enabled: manager.loading,
+          child: Suggests(
+            tag: tag,
+            trailing: Skeleton.ignore(child: Icon(icon)),
+            onTap: manager.editable
+                ? manager.add
+                : null,
+          ),
         );
       },
     );
