@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
@@ -37,7 +39,7 @@ class TagSheet extends HookWidget {
     final PageGetxController page = Get.find(tag: tag);
 
     final pos = positionData.relativeToSheetHeight;
-    page.sheetProgress.value = pos/0.5;
+    page.sheetProgress.value = clampDouble(pos/0.5, 0, 1);
     if (pos > 0) {
       page.blockDismiss = true;
     } else {
