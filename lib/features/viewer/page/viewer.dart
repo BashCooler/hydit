@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
@@ -30,7 +32,7 @@ class Viewer extends StatelessWidget {
     this.showFloatingActionButton = true,
   });
 
-  void showSearchBar(bool didPop, dynamic result) async {
+  void showSearchBar() async {
     Future.delayed(Duration(milliseconds: 250), () {
       gallery?..showActions()..showBadges();
     });
@@ -42,7 +44,19 @@ class Viewer extends StatelessWidget {
     final PageGetxController page = Get.find(tag: tag);
 
     return PopScope(
-      onPopInvokedWithResult: showSearchBar,
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+
+        final SnappingSheetController sheet = Get.find(tag: tag);
+        if (page.sheetProgress.value > 0.5) {
+          sheet.snapToPosition(SnappingPosition.factor(positionFactor: 0));
+          return;
+        }
+
+        showSearchBar();
+        Get.back();
+      },
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
