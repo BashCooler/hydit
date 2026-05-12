@@ -16,6 +16,8 @@ class PageGetxController extends GetxController {
   final GridObserverController? grid;
   final PreloadPageController controller;
 
+  final sheetProgress = 0.0.obs;
+
   PageGetxController({required int initial, this.grid})
     : index = initial.obs,
       controller = PreloadPageController(initialPage: initial);

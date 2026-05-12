@@ -185,7 +185,7 @@ class _ViewVideoState extends State<ViewVideo> {
             opacity: ready ? 1 : 0,
             duration: const Duration(milliseconds: 150),
             curve: Curves.easeInQuint,
-            child: VideoPlayer(controller: controller),
+            child: VideoPlayer(controller: controller, tag: widget.tag),
           ),
         ],
       ),
@@ -195,43 +195,52 @@ class _ViewVideoState extends State<ViewVideo> {
 
 
 class VideoPlayer extends StatelessWidget {
+  final String tag;
   final VideoController controller;
 
-  const VideoPlayer({super.key, required this.controller});
+  const VideoPlayer({super.key, required this.controller, required this.tag});
 
   @override
   Widget build(BuildContext context) {
+    final PageGetxController page = Get.find(tag: tag);
     return Video(
       fit: .contain,
       controller: controller,
       fill: Colors.transparent,
       controls: (state) {
-        return Material(
-          color: Colors.transparent,
-          child: Column(
-            mainAxisAlignment: .end,
-            children: [
-              MaterialPositionIndicator(),
-              Row(
-                crossAxisAlignment: .center,
+        return Obx(() {
+          final inverseProgress = (1 - page.sheetProgress.value);
+          final viewPadding = Get.mediaQuery.viewPadding.bottom;
+          final padding = Get.mediaQuery.padding.bottom;
+          return Padding(
+            padding: .only(bottom: inverseProgress * (viewPadding + padding)),
+            child: Material(
+              color: Colors.transparent,
+              child: Column(
+                mainAxisAlignment: .end,
                 children: [
-                  Padding(
-                    padding: .only(left: 12),
-                    child: MaterialPlayOrPauseButton(),
+                  MaterialPositionIndicator(),
+                  Row(
+                    crossAxisAlignment: .center,
+                    children: [
+                      Padding(
+                        padding: .only(left: 12),
+                        child: MaterialPlayOrPauseButton(),
+                      ),
+                      CustomMaterialSeekBar(),
+                      // MaterialFullscreenButton(),
+                      MaterialDesktopVolumeButton(),
+                    ],
                   ),
-                  CustomMaterialSeekBar(),
-                  // MaterialFullscreenButton(),
-                  MaterialDesktopVolumeButton(),
                 ],
               ),
-            ],
-          ),
-        );
+            ),
+          );
+        });
       },
     );
   }
 }
-
 
 
 class NotSupported extends StatelessWidget {

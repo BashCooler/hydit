@@ -36,7 +36,9 @@ class TagSheet extends HookWidget {
     if (!Get.isRegistered<PageGetxController>(tag: tag)) return;
     final PageGetxController page = Get.find(tag: tag);
 
-    if (positionData.relativeToSheetHeight > 0) {
+    final pos = positionData.relativeToSheetHeight;
+    page.sheetProgress.value = pos/0.5;
+    if (pos > 0) {
       page.blockDismiss = true;
     } else {
       page.blockDismiss = false;
