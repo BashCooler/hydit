@@ -19,6 +19,8 @@ import '../data/repo.dart';
 
 
 class HydrusFile {
+  final ready = false.obs;
+
   final int id;
   double width = -1;
   double height = -1;
@@ -28,11 +30,13 @@ class HydrusFile {
   int duration = 0;
   final service = <String, List<Tag>>{}.obs;
 
+  HydrusFile(this.id);
+
   int get length => service['all known tags']?.length ?? 0;
   List<Tag> get all => service['all known tags'] ?? [];
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
 
-  HydrusFile(this.id);
+  bool get loading => !ready.value;
 
   set mime(String value) {
     final m = value.split('/');

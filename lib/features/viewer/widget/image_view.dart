@@ -350,10 +350,12 @@ class _ZoomableImageViewState extends State<_ZoomableImageView>
       return;
     }
 
-    setState(() {
-      _scale = clampedScale;
-      _offset = clampedOffset;
-    });
+    if (mounted) {
+      setState(() {
+        _scale = clampedScale;
+        _offset = clampedOffset;
+      });
+    }
     _syncPageSwipeLock();
   }
 

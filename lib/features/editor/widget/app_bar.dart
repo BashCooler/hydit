@@ -1,11 +1,15 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrus_flutter/core/domain/entities.dart';
 import 'package:niku/extra/extra.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:filesize/filesize.dart';
 
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/viewer/getx/page.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../getx/tags.dart';
 import '../page/editor.dart';
@@ -73,19 +77,28 @@ class Info extends StatelessWidget {
       child: GetBuilder(
         init: Get.find<TagManager>(),
         builder: (manager) {
-          return Column(
-            spacing: 5,
-            mainAxisAlignment: .center,
-            crossAxisAlignment: .start,
-            children: <Widget>[
-              buildDiff(manager),
-              buildService(context, manager),
-              switch (mode) {
-                Mode.paged => buildMeta(context, tag),
-                Mode.batch => buildFileCount(manager),
-              },
-            ],
-          );
+          final FileRepo files = Get.find(tag: tag);
+          final PageGetxController page = Get.find(tag: tag);
+          final file = files[page.i];
+          log(file.ready.value.toString());
+          return Obx(() {
+            return Skeletonizer(
+              enabled: file.loading,
+              child: Column(
+                spacing: 5,
+                mainAxisAlignment: .center,
+                crossAxisAlignment: .start,
+                children: <Widget>[
+                  buildDiff(manager),
+                  buildService(context, manager),
+                  switch (mode) {
+                    Mode.paged => buildMeta(file),
+                    Mode.batch => buildFileCount(manager),
+                  },
+                ],
+              ),
+            );
+          });
         },
       ),
     );
@@ -95,12 +108,8 @@ class Info extends StatelessWidget {
 
 extension Builders on Info
 {
-  Widget buildMeta(BuildContext context, String tag) {
-    final FileRepo files = Get.find(tag: tag);
-    final PageGetxController page = Get.find(tag: tag);
-    final file = files[page.i];
-
-    return 'id: ${file.id} / ${filesize(file.size)} / ${file.res}'.n
+  Widget buildMeta(HydrusFile file) {
+    return 'id: ${file.id}, ${filesize(file.size)},\n${file.res}'.n
       ..labelMedium
       ..maxLines = 2;
   }

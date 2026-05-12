@@ -30,11 +30,12 @@ class Repo {
 
   Future<void> setMetadataFor(HydrusFile? image) async {
     if (image == null) return;
-    // await Future.delayed(Duration(seconds: 10));
+    await Future.delayed(Duration(seconds: 10));
     final response = await api.getFileMetadata(
       [image.id],
       includeServicesObject: false);
     await Mapper.writeMetadata(response, image);
+    image.ready.value = true;
   }
 
   String buildUrl(int id, {bool thumbnail = false}) => ""

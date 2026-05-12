@@ -5,6 +5,7 @@ import 'package:multi_split_view/multi_split_view.dart';
 
 import 'package:hydrus_flutter/core/ui/tag_list.dart';
 import 'package:hydrus_flutter/features/search/widget/suggests.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../getx/tags.dart';
 
