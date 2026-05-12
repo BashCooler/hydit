@@ -202,45 +202,63 @@ class VideoPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PageGetxController page = Get.find(tag: tag);
     return Video(
       fit: .contain,
       controller: controller,
       fill: Colors.transparent,
       controls: (state) {
-        return Obx(() {
-          final inverseProgress = (1 - page.sheetProgress.value);
-          final viewPadding = Get.mediaQuery.viewPadding.bottom;
-          final padding = Get.mediaQuery.padding.bottom;
-          return Padding(
-            padding: .only(bottom: inverseProgress * (viewPadding + padding)),
-            child: Material(
-              color: Colors.transparent,
-              child: Column(
-                mainAxisAlignment: .end,
+        return AnimatedControlsPadding(
+          tag: tag,
+          child: const Column(
+            mainAxisAlignment: .end,
+            children: [
+              MaterialPositionIndicator(),
+              Row(
+                crossAxisAlignment: .center,
                 children: [
-                  MaterialPositionIndicator(),
-                  Row(
-                    crossAxisAlignment: .center,
-                    children: [
-                      Padding(
-                        padding: .only(left: 12),
-                        child: MaterialPlayOrPauseButton(),
-                      ),
-                      CustomMaterialSeekBar(),
-                      // MaterialFullscreenButton(),
-                      MaterialDesktopVolumeButton(),
-                    ],
+                  Padding(
+                    padding: .only(left: 12),
+                    child: MaterialPlayOrPauseButton(),
                   ),
+                  CustomMaterialSeekBar(),
+                  // MaterialFullscreenButton(),
+                  MaterialDesktopVolumeButton(),
                 ],
               ),
-            ),
-          );
-        });
+            ],
+          ),
+        );
       },
     );
   }
 }
+
+
+class AnimatedControlsPadding extends StatelessWidget {
+  final String tag;
+  final Widget child;
+
+  const AnimatedControlsPadding({super.key, required this.tag, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final PageGetxController page = Get.find(tag: tag);
+    final viewPadding = Get.mediaQuery.viewPadding.bottom;
+    final padding = Get.mediaQuery.padding.bottom;
+
+    return Obx(() {
+      final inverseProgress = (1 - page.sheetProgress.value);
+      return Padding(
+        padding: .only(bottom: inverseProgress * (viewPadding + padding)),
+        child: Material(
+          color: Colors.transparent,
+          child: child,
+        ),
+      );
+    });
+  }
+}
+
 
 
 class NotSupported extends StatelessWidget {
