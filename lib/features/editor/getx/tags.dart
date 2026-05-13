@@ -146,6 +146,7 @@ extension Init on TagManager {
     }
 
     selectCurrentService();
+    ready.value = true;
     update();
   }
 
