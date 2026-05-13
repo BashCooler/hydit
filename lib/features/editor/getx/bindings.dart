@@ -58,6 +58,8 @@ class EditorBindings extends Bindings {
         Get.put(page, tag: tag);
         Get.put(TagManager(files)..init(files[index!]));
       case .batch:
+        final page = PageGetxController(initial: 0, grid: gallery?.grid);
+        Get.put(page, tag: tag);
         Get.put(TagManager(files)..initBatch(ids!));
     }
   }
