@@ -45,7 +45,7 @@ class TagSearchBar extends HookWidget {
         suffixIcon: actions,
         border: .none,
       ),
-      onChanged: query.onChange,
+      onChanged: (value) => query.query.value = value,
       onSubmitted: (_) => onSubmitted?.call(),
       onTapOutside: (_) => keepFocus(node),
     );

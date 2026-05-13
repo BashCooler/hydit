@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
@@ -36,8 +38,11 @@ class QueryController extends GetxController {
   void onInit() {
     super.onInit();
     debounce(
-      query, (q) => onChange(q),
-      time: Duration(milliseconds: 250),
+      query, (q) {
+        log('Searching');
+        _onChange(q);
+      },
+      time: Duration(milliseconds: 100),
     );
   }
 
@@ -47,7 +52,7 @@ class QueryController extends GetxController {
     super.dispose();
   }
 
-  void onChange(String q) {
+  void _onChange(String q) {
     if (q.length < 3) {
       suggests.clear();
       _suggestVisible.value = false;
