@@ -20,12 +20,14 @@ class GalleryGridView extends StatelessWidget {
   final String tag;
   final void Function(int id, int index)? onTap;
   final void Function(int id)? onLongPress;
+  final bool Function(ScrollNotification) allowRefresh;
 
   const GalleryGridView({
     super.key,
     required this.tag,
     this.onTap,
     this.onLongPress,
+    this.allowRefresh = defaultScrollNotificationPredicate,
   });
 
   static const physics = BouncingScrollPhysics(
@@ -45,13 +47,12 @@ class GalleryGridView extends StatelessWidget {
 
     final FileRepo files = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
-    final SelectionController selection = Get.find(tag: tag);
 
     return GridViewObserver(
       controller: gallery.grid,
       child: ExpressiveRefreshIndicator(
         displacement: 100.0,
-        notificationPredicate: (_) => selection.off,
+        notificationPredicate: allowRefresh,
         onRefresh: () => query.searchForFiles(),
         onStatusChange: (status) {
           switch (status) {
@@ -63,42 +64,44 @@ class GalleryGridView extends StatelessWidget {
               gallery.refreshing.value = true;
           }
         },
-        child: Obx(() => GridView.builder(
-          padding: .only(
-            top: Get.mediaQuery.viewPadding.top,
-            right: 5,
-            left: 5,
-            bottom: 5,
-          ),
-          physics: physics,
-          controller: gallery.grid.controller,
-          itemCount: files.length,
-          gridDelegate: delegate,
-          itemBuilder: (context, index) {
-            final file = files[index];
+        child: Obx(() {
+          return GridView.builder(
+            padding: .only(
+              top: Get.mediaQuery.viewPadding.top,
+              right: 5,
+              left: 5,
+              bottom: 5,
+            ),
+            physics: physics,
+            controller: gallery.scroll,
+            itemCount: files.length,
+            gridDelegate: delegate,
+            itemBuilder: (context, index) {
+              final file = files[index];
 
-            final tile = Tile(
-              tag: tag,
-              index: index,
-              file: files[index],
-              onTap: onTap,
-              onLongPress: onLongPress,
-            );
+              final tile = Tile(
+                tag: tag,
+                index: index,
+                file: files[index],
+                onTap: onTap,
+                onLongPress: onLongPress,
+              );
 
-            if (file.width != -1) return tile;
+              if (file.width != -1) return tile;
 
-            return FutureBuilder(
-              future: repo.setMetadataFor(file),
-              builder: (_, snapshot) {
-                if (snapshot.connectionState == .done) {
-                  return tile;
-                } else {
-                  return const ColoredBox(color: Colors.white10);
-                }
-              },
-            );
-          },
-        )),
+              return FutureBuilder(
+                future: repo.setMetadataFor(file),
+                builder: (_, snapshot) {
+                  if (snapshot.connectionState == .done) {
+                    return tile;
+                  } else {
+                    return const ColoredBox(color: Colors.white10);
+                  }
+                },
+              );
+            },
+          );
+        }),
       ),
     );
   }

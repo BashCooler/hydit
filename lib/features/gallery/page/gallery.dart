@@ -73,6 +73,7 @@ class Gallery extends StatelessWidget {
             children: [
               GalleryGridView(
                 tag: tag,
+                allowRefresh: (_) => selection.off,
                 onTap: (id, index) {
                   if (gallery.refreshing.value) return;
                   switch (selection.on) {
@@ -92,7 +93,9 @@ class Gallery extends StatelessWidget {
                     ? selection.selectTile
                     : null,
               ),
-              FloatingActions(tag: tag),
+              mode == .full
+                  ? FloatingActions(tag: tag)
+                  : const SizedBox.shrink(),
             ],
           ),
           bottomNavigationBar: selection.on
