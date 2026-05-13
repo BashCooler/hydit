@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:hive_ce/hive.dart';
@@ -79,9 +80,12 @@ class Repo {
       final message = 'Host is unknown, probably wrong URL';
       return (Result.error, message);
     } on HydrusNoServiceException {
-      final message = 'No connection with Hydrus. Is your client running?';
+      final message = 'No connection with Hydrus';
       return (Result.error, message);
     } on HydrusTimeoutException {
+      final message = 'No response (timeout)';
+      return (Result.error, message);
+    } on TimeoutException {
       final message = 'No response (timeout)';
       return (Result.error, message);
     } on HydrusUnknownException {

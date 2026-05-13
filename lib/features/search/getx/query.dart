@@ -37,7 +37,7 @@ class QueryController extends GetxController {
     super.onInit();
     debounce(
       query, (q) => onChange(q),
-      time: Duration(milliseconds: 300),
+      time: Duration(milliseconds: 250),
     );
   }
 

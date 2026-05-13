@@ -3,18 +3,10 @@ import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/domain/entities.dart';
 
 
-/// [ListView] of [Tag]s.
-///
-/// The [tags] should be of type [RxList] or [RxSet] and should
-/// contain [Tag]s.
-///
 /// Parameters [trailing] and [onTap] apply to each [ListTile] in
 /// [ListView].
 ///
 /// Default [trailing] is [Tag.count].
-///
-/// The [onTap] method is called when [ListTile] pressed and
-/// usually used to add tag to some [RxList] or [RxSet].
 class TagList extends StatelessWidget {
   final Widget? trailing;
   final List<Tag> tags;

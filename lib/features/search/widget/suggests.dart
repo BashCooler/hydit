@@ -28,16 +28,18 @@ class Suggests extends StatelessWidget {
   Widget build(BuildContext context) {
     final QueryController controller = Get.find(tag: tag);
     return Obx(() {
-      if (!controller.suggestsVisible) {
-        return const Hint();
+      switch (controller.suggestsVisible) {
+        case true:
+          return TagList(
+            trailing: trailing,
+            onTap: onTap,
+            scrollController: scrollController,
+            tags: controller.suggests.toList(),
+            reverse: true,
+          );
+        case false:
+          return const Hint();
       }
-      return TagList(
-        trailing: trailing,
-        onTap: onTap,
-        scrollController: scrollController,
-        tags: controller.suggests,
-        reverse: true,
-      );
     });
   }
 }
