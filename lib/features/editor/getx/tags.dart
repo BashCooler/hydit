@@ -28,6 +28,8 @@ class TagManager extends GetxController {
   /// Selected service's tags
   List<Tag> get tags => _tags[service] ?? [];
 
+  int length(String service) => _tags[service]?.length ?? 0;
+
   List<int> get fileIds => _ids.toList();
 
   /// Selected service's index
