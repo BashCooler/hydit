@@ -34,10 +34,10 @@ class GalleryGridView extends StatelessWidget {
     parent: AlwaysScrollableScrollPhysics(),
   );
 
-  static const delegate = SliverGridDelegateWithFixedCrossAxisCount(
-    crossAxisCount: 2,
-    mainAxisSpacing: 5.0,
-    crossAxisSpacing: 5.0,
+  static const delegate = SliverGridDelegateWithMaxCrossAxisExtent(
+    maxCrossAxisExtent: 180,
+    mainAxisSpacing: 5,
+    crossAxisSpacing: 5,
   );
 
   @override

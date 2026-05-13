@@ -66,6 +66,7 @@ class TagManager extends GetxController {
 
   void addToService(String service, Tag tag) {
     if (!isServiceEditable(service)) return;
+    if (tag.raw.isEmpty) return;
 
     final tags = _tags[service]!;
     final tagsToAdd = _tagsToAdd[service]!;

@@ -31,29 +31,31 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text('Settings'),
         elevation: 2,
       ),
-      body: Column(
-        spacing: 15,
-        children: [
-          Divider(color: Colors.transparent),
-          SettingsTextField(
-            label: 'Url',
-            onChanged: settings.updateUrl,
-            initial: settings.$.url,
-          ),
-          SettingsTextField(
-            label: 'API Key',
-            onChanged: settings.updateKey,
-            initial: settings.$.key,
-          ),
-          Obx(() {
-            return SettingActionTile(
-              enabled: !settings.processing.value,
-              icon: const SettingTileIcon(Icons.save),
-              title: const Text('Verify and save'),
-              onTap: verify,
-            );
-          }),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          spacing: 15,
+          children: [
+            Divider(color: Colors.transparent),
+            SettingsTextField(
+              label: 'Url',
+              onChanged: settings.updateUrl,
+              initial: settings.$.url,
+            ),
+            SettingsTextField(
+              label: 'API Key',
+              onChanged: settings.updateKey,
+              initial: settings.$.key,
+            ),
+            Obx(() {
+              return SettingActionTile(
+                enabled: !settings.processing.value,
+                icon: const SettingTileIcon(Icons.save),
+                title: const Text('Verify and save'),
+                onTap: verify,
+              );
+            }),
+          ],
+        ),
       ),
     );
   }
