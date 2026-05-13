@@ -5,10 +5,10 @@ import 'package:niku/namespace.dart' as n;
 
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
+import 'package:hydrus_flutter/features/search/page/search.dart';
 import 'package:hydrus_flutter/features/viewer/getx/bindings.dart';
 import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
 import 'package:hydrus_flutter/features/gallery/getx/bindings.dart';
-import 'package:hydrus_flutter/features/search/page/search_sheet.dart';
 import 'package:hydrus_flutter/features/settings/ui/page/settings.dart';
 
 import '../getx/gallery.dart';
@@ -134,7 +134,7 @@ class FloatingActions extends StatelessWidget {
             FilledIconButton(
               onPressed: () {
                 gallery.hideActions();
-                showSearchSheet(context, tag);
+                Get.to(() => SearchSheet(tag: tag), transition: .downToUp);
               },
               icon: const Icon(Icons.search),
             ),

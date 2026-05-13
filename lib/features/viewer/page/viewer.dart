@@ -30,12 +30,6 @@ class Viewer extends StatelessWidget {
     this.showFloatingActionButton = true,
   });
 
-  void showSearchBar() async {
-    Future.delayed(Duration(milliseconds: 250), () {
-      gallery?..showActions()..showBadges();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final FileRepo files = Get.find(tag: tag);
@@ -52,7 +46,6 @@ class Viewer extends StatelessWidget {
           return;
         }
 
-        showSearchBar();
         Get.back();
       },
       child: Scaffold(
@@ -140,9 +133,7 @@ class DismissibleFile extends StatelessWidget {
         backgroundColor: Theme
             .of(context)
             .scaffoldBackgroundColor,
-        onDismissed: Navigator
-            .of(context)
-            .pop,
+        onDismissed: Get.back,
         direction: .vertical,
         interactionMode: .gesture,
         minScale: 0,

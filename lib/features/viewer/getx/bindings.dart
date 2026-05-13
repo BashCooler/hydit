@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
+import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
@@ -9,17 +10,17 @@ import '../page/viewer.dart';
 import 'page.dart';
 
 
-void toViewer({
+Future<void> toViewer({
   required int index,
   required FileRepo files,
   GalleryController? gallery,
   bool showFloatingActionButton = true,
-}) {
+}) async {
   final tag = 'Viewer-${DateTime.now().microsecondsSinceEpoch}';
 
   gallery?..hideActions()..hideBadges();
 
-  Get.to(
+  await Get.to(
     () => Viewer(
       index: index,
       tag: tag,
@@ -36,6 +37,10 @@ void toViewer({
       gallery: gallery,
     ),
   );
+
+  Future.delayed(AppTheme.duration, () {
+    gallery?..showActions()..showBadges();
+  });
 }
 
 

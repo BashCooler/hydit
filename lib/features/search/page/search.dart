@@ -14,20 +14,6 @@ import '../widget/search.dart';
 import '../widget/suggests.dart';
 
 
-void showSearchSheet(BuildContext context, String tag) {
-  Get.find<Repo>().updateClient();
-  Navigator.push(
-    context,
-    ModalSheetRoute(
-      swipeDismissible: true,
-      viewportBuilder: (context, child) => SheetViewport(child: child),
-      builder: (context) => SearchSheet(tag: tag),
-      transitionDuration: AppTheme.duration,
-    ),
-  );
-}
-
-
 class SearchSheet extends StatefulWidget {
   final String tag;
 
@@ -75,32 +61,27 @@ class _SearchSheetState extends State<SearchSheet> {
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvokedWithResult: onLeave,
-      child: SheetKeyboardDismissible(
-        dismissBehavior: behaviour,
-        child: Sheet(
-          child: Material(
-            child: n.Column([
-              Suggests(
-                onTap: (tag) {
-                  query
-                    ..clear()
-                    ..add(tag.raw);
-                },
-              ).niku
-                ..expanded,
-              const Divider(height: 1),
-              const TagPanel(),
-              TagSearchBar(
-                autofocus: true,
-                hintText: 'Enter tags here',
-                actions: const _TagSearchBarActions(),
-                onSubmitted: searchThenBack,
-              ),
-            ])
-              ..mainAxisAlignment = .end
-              ..safe,
+      child: Scaffold(
+        body: n.Column([
+          Suggests(
+            onTap: (tag) {
+              query
+                ..clear()
+                ..add(tag.raw);
+            },
+          ).niku
+            ..expanded,
+          const Divider(height: 1),
+          const TagPanel(),
+          TagSearchBar(
+            autofocus: true,
+            hintText: 'Enter tags here',
+            actions: const _TagSearchBarActions(),
+            onSubmitted: searchThenBack,
           ),
-        ),
+        ])
+          ..mainAxisAlignment = .end
+          ..safe,
       ),
     );
   }
