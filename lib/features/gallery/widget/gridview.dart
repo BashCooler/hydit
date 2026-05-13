@@ -67,10 +67,10 @@ class GalleryGridView extends StatelessWidget {
         child: Obx(() {
           return GridView.builder(
             padding: .only(
-              top: Get.mediaQuery.viewPadding.top,
+              top: Get.mediaQuery.viewPadding.top + kToolbarHeight,
               right: 5,
               left: 5,
-              bottom: 5,
+              bottom: Get.mediaQuery.viewPadding.bottom,
             ),
             physics: physics,
             controller: gallery.scroll,

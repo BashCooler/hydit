@@ -22,6 +22,8 @@ class Gallery extends StatelessWidget {
 
   const Gallery({super.key, required this.tag, this.mode = .full});
 
+  bool get full => mode == .full;
+
   @override
   Widget build(BuildContext context) {
     final FileRepo files = Get.find(tag: tag);
@@ -62,8 +64,15 @@ class Gallery extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            toolbarHeight: Get.mediaQuery.viewInsets.top,
-            backgroundColor: Get.theme.scaffoldBackgroundColor.withAlpha(90),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            flexibleSpace: Container(decoration: buildBoxDecoration()),
+            title: '${files.length} files'.n
+              ..color = Colors.white
+              ..bodyLarge
+              ..shadows = [
+                Shadow(blurRadius: 16),
+              ],
           ),
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
@@ -73,29 +82,24 @@ class Gallery extends StatelessWidget {
             children: [
               GalleryGridView(
                 tag: tag,
-                allowRefresh: (_) => selection.off,
+                allowRefresh: (_) => full && selection.off,
                 onTap: (id, index) {
                   if (gallery.refreshing.value) return;
                   switch (selection.on) {
                     case true:
                       selection.toggle(id);
                     case false:
-                      final button = mode == .full;
                       toViewer(
                         index: index,
                         files: files,
                         gallery: gallery,
-                        showFloatingActionButton: button,
+                        showFloatingActionButton: full,
                       );
                   }
                 },
-                onLongPress: mode == .full
-                    ? selection.selectTile
-                    : null,
+                onLongPress: full ? selection.selectTile : null,
               ),
-              mode == .full
-                  ? FloatingActions(tag: tag)
-                  : const SizedBox.shrink(),
+              full ? FloatingActions(tag: tag) : const SizedBox.shrink(),
             ],
           ),
           bottomNavigationBar: selection.on
@@ -103,6 +107,19 @@ class Gallery extends StatelessWidget {
               : null,
         );
       }),
+    );
+  }
+
+  BoxDecoration buildBoxDecoration() {
+    return BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          Get.theme.scaffoldBackgroundColor.withAlpha(128),
+          Colors.transparent,
+        ],
+        begin: .topCenter,
+        end: .bottomCenter,
+      ),
     );
   }
 }
