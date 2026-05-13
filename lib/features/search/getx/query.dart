@@ -38,11 +38,8 @@ class QueryController extends GetxController {
   void onInit() {
     super.onInit();
     debounce(
-      query, (q) {
-        log('Searching');
-        _onChange(q);
-      },
-      time: Duration(milliseconds: 100),
+      query, (q) => _onChange(q),
+      time: const Duration(milliseconds: 100),
     );
   }
 

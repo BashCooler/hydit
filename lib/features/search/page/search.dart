@@ -62,6 +62,11 @@ class _SearchSheetState extends State<SearchSheet> {
     return PopScope(
       onPopInvokedWithResult: onLeave,
       child: Scaffold(
+        appBar: AppBar(
+          elevation: 2,
+          scrolledUnderElevation: 0,
+          title: Text('Search'),
+        ),
         body: n.Column([
           Suggests(
             onTap: (tag) {

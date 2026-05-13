@@ -27,10 +27,14 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Settings')),
+      appBar: AppBar(
+        title: Text('Settings'),
+        elevation: 2,
+      ),
       body: Column(
         spacing: 15,
         children: [
+          Divider(color: Colors.transparent),
           SettingsTextField(
             label: 'Url',
             onChanged: settings.updateUrl,

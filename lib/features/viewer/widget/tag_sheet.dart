@@ -34,6 +34,8 @@ class TagSheet extends HookWidget {
     SnappingPosition.factor(positionFactor: 0.5),
   ];
 
+  static const background = Material(child: Center());
+
   void syncPageLock(dynamic positionData) {
     if (!Get.isRegistered<PageGetxController>(tag: tag)) return;
     final PageGetxController page = Get.find(tag: tag);
@@ -52,8 +54,6 @@ class TagSheet extends HookWidget {
     final scrollBelow = useScrollController();
     final SnappingSheetController sheet = Get.find(tag: tag);
     final PageGetxController page = Get.find(tag: tag);
-
-    const background = Material(child: Center());
 
     return SnappingSheet(
       controller: sheet,

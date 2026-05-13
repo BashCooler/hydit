@@ -271,6 +271,7 @@ extension ServiceUtils on TagManager {
   String pretty(String service) => switch (service) {
     'all known tags' => 'All',
     'public tag repository' => 'PTR',
+    'downloader tags' => 'Downloader',
     _ => service,
   };
 }
