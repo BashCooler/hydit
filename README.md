@@ -50,3 +50,12 @@ Feel free to ask any questions on how the things work if you want to improve som
 Notes on submitting a PR:
 - Try to keep the codebase simple
 - Don't overuse the AI. I'm fine with using something like Codex as a tool, but 1000+ lines of unreadable undocumented mess will not be appreciated and may be rejected even if it works
+
+## See also
+
+- [hydrui](https://hydrui.dev/en/) - a web-based client for Hydrus network
+- [LoliSnatcher](https://github.com/NO-ob/LoliSnatcher_Droid) - a powerful multibooru client with support for batch downloading 
+
+## Licence
+
+Hydit is licensed under the MIT License

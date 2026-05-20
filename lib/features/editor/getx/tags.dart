@@ -121,6 +121,8 @@ extension Init on TagManager {
   bool get loading => !ready.value;
 
   Future<void> init(HydrusFile file) async {
+    clear();
+
     _ids.assign(file.id);
     ready.value = false;
     update();
@@ -128,7 +130,6 @@ extension Init on TagManager {
     await file.checkForMetadata();
     if (file.id != _ids.first) return;
 
-    clear();
     initializeServices();
     addToServices(file.service);
     selectCurrentService();
@@ -200,6 +201,8 @@ extension Save on TagManager {
   /// ```
   /// if X and Y are not zero.
   String summarize() {
+    assert(_ids.isNotEmpty);
+
     final toAdd = removeEmpty(_tagsToAdd);
     final toRem = removeEmpty(_tagsToDelete);
 
