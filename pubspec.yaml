@@ -72,6 +72,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  integration_test:
+    sdk: flutter
   hive_ce_generator: ^1.11.1
   build_runner: ^2.13.1
 
