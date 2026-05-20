@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
+import 'package:hydrus_flutter/utils/dictionaries.dart';
 import 'package:hydrus_flutter/core/data/api.dart';
 import 'package:hydrus_flutter/core/data/mapper.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
@@ -20,6 +19,9 @@ class QueryController extends GetxController {
 
   final FileRepo? fileRepo;
   final GalleryController? gallery;
+
+  FileSortType sortType = .importTime;
+  final sortAsc = false.obs;
 
   QueryController({this.fileRepo, required this.gallery});
 
@@ -95,7 +97,11 @@ class QueryController extends GetxController {
     List<int> ids = [];
 
     try {
-      ids = await repo.api.getSearchFiles(_tags.map((t) => t.raw).toList());
+      ids = await repo.api.getSearchFiles(
+        _tags.map((t) => t.raw).toList(),
+        fileSortType: sortType.value,
+        fileSortAsc: sortAsc.value,
+      );
       await repo.updateServiceNames();
       var list = ids.map((id) => HydrusFile(id)).toList();
       fileRepo!.assignAll(list);

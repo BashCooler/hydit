@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hydrus_flutter/features/search/getx/query.dart';
+import 'package:hydrus_flutter/utils/dictionaries.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydrus_flutter/core/ui/common.dart';
@@ -23,6 +25,15 @@ class Gallery extends StatelessWidget {
   const Gallery({super.key, required this.tag, this.mode = .full});
 
   bool get full => mode == .full;
+
+  void scrollUp(GalleryController gallery) {
+    gallery.scroll.animateTo(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInCubic,
+    );
+    gallery.showActions();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +78,19 @@ class Gallery extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             flexibleSpace: Container(decoration: buildBoxDecoration()),
-            title: '${files.length} files'.n
-              ..color = Colors.white
-              ..bodyLarge
-              ..shadows = [
-                Shadow(blurRadius: 16),
-              ],
+            title: GestureDetector(
+              onTap: () => scrollUp(gallery),
+              child: '${files.length} files'.n
+                ..color = Colors.white
+                ..bodyLarge
+                ..shadows = const [
+                  Shadow(blurRadius: 16),
+                ],
+            ),
+            actions: const [
+              SortDirection(),
+              SortPopUp(),
+            ],
           ),
           resizeToAvoidBottomInset: false,
           extendBodyBehindAppBar: true,
@@ -120,6 +138,61 @@ class Gallery extends StatelessWidget {
         begin: .topCenter,
         end: .bottomCenter,
       ),
+    );
+  }
+}
+
+
+class SortDirection extends StatelessWidget {
+  const SortDirection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final query = Get.find<QueryController>();
+    return Obx(() {
+      final sortAsc = query.sortAsc.value;
+      return IconButton(
+        icon: sortAsc
+            ? Icon(Icons.arrow_drop_up)
+            : Icon(Icons.arrow_drop_down),
+        onPressed: () {
+          query.sortAsc.value = !query.sortAsc.value;
+          query.searchForFiles();
+        },
+      );
+    });
+  }
+}
+
+
+
+class SortPopUp extends StatelessWidget {
+  const SortPopUp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final query = Get.find<QueryController>();
+    return PopupMenuButton<FileSortType>(
+      icon: const Icon(
+        Icons.sort,
+        color: Colors.white,
+        shadows: [
+          Shadow(blurRadius: 16),
+        ],
+      ),
+      onSelected: (value) {
+        query.sortType = value;
+        query.searchForFiles();
+      },
+      itemBuilder: (BuildContext context) {
+        return FileSortType.values.map((option) {
+          return CheckedPopupMenuItem<FileSortType>(
+            checked: query.sortType == option,
+            value: option,
+            child: option.name.n,
+          );
+        }).toList();
+      },
     );
   }
 }

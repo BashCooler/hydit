@@ -35,7 +35,7 @@ class GalleryGridView extends StatelessWidget {
   );
 
   static const delegate = SliverGridDelegateWithMaxCrossAxisExtent(
-    maxCrossAxisExtent: 180,
+    maxCrossAxisExtent: 200,
     mainAxisSpacing: 5,
     crossAxisSpacing: 5,
   );

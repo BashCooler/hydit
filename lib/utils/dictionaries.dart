@@ -26,32 +26,39 @@ class BasicPermission {
 }
 
 
-class FileSortType {
-  static const fileSize = 1;
-  static const duration = 2;
-  static const importTime = 3;
-  static const filetype = 4;
-  static const random = 5;
-  static const width = 6;
-  static const height = 7;
-  static const ratio = 8;
-  static const numberOfPixels = 9;
-  static const numberOfTags = 10;
-  static const numberOfMediaViews = 11;
-  static const totalMediaViewTime = 12;
-  static const approximateBitrate = 13;
-  static const hasAudio = 14;
-  static const modifiedTime = 15;
-  static const frameRate = 16;
-  static const numberOfFrames = 17;
-  static const lastViewedTime = 18;
-  static const archiveTimestamp = 19;
-  static const hashHex = 20;
-  static const pixelHashHex = 21;
-  static const blurHash = 22;
-  static const averageColourLightness = 23;
-  static const averageColourChromaticMagnitude = 24;
-  static const averageColourGreenRedAxis = 25;
-  static const averageColourBlueYellowAxis = 26;
-  static const averageColourHue = 27;
+enum FileSortType {
+  fileSize(0, 'size'),
+  duration(1, 'duration'),  // should work, but haven't been tested really
+  importTime(2, 'import time'),
+  // filetype(3, 'type'),
+  random(4, 'random'),
+  width(5, 'width'),
+  height(6, 'height'),
+  ratio(7, 'ratio'),
+  numberOfPixels(8, 'number of pixels'),
+  numberOfTags(9, 'number of tags'),  // doesn't work
+  // numberOfMediaViews(10, 'number of views'),
+  // totalMediaViewTime(11, 'view time'),
+  // approximateBitrate(12, 'bitrate'),
+  hasAudio(13, 'has audio'),
+  modifiedTime(14, 'modified time'),
+  // frameRate(15, 'fps'),
+  // numberOfFrames(16, 'number of frames'),
+  // 17 doesn't exist
+  // lastViewedTime(18, 'last viewed time'),
+  // archiveTimestamp(19, 'archived time'),  // doesn't work
+  // hashHex(20, 'has hex'),
+  // pixelHashHex(21, 'pixel hash hex'),
+  // blurHash(22, 'blur hash'),
+  // averageColourLightness(22, 'avg color lightness'),
+  // averageColourChromaticMagnitude(23, 'avg color chromatic magnitude'),
+  // averageColourGreenRedAxis(24, 'avg color green red axis'),
+  // averageColourBlueYellowAxis(25, 'avg color blue yellow axis'),
+  // averageColourHue(26, 'avg color hue');
+  ;
+
+  final int value;
+  final String name;
+
+  const FileSortType(this.value, this.name);
 }
