@@ -1,18 +1,17 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hydrus_flutter/features/search/getx/query.dart';
-import 'package:hydrus_flutter/utils/dictionaries.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydrus_flutter/core/ui/common.dart';
 import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:hydrus_flutter/features/search/page/search.dart';
+import 'package:hydrus_flutter/features/search/widget/sorting.dart';
 import 'package:hydrus_flutter/features/viewer/getx/bindings.dart';
 import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
-import 'package:hydrus_flutter/features/gallery/getx/bindings.dart';
 import 'package:hydrus_flutter/features/settings/ui/page/settings.dart';
 
+import '../getx/bindings.dart';
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
 import '../widget/gridview.dart';
@@ -137,81 +136,6 @@ class Gallery extends StatelessWidget {
         begin: .topCenter,
         end: .bottomCenter,
       ),
-    );
-  }
-}
-
-
-class SortPopUp extends StatelessWidget {
-  const SortPopUp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final query = Get.find<QueryController>();
-    return PopupMenuButton<FileSortType>(
-      icon: const Icon(
-        Icons.sort,
-        color: Colors.white,
-        shadows: [
-          Shadow(blurRadius: 16),
-        ],
-      ),
-      onSelected: (value) {
-        query.sortType = value;
-        query.searchForFiles();
-      },
-      itemBuilder: (BuildContext context) {
-        return [
-          ...FileSortType.values.map((option) {
-            return PopupMenuItem<FileSortType>(
-              value: option,
-              child: Row(
-                spacing: 10,
-                children: [
-                  query.sortType == option
-                      ? const Icon(Icons.check)
-                      : const Icon(null),
-                  option.name.n,
-                ],
-              ),
-            );
-          }),
-
-          const PopupMenuDivider(),
-
-          PopupMenuItem(
-            onTap: () {
-              query.sortAsc.value = true;
-              query.searchForFiles();
-            },
-            child: Row(
-              spacing: 10,
-              children: [
-                query.sortAsc.value
-                    ? const Icon(Icons.check)
-                    : const Icon(null),
-                'ascending'.n,
-              ],
-            ),
-          ),
-
-          PopupMenuItem(
-            onTap: () {
-              query.sortAsc.value = false;
-              query.searchForFiles();
-            },
-            child: Row(
-              spacing: 10,
-              children: [
-                !query.sortAsc.value
-                    ? const Icon(Icons.check)
-                    : const Icon(null),
-                'descending'.n,
-              ],
-            ),
-          ),
-        ];
-      },
     );
   }
 }
