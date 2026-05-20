@@ -30,14 +30,9 @@ class SortPopUp extends StatelessWidget {
           ...FileSortType.values.map((option) {
             return PopupMenuItem<FileSortType>(
               value: option,
-              child: Row(
-                spacing: 10,
-                children: [
-                  query.sortType == option
-                      ? const Icon(Icons.check)
-                      : const Icon(null),
-                  option.name.n,
-                ],
+              child: CheckedPopUpChild(
+                checked: query.sortType == option,
+                label: option.name,
               ),
             );
           }),
@@ -49,14 +44,9 @@ class SortPopUp extends StatelessWidget {
               query.sortAsc.value = true;
               query.searchForFiles();
             },
-            child: Row(
-              spacing: 10,
-              children: [
-                query.sortAsc.value
-                    ? const Icon(Icons.check)
-                    : const Icon(null),
-                'ascending'.n,
-              ],
+            child: CheckedPopUpChild(
+              checked: query.sortAsc.value,
+              label: 'ascending',
             ),
           ),
 
@@ -65,14 +55,9 @@ class SortPopUp extends StatelessWidget {
               query.sortAsc.value = false;
               query.searchForFiles();
             },
-            child: Row(
-              spacing: 10,
-              children: [
-                !query.sortAsc.value
-                    ? const Icon(Icons.check)
-                    : const Icon(null),
-                'descending'.n,
-              ],
+            child: CheckedPopUpChild(
+              checked: !query.sortAsc.value,
+              label: 'descending',
             ),
           ),
         ];
@@ -80,3 +65,27 @@ class SortPopUp extends StatelessWidget {
     );
   }
 }
+
+
+class CheckedPopUpChild extends StatelessWidget {
+  final bool checked;
+  final String label;
+
+  const CheckedPopUpChild({
+    super.key,
+    required this.checked,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 10,
+      children: [
+        checked ? const Icon(Icons.check) : const Icon(null),
+        label.n,
+      ],
+    );
+  }
+}
+
