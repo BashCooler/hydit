@@ -88,7 +88,6 @@ class Gallery extends StatelessWidget {
                 ],
             ),
             actions: const [
-              SortDirection(),
               SortPopUp(),
             ],
           ),
@@ -143,29 +142,6 @@ class Gallery extends StatelessWidget {
 }
 
 
-class SortDirection extends StatelessWidget {
-  const SortDirection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final query = Get.find<QueryController>();
-    return Obx(() {
-      final sortAsc = query.sortAsc.value;
-      return IconButton(
-        icon: sortAsc
-            ? Icon(Icons.arrow_drop_up)
-            : Icon(Icons.arrow_drop_down),
-        onPressed: () {
-          query.sortAsc.value = !query.sortAsc.value;
-          query.searchForFiles();
-        },
-      );
-    });
-  }
-}
-
-
-
 class SortPopUp extends StatelessWidget {
   const SortPopUp({super.key});
 
@@ -185,13 +161,56 @@ class SortPopUp extends StatelessWidget {
         query.searchForFiles();
       },
       itemBuilder: (BuildContext context) {
-        return FileSortType.values.map((option) {
-          return CheckedPopupMenuItem<FileSortType>(
-            checked: query.sortType == option,
-            value: option,
-            child: option.name.n,
-          );
-        }).toList();
+        return [
+          ...FileSortType.values.map((option) {
+            return PopupMenuItem<FileSortType>(
+              value: option,
+              child: Row(
+                spacing: 10,
+                children: [
+                  query.sortType == option
+                      ? const Icon(Icons.check)
+                      : const Icon(null),
+                  option.name.n,
+                ],
+              ),
+            );
+          }),
+
+          const PopupMenuDivider(),
+
+          PopupMenuItem(
+            onTap: () {
+              query.sortAsc.value = true;
+              query.searchForFiles();
+            },
+            child: Row(
+              spacing: 10,
+              children: [
+                query.sortAsc.value
+                    ? const Icon(Icons.check)
+                    : const Icon(null),
+                'ascending'.n,
+              ],
+            ),
+          ),
+
+          PopupMenuItem(
+            onTap: () {
+              query.sortAsc.value = false;
+              query.searchForFiles();
+            },
+            child: Row(
+              spacing: 10,
+              children: [
+                !query.sortAsc.value
+                    ? const Icon(Icons.check)
+                    : const Icon(null),
+                'descending'.n,
+              ],
+            ),
+          ),
+        ];
       },
     );
   }

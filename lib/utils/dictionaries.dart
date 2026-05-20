@@ -36,7 +36,7 @@ enum FileSortType {
   height(6, 'height'),
   ratio(7, 'ratio'),
   numberOfPixels(8, 'number of pixels'),
-  numberOfTags(9, 'number of tags'),  // doesn't work
+  // numberOfTags(9, 'number of tags'),  // doesn't work
   // numberOfMediaViews(10, 'number of views'),
   // totalMediaViewTime(11, 'view time'),
   // approximateBitrate(12, 'bitrate'),
