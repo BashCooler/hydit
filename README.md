@@ -2,25 +2,25 @@
 
 **HIDE IT!**
 
-I mean **Hydit** (as in **hy**drus e**dit**) is a lightweight feature rich Hydrus client for Android written in Flutter.
+I mean **Hydit** (as in **hy**drus e**dit**) is a lightweight feature rich Hydrus client for Android written in Flutter
 
 ## Features
 
 ### Browse your Hydrus database
 
-Search for one or multiple tags, sort results and get to browsing.
+Search for one or multiple tags, sort results and get to browsing
 
 
 
 ### View images and videos
 
-Hydit has a built-in media viewer with support for gestures, zooming and quick navigation.
+Hydit has a built-in media viewer with support for gestures, zooming and quick navigation
 
 
 
 ### Manage tags
 
-Select one or more files, open tag editor, add new tags or remove existing tags.
+Select one or more files, open tag editor, add new tags or remove existing tags
 
 ## Supported platforms
 
@@ -30,7 +30,7 @@ Select one or more files, open tag editor, add new tags or remove existing tags.
 
 ## Quick start
 
-> Before you start BACK UP YOUR DATABASE! Hydit is unlikely to break it, but it definitely has the capability to do so. Remember that I'm not a professional dev and I can mess things up. So, backup your stuff and keep an eye on your actual database
+> Before you start BACK UP YOUR DATABASE! Hydit is unlikely to break anything, but it definitely has the capability to do so. Remember that I'm not a professional dev and I can mess things up. So, backup your stuff and keep an eye on your actual database
 
 1. Install the latest version from [Releases](https://github.com/BashCooler/hydit/releases)
 2. Enable API in your Hydrus client, follow these [instructions](https://hydrusnetwork.github.io/hydrus/client_api.html)
@@ -39,7 +39,7 @@ Select one or more files, open tag editor, add new tags or remove existing tags.
 
 ## Roadmap
 
-The next big feature is uploading files from your Android device to Hydrus.
+The next big feature is uploading files from your Android device to Hydrus
 
 ## Contributing
 
@@ -49,4 +49,4 @@ Feel free to ask any questions on how the things work if you want to improve som
 
 Notes on submitting a PR:
 - Try to keep the codebase simple
-- Don't overuse the AI... I'm fine with using something like Codex as a tool, but 1000+ lines of unreadable undocumented mess will not be appreciated and may be rejected even if it works
+- Don't overuse the AI. I'm fine with using something like Codex as a tool, but 1000+ lines of unreadable undocumented mess will not be appreciated and may be rejected even if it works
