@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:settings_tiles/settings_tiles.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:hydrus_flutter/core/data/version.dart';
@@ -88,7 +89,16 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 )
               ]),
-              onTap: () {},
+              onTap: () async {
+                try {
+                  await launchUrl(
+                    Uri.parse(downloadUrl),
+                    customTabsOptions: CustomTabsOptions(shareState: .off),
+                  );
+                } catch (e) {
+                  return;
+                }
+              },
             ),
           ],
         ),
