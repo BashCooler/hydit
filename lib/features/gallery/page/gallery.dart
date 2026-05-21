@@ -87,7 +87,9 @@ class Gallery extends StatelessWidget {
                 ],
             ),
             actions: [
-              mode == .full ? const SortPopUp() : const SizedBox.shrink(),
+              mode == .full  && selection.off
+                  ? const SortPopUp()
+                  : const SizedBox.shrink(),
             ],
           ),
           resizeToAvoidBottomInset: false,
