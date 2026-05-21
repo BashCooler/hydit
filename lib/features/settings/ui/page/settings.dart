@@ -5,8 +5,8 @@ import 'package:settings_tiles/settings_tiles.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:hydrus_flutter/core/data/version.dart';
-import 'package:hydrus_flutter/core/ui/snack_bar.dart';
+import 'package:hydit/core/data/version.dart';
+import 'package:hydit/core/ui/snack_bar.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../getx/controller.dart';

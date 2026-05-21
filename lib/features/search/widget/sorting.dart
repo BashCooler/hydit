@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/extra/primitive.dart';
 
-import 'package:hydrus_flutter/utils/dictionaries.dart';
+import 'package:hydit/utils/dictionaries.dart';
 
 import '../getx/query.dart';
 

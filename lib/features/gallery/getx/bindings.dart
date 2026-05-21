@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
 
-import 'package:hydrus_flutter/utils/theme.dart';
-import 'package:hydrus_flutter/features/search/getx/query.dart';
+import 'package:hydit/utils/theme.dart';
+import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/features/search/getx/query.dart';
 
 import '../page/gallery.dart';
 import 'gallery.dart';

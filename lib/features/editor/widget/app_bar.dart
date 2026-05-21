@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:niku/extra/extra.dart';
 import 'package:filesize/filesize.dart';
 import 'package:niku/namespace.dart' as n;
-
-import 'package:hydrus_flutter/core/domain/entities.dart';
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/viewer/getx/page.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+import 'package:hydit/core/domain/entities.dart';
+import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/features/viewer/getx/page.dart';
 
 import '../getx/tags.dart';
 import '../page/editor.dart';

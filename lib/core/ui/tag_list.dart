@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/utils/theme.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
+import 'package:hydit/utils/theme.dart';
+import '../domain/entities.dart';
 
 
 /// Parameters [trailing] and [onTap] apply to each [ListTile] in

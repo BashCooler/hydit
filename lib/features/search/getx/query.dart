@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydrus_flutter/utils/dictionaries.dart';
-import 'package:hydrus_flutter/core/data/api.dart';
-import 'package:hydrus_flutter/core/data/mapper.dart';
-import 'package:hydrus_flutter/core/data/repo.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
+import 'package:hydit/utils/dictionaries.dart';
+import 'package:hydit/core/data/api.dart';
+import 'package:hydit/core/data/mapper.dart';
+import 'package:hydit/core/data/repo.dart';
+import 'package:hydit/core/domain/entities.dart';
+import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/features/gallery/getx/gallery.dart';
 
 
 class QueryController extends GetxController {

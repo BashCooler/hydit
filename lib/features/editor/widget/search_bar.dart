@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
 
-import 'package:hydrus_flutter/features/search/getx/query.dart';
-import 'package:hydrus_flutter/features/search/widget/search.dart';
+import 'package:hydit/core/domain/entities.dart';
+import 'package:hydit/features/search/getx/query.dart';
+import 'package:hydit/features/search/widget/search.dart';
 
 import '../getx/tags.dart';
 

@@ -2,13 +2,13 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 
 import 'utils/theme.dart';
 import 'core/data/repo.dart';
+import 'core/domain/file_repo.dart';
 import 'features/gallery/page/gallery.dart';
 import 'features/gallery/getx/bindings.dart';
 

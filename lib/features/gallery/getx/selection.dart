@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
+import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/features/gallery/getx/gallery.dart';
 
 
 class SelectionController extends GetxController {

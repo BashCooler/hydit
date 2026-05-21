@@ -5,11 +5,11 @@ import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
-import 'package:hydrus_flutter/core/ui/common.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
-import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
+import 'package:hydit/core/ui/common.dart';
+import 'package:hydit/core/domain/entities.dart';
+import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/features/editor/getx/bindings.dart';
+import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import '../getx/page.dart';
 import '../widget/views.dart';

@@ -2,9 +2,9 @@ import 'dart:math' hide log;
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydrus_flutter/core/domain/entities.dart';
-import 'package:hydrus_flutter/core/ui/images.dart';
-import 'package:hydrus_flutter/features/viewer/widget/views.dart';
+import 'package:hydit/core/domain/entities.dart';
+import 'package:hydit/core/ui/images.dart';
+import 'package:hydit/features/viewer/widget/views.dart';
 
 import '../getx/page.dart';
 

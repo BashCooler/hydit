@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 
-import 'package:hydrus_flutter/core/ui/common.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
+import 'package:hydit/core/ui/common.dart';
+import 'package:hydit/core/domain/entities.dart';
 
 import '../getx/page.dart';
 import 'image_view.dart';

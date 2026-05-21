@@ -2,11 +2,11 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydrus_flutter/utils/theme.dart';
-import 'package:hydrus_flutter/core/data/repo.dart';
-import 'package:hydrus_flutter/core/ui/snack_bar.dart';
-import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
-import 'package:hydrus_flutter/features/search/widget/tag_panel.dart';
+import 'package:hydit/utils/theme.dart';
+import 'package:hydit/core/data/repo.dart';
+import 'package:hydit/core/ui/snack_bar.dart';
+import 'package:hydit/features/gallery/getx/gallery.dart';
+import 'package:hydit/features/search/widget/tag_panel.dart';
 
 import '../getx/query.dart';
 import '../widget/search.dart';

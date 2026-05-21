@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydrus_flutter/core/ui/common.dart';
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/search/page/search.dart';
-import 'package:hydrus_flutter/features/search/widget/sorting.dart';
-import 'package:hydrus_flutter/features/viewer/getx/bindings.dart';
-import 'package:hydrus_flutter/features/editor/getx/bindings.dart';
-import 'package:hydrus_flutter/features/settings/ui/page/settings.dart';
+import 'package:hydit/core/ui/common.dart';
+import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/features/search/page/search.dart';
+import 'package:hydit/features/search/widget/sorting.dart';
+import 'package:hydit/features/viewer/getx/bindings.dart';
+import 'package:hydit/features/editor/getx/bindings.dart';
+import 'package:hydit/features/settings/ui/page/settings.dart';
 
 import '../getx/bindings.dart';
 import '../getx/gallery.dart';

@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
 
-import 'package:hydrus_flutter/utils/theme.dart';
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/viewer/getx/page.dart';
-import 'package:hydrus_flutter/features/search/getx/query.dart';
-import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
+import 'package:hydit/utils/theme.dart';
+import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/features/viewer/getx/page.dart';
+import 'package:hydit/features/search/getx/query.dart';
+import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import '../page/editor.dart';
 import 'tags.dart';

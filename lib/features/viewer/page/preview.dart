@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:dismissible_page/dismissible_page.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
+import 'package:hydit/core/domain/entities.dart';
 
 import '../getx/page.dart';
 import '../widget/views.dart';

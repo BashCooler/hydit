@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
+import 'package:hydit/core/domain/entities.dart';
 
 
 class FileRepo extends GetxController {

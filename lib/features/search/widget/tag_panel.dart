@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydrus_flutter/core/domain/entities_ext.dart';
-import 'package:hydrus_flutter/features/search/getx/query.dart';
+import 'package:hydit/core/domain/entities_ext.dart';
+import 'package:hydit/features/search/getx/query.dart';
 
 
 class TagPanel extends StatelessWidget {

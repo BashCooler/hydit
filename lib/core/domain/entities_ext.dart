@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/utils/theme.dart';
+import 'package:hydit/utils/theme.dart';
 import 'entities.dart';
 
 

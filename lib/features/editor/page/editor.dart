@@ -2,13 +2,13 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydrus_flutter/core/ui/common.dart';
-import 'package:hydrus_flutter/core/ui/images.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/viewer/getx/page.dart';
-import 'package:hydrus_flutter/features/viewer/page/preview.dart';
-import 'package:hydrus_flutter/features/gallery/getx/bindings.dart';
+import 'package:hydit/core/ui/common.dart';
+import 'package:hydit/core/ui/images.dart';
+import 'package:hydit/core/domain/entities.dart';
+import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/features/viewer/getx/page.dart';
+import 'package:hydit/features/viewer/page/preview.dart';
+import 'package:hydit/features/gallery/getx/bindings.dart';
 
 import '../getx/tags.dart';
 import '../widget/app_bar.dart';

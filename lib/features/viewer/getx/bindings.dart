@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
-import 'package:hydrus_flutter/utils/theme.dart';
+import 'package:hydit/utils/theme.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/gallery/getx/gallery.dart';
+import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import '../page/viewer.dart';
 import 'page.dart';

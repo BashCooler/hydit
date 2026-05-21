@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydrus_flutter/features/editor/page/editor.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydrus_flutter/core/domain/file_repo.dart';
-import 'package:hydrus_flutter/features/viewer/getx/page.dart';
+import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/features/viewer/getx/page.dart';
 
 import '../getx/tags.dart';
+import '../page/editor.dart';
 import 'search_bar.dart';
 
 

@@ -6,8 +6,8 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:hydrus_flutter/core/data/repo.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
+import 'package:hydit/core/data/repo.dart';
+import 'package:hydit/core/domain/entities.dart';
 
 import '../getx/page.dart';
 import 'seekbar.dart';

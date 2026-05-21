@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydrus_flutter/core/ui/tag_list.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
+import 'package:hydit/core/ui/tag_list.dart';
+import 'package:hydit/core/domain/entities.dart';
 
 import '../getx/query.dart';
 

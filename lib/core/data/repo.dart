@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:hive_ce/hive.dart';
 import 'package:deep_pick/deep_pick.dart';
 
-import 'package:hydrus_flutter/core/data/api.dart';
-import 'package:hydrus_flutter/utils/dictionaries.dart';
+import 'package:hydit/core/data/api.dart';
+import 'package:hydit/utils/dictionaries.dart';
 
 import 'mapper.dart';
 import '../domain/entities.dart';

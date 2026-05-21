@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:niku/extra/primitive.dart';
 
-import 'package:hydrus_flutter/core/ui/images.dart';
-import 'package:hydrus_flutter/features/editor/getx/tags.dart';
+import 'package:hydit/core/ui/images.dart';
+import 'package:hydit/features/editor/getx/tags.dart';
 
 
 class PreviewGrid extends StatelessWidget {

@@ -2,9 +2,9 @@ import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:string_validator/string_validator.dart';
 
-import 'package:hydrus_flutter/core/data/api.dart';
-import 'package:hydrus_flutter/core/data/repo.dart';
-import 'package:hydrus_flutter/features/settings/data/model.dart';
+import 'package:hydit/core/data/api.dart';
+import 'package:hydit/core/data/repo.dart';
+import 'package:hydit/features/settings/data/model.dart';
 
 
 class SettingsController extends GetxController {

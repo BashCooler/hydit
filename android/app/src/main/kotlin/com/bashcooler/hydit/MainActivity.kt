@@ -1,4 +1,4 @@
-package com.bashcooler.hydrus_flutter
+package com.bashcooler.hydit
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:deep_pick/deep_pick.dart';
-import 'package:hydrus_flutter/core/domain/entities.dart';
+import 'package:hydit/core/domain/entities.dart';
 
 
 class Mapper {
