@@ -1,8 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:niku/namespace.dart' as n;
 import 'package:settings_tiles/settings_tiles.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:hydrus_flutter/core/data/version.dart';
 import 'package:hydrus_flutter/core/ui/snack_bar.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../getx/controller.dart';
 import '../widget/text_field.dart';
@@ -54,6 +58,38 @@ class _SettingsPageState extends State<SettingsPage> {
                 onTap: verify,
               );
             }),
+            SettingActionTile(
+              icon: Padding(
+                padding: .all(8),
+                child: const FaIcon(FontAwesomeIcons.github, size: 32),
+              ),
+              title: FutureBuilder(
+                future: version(),
+                builder: (context, snapshot) {
+                  switch (snapshot.hasData) {
+                    case true:
+                      return 'v${snapshot.data!}'.n;
+                    case false:
+                      return Skeletonizer(child: 'v0.0.0'.n);
+                  }
+                },
+              ),
+              description: n.Row([
+                'Latest version: '.n,
+                FutureBuilder(
+                  future: getLatestVersion(),
+                  builder: (context, snapshot) {
+                    switch (snapshot.hasData) {
+                      case true:
+                        return 'v${snapshot.data!}'.n;
+                      case false:
+                        return Skeletonizer(child: 'v0.0.0'.n);
+                    }
+                  },
+                )
+              ]),
+              onTap: () {},
+            ),
           ],
         ),
       ),

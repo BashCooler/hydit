@@ -167,7 +167,7 @@ class FloatingActions extends StatelessWidget {
             FilledIconButton(
               onPressed: () {
                 gallery.hideActions();
-                Get.to(() => SearchSheet(tag: tag), transition: .downToUp);
+                Get.to(() => Search(tag: tag), transition: .downToUp);
               },
               icon: const Icon(Icons.search),
             ),

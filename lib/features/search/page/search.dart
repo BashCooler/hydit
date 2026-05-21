@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
-import 'package:smooth_sheets/smooth_sheets.dart';
 
 import 'package:hydrus_flutter/utils/theme.dart';
 import 'package:hydrus_flutter/core/data/repo.dart';
@@ -14,20 +13,17 @@ import '../widget/search.dart';
 import '../widget/suggests.dart';
 
 
-class SearchSheet extends StatefulWidget {
+class Search extends StatefulWidget {
   final String tag;
 
-  const SearchSheet({super.key, required this.tag});
+  const Search({super.key, required this.tag});
 
   @override
-  State<SearchSheet> createState() => _SearchSheetState();
+  State<Search> createState() => _SearchState();
 }
 
-class _SearchSheetState extends State<SearchSheet> {
+class _SearchState extends State<Search> {
   final QueryController query = Get.find();
-
-  static const behaviour = SheetKeyboardDismissBehavior
-      .onDragDown(isContentScrollAware: true);
 
   @override
   void initState() {
