@@ -92,7 +92,7 @@ BEGIN
             VALUE "CompanyName", "com.bashcooler" "\0"
             VALUE "FileDescription", "hydrus_flutter" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "hydrus_flutter" "\0"
+            VALUE "InternalName", "hydit" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.bashcooler. All rights reserved." "\0"
             VALUE "OriginalFilename", "hydrus_flutter.exe" "\0"
             VALUE "ProductName", "hydrus_flutter" "\0"
