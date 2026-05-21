@@ -1,8 +1,6 @@
 # Hydit
 
-**HIDE IT!**
-
-I mean **Hydit** (as in **hy**drus e**dit**) is a lightweight feature rich Hydrus client for Android written in Flutter
+**HIDE IT!** I mean **Hydit** (as in **hy**drus e**dit**) is a lightweight feature rich Hydrus client for Android written in Flutter
 
 ## Features
 
@@ -10,17 +8,36 @@ I mean **Hydit** (as in **hy**drus e**dit**) is a lightweight feature rich Hydru
 
 Search for one or multiple tags, sort results and get to browsing
 
-
+<img width="240" height="536" alt="search" src="https://github.com/user-attachments/assets/23cc3731-cc5d-4c24-a6c8-7620d6c235cf" />
 
 ### View images and videos
 
 Hydit has a built-in media viewer with support for gestures, zooming and quick navigation
 
-
+<img width="240" height="536" alt="view" src="https://github.com/user-attachments/assets/b306ffd3-6981-488a-b9ca-c7e3411ed469" />
 
 ### Manage tags
 
 Select one or more files, open tag editor, add new tags or remove existing tags
+
+<table>
+  <thead>
+    <tr>
+      <th>Single file</th>
+      <th>Batch editor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <img width="240" height="536" alt="edit" src="https://github.com/user-attachments/assets/07c02c2e-1929-4ebf-84f1-db0002a892d9" />
+      </td>
+      <td>
+        <img width="240" height="536" alt="batch" src="https://github.com/user-attachments/assets/b173d1b9-3abd-498e-b8cd-605735c62d49" />
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ## Supported platforms
 
@@ -30,7 +47,7 @@ Select one or more files, open tag editor, add new tags or remove existing tags
 
 ## Quick start
 
-> Before you start BACK UP YOUR DATABASE! Hydit is unlikely to break anything, but it definitely has the capability to do so. Remember that I'm not a professional dev and I can mess things up. So, backup your stuff and keep an eye on your actual database
+> Before you start BACK UP YOUR DATABASE! Hydit is unlikely to break anything, but it definitely has the capability to do so. Keep an eye on your actual database
 
 1. Install the latest version from [Releases](https://github.com/BashCooler/hydit/releases)
 2. Enable API in your Hydrus client, follow these [instructions](https://hydrusnetwork.github.io/hydrus/client_api.html)
@@ -43,13 +60,9 @@ The next big feature is uploading files from your Android device to Hydrus
 
 ## Contributing
 
-Contributions are always welcome!
+Contributions are always welcome! Just try to keep the codebase simple
 
-Feel free to ask any questions on how the things work if you want to improve something and don't know where to start or just out of curiosity.
-
-Notes on submitting a PR:
-- Try to keep the codebase simple
-- Don't overuse the AI. I'm fine with using something like Codex as a tool, but 1000+ lines of unreadable undocumented mess will not be appreciated and may be rejected even if it works
+Feel free to ask any questions on how the things work if you want to improve something and don't know where to start or just out of curiosity
 
 ## See also
 
