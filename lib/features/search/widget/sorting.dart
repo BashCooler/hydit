@@ -21,10 +21,7 @@ class SortPopUp extends StatelessWidget {
           Shadow(blurRadius: 16),
         ],
       ),
-      onSelected: (value) {
-        query.sortType = value;
-        query.searchForFiles();
-      },
+      onSelected: (value) => query.sortType = value,
       itemBuilder: (BuildContext context) {
         return [
           ...FileSortType.values.map((option) {
@@ -40,23 +37,17 @@ class SortPopUp extends StatelessWidget {
           const PopupMenuDivider(),
 
           PopupMenuItem(
-            onTap: () {
-              query.sortAsc.value = true;
-              query.searchForFiles();
-            },
+            onTap: () => query.sortAsc = true,
             child: CheckedPopUpChild(
-              checked: query.sortAsc.value,
+              checked: query.sortAsc,
               label: 'ascending',
             ),
           ),
 
           PopupMenuItem(
-            onTap: () {
-              query.sortAsc.value = false;
-              query.searchForFiles();
-            },
+            onTap: () => query.sortAsc = false,
             child: CheckedPopUpChild(
-              checked: !query.sortAsc.value,
+              checked: !query.sortAsc,
               label: 'descending',
             ),
           ),

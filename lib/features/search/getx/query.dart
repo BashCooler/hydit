@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_ce/hive.dart';
 
 import 'package:hydit/utils/dictionaries.dart';
 import 'package:hydit/core/data/api.dart';
@@ -20,10 +21,15 @@ class QueryController extends GetxController {
   final FileRepo? fileRepo;
   final GalleryController? gallery;
 
-  FileSortType sortType = .importTime;
-  final sortAsc = false.obs;
+  // Sorting options are global and we can't sort
+  // preview galleries for now
+  FileSortType _sortType = .importTime;
+  bool _sortAsc = false;
 
-  QueryController({this.fileRepo, required this.gallery});
+  QueryController({this.fileRepo, required this.gallery}) {
+    loadSortOption();
+    loadAscOption();
+  }
 
   List<Tag> get tags => _tags;
   String get text => textController.text;
@@ -99,8 +105,8 @@ class QueryController extends GetxController {
     try {
       ids = await repo.api.getSearchFiles(
         _tags.map((t) => t.raw).toList(),
-        fileSortType: sortType.value,
-        fileSortAsc: sortAsc.value,
+        fileSortType: _sortType.value,
+        fileSortAsc: _sortAsc,
       );
       await repo.updateServiceNames();
       var list = ids.map((id) => HydrusFile(id)).toList();
@@ -128,5 +134,55 @@ class QueryController extends GetxController {
     _suggestVisible.value = false;
     textController.text = '';
     suggests.clear();
+  }
+}
+
+
+extension Sort on QueryController {
+  static const typeKey = 'sort type';
+
+  FileSortType get sortType => _sortType;
+
+  set sortType(FileSortType sortType) {
+    _sortType = sortType;
+    searchForFiles();
+    Hive.box('settings').put(typeKey, sortType.name);
+  }
+
+  void loadSortOption() {
+    final box = Hive.box('settings');
+    final String? sort = box.get(typeKey);
+    switch (sort) {
+      case null:
+        box.put(typeKey, FileSortType.importTime.name);
+      case _:
+        _sortType = FileSortType
+            .values
+            .firstWhere((e) => e.name == sort);
+    }
+  }
+}
+
+
+extension Asc on QueryController {
+  static const ascKey = 'sort ascending';
+
+  bool get sortAsc => _sortAsc;
+
+  set sortAsc(bool sortAsc) {
+    _sortAsc = sortAsc;
+    searchForFiles();
+    Hive.box('settings').put(ascKey, sortAsc);
+  }
+
+  void loadAscOption() {
+    final box = Hive.box('settings');
+    final bool? asc = box.get(ascKey);
+    switch (asc) {
+      case null:
+        box.put(ascKey, false);
+      case _:
+        _sortAsc = asc;
+    }
   }
 }

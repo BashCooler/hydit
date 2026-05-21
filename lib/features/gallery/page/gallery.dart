@@ -86,8 +86,8 @@ class Gallery extends StatelessWidget {
                   Shadow(blurRadius: 16),
                 ],
             ),
-            actions: const [
-              SortPopUp(),
+            actions: [
+              mode == .full ? const SortPopUp() : const SizedBox.shrink(),
             ],
           ),
           resizeToAvoidBottomInset: false,
