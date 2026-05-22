@@ -15,6 +15,7 @@ class TagManager extends GetxController {
   final _ids = <int>{};
   final sort = Sort.alphabeticalAsc.obs;
 
+  final Set<Tag> _original = {};
   final Set<Tag> _tags = {};
   final Set<Tag> _tagsToAdd = {};
   final Set<Tag> _tagsToDelete = {};
@@ -42,7 +43,7 @@ class TagManager extends GetxController {
   }
 
   /// Selected service's tags length
-  int get tagCount => tags.length;
+  int get total => _tags[service].length + _tagsToAdd[service].length;
 
   /// Number of current files to edit
   int get fileCount => _ids.length;
@@ -56,67 +57,35 @@ class TagManager extends GetxController {
   /// If selected service is editable returns true
   bool get editable => isServiceEditable(service);
 
-  void add(Tag tag) {}      // TODO
-  void delete(Tag tag) {}   // TODO
-
-  @override
-  void onInit() {
-    super.onInit();
-    ever(selectedService, (_) => sortTags());
-  }
-
-  /*
-  void addToService(String service, Tag tag) {
-    if (!isServiceEditable(service)) return;
-    if (tag.raw.isEmpty) return;
-
-    final tags = _tags[service]!;
-    final tagsToAdd = _tagsToAdd[service]!;
-    final tagsToDelete = _tagsToDelete[service]!;
-
-    final existing = tags.firstWhereOrNull((t) => t == tag);
-    if (existing != null) {
-      if (existing.diff == .delete) {
-        existing.diff = null;
-        tagsToDelete.remove(existing);
-      }
-      update();
-      return;
-    }
-
-    /// If we create new Tag here the ListTile in search won't
-    /// change it's color
-    final newTag = Tag(tag.raw, count: tag.count, diff: .add);
-    tags.insert(0, newTag);
-    tagsToAdd.insert(0, newTag);
-    update();
-  }
-
-  void deleteFromService(String service, Tag tag) {
+  void add(Tag tag) {
     if (!isServiceEditable(service)) return;
 
-    final tags = _tags[service]!;
-    final tagsToAdd = _tagsToAdd[service]!;
-    final tagsToDelete = _tagsToDelete[service]!;
+    final t = tag.copyWith(service: service);
+    if (t.raw.isEmpty) return;
+    if (_tags.contains(t)) return;
 
-    final target = tags.firstWhereOrNull((t) => t == tag);
-    if (target == null) return;
-
-    switch (target.diff) {
-      case .delete:
-        target.diff = null;
-        tagsToDelete.remove(target);
-      case .add:
-        target.diff = null;
-        tags.remove(target);
-        tagsToAdd.remove(target);
-      case _:
-        target.diff = .delete;
-        tagsToDelete.addIf(!tagsToDelete.contains(target), target);
+    switch (_original.contains(t)) {
+      case true:
+        _tags.add(t);
+        _tagsToDelete.remove(t);
+      case false:
+        _tagsToAdd.add(t);
     }
     update();
   }
-  */
+
+  void delete(Tag tag) {
+    if (!isServiceEditable(service)) return;
+
+    final t = tag.copyWith(service: service);
+    final hasTag = _tags.contains(t) || _tagsToAdd.contains(t);
+    if (!hasTag) return;
+
+    _tags.remove(t);
+    _tagsToAdd.remove(t);
+    _tagsToDelete.add(t);
+    update();
+  }
 }
 
 
@@ -166,6 +135,7 @@ extension Init on TagManager {
 
   void addToServices(Set<Tag>? combined) {
     if (combined == null) return;
+    _original.assignAll(combined);
     _tags.addAll(combined);
   }
 

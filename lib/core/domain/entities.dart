@@ -79,6 +79,14 @@ class Tag extends Equatable {
         value = _value(raw),
         pretty = _pretty(raw);
 
+  Tag copyWith({String? service, int? count}) {
+    return Tag(
+      raw,
+      service: service ?? this.service,
+      count: count ?? this.count,
+    );
+  }
+
   static String? _namespace(String raw) {
     final idx = raw.indexOf(':');
     return idx == -1 ? null : raw.substring(0 , idx);
@@ -115,7 +123,7 @@ class Tag extends Equatable {
 
 
 extension TagOperations on Set<Tag> {
-  Iterable<Tag> operator [](String service) {
-    return where((e) => e.service == service).toSet();
+  Set<Tag> operator [](String service) {
+    return Set.unmodifiable(where((e) => e.service == service));
   }
 }
