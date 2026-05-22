@@ -64,7 +64,7 @@ class Up extends HookWidget {
             );
           case false:
             return TagList(
-              tags: manager.tags,
+              tags: manager.tags().toList(),
               trailing: Icon(manager.editable
                   ? Icons.playlist_remove
                   : Icons.lock_outline),

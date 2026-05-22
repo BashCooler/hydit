@@ -24,7 +24,7 @@ class PreviewGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final files = manager.slice();
+    final files = manager.take(4);
     final count = buildCount(manager.fileCount - 3);
 
     return GestureDetector(

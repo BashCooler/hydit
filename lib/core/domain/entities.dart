@@ -115,7 +115,7 @@ class Tag extends Equatable {
   }
 
   @override
-  String toString() => raw;
+  String toString() => '"$service": "$raw"';
 
   @override
   List<Object?> get props => [raw, service];

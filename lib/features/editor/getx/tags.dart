@@ -27,14 +27,35 @@ class TagManager extends GetxController {
   /// Selected service
   String get service => selectedService.value;
 
-  /// Selected service's tags
-  List<Tag> get tags => _tags[service].toList();
+  /// Returns tags of specified [service], if [service] is null
+  /// returns tags of currently selected service
+  Iterable<Tag> tags([String? service]) {
+    switch (service) {
+      case null:
+        if (this.service == 'all known tags') return unique();
+        return _tags[this.service];
+      case 'all known tags':
+        return unique();
+      case _:
+        return _tags[service];
+    }
+  }
 
-  int lengthOf(String service) => _tags[service].length;
+  /// Number of tags in specified service
+  int lengthOf(String service) {
+    return tags(service).length;
+  }
 
-  List<int> get fileIds => _ids.toList();
+  /// Generates `all known tags` dynamically to
+  /// reflect changes in other services
+  Set<Tag> unique() {
+    final Map<String, Tag> map = {
+      for (var tag in _tags) tag.raw : tag
+    };
+    return map.values.toSet();
+  }
 
-  /// Selected service's index
+  /// Index of the selected service
   int get index {
     if (services.isEmpty) return 0;
     final index = services.indexOf(service);
@@ -42,19 +63,20 @@ class TagManager extends GetxController {
     return index;
   }
 
-  /// Selected service's tags length
+  /// Number of tags in the selected service including existing tags
+  /// and tags to add
   int get total => _tags[service].length + _tagsToAdd[service].length;
 
-  /// Number of current files to edit
+  /// Number of files in [TagManager]
   int get fileCount => _ids.length;
 
-  /// Selected service's tags to add length
+  /// Number of tags to add to the selected service
   int get additionsCount => _tagsToAdd[service].length;
 
-  /// Selected service's tags to delete length
+  /// Number of tags to remove from the selected service
   int get deletionsCount => _tagsToDelete[service].length;
 
-  /// If selected service is editable returns true
+  /// Whether selected service is editable
   bool get editable => isServiceEditable(service);
 
   void add(Tag tag) {
@@ -86,6 +108,13 @@ class TagManager extends GetxController {
     _tagsToDelete.add(t);
     update();
   }
+
+  /// Take from 0 to [count] files from [TagManager]
+  List<HydrusFile> take([int count = 4]) => _ids
+      .take(count)
+      .map((id) => files.byId(id))
+      .whereType<HydrusFile>()
+      .toList();
 }
 
 
@@ -102,7 +131,11 @@ extension Init on TagManager {
     await file.checkForMetadata();
     if (file.id != _ids.first) return;
 
-    addToServices(file.combined);
+    final tags = file
+        .combined
+        .where((e) => e.service != 'all known tags')
+        .toSet();
+    addToServices(tags);
     selectCurrentService();
 
     ready.value = true;
@@ -115,7 +148,11 @@ extension Init on TagManager {
 
     for (final id in ids) {
       final file = files.byId(id);
-      addToServices(file?.combined);
+      final tags = file
+          ?.combined
+          .where((e) => e.service != 'all known tags')
+          .toSet();
+      addToServices(tags);
     }
 
     selectCurrentService();
@@ -133,10 +170,10 @@ extension Init on TagManager {
     _tagsToDelete.clear();
   }
 
-  void addToServices(Set<Tag>? combined) {
-    if (combined == null) return;
-    _original.assignAll(combined);
-    _tags.addAll(combined);
+  void addToServices(Set<Tag>? tags) {
+    if (tags == null) return;
+    _original.assignAll(tags);
+    _tags.addAll(tags);
   }
 
   void selectCurrentService() {
@@ -243,21 +280,15 @@ extension ServiceUtils on TagManager {
 enum Sort { alphabeticalAsc, alphabeticalDesc }
 
 extension Sorting on TagManager {
+  /*
   void sortTags() {
     switch (sort.value) {
       case .alphabeticalAsc:
-        tags.sort((a, b) => a.raw.compareTo(b.raw));
+        tags().toList().sort((a, b) => a.raw.compareTo(b.raw));
       case .alphabeticalDesc:
-        tags.sort((a, b) => b.raw.compareTo(a.raw));
+        tags().toList().sort((a, b) => b.raw.compareTo(a.raw));
     }
     update();
   }
-
-  List<HydrusFile> slice() {
-    return _ids
-        .take(4)
-        .map((id) => files.byId(id))
-        .whereType<HydrusFile>()
-        .toList();
-  }
+   */
 }
