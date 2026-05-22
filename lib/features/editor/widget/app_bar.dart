@@ -105,21 +105,8 @@ class Info extends StatelessWidget {
 
 extension Builders on Info
 {
-  Widget buildMeta(HydrusFile file) {
-    return 'id: ${file.id}, ${filesize(file.size)},\n${file.res}'.n
-      ..labelMedium
-      ..maxLines = 2;
-  }
-
   Widget buildFileCount(TagManager manager) {
     return 'Editing ${manager.fileCount} files'.n..labelMedium;
-  }
-
-  Widget buildService(BuildContext context, TagManager manager) {
-    return 'service: ${manager.service}'.n
-      ..labelMedium
-      ..maxLines = 1
-      ..overflow = .ellipsis;
   }
 
   Widget buildDiff(TagManager manager) {
@@ -158,5 +145,18 @@ extension Builders on Info
       default:
         return const SizedBox.shrink();
     }
+  }
+
+  Widget buildService(BuildContext context, TagManager manager) {
+    return 'service: ${manager.service}'.n
+      ..labelMedium
+      ..maxLines = 1
+      ..overflow = .ellipsis;
+  }
+
+  Widget buildMeta(HydrusFile file) {
+    return 'id: ${file.id}, ${filesize(file.size)},\n${file.res}'.n
+      ..labelMedium
+      ..maxLines = 2;
   }
 }

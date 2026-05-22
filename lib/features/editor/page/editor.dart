@@ -122,8 +122,7 @@ class _EditorState extends State<Editor> {
   Future<bool> confirmPendingChanges(String tag) async {
     final TagManager manager = Get.find();
 
-    // final message = manager.summarize();
-    final message = 'No changes';  // TODO
+    final message = manager.summarize();
     if (message == 'No changes') return true;
 
     final result = await showPopDialog(context, message, tag);

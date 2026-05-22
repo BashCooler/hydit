@@ -18,7 +18,7 @@ class TagManager extends GetxController {
   final Set<Tag> _original = {};
   final Set<Tag> _tags = {};
   final Set<Tag> _tagsToAdd = {};
-  final Set<Tag> _tagsToDelete = {};
+  final Set<Tag> _tagsToRemove = {};
 
   final FileRepo files;
 
@@ -65,7 +65,9 @@ class TagManager extends GetxController {
 
   /// Number of tags in the selected service including existing tags
   /// and tags to add
-  int get total => _tags[service].length + _tagsToAdd[service].length;
+  int get total {
+    return tags().length + _tagsToAdd[service].length;
+  }
 
   /// Number of files in [TagManager]
   int get fileCount => _ids.length;
@@ -74,7 +76,7 @@ class TagManager extends GetxController {
   int get additionsCount => _tagsToAdd[service].length;
 
   /// Number of tags to remove from the selected service
-  int get deletionsCount => _tagsToDelete[service].length;
+  int get deletionsCount => _tagsToRemove[service].length;
 
   /// Whether selected service is editable
   bool get editable => isServiceEditable(service);
@@ -89,7 +91,7 @@ class TagManager extends GetxController {
     switch (_original.contains(t)) {
       case true:
         _tags.add(t);
-        _tagsToDelete.remove(t);
+        _tagsToRemove.remove(t);
       case false:
         _tagsToAdd.add(t);
     }
@@ -105,7 +107,7 @@ class TagManager extends GetxController {
 
     _tags.remove(t);
     _tagsToAdd.remove(t);
-    _tagsToDelete.add(t);
+    _tagsToRemove.add(t);
     update();
   }
 
@@ -167,7 +169,7 @@ extension Init on TagManager {
     _ids.clear();
     _tags.clear();
     _tagsToAdd.clear();
-    _tagsToDelete.clear();
+    _tagsToRemove.clear();
   }
 
   void addToServices(Set<Tag>? tags) {
@@ -183,7 +185,7 @@ extension Init on TagManager {
   }
 }
 
-/*
+
 extension Save on TagManager {
   /// Removes entries with empty lists from map
   Map<String, List<Tag>> removeEmpty(Map<String, List<Tag>> map) =>
@@ -198,40 +200,38 @@ extension Save on TagManager {
   String summarize() {
     assert(_ids.isNotEmpty);
 
-    final toAdd = removeEmpty(_tagsToAdd);
-    final toRem = removeEmpty(_tagsToDelete);
-
-    if (toAdd.isEmpty && toRem.isEmpty) {
+    if (_tagsToAdd.isEmpty && _tagsToRemove.isEmpty) {
       return 'No changes';
     }
 
     final sb = StringBuffer();
 
-    final addCount = toAdd.values.fold(
-      0,
-      (sum, list) => (sum + list.length).toInt(),
-    );
-    final serCount = toAdd.length;
-    if (addCount > 0) {
-      sb.writeln('Add $addCount tags to $serCount services');
+    if (_tagsToAdd.isNotEmpty) {
+      final servicesToAddTo = _tagsToAdd
+          .map((t) => t.service)
+          .toSet()
+          .length;
+      final count = _tagsToAdd.length;
+      sb.writeln('Add $count tags to $servicesToAddTo services');
     }
 
-    final remCount = toRem.values.fold(
-      0,
-      (sum, list) => (sum + list.length).toInt(),
-    );
-    final serRem = toRem.length;
-    if (remCount > 0) {
-      sb.writeln('Remove $remCount tags from $serRem services');
+    if (_tagsToRemove.isNotEmpty) {
+      final servicesToRemoveFrom = _tagsToRemove
+          .map((t) => t.service)
+          .toSet()
+          .length;
+      final count = _tagsToRemove.length;
+      sb.writeln('Remove $count tags from $servicesToRemoveFrom services');
     }
 
     return sb.toString();
   }
 
+  /*
   /// Send request to Hydrus to add/remove tags
   Future<void> save() async {
     final toAdd = removeEmpty(_tagsToAdd);
-    final toRem = removeEmpty(_tagsToDelete);
+    final toRem = removeEmpty(_tagsToRemove);
 
     final Repo repo = Get.find();
 
@@ -253,8 +253,8 @@ extension Save on TagManager {
       await repo.setMetadataFor(files.byId(id));
     }
   }
+   */
 }
- */
 
 
 extension ServiceUtils on TagManager {
