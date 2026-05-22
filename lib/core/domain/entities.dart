@@ -28,12 +28,23 @@ class HydrusFile {
   String? type;
   String? ext;
   int duration = 0;
-  final service = <String, List<Tag>>{}.obs;
+
+  /// This [Set] contains all tags from all services, which means
+  /// it may have duplicate tags from different services, so don't
+  /// show it in UI.
+  final RxSet<Tag> combined = <Tag>{}.obs;
 
   HydrusFile(this.id);
 
-  int get length => service['all known tags']?.length ?? 0;
-  List<Tag> get all => service['all known tags'] ?? [];
+  /// Length of `all known tags` service
+  int get length => combined
+      .where((e) => e.service == 'all known tags')
+      .length;
+
+  /// Tags from `all known tags` service as [Iterable]
+  Iterable<Tag> get all => combined
+      .where((e) => e.service == 'all known tags');
+
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
 
   bool get loading => !ready.value;
@@ -55,18 +66,30 @@ class HydrusFile {
 enum Diff {add, delete}
 
 
-/// Contains information about a hydrus tag
-/// - [raw] - "namespace:tag"
-/// - [count] - (optional) useful for presenting the
-/// number of entries in search
-///
-/// Getters:
-/// - [namespace]
-/// - [value]
-///
-/// ignore: must_be_immutable
 class Tag extends Equatable {
-  static Set<String> namespaces = {
+  final String? service;
+  final String raw;
+  final String? namespace;
+  final String value;
+  final String pretty;
+  final int? count;
+
+  Tag(this.raw, {this.service, this.count})
+      : namespace = _namespace(raw),
+        value = _value(raw),
+        pretty = _pretty(raw);
+
+  static String? _namespace(String raw) {
+    final idx = raw.indexOf(':');
+    return idx == -1 ? null : raw.substring(0 , idx);
+  }
+
+  static String _value(String raw) {
+    final idx = raw.indexOf(':');
+    return idx == -1 ? raw : raw.substring(idx + 1);
+  }
+
+  static const Set<String> namespaces = {
     'system',
     'creator',
     'character',
@@ -75,27 +98,11 @@ class Tag extends Equatable {
     'studio',
   };
 
-  final String raw;
-  final int? count;
-  Diff? diff;
-
-  Tag(this.raw, {this.count, this.diff});
-
-  String get namespace {
-    final idx = raw.indexOf(':');
-    return idx == -1 ? 'no namespace' : raw.substring(0 , idx);
-  }
-
-  String get value {
-    final idx = raw.indexOf(':');
-    return idx == -1 ? raw : raw.substring(idx + 1);
-  }
-
-  String get pretty {
+  static String _pretty(String raw) {
     final idx = raw.indexOf(':');
     if (idx == -1) return raw;
     final namespace = raw.substring(0 , idx);
-    if (namespaces.contains(namespace)) return value;
+    if (namespaces.contains(namespace)) return _value(raw);
     return raw;
   }
 
@@ -103,5 +110,5 @@ class Tag extends Equatable {
   String toString() => raw;
 
   @override
-  List<Object?> get props => [raw];
+  List<Object?> get props => [raw, service];
 }

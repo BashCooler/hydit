@@ -58,8 +58,9 @@ class Viewer extends StatelessWidget {
         extendBodyBehindAppBar: true,
         extendBody: true,
         body: Obx(() {
+          final file = files[page.i];
           return TagSheet(
-            tags: files[page.i].all,
+            tags: file.all.toList(),
             tag: tag,
             gallery: gallery,
             onFloatingActionButtonTap: showFloatingActionButton

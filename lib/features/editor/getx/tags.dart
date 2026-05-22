@@ -56,8 +56,8 @@ class TagManager extends GetxController {
   /// If selected service is editable returns true
   bool get editable => isServiceEditable(service);
 
-  void add(Tag tag) => addToService(service, tag);
-  void delete(Tag tag) => deleteFromService(service, tag);
+  void add(Tag tag) {}      // TODO
+  void delete(Tag tag) {}   // TODO
 
   @override
   void onInit() {
@@ -65,6 +65,7 @@ class TagManager extends GetxController {
     ever(selectedService, (_) => sortTags());
   }
 
+  /*
   void addToService(String service, Tag tag) {
     if (!isServiceEditable(service)) return;
     if (tag.raw.isEmpty) return;
@@ -115,6 +116,7 @@ class TagManager extends GetxController {
     }
     update();
   }
+  */
 }
 
 
@@ -132,7 +134,7 @@ extension Init on TagManager {
     if (file.id != _ids.first) return;
 
     initializeServices();
-    addToServices(file.service);
+    // addToServices(file.tags);
     selectCurrentService();
 
     ready.value = true;
@@ -145,9 +147,9 @@ extension Init on TagManager {
     initializeServices();
 
     for (final id in ids) {
-      final servicesMap = files.byId(id)?.service;
+      final servicesMap = files.byId(id)?.combined;
       if (servicesMap == null) return;
-      addToServices(servicesMap);
+      // addToServices(servicesMap);
     }
 
     selectCurrentService();

@@ -69,27 +69,11 @@ class SearchEntry extends StatelessWidget {
     final tag = tags[index] as Tag;
     final color = namespaceColors[tag.namespace] ?? namespaceColors['_'];
 
-    final Icon? icon;
-    final Color? tileColor;
-
-    switch (tag.diff) {
-      case .add:
-        icon = Icon(Icons.playlist_remove);
-        tileColor = AppColors.addition;
-      case .delete:
-        icon = Icon(Icons.undo);
-        tileColor = AppColors.deletion;
-      case _:
-        icon = null;
-        tileColor = null;
-    }
-
     return ListTile(
       enabled: onTap != null,
-      tileColor: tileColor,
       minTileHeight: AppTheme.fieldHeight,
       title: Text(tag.pretty, style: TextStyle(color: color)),
-      trailing: trailing ?? icon ?? Text(
+      trailing: trailing ?? Text(
         tag.count?.toString() ?? '',
         style: TextStyle(color: color, fontSize: 14.0),
       ),
