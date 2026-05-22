@@ -126,4 +126,8 @@ extension TagOperations on Set<Tag> {
   Set<Tag> operator [](String service) {
     return Set.unmodifiable(where((e) => e.service == service));
   }
+
+  Set<String> get services {
+    return map((t) => t.service).whereType<String>().toSet();
+  }
 }

@@ -219,11 +219,12 @@ class Client {
     return await request('get', '/add_tags/search_tags', params);
   }
 
-  Future<int> postAddTags(List<int> ids, String service, int action, List<String> tags) async {
+  Future<int> postAddTags(List<int> ids, String serviceKey, int action,
+      List<String> tags) async {
     final Map<String, dynamic> params = {
       'file_ids': ids,
       'service_keys_to_actions_to_tags': {
-        service: {
+        serviceKey: {
           "$action": tags,
         }
       }

@@ -139,12 +139,14 @@ class _EditorState extends State<Editor> {
 
   // MARK: DIALOG
 
-  Future<Action?> showPopDialog(BuildContext context, String message, String tag) {
+  Future<Action?> showPopDialog(BuildContext context, String message,
+      String tag) {
     bool isLoading = false;
     final TagManager manager = Get.find();
 
     return showDialog<Action>(
       context: context,
+      barrierDismissible: !isLoading,
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
@@ -153,8 +155,7 @@ class _EditorState extends State<Editor> {
               n.Button('Save'.n)
                 ..onPressed = () async {
                   setState(() => isLoading = true);
-                  // await manager.save();
-                  throw UnimplementedError();  // TODO
+                  await manager.save();
                   if (context.mounted) nav.pop(Action.save);
                 },
               n.Button('Discard'.n)
@@ -163,16 +164,24 @@ class _EditorState extends State<Editor> {
                 ..onPressed = () => nav.pop(Action.cancel),
             ];
 
-            return AlertDialog(
-              actionsAlignment: .center,
-              icon: const Icon(Icons.save),
-              title: isLoading
-                  ? const Text('Saving...')
-                  : const Text('Save changes?'),
-              content: isLoading
-                  ? const LinearProgressIndicator()
-                  : Text(message),
-              actions: isLoading ? <Widget>[] : actions,
+            return PopScope(
+              canPop: false,
+              onPopInvokedWithResult: (didPop, result) {
+                if (didPop) return;
+                if (isLoading) return;
+                Get.back();
+              },
+              child: AlertDialog(
+                actionsAlignment: .center,
+                icon: const Icon(Icons.save),
+                title: isLoading
+                    ? const Text('Saving...')
+                    : const Text('Save changes?'),
+                content: isLoading
+                    ? const LinearProgressIndicator()
+                    : Text(message),
+                actions: isLoading ? <Widget>[] : actions,
+              ),
             );
           },
         );

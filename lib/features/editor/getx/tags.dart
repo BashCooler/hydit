@@ -207,53 +207,45 @@ extension Save on TagManager {
     final sb = StringBuffer();
 
     if (_tagsToAdd.isNotEmpty) {
-      final servicesToAddTo = _tagsToAdd
-          .map((t) => t.service)
-          .toSet()
-          .length;
+      final services = _tagsToAdd.services.length;
       final count = _tagsToAdd.length;
-      sb.writeln('Add $count tags to $servicesToAddTo services');
+      sb.writeln('Add $count tags to $services services');
     }
 
     if (_tagsToRemove.isNotEmpty) {
-      final servicesToRemoveFrom = _tagsToRemove
-          .map((t) => t.service)
-          .toSet()
-          .length;
+      final services = _tagsToRemove.services.length;
       final count = _tagsToRemove.length;
-      sb.writeln('Remove $count tags from $servicesToRemoveFrom services');
+      sb.writeln('Remove $count tags from $services services');
     }
 
     return sb.toString();
   }
 
-  /*
   /// Send request to Hydrus to add/remove tags
   Future<void> save() async {
-    final toAdd = removeEmpty(_tagsToAdd);
-    final toRem = removeEmpty(_tagsToRemove);
-
     final Repo repo = Get.find();
 
-    for (final entry in toAdd.entries) {
-      var service = entry.key;
-      service = await repo.getServiceByName(service);
-      final tags = entry.value.map((e) => e.raw).toList();
-      await repo.addTags(_ids.toList(), service, tags);
-    }
-
-    for (final entry in toRem.entries) {
-      var service = entry.key;
-      service = await repo.getServiceByName(service);
-      final tags = entry.value.map((e) => e.raw).toList();
-      await repo.removeTags(_ids.toList(), service, tags);
-    }
+    await addOrRemove(_tagsToAdd, repo.addTags);
+    await addOrRemove(_tagsToRemove, repo.removeTags);
 
     for (final id in _ids) {
       await repo.setMetadataFor(files.byId(id));
     }
   }
-   */
+
+  Future<void> addOrRemove(Set<Tag> tags, Future<void> Function(List<int> ids, String serviceKey, List<String> tags) action) async {
+    final Repo repo = Get.find();
+    final services = tags.services;
+
+    for (final service in services) {
+      final key = await repo.serviceKeyOf(service);
+      await action(
+        _ids.toList(),
+        key,
+        tags[service].map((t) => t.raw).toList(),
+      );
+    }
+  }
 }
 
 

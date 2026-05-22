@@ -44,18 +44,22 @@ class Repo {
       "?file_id=$id"
       "&Hydrus-Client-API-Access-Key=${api.accessKey}";
 
-  Future<String> getServiceByName(String name) async {
+  Future<String> serviceKeyOf(String name) async {
     final response = await api.getService(name: name);
     final decoded = jsonDecode(response);
     return decoded['service']['service_key'];
   }
 
-  Future<int> addTags(List<int> ids, String service, List<String> tags) async {
-    return await api.postAddTags(ids, service, Action.addToLocalFileDomain, tags);
+  Future<int> addTags(List<int> ids, String serviceKey,
+      List<String> tags) async {
+    return await api.postAddTags(
+        ids, serviceKey, Action.addToLocalFileDomain, tags);
   }
 
-  Future<int> removeTags(List<int> ids, String service, List<String> tags) async {
-    return await api.postAddTags(ids, service, Action.deleteFromLocalFileDomain, tags);
+  Future<int> removeTags(List<int> ids, String serviceKey,
+      List<String> tags) async {
+    return await api.postAddTags(
+        ids, serviceKey, Action.deleteFromLocalFileDomain, tags);
   }
 
   Future<void> updateServiceNames() async {
