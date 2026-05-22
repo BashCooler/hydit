@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:deep_pick/deep_pick.dart';
-import 'package:get/get.dart';
 import 'package:hydit/core/domain/entities.dart';
 
 

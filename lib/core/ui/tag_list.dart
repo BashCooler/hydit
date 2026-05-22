@@ -38,8 +38,7 @@ class TagList extends StatelessWidget {
             itemCount: tags.length,
             controller: scrollController,
             itemBuilder: (_, index) => SearchEntry(
-              index: index,
-              tags: tags,
+              tag: tags[index],
               trailing: trailing,
               onTap: onTap,
             ),
@@ -51,22 +50,19 @@ class TagList extends StatelessWidget {
 }
 
 class SearchEntry extends StatelessWidget {
-  final int index;
   final Widget? trailing;
-  final dynamic tags;
+  final Tag tag;
   final void Function(Tag tag)? onTap;
 
   const SearchEntry({
     super.key,
-    required this.index,
     this.trailing,
     required this.onTap,
-    this.tags,
+    required this.tag,
   });
 
   @override
   Widget build(BuildContext context) {
-    final tag = tags[index] as Tag;
     final color = namespaceColors[tag.namespace] ?? namespaceColors['_'];
 
     return ListTile(
