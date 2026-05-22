@@ -122,7 +122,8 @@ class _EditorState extends State<Editor> {
   Future<bool> confirmPendingChanges(String tag) async {
     final TagManager manager = Get.find();
 
-    final message = manager.summarize();
+    // final message = manager.summarize();
+    final message = 'No changes';  // TODO
     if (message == 'No changes') return true;
 
     final result = await showPopDialog(context, message, tag);
@@ -153,7 +154,8 @@ class _EditorState extends State<Editor> {
               n.Button('Save'.n)
                 ..onPressed = () async {
                   setState(() => isLoading = true);
-                  await manager.save();
+                  // await manager.save();
+                  throw UnimplementedError();  // TODO
                   if (context.mounted) nav.pop(Action.save);
                 },
               n.Button('Discard'.n)

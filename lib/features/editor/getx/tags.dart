@@ -15,9 +15,9 @@ class TagManager extends GetxController {
   final _ids = <int>{};
   final sort = Sort.alphabeticalAsc.obs;
 
-  final Map<String, List<Tag>> _tags = {};
-  final Map<String, List<Tag>> _tagsToAdd = {};
-  final Map<String, List<Tag>> _tagsToDelete = {};
+  final Set<Tag> _tags = {};
+  final Set<Tag> _tagsToAdd = {};
+  final Set<Tag> _tagsToDelete = {};
 
   final FileRepo files;
 
@@ -27,9 +27,9 @@ class TagManager extends GetxController {
   String get service => selectedService.value;
 
   /// Selected service's tags
-  List<Tag> get tags => _tags[service] ?? [];
+  List<Tag> get tags => _tags[service].toList();
 
-  int length(String service) => _tags[service]?.length ?? 0;
+  int lengthOf(String service) => _tags[service].length;
 
   List<int> get fileIds => _ids.toList();
 
@@ -48,10 +48,10 @@ class TagManager extends GetxController {
   int get fileCount => _ids.length;
 
   /// Selected service's tags to add length
-  int get additionsCount => _tagsToAdd[service]?.length ?? 0;
+  int get additionsCount => _tagsToAdd[service].length;
 
   /// Selected service's tags to delete length
-  int get deletionsCount => _tagsToDelete[service]?.length ?? 0;
+  int get deletionsCount => _tagsToDelete[service].length;
 
   /// If selected service is editable returns true
   bool get editable => isServiceEditable(service);
@@ -133,8 +133,7 @@ extension Init on TagManager {
     await file.checkForMetadata();
     if (file.id != _ids.first) return;
 
-    initializeServices();
-    // addToServices(file.tags);
+    addToServices(file.combined);
     selectCurrentService();
 
     ready.value = true;
@@ -144,12 +143,10 @@ extension Init on TagManager {
   void initBatch(List<int> ids) {
     clear();
     _ids.assignAll(ids);
-    initializeServices();
 
     for (final id in ids) {
-      final servicesMap = files.byId(id)?.combined;
-      if (servicesMap == null) return;
-      // addToServices(servicesMap);
+      final file = files.byId(id);
+      addToServices(file?.combined);
     }
 
     selectCurrentService();
@@ -167,21 +164,9 @@ extension Init on TagManager {
     _tagsToDelete.clear();
   }
 
-  void addToServices(Map<String, List<Tag>> servicesMap) {
-    for (final entry in servicesMap.entries) {
-      final tags = entry.value
-          .map((tag) => Tag(tag.raw))
-          .toList();
-      _tags[entry.key] = {...?_tags[entry.key], ...tags}.toList();
-    }
-  }
-
-  void initializeServices() {
-    for (final service in services) {
-      _tags.putIfAbsent(service, () => <Tag>[]);
-      _tagsToAdd.putIfAbsent(service, () => <Tag>[]);
-      _tagsToDelete.putIfAbsent(service, () => <Tag>[]);
-    }
+  void addToServices(Set<Tag>? combined) {
+    if (combined == null) return;
+    _tags.addAll(combined);
   }
 
   void selectCurrentService() {
@@ -191,7 +176,7 @@ extension Init on TagManager {
   }
 }
 
-
+/*
 extension Save on TagManager {
   /// Removes entries with empty lists from map
   Map<String, List<Tag>> removeEmpty(Map<String, List<Tag>> map) =>
@@ -262,6 +247,7 @@ extension Save on TagManager {
     }
   }
 }
+ */
 
 
 extension ServiceUtils on TagManager {

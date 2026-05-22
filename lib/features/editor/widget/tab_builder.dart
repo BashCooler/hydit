@@ -16,14 +16,14 @@ class TabBuilder extends StatelessWidget {
       .toList();
 
   Widget buildTab(TagManager manager, String service) {
-    final length = manager.length(service);
+    final length = manager.lengthOf(service);
     switch (length) {
       case 0:
         return Tab(text: manager.pretty(service));
       case _:
         return n.Row([
           Tab(text: manager.pretty(service)),
-          Badge(label: '${manager.length(service)}'.n),
+          Badge(label: '${manager.lengthOf(service)}'.n),
         ])
           ..gap = 5;
     }

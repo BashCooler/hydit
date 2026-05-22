@@ -112,3 +112,10 @@ class Tag extends Equatable {
   @override
   List<Object?> get props => [raw, service];
 }
+
+
+extension TagOperations on Set<Tag> {
+  Iterable<Tag> operator [](String service) {
+    return where((e) => e.service == service).toSet();
+  }
+}
