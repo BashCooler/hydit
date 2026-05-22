@@ -130,4 +130,6 @@ extension TagOperations on Set<Tag> {
   Set<String> get services {
     return map((t) => t.service).whereType<String>().toSet();
   }
+
+  List<String> get rawList => map((t) => t.raw).toList();
 }

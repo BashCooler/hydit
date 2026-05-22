@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:hive_ce/hive.dart';
 import 'package:deep_pick/deep_pick.dart';
@@ -50,16 +51,22 @@ class Repo {
     return decoded['service']['service_key'];
   }
 
-  Future<int> addTags(List<int> ids, String serviceKey,
-      List<String> tags) async {
-    return await api.postAddTags(
-        ids, serviceKey, Action.addToLocalFileDomain, tags);
+  Future<void> addTags(List<int> ids, Set<Tag> tags) async {
+    for (final service in tags.services) {
+      final key = await serviceKeyOf(service);
+      await api.postAddTags(
+        ids, key, .addToLocalFileDomain, tags[service].rawList,
+      );
+    }
   }
 
-  Future<int> removeTags(List<int> ids, String serviceKey,
-      List<String> tags) async {
-    return await api.postAddTags(
-        ids, serviceKey, Action.deleteFromLocalFileDomain, tags);
+  Future<void> removeTags(List<int> ids, Set<Tag> tags) async {
+    for (final service in tags.services) {
+      final key = await serviceKeyOf(service);
+      await api.postAddTags(
+        ids, key, .deleteFromLocalFileDomain, tags[service].rawList,
+      );
+    }
   }
 
   Future<void> updateServiceNames() async {

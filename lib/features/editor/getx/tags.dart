@@ -225,25 +225,11 @@ extension Save on TagManager {
   Future<void> save() async {
     final Repo repo = Get.find();
 
-    await addOrRemove(_tagsToAdd, repo.addTags);
-    await addOrRemove(_tagsToRemove, repo.removeTags);
+    await repo.addTags(_ids.toList(), _tagsToAdd);
+    await repo.removeTags(_ids.toList(), _tagsToRemove);
 
     for (final id in _ids) {
       await repo.setMetadataFor(files.byId(id));
-    }
-  }
-
-  Future<void> addOrRemove(Set<Tag> tags, Future<void> Function(List<int> ids, String serviceKey, List<String> tags) action) async {
-    final Repo repo = Get.find();
-    final services = tags.services;
-
-    for (final service in services) {
-      final key = await repo.serviceKeyOf(service);
-      await action(
-        _ids.toList(),
-        key,
-        tags[service].map((t) => t.raw).toList(),
-      );
     }
   }
 }

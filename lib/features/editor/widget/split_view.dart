@@ -45,7 +45,7 @@ class Up extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scrollUp = useScrollController();
+    final scroll = useScrollController();
 
     return GetBuilder(
       init: Get.find<TagManager>(),
@@ -56,7 +56,7 @@ class Up extends HookWidget {
               child: ListView.builder(
                 reverse: true,
                 itemCount: 20,
-                controller: scrollUp,
+                controller: scroll,
                 itemBuilder: (context, index) {
                   return ListTile(title: Text('X' * 16));
                 },
@@ -68,7 +68,7 @@ class Up extends HookWidget {
               trailing: Icon(manager.editable
                   ? Icons.playlist_remove
                   : Icons.lock_outline),
-              scrollController: scrollUp,
+              scrollController: scroll,
               onTap: manager.editable
                   ? manager.delete
                   : null,
@@ -81,13 +81,14 @@ class Up extends HookWidget {
 }
 
 
-class Down extends StatelessWidget {
+class Down extends HookWidget {
   final String tag;
 
   const Down({super.key, required this.tag});
 
   @override
   Widget build(BuildContext context) {
+    final scroll = useScrollController();
     return GetBuilder(
       init: Get.find<TagManager>(),
       builder: (manager) {
@@ -98,6 +99,7 @@ class Down extends StatelessWidget {
           enabled: manager.loading,
           child: Suggests(
             tag: tag,
+            scrollController: scroll,
             trailing: Skeleton.ignore(child: Icon(icon)),
             onTap: manager.editable
                 ? manager.add

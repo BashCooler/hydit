@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' show Response, get, post;
+import 'package:hydit/utils/dictionaries.dart';
 
 Future<void> main() async {
   final client = Client(accessKey: '86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
@@ -219,13 +220,13 @@ class Client {
     return await request('get', '/add_tags/search_tags', params);
   }
 
-  Future<int> postAddTags(List<int> ids, String serviceKey, int action,
+  Future<int> postAddTags(List<int> ids, String serviceKey, Action action,
       List<String> tags) async {
     final Map<String, dynamic> params = {
       'file_ids': ids,
       'service_keys_to_actions_to_tags': {
         serviceKey: {
-          "$action": tags,
+          "${action.value}": tags,
         }
       }
     };
@@ -236,7 +237,7 @@ class Client {
 // MARK: METHODS
 
 String _encodeTags(List<String> tagList) {
-  // Replace special symbols with Unicode escape sequences (like \uxxxx)
+  /// Replace special symbols with Unicode escape sequences (like \uXXXX)
   String encodeUnicode(String input) {
     return input.replaceAllMapped(
       RegExp(r'[^\x00-\x7F]'),
