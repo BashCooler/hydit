@@ -144,11 +144,14 @@ class TagSortBuilder {
 
   TagSortBuilder(this._tags);
 
+  /// Sort tags in alphabetical order
   TagSortBuilder alphabetical() {
     _comparators.add((a, b) => a.raw.compareTo(b.raw));
     return this;
   }
 
+  /// Sort tags by state: added tags first,
+  /// then removed or unchanged
   TagSortBuilder state(Set<Tag> original) {
     _comparators.add((a, b) {
       final aAdded = !original.contains(a);
@@ -161,6 +164,8 @@ class TagSortBuilder {
     return this;
   }
 
+  /// Apply all sorting operations and return
+  /// a [List] of [Tag]s
   List<Tag> build() {
     final list = _tags.toList();
 

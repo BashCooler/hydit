@@ -123,10 +123,11 @@ extension Builders on Info
   }
 
   Widget buildAdditions(TagManager manager) {
-    switch (manager.additionsCount) {
+    final count = manager.additions.length;
+    switch (count) {
       case > 0:
         return n.Row([
-          '+${manager.additionsCount}'.n
+          '+$count'.n
             ..fontSize = 16
             ..color = additions,
           const VerticalDivider(width: 6),
@@ -137,9 +138,10 @@ extension Builders on Info
   }
 
   Widget buildDeletions(TagManager manager) {
-    switch (manager.deletionsCount) {
+    final count = manager.deletions.length;
+    switch (count) {
       case > 0:
-        return '-${manager.deletionsCount}'.n
+        return '-$count'.n
           ..fontSize = 16
           ..color = deletions;
       default:

@@ -88,11 +88,9 @@ class TagManager extends GetxController {
   /// Number of files in [TagManager]
   int get fileCount => _ids.length;
 
-  /// Number of tags to add to the selected service
-  int get additionsCount => -1;  // TODO
+  Set<Tag> get additions => _current.difference(_original);
 
-  /// Number of tags to remove from the selected service
-  int get deletionsCount => -1;  // TODO
+  Set<Tag> get deletions => _original.difference(_current);
 
   /// Whether selected service is editable
   bool get editable => isServiceEditable(service);
@@ -182,7 +180,7 @@ extension Init on TagManager {
 
   void addToServices(Set<Tag>? tags) {
     if (tags == null) return;
-    _original.assignAll(tags);
+    _original.addAll(tags);
     _current.addAll(tags);
   }
 
@@ -208,43 +206,38 @@ extension Save on TagManager {
   String summarize() {
     assert(_ids.isNotEmpty);
 
-    return 'Not implemented';  // TODO
-    /*
-    if (_tagsToAdd.isEmpty && _tagsToRemove.isEmpty) {
-      return 'No changes';
-    }
+    final add = additions;
+    final del = deletions;
+
+    if (add.isEmpty && del.isEmpty) return 'No changes';
 
     final sb = StringBuffer();
 
-    if (_tagsToAdd.isNotEmpty) {
-      final services = _tagsToAdd.services.length;
-      final count = _tagsToAdd.length;
+    if (add.isNotEmpty) {
+      final services = add.services.length;
+      final count = add.length;
       sb.writeln('Add $count tags to $services services');
     }
 
-    if (_tagsToRemove.isNotEmpty) {
-      final services = _tagsToRemove.services.length;
-      final count = _tagsToRemove.length;
+    if (del.isNotEmpty) {
+      final services = del.services.length;
+      final count = del.length;
       sb.writeln('Remove $count tags from $services services');
     }
 
     return sb.toString();
-    */
   }
 
   /// Send request to Hydrus to add/remove tags
   Future<void> save() async {
     final Repo repo = Get.find();
-    throw UnimplementedError();  // TODO
 
-    /*
-    await repo.addTags(_ids.toList(), _tagsToAdd);
-    await repo.removeTags(_ids.toList(), _tagsToRemove);
+    await repo.addTags(_ids.toList(), additions);
+    await repo.removeTags(_ids.toList(), deletions);
 
     for (final id in _ids) {
       await repo.setMetadataFor(files.byId(id));
     }
-     */
   }
 }
 

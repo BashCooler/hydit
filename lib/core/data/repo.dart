@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:hive_ce/hive.dart';
 import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/core/data/api.dart';
-import 'package:hydit/utils/dictionaries.dart';
 
 import 'mapper.dart';
 import '../domain/entities.dart';
