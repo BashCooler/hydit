@@ -65,12 +65,13 @@ class Up extends HookWidget {
           case false:
             return TagList(
               tags: manager.tags().toList(),
+              manager: manager,
               trailing: Icon(manager.editable
                   ? Icons.playlist_remove
                   : Icons.lock_outline),
               scrollController: scroll,
               onTap: manager.editable
-                  ? manager.delete
+                  ? manager.remove
                   : null,
               reverse: true,
             );

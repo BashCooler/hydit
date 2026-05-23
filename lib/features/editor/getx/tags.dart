@@ -7,18 +7,22 @@ import 'package:hydit/core/domain/file_repo.dart';
 const readOnlyServices = ['all known tags', 'public tag repository'];
 
 
+enum TagState {
+  unchanged,
+  added,
+  removed,
+}
+
+
 class TagManager extends GetxController {
   final ready = false.obs;
 
   final services = <String>[];
   final selectedService = ''.obs;
   final _ids = <int>{};
-  final sort = Sort.alphabeticalAsc.obs;
 
   final Set<Tag> _original = {};
-  final Set<Tag> _tags = {};
-  final Set<Tag> _tagsToAdd = {};
-  final Set<Tag> _tagsToRemove = {};
+  final Set<Tag> _current = {};
 
   final FileRepo files;
 
@@ -27,30 +31,55 @@ class TagManager extends GetxController {
   /// Selected service
   String get service => selectedService.value;
 
+  /// Sorted tags to show in UI
+  List<Tag> tags([String? service]) {
+    final Iterable<Tag> set = _tags(service);
+    return set.toList()..sort((a, b) {
+      final aAdded = !_original.contains(a);
+      final bAdded = !_original.contains(b);
+
+      if (aAdded != bAdded) return aAdded ? -1 : 1;
+
+      return a.raw.compareTo(b.raw);
+    });
+  }
+
   /// Returns tags of specified [service], if [service] is null
   /// returns tags of currently selected service
-  Iterable<Tag> tags([String? service]) {
+  Iterable<Tag> _tags([String? service]) {
     switch (service) {
       case null:
         if (this.service == 'all known tags') return unique();
-        return _tags[this.service];
+        return _current[this.service].union(_original[this.service]);
       case 'all known tags':
         return unique();
       case _:
-        return _tags[service];
+        return _current[service].union(_original[service]);
     }
   }
 
-  /// Number of tags in specified service
-  int lengthOf(String service) {
-    return tags(service).length;
+  /// Number of tags in specified service, if no service
+  /// is specified returns current service length
+  int lengthOf([String? service]) {
+    if (service == null) return _tags().length;
+    return _tags(service).where((t) => stateOf(t) != .removed).length;
+  }
+
+  /// State of specified tag: unchanged, added or removed
+  TagState stateOf(Tag tag) {
+    final original = _original.contains(tag);
+    final current = _current.contains(tag);
+
+    if (original && current) return .unchanged;
+    if (!original && current) return .added;
+    return .removed;
   }
 
   /// Generates `all known tags` dynamically to
   /// reflect changes in other services
   Set<Tag> unique() {
     final Map<String, Tag> map = {
-      for (var tag in _tags) tag.raw : tag
+      for (var tag in _current) tag.raw : tag
     };
     return map.values.toSet();
   }
@@ -63,20 +92,14 @@ class TagManager extends GetxController {
     return index;
   }
 
-  /// Number of tags in the selected service including existing tags
-  /// and tags to add
-  int get total {
-    return tags().length + _tagsToAdd[service].length;
-  }
-
   /// Number of files in [TagManager]
   int get fileCount => _ids.length;
 
   /// Number of tags to add to the selected service
-  int get additionsCount => _tagsToAdd[service].length;
+  int get additionsCount => -1;  // TODO
 
   /// Number of tags to remove from the selected service
-  int get deletionsCount => _tagsToRemove[service].length;
+  int get deletionsCount => -1;  // TODO
 
   /// Whether selected service is editable
   bool get editable => isServiceEditable(service);
@@ -86,28 +109,22 @@ class TagManager extends GetxController {
 
     final t = tag.copyWith(service: service);
     if (t.raw.isEmpty) return;
-    if (_tags.contains(t)) return;
 
-    switch (_original.contains(t)) {
-      case true:
-        _tags.add(t);
-        _tagsToRemove.remove(t);
-      case false:
-        _tagsToAdd.add(t);
-    }
+    _current.add(t);
     update();
   }
 
-  void delete(Tag tag) {
+  void remove(Tag tag) {
     if (!isServiceEditable(service)) return;
 
     final t = tag.copyWith(service: service);
-    final hasTag = _tags.contains(t) || _tagsToAdd.contains(t);
-    if (!hasTag) return;
-
-    _tags.remove(t);
-    _tagsToAdd.remove(t);
-    _tagsToRemove.add(t);
+    if (t.raw.isEmpty) return;
+    switch (stateOf(t)) {
+      case .removed:
+        _current.add(t);
+      case _:
+        _current.remove(t);
+    }
     update();
   }
 
@@ -167,15 +184,13 @@ extension Init on TagManager {
     services..clear()..addAll(all);
 
     _ids.clear();
-    _tags.clear();
-    _tagsToAdd.clear();
-    _tagsToRemove.clear();
+    _current.clear();
   }
 
   void addToServices(Set<Tag>? tags) {
     if (tags == null) return;
     _original.assignAll(tags);
-    _tags.addAll(tags);
+    _current.addAll(tags);
   }
 
   void selectCurrentService() {
@@ -200,6 +215,8 @@ extension Save on TagManager {
   String summarize() {
     assert(_ids.isNotEmpty);
 
+    return 'Not implemented';  // TODO
+    /*
     if (_tagsToAdd.isEmpty && _tagsToRemove.isEmpty) {
       return 'No changes';
     }
@@ -219,18 +236,22 @@ extension Save on TagManager {
     }
 
     return sb.toString();
+    */
   }
 
   /// Send request to Hydrus to add/remove tags
   Future<void> save() async {
     final Repo repo = Get.find();
+    throw UnimplementedError();  // TODO
 
+    /*
     await repo.addTags(_ids.toList(), _tagsToAdd);
     await repo.removeTags(_ids.toList(), _tagsToRemove);
 
     for (final id in _ids) {
       await repo.setMetadataFor(files.byId(id));
     }
+     */
   }
 }
 
@@ -252,21 +273,4 @@ extension ServiceUtils on TagManager {
     'downloader tags' => 'Downloader',
     _ => service,
   };
-}
-
-
-enum Sort { alphabeticalAsc, alphabeticalDesc }
-
-extension Sorting on TagManager {
-  /*
-  void sortTags() {
-    switch (sort.value) {
-      case .alphabeticalAsc:
-        tags().toList().sort((a, b) => a.raw.compareTo(b.raw));
-      case .alphabeticalDesc:
-        tags().toList().sort((a, b) => b.raw.compareTo(a.raw));
-    }
-    update();
-  }
-   */
 }

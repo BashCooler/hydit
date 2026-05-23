@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hydit/features/editor/getx/tags.dart';
 import 'package:hydit/utils/theme.dart';
 import '../domain/entities.dart';
 
@@ -13,6 +14,7 @@ class TagList extends StatelessWidget {
   final ScrollController? scrollController;
   final void Function(Tag tag)? onTap;
   final bool reverse;
+  final TagManager? manager;
 
   const TagList({
     super.key,
@@ -21,6 +23,7 @@ class TagList extends StatelessWidget {
     this.scrollController,
     required this.tags,
     this.reverse = false,
+    this.manager,
   });
 
   @override
@@ -41,6 +44,7 @@ class TagList extends StatelessWidget {
               tag: tags[index],
               trailing: trailing,
               onTap: onTap,
+              manager: manager,
             ),
           ),
         ),
@@ -53,19 +57,29 @@ class SearchEntry extends StatelessWidget {
   final Widget? trailing;
   final Tag tag;
   final void Function(Tag tag)? onTap;
+  final TagManager? manager;
 
   const SearchEntry({
     super.key,
     this.trailing,
     required this.onTap,
     required this.tag,
+    this.manager,
   });
 
   @override
   Widget build(BuildContext context) {
     final color = namespaceColors[tag.namespace] ?? namespaceColors['_'];
 
+    final TagState? state = manager?.stateOf(tag);
+    final Color? tileColor = switch (state) {
+      TagState.added => AppColors.addition,
+      TagState.removed => AppColors.deletion,
+      _ => null,
+    };
+
     return ListTile(
+      tileColor: tileColor,
       enabled: onTap != null,
       minTileHeight: AppTheme.fieldHeight,
       title: Text(tag.pretty, style: TextStyle(color: color)),

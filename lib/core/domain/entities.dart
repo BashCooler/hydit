@@ -63,9 +63,6 @@ class HydrusFile {
 }
 
 
-enum Diff {add, delete}
-
-
 class Tag extends Equatable {
   final String? service;
   final String raw;
