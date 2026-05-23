@@ -130,3 +130,48 @@ extension TagOperations on Set<Tag> {
 
   List<String> get rawList => map((t) => t.raw).toList();
 }
+
+
+extension Sorting on Iterable<Tag> {
+  TagSortBuilder get sort => TagSortBuilder(this);
+}
+
+
+class TagSortBuilder {
+  final Iterable<Tag> _tags;
+
+  final List<Comparator<Tag>> _comparators = [];
+
+  TagSortBuilder(this._tags);
+
+  TagSortBuilder alphabetical() {
+    _comparators.add((a, b) => a.raw.compareTo(b.raw));
+    return this;
+  }
+
+  TagSortBuilder state(Set<Tag> original) {
+    _comparators.add((a, b) {
+      final aAdded = !original.contains(a);
+      final bAdded = !original.contains(b);
+
+      if (aAdded == bAdded) return 0;
+
+      return aAdded ? -1 : 1;
+    });
+    return this;
+  }
+
+  List<Tag> build() {
+    final list = _tags.toList();
+
+    list.sort((a, b) {
+      for (final compare in _comparators) {
+        final result = compare(a, b);
+        if (result != 0) return result;
+      }
+      return 0;
+    });
+
+    return list;
+  }
+}

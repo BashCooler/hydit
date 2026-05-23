@@ -34,14 +34,7 @@ class TagManager extends GetxController {
   /// Sorted tags to show in UI
   List<Tag> tags([String? service]) {
     final Iterable<Tag> set = _tags(service);
-    return set.toList()..sort((a, b) {
-      final aAdded = !_original.contains(a);
-      final bAdded = !_original.contains(b);
-
-      if (aAdded != bAdded) return aAdded ? -1 : 1;
-
-      return a.raw.compareTo(b.raw);
-    });
+    return set.sort.state(_original).alphabetical().build();
   }
 
   /// Returns tags of specified [service], if [service] is null
