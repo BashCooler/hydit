@@ -64,41 +64,44 @@ class GalleryGridView extends StatelessWidget {
           }
         },
         child: Obx(() {
-          return GridView.builder(
-            padding: .only(
-              top: Get.mediaQuery.viewPadding.top + kToolbarHeight,
-              right: 5,
-              left: 5,
-              bottom: Get.mediaQuery.viewPadding.bottom,
-            ),
-            physics: physics,
+          return Scrollbar(
             controller: gallery.scroll,
-            itemCount: files.length,
-            gridDelegate: delegate,
-            itemBuilder: (context, index) {
-              final file = files[index];
+            child: GridView.builder(
+              padding: .fromLTRB(
+                8,
+                Get.mediaQuery.viewPadding.top + kToolbarHeight,
+                8,
+                Get.mediaQuery.viewPadding.bottom,
+              ),
+              physics: physics,
+              controller: gallery.scroll,
+              itemCount: files.length,
+              gridDelegate: delegate,
+              itemBuilder: (context, index) {
+                final file = files[index];
 
-              final tile = Tile(
-                tag: tag,
-                index: index,
-                file: files[index],
-                onTap: onTap,
-                onLongPress: onLongPress,
-              );
+                final tile = Tile(
+                  tag: tag,
+                  index: index,
+                  file: files[index],
+                  onTap: onTap,
+                  onLongPress: onLongPress,
+                );
 
-              if (file.width != -1) return tile;
+                if (file.width != -1) return tile;
 
-              return FutureBuilder(
-                future: repo.setMetadataFor(file),
-                builder: (_, snapshot) {
-                  if (snapshot.connectionState == .done) {
-                    return tile;
-                  } else {
-                    return const ColoredBox(color: Colors.white10);
-                  }
-                },
-              );
-            },
+                return FutureBuilder(
+                  future: repo.setMetadataFor(file),
+                  builder: (_, snapshot) {
+                    if (snapshot.connectionState == .done) {
+                      return tile;
+                    } else {
+                      return const ColoredBox(color: Colors.white10);
+                    }
+                  },
+                );
+              },
+            ),
           );
         }),
       ),
