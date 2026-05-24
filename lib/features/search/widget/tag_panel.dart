@@ -21,16 +21,18 @@ class TagPanel extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Padding(
-            padding: .only(left: 6),
+            padding: const .only(left: 6),
             child: Row(
               spacing: 5,
               children: [
-                SingleChildScrollView(
-                  scrollDirection: .horizontal,
-                  child: Obx(() {
-                    return n.Wrap(buildChips())..spacing = 5;
-                  }),
-                ).niku..expanded,
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: .horizontal,
+                    child: Obx(() {
+                      return n.Wrap(buildChips())..spacing = 5;
+                    }),
+                  ),
+                ),
                 ?actions,
               ],
             ),
@@ -60,14 +62,17 @@ class PlaceholderText extends StatelessWidget {
   Widget build(BuildContext context) {
     final QueryController controller = Get.find();
 
-    return Align(
-      alignment: .centerLeft,
-      child: Obx(() {
-        if (controller.tags.isNotEmpty) {
-          return const SizedBox.shrink();
-        }
-        return 'No tags'.n..fontSize = 16;
-      }),
-    ).niku..padding = .only(left: 16);
+    return Padding(
+      padding: const .only(left: 16),
+      child: Align(
+        alignment: .centerLeft,
+        child: Obx(() {
+          if (controller.tags.isNotEmpty) {
+            return const SizedBox.shrink();
+          }
+          return 'No tags'.n..fontSize = 16;
+        }),
+      ),
+    );
   }
 }

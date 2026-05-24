@@ -89,7 +89,7 @@ class TagSheet extends HookWidget {
   Widget? buildFloatingActionButton() {
     if (onFloatingActionButtonTap == null) return null;
     return Padding(
-      padding: .only(bottom: 18),
+      padding: const .only(bottom: 18),
       child: FloatingActionButton(
         onPressed: onFloatingActionButtonTap,
         child: const Icon(Icons.edit_note),

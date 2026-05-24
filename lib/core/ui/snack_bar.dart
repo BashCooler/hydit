@@ -18,7 +18,7 @@ void snackBar(Icon icon, String title, String message) {
         .colorScheme
         .surfaceContainerHigh,
     icon: icon,
-    margin: .all(8)
+    margin: const .all(8)
   );
 }
 

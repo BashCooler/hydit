@@ -91,15 +91,16 @@ class Gallery extends StatelessWidget {
             flexibleSpace: Container(decoration: buildBoxDecoration()),
             title: GestureDetector(
               onTap: () => scrollUp(gallery),
-              child: n.Column([
-                count,
-                ?q.text == '' ? null : q,
-              ])..crossAxisAlignment = .start,
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  count,
+                  ?q.text == '' ? null : q,
+                ],
+              ),
             ),
             actions: [
-              mode == .full  && selection.off
-                  ? const SortPopUp()
-                  : const SizedBox.shrink(),
+              if (mode == .full && selection.off) const SortPopUp(),
             ],
           ),
           resizeToAvoidBottomInset: false,
