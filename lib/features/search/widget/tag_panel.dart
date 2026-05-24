@@ -5,17 +5,15 @@ import 'package:niku/namespace.dart' as n;
 import 'package:hydit/core/domain/entities_ext.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
-import 'tag_actions.dart';
-
 
 class TagPanel extends StatelessWidget {
   final VoidCallback? onTap;
+  final Widget? actions;
 
-  const TagPanel({super.key, this.onTap});
+  const TagPanel({super.key, this.onTap, this.actions});
 
   @override
   Widget build(BuildContext context) {
-    final QueryController query = Get.find();
     return Stack(
       fit: .expand,
       children: [
@@ -33,13 +31,7 @@ class TagPanel extends StatelessWidget {
                     return n.Wrap(buildChips())..spacing = 5;
                   }),
                 ).niku..expanded,
-                TagActions(
-                  onClear: query.clearTags,
-                  onInsert: () {
-                    query.add(query.text);
-                    query.clear();
-                  },
-                ),
+                ?actions,
               ],
             ),
           ),

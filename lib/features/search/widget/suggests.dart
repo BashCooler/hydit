@@ -9,31 +9,28 @@ import '../getx/query.dart';
 
 class Suggests extends StatelessWidget {
   final Widget? trailing;
-  final bool expanded;
   final ScrollController? scrollController;
   final void Function(Tag tag)? onTap;
-  final String? tag;
+  final TagSearchController tagSearchController;
 
   const Suggests({
     super.key,
-    this.expanded = true,
     this.scrollController,
     this.trailing,
     required this.onTap,
-    this.tag,
+    required this.tagSearchController,
   });
 
   @override
   Widget build(BuildContext context) {
-    final QueryController controller = Get.find(tag: tag);
     return Obx(() {
-      switch (controller.suggestsVisible) {
+      switch (tagSearchController.suggestsVisible) {
         case true:
           return TagList(
             trailing: trailing,
             onTap: onTap,
             scrollController: scrollController,
-            tags: controller.suggests.toList(),
+            tags: tagSearchController.suggests.toList(),
             reverse: true,
           );
         case false:

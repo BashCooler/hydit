@@ -24,6 +24,7 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  final tagSearch = TagSearchController();
   final QueryController query = Get.find();
 
   @override
@@ -40,9 +41,9 @@ class _SearchState extends State<Search> {
 
   void searchThenBack() {
     if (query.tags.isEmpty) {
-      query.add(query.text);
+      query.add(tagSearch.text);
     }
-    query..clear()..searchForFiles();
+    query.searchForFiles();
     Get.back();
   }
 
@@ -50,7 +51,6 @@ class _SearchState extends State<Search> {
     Future.delayed(AppTheme.duration, () {
       final GalleryController gallery = Get.find(tag: widget.tag);
       gallery.showActions();
-      query.clear();
     });
   }
 
@@ -65,19 +65,32 @@ class _SearchState extends State<Search> {
           title: Text('Search'),
         ),
         body: n.Column([
-          Suggests(onTap: (tag) => query..clear()..add(tag.raw)).niku
-            ..expanded,
+          Expanded(
+            child: Suggests(
+              tagSearchController: tagSearch,
+              onTap: (tag) {
+                tagSearch.clear();
+                query.add(tag.raw);
+              },
+            ),
+          ),
           const Divider(height: 1),
-          const TagPanel(),
+          TagPanel(
+            actions: TagActions(
+              onClear: query.clearTags,
+              onInsert: () {
+                query.add(tagSearch.text);
+                tagSearch.clear();
+              },
+            ),
+          ),
           TagSearchBar(
             autofocus: true,
             hintText: 'Enter tags here',
+            tagSearchController: tagSearch,
             actions: TagActions(
-              onClear: query.clear,
-              onSearch: () {
-                query..clear()..searchForFiles();
-                Get.back();
-              },
+              onClear: tagSearch.clear,
+              onSearch: searchThenBack,
             ),
             onSubmitted: searchThenBack,
           ),

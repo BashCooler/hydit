@@ -49,8 +49,8 @@ class EditorBindings extends Bindings {
 
   @override
   void dependencies() {
-    Get.put(QueryController(gallery: gallery), tag: tag);
     Get.put(FileRepo.copy(files), tag: tag);
+    Get.put(TagSearchController(), tag: tag);
 
     switch (mode) {
       case .paged:

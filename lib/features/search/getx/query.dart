@@ -11,62 +11,36 @@ import 'package:hydit/core/domain/file_repo.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 
-class QueryController extends GetxController {
-  final query = ''.obs;
+class TagSearchController extends GetxController {
   final suggests = <Tag>[].obs;
-  final _tags = <Tag>[].obs;
-  final isLoading = false.obs;
   final _suggestVisible = false.obs;
 
-  final FileRepo? fileRepo;
-  final GalleryController? gallery;
+  final Repo repo = Get.find();
+  final controller = TextEditingController();
 
-  // Sorting options are global and we can't sort
-  // preview galleries for now
-  FileSortType _sortType = .importTime;
-  bool _sortAsc = false;
-
-  QueryController({this.fileRepo, required this.gallery}) {
-    loadSortOption();
-    loadAscOption();
-  }
-
-  List<Tag> get tags => _tags;
-  String get text => textController.text;
-  TextEditingController get $ => textController;
   bool get suggestsVisible => _suggestVisible.value;
-  List<String> get values => _tags.map((t) => t.raw).toList();
 
-  bool hasTag(Tag tag) => values.contains(tag.raw);
-
-  final repo = Get.find<Repo>();
-  final textController = TextEditingController();
-
-  @override
-  void onInit() {
-    super.onInit();
-    debounce(
-      query, (q) => _onChange(q),
-      time: const Duration(milliseconds: 100),
-    );
-  }
+  String get text => controller.text;
+  TextEditingController get $ => controller;
 
   @override
   void dispose() {
-    textController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
-  void _onChange(String q) {
-    if (q.length < 3) {
-      suggests.clear();
-      _suggestVisible.value = false;
-      return;
+  void query(String query) {
+    switch (query.length) {
+      case < 3:
+        suggests.clear();
+        _suggestVisible.value = false;
+      case _:
+        fetch(query);
     }
-    fetch(q);
   }
 
   int _requestId = 0;
+  final isLoading = false.obs;
 
   Future<void> fetch(String q) async {
     isLoading.value = true;
@@ -85,6 +59,36 @@ class QueryController extends GetxController {
     }
     isLoading.value = false;
   }
+
+  void clear() {
+    _suggestVisible.value = false;
+    controller.text = '';
+    suggests.clear();
+  }
+}
+
+
+class QueryController extends GetxController {
+  final _tags = <Tag>[].obs;
+
+  final FileRepo? fileRepo;
+  final Repo repo = Get.find();
+  final GalleryController? gallery;
+
+  // Sorting options are global and we can't sort
+  // preview galleries for now
+  FileSortType _sortType = .importTime;
+  bool _sortAsc = false;
+
+  QueryController({this.fileRepo, required this.gallery}) {
+    loadSortOption();
+    loadAscOption();
+  }
+
+  List<Tag> get tags => _tags;
+  List<String> get values => _tags.map((t) => t.raw).toList();
+
+  bool hasTag(Tag tag) => values.contains(tag.raw);
 
   void add(String tag) {
     final t = Tag(tag);
@@ -128,12 +132,6 @@ class QueryController extends GetxController {
       case _:
         Get.snackbar('Error', '$e');
     }
-  }
-
-  void clear() {
-    _suggestVisible.value = false;
-    textController.text = '';
-    suggests.clear();
   }
 }
 

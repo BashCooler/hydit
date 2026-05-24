@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -11,7 +10,7 @@ class TagSearchBar extends HookWidget {
   final String? hintText;
   final Widget? actions;
   final void Function()? onSubmitted;
-  final String? tag;
+  final TagSearchController tagSearchController;
 
   const TagSearchBar({
     super.key,
@@ -20,7 +19,7 @@ class TagSearchBar extends HookWidget {
     this.hintText,
     this.actions,
     required this.onSubmitted,
-    this.tag,
+    required this.tagSearchController,
   });
 
   void keepFocus(FocusNode node) {
@@ -30,14 +29,13 @@ class TagSearchBar extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final node = useFocusNode();
-    final QueryController query = Get.find(tag: tag);
 
     return TextField(
       enabled: enabled,
       textAlignVertical: .center,
       autofocus: autofocus,
       focusNode: node,
-      controller: query.textController,
+      controller: tagSearchController.controller,
       decoration: InputDecoration(
         hintText: hintText,
         filled: true,
@@ -45,7 +43,7 @@ class TagSearchBar extends HookWidget {
         suffixIcon: actions,
         border: .none,
       ),
-      onChanged: (value) => query.query.value = value,
+      onChanged: tagSearchController.query,
       onSubmitted: (_) => onSubmitted?.call(),
       onTapOutside: (_) => keepFocus(node),
     );

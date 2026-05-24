@@ -17,7 +17,7 @@ class EditorTagSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TagManager manager = Get.find();
-    final QueryController query = Get.find(tag: tag);
+    final TagSearchController tagSearch = Get.find(tag: tag);
 
     return Obx(() {
       return Skeletonizer(
@@ -28,16 +28,16 @@ class EditorTagSearchBar extends StatelessWidget {
               ? 'Add tags to ${manager.service}'
               : 'Read-only service selected',
           onSubmitted: null,
+          tagSearchController: tagSearch,
           actions: Skeleton.shade(
             child: TagActions(
-              onClear: query.clear,
+              onClear: tagSearch.clear,
               onInsert: () {
-                manager.addRaw(query.text);
-                query.clear();
+                manager.addRaw(tagSearch.text);
+                tagSearch.clear();
               },
             ),
           ),
-          tag: tag,
         ),
       );
     });

@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:multi_split_view/multi_split_view.dart';
 
 import 'package:hydit/core/ui/tag_list.dart';
+import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/search/widget/suggests.dart';
 
 import '../getx/tags.dart';
@@ -90,6 +91,8 @@ class Down extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final scroll = useScrollController();
+    final TagSearchController tagSearch = Get.find(tag: tag);
+
     return GetBuilder(
       init: Get.find<TagManager>(),
       builder: (manager) {
@@ -99,9 +102,9 @@ class Down extends HookWidget {
         return Skeletonizer(
           enabled: manager.loading,
           child: Suggests(
-            tag: tag,
             scrollController: scroll,
             trailing: Skeleton.ignore(child: Icon(icon)),
+            tagSearchController: tagSearch,
             onTap: manager.editable
                 ? manager.add
                 : null,
