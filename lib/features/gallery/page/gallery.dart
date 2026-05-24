@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hydit/features/search/getx/query.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/core/ui/common.dart';
@@ -34,11 +35,14 @@ class Gallery extends StatelessWidget {
     gallery.showActions();
   }
 
+  static const shadows = [ Shadow(blurRadius: 16) ];
+
   @override
   Widget build(BuildContext context) {
     final FileRepo files = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
     final SelectionController selection = Get.find(tag: tag);
+    final QueryController query = Get.find();
 
     return PopScope(
       canPop: false,
@@ -71,6 +75,16 @@ class Gallery extends StatelessWidget {
         n.showDialog(context: context, builder: (context) => alert);
       },
       child: Obx(() {
+        final count = '${files.length} files'.n
+          ..color = Colors.white
+          ..bodyLarge
+          ..shadows = shadows;
+
+        final q = '${query.values}'.replaceAll(RegExp(r'[\[\]]'), '').n
+          ..color = Colors.white
+          ..bodySmall
+          ..shadows = shadows;
+
         return Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
@@ -79,12 +93,10 @@ class Gallery extends StatelessWidget {
             flexibleSpace: Container(decoration: buildBoxDecoration()),
             title: GestureDetector(
               onTap: () => scrollUp(gallery),
-              child: '${files.length} files'.n
-                ..color = Colors.white
-                ..bodyLarge
-                ..shadows = const [
-                  Shadow(blurRadius: 16),
-                ],
+              child: n.Column([
+                count,
+                ?q.text == '' ? null : q,
+              ])..crossAxisAlignment = .start,
             ),
             actions: [
               mode == .full  && selection.off
