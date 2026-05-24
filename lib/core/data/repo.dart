@@ -28,13 +28,14 @@ class Repo {
     api.updateClient(key: key, uri: uri);
   }
 
-  Future<void> setMetadataFor(HydrusFile? image) async {
-    if (image == null) return;
+  Future<void> setMetadataFor(HydrusFile? file) async {
+    if (file == null) return;
     final response = await api.getFileMetadata(
-      [image.id],
+      [file.id],
       includeServicesObject: false);
-    await Mapper.writeMetadata(response, image);
-    image.ready.value = true;
+    await Mapper.writeMetadata(response, file);
+    file.buildNamespaceIndex();
+    file.ready.value = true;
   }
 
   String buildUrl(int id, {bool thumbnail = false}) => ""

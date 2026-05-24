@@ -81,6 +81,11 @@ class PageGetxController extends GetxController {
   /// If [SliverGridDelegateWithFixedCrossAxisCount.crossAxisCount] changed
   /// in settings the `-2` offset becomes irrelevant
   void jumpToPageInBackground(int page) {
-    grid?.jumpTo(index: page - 2 > 0 ? page - 2 : 0);
+    switch (page) {
+      case < 2:
+        grid?.controller?.jumpTo(0);
+      case _:
+        grid?.jumpTo(index: page - 2 > 0 ? page - 2 : 0);
+    }
   }
 }

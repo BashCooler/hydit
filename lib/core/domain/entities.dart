@@ -34,6 +34,8 @@ class HydrusFile {
   /// show it in UI.
   final RxSet<Tag> combined = <Tag>{}.obs;
 
+  late final Map<String, List<String>> namespaces;
+
   HydrusFile(this.id);
 
   /// Length of `all known tags` service
@@ -59,6 +61,21 @@ class HydrusFile {
     if (ready.value) return;
     final Repo repo = Get.find();
     await repo.setMetadataFor(this);
+  }
+
+  void buildNamespaceIndex() {
+    final map = <String, List<String>>{};
+
+    for (final tag in combined) {
+      if (tag.namespace == null) continue;
+      map.putIfAbsent(tag.namespace!, () => []).add(tag.value);
+    }
+
+    for (final values in map.values) {
+      values.sort();
+    }
+
+    namespaces = map;
   }
 }
 
