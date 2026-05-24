@@ -11,6 +11,7 @@ import 'package:hydit/features/search/widget/tag_panel.dart';
 import '../getx/query.dart';
 import '../widget/search.dart';
 import '../widget/suggests.dart';
+import '../widget/tag_actions.dart';
 
 
 class Search extends StatefulWidget {
@@ -64,59 +65,26 @@ class _SearchState extends State<Search> {
           title: Text('Search'),
         ),
         body: n.Column([
-          Suggests(
-            onTap: (tag) {
-              query
-                ..clear()
-                ..add(tag.raw);
-            },
-          ).niku
+          Suggests(onTap: (tag) => query..clear()..add(tag.raw)).niku
             ..expanded,
           const Divider(height: 1),
           const TagPanel(),
           TagSearchBar(
             autofocus: true,
             hintText: 'Enter tags here',
-            actions: const _TagSearchBarActions(),
+            actions: TagActions(
+              onClear: query.clear,
+              onSearch: () {
+                query..clear()..searchForFiles();
+                Get.back();
+              },
+            ),
             onSubmitted: searchThenBack,
           ),
         ])
           ..mainAxisAlignment = .end
           ..safe,
       ),
-    );
-  }
-}
-
-
-class _TagSearchBarActions extends StatelessWidget {
-  const _TagSearchBarActions();
-
-  @override
-  Widget build(BuildContext context) {
-    final QueryController query = Get.find();
-    return Row(
-      mainAxisSize: .min,
-      spacing: 5.0,
-      mainAxisAlignment: .end,
-      children: [
-        IconButton(
-          onPressed: query.clear,
-          icon: const Icon(Icons.clear),
-          tooltip: 'Clear',
-        ),
-        IconButton(
-          tooltip: 'Search',
-          onPressed: () {
-            query
-              ..clear()
-              ..searchForFiles();
-            Get.back();
-          },
-          icon: const Icon(Icons.search),
-        ),
-        const VerticalDivider(width: 0),
-      ],
     );
   }
 }

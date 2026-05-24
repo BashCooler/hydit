@@ -5,6 +5,8 @@ import 'package:niku/namespace.dart' as n;
 import 'package:hydit/core/domain/entities_ext.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
+import 'tag_actions.dart';
+
 
 class TagPanel extends StatelessWidget {
   final VoidCallback? onTap;
@@ -13,6 +15,7 @@ class TagPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final QueryController query = Get.find();
     return Stack(
       fit: .expand,
       children: [
@@ -20,7 +23,7 @@ class TagPanel extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Padding(
-            padding: .symmetric(horizontal: 6),
+            padding: .only(left: 6),
             child: Row(
               spacing: 5,
               children: [
@@ -30,7 +33,13 @@ class TagPanel extends StatelessWidget {
                     return n.Wrap(buildChips())..spacing = 5;
                   }),
                 ).niku..expanded,
-                const TagPanelActions(),
+                TagActions(
+                  onClear: query.clearTags,
+                  onInsert: () {
+                    query.add(query.text);
+                    query.clear();
+                  },
+                ),
               ],
             ),
           ),
@@ -68,33 +77,5 @@ class PlaceholderText extends StatelessWidget {
         return 'No tags'.n..fontSize = 16;
       }),
     ).niku..padding = .only(left: 16);
-  }
-}
-
-
-class TagPanelActions extends StatelessWidget {
-  const TagPanelActions({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final QueryController controller = Get.find();
-    return Row(
-      spacing: 4,
-      children: [
-        IconButton(
-          tooltip: 'Clear tags',
-          onPressed: controller.clearTags,
-          icon: const Icon(Icons.clear),
-        ),
-        IconButton(
-          onPressed: () {
-            controller.add(controller.text);
-            controller.clear();
-          },
-          icon: const Icon(Icons.arrow_drop_up),
-          tooltip: 'Insert input as tag',
-        ),
-      ],
-    );
   }
 }

@@ -105,6 +105,11 @@ class TagManager extends GetxController {
     update();
   }
 
+  void addRaw(String raw) {
+    final t = Tag(raw);
+    add(t);
+  }
+
   void remove(Tag tag) {
     if (!isServiceEditable(service)) return;
 
