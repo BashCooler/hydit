@@ -9,6 +9,7 @@ import 'package:hydit/features/gallery/getx/gallery.dart';
 import 'package:hydit/features/search/widget/tag_panel.dart';
 
 import '../getx/query.dart';
+import '../getx/search.dart';
 import '../widget/search.dart';
 import '../widget/suggests.dart';
 import '../widget/tag_actions.dart';

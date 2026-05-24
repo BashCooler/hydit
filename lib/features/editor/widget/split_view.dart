@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:multi_split_view/multi_split_view.dart';
 
 import 'package:hydit/core/ui/tag_list.dart';
-import 'package:hydit/features/search/getx/query.dart';
+import 'package:hydit/features/search/getx/search.dart';
 import 'package:hydit/features/search/widget/suggests.dart';
 
 import '../getx/tags.dart';
