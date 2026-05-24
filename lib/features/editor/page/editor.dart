@@ -52,10 +52,7 @@ class _EditorState extends State<Editor> {
         ])
           ..safe,
         floatingActionButtonLocation: .miniEndFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: Navigator.of(context).maybePop,
-          child: const Icon(Icons.check),
-        ).niku.paddingOnly(bottom: 60),
+        floatingActionButton: buildActionButton(),
       ),
     );
   }
@@ -97,6 +94,16 @@ class _EditorState extends State<Editor> {
           ),
         );
     }
+  }
+
+  Widget buildActionButton() {
+    return Padding(
+      padding: const .only(bottom: 60),
+      child: FloatingActionButton(
+        onPressed: Navigator.of(context).maybePop,
+        child: const Icon(Icons.check),
+      ),
+    );
   }
 
   // MARK: NAV

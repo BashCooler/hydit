@@ -1,21 +1,19 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hydit/features/search/getx/query.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/core/ui/common.dart';
 import 'package:hydit/core/domain/file_repo.dart';
-import 'package:hydit/features/search/page/search.dart';
-import 'package:hydit/features/search/widget/sorting.dart';
+import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/viewer/getx/bindings.dart';
-import 'package:hydit/features/editor/getx/bindings.dart';
-import 'package:hydit/features/settings/ui/page/settings.dart';
+import 'package:hydit/features/search/widget/sorting.dart';
 
-import '../getx/bindings.dart';
 import '../getx/gallery.dart';
+import '../getx/bindings.dart';
 import '../getx/selection.dart';
+import '../widget/floating.dart';
 import '../widget/gridview.dart';
+import '../widget/select.dart';
 
 
 class Gallery extends StatelessWidget {
@@ -129,7 +127,7 @@ class Gallery extends StatelessWidget {
                 },
                 onLongPress: full ? selection.selectTile : null,
               ),
-              full ? FloatingActions(tag: tag) : const SizedBox.shrink(),
+              if (full) FloatingActions(tag: tag),
             ],
           ),
           bottomNavigationBar: selection.on
@@ -150,112 +148,6 @@ class Gallery extends StatelessWidget {
         begin: .topCenter,
         end: .bottomCenter,
       ),
-    );
-  }
-}
-
-
-class FloatingActions extends StatelessWidget {
-  final String tag;
-
-  const FloatingActions({super.key, required this.tag});
-
-  @override
-  Widget build(BuildContext context) {
-    final GalleryController gallery = Get.find(tag: tag);
-    return Obx(() {
-      return AnimatedContainer(
-        curve: Curves.easeOutCubic,
-        duration: const Duration(milliseconds: 350),
-        height: gallery.actionsVisible
-            ? MediaQuery.of(context).viewPadding.bottom * 2
-            : 0,
-        child: n.Wrap([
-          n.Row([
-            FilledIconButton(
-              onPressed: () {
-                Get.to(() => const SettingsPage(), transition: .downToUp);
-              },
-              icon: const Icon(Icons.settings),
-            ),
-            FilledIconButton(
-              onPressed: () {
-                gallery.hideActions();
-                Get.to(() => Search(tag: tag), transition: .downToUp);
-              },
-              icon: const Icon(Icons.search),
-            ),
-          ])
-            ..mainAxisAlignment = .spaceBetween
-            ..n.padding = .only(left: 15.0, right: 15.0, bottom: 15.0),
-        ]),
-      );
-    });
-  }
-}
-
-
-class SelectActions extends StatelessWidget {
-  final String tag;
-
-  const SelectActions({super.key, required this.tag});
-
-  @override
-  Widget build(BuildContext context) {
-    final FileRepo files = Get.find(tag: tag);
-    final SelectionController selection = Get.find(tag: tag);
-    final GalleryController gallery = Get.find(tag: tag);
-
-    return BottomAppBar(
-      color: Get.theme.scaffoldBackgroundColor.withAlpha(90),
-      child: n.Row([
-        Obx(() {
-          return '${selection.ids.length} selected'.n
-            ..expanded
-            ..color = Colors.white
-            ..fontSize = 16
-            ..fontWeight = .w500
-            ..shadows = [Shadow(blurRadius: 24)]
-            ..textAlign = .center;
-        }),
-        n.Row([
-          IconButton(
-            tooltip: 'Edit tags',
-            icon: const Icon(Icons.edit),
-            color: Colors.white,
-            onPressed: () async {
-              final tag = 'Editor-${DateTime.now().microsecondsSinceEpoch}';
-              switch (selection.ids.length) {
-                case 1:
-                  final id = selection.ids.first;
-                  final index = files.indexWhere((f) => f.id == id);
-                  await toEditorPaged(tag, index, files, gallery);
-                  selection.clear();
-                case _:
-                  final fileRepo = FileRepo.pickFrom(files, selection.ids.toList());
-                  await toEditorBatch(tag, fileRepo, gallery, selection.ids.toList());
-                  selection.clear();
-              }
-            },
-          ),
-          Obx(() {
-            switch (selection.rangeSelected) {
-              case true:
-                return IconButton(
-                  tooltip: 'Select range',
-                  icon: const Icon(Icons.select_all),
-                  color: Colors.white,
-                  onPressed: selection.selectRange,
-                );
-              case false:
-                return const SizedBox.shrink();
-            }
-          }),
-        ])
-          ..gap = 10
-          ..padding = .only(right: 10),
-      ])
-        ..mainAxisAlignment = .spaceBetween,
     );
   }
 }

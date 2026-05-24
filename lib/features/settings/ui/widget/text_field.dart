@@ -29,8 +29,7 @@ class SettingsTextField extends HookWidget {
     node.addListener(() => focus.value = node.hasFocus);
 
     return n.Column([
-      n.Text(label)
-        ..fontSize = 16.5,
+      n.Text(label)..fontSize = 16.5,
       Obx(() {
         return TextField(
           enabled: !settings.processing.value,
@@ -40,10 +39,10 @@ class SettingsTextField extends HookWidget {
           focusNode: node,
           textAlignVertical: .center,
           decoration: InputDecoration(
-            contentPadding: .symmetric(vertical: 0, horizontal: 8),
+            contentPadding: const .symmetric(vertical: 0, horizontal: 8),
             border: OutlineInputBorder(
               borderSide: .none,
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: .circular(8.0),
             ),
             floatingLabelBehavior: .always,
             filled: true,
@@ -56,7 +55,7 @@ class SettingsTextField extends HookWidget {
     ])
       ..crossAxisAlignment = .start
       ..gap = 4
-      ..padding = .symmetric(horizontal: 24);
+      ..padding = const .symmetric(horizontal: 24);
   }
 }
 

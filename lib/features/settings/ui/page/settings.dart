@@ -60,9 +60,9 @@ class _SettingsPageState extends State<SettingsPage> {
               );
             }),
             SettingActionTile(
-              icon: Padding(
+              icon: const Padding(
                 padding: .all(8),
-                child: const FaIcon(FontAwesomeIcons.github, size: 32),
+                child: FaIcon(FontAwesomeIcons.github, size: 32),
               ),
               title: FutureBuilder(
                 future: version(),
