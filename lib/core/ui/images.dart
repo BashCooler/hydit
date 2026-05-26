@@ -40,12 +40,12 @@ class HighResImage extends StatelessWidget {
       children: [
         CachedNetworkImage(
           imageUrl: repo.buildUrl(image.id, thumbnail: true),
-          placeholder: (_, _) => SizedBox.shrink(),
+          placeholder: (context, url) => const SizedBox.shrink(),
           fit: .cover,
         ),
         CachedNetworkImage(
           imageUrl: repo.buildUrl(image.id),
-          placeholder: (_, _) => SizedBox.shrink(),
+          placeholder: (context, url) => const SizedBox.shrink(),
           fit: .cover,
         ),
       ],

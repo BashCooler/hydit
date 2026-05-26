@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/extra/extra.dart';
-import 'package:filesize/filesize.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -157,7 +156,7 @@ extension Builders on Info
   }
 
   Widget buildMeta(HydrusFile file) {
-    return 'id: ${file.id}, ${filesize(file.size)},\n${file.res}'.n
+    return 'id: ${file.id}, ${file.fileSize},\n${file.res}'.n
       ..labelMedium
       ..maxLines = 2;
   }

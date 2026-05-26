@@ -13,6 +13,7 @@
 library;
 
 import 'package:get/get.dart';
+import 'package:filesize/filesize.dart';
 import 'package:equatable/equatable.dart';
 
 import '../data/repo.dart';
@@ -48,6 +49,8 @@ class HydrusFile {
       .where((e) => e.service == 'all known tags');
 
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
+
+  String get fileSize => filesize(size);
 
   bool get loading => !ready.value;
 

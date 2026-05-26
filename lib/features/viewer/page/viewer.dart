@@ -179,7 +179,15 @@ class BottomActions extends StatelessWidget {
             icon: const Icon(Icons.keyboard_arrow_left),
           ),
           Obx(() {
-            return n.Button('${files[page.i].length} tags'.n)
+            final file = files[page.i];
+            final content = Column(
+              children: [
+                '${file.length} tags'.n,
+                '${file.res}, ${file.fileSize}'.n
+                  ..labelSmall,
+              ],
+            );
+            return n.Button(content)
               ..tooltip = 'Show tags'
               ..foregroundColor = Colors.white
               ..overlayColor = Colors.white.withAlpha(32)
@@ -187,6 +195,7 @@ class BottomActions extends StatelessWidget {
               ..fontWeight = .w500
               ..shadows = [Shadow(blurRadius: 24)]
               ..onPressed = openSheet
+              ..padding = .zero
               ..expanded;
           }),
           IconButton(
