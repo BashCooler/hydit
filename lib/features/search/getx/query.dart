@@ -28,6 +28,7 @@ class QueryController extends GetxController {
   QueryController({this.fileRepo, required this.gallery}) {
     loadSortOption();
     loadAscOption();
+    load();
   }
 
   List<Tag> get tags => _tags;
@@ -65,6 +66,8 @@ class QueryController extends GetxController {
       return;
     } finally {
       gallery!.refreshing.value = false;
+      final box = Hive.box('settings');
+      box.put('query', _tags.map((t) => t.raw).toList());
     }
   }
 
@@ -86,12 +89,19 @@ class QueryController extends GetxController {
 
     snackBar(const Icon(Icons.clear), title, message);
   }
-}
 
+  Future<void> load() async {
+    final box = Hive.box('settings');
+    final List<String>? tags = box.get('query');
+    if (tags != null) {
+      _tags.assignAll(tags.map((t) => Tag(t)));
+      await searchForFiles();
+    }
+  }
 
-extension Sort on QueryController {
+  // MARK: SORT TYPE
+
   static const typeKey = 'sort type';
-
   FileSortType get sortType => _sortType;
 
   set sortType(FileSortType sortType) {
@@ -112,12 +122,10 @@ extension Sort on QueryController {
             .firstWhere((e) => e.name == sort);
     }
   }
-}
 
+  // MARK: ASC/DESC
 
-extension Asc on QueryController {
   static const ascKey = 'sort ascending';
-
   bool get sortAsc => _sortAsc;
 
   set sortAsc(bool sortAsc) {
