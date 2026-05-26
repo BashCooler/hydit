@@ -39,12 +39,6 @@ Select one or more files, open tag editor, add new tags or remove existing tags
   </tbody>
 </table>
 
-## Supported platforms
-
-- Android
-
-*Note:* This app is developed for Android, so a lot of features is gesture based and designed for a small screen. It is possible to bring this app to other platforms, it's just that I don't have IOS devices and on desktop you can use the original Hydrus client or something like [hydrui](https://hydrui.dev/en/).
-
 ## Quick start
 
 > Before you start BACK UP YOUR DATABASE! Hydit is unlikely to break anything, but it definitely has the capability to do so. Keep an eye on your actual database
