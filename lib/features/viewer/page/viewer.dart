@@ -158,6 +158,8 @@ class BottomActions extends StatelessWidget {
     sheet.snapToPosition(.factor(positionFactor: 0.5));
   }
 
+  static const shadows = [Shadow(blurRadius: 24)];
+
   @override
   Widget build(BuildContext context) {
     final PageGetxController page = Get.find(tag: tag);
@@ -181,6 +183,7 @@ class BottomActions extends StatelessWidget {
           Obx(() {
             final file = files[page.i];
             final content = Column(
+              mainAxisAlignment: .center,
               children: [
                 '${file.length} tags'.n,
                 '${file.res}, ${file.fileSize}'.n
@@ -193,7 +196,7 @@ class BottomActions extends StatelessWidget {
               ..overlayColor = Colors.white.withAlpha(32)
               ..fontSize = 16
               ..fontWeight = .w500
-              ..shadows = [Shadow(blurRadius: 24)]
+              ..shadows = shadows
               ..onPressed = openSheet
               ..padding = .zero
               ..expanded;

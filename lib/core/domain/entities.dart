@@ -25,7 +25,7 @@ class HydrusFile {
   final int id;
   double width = -1;
   double height = -1;
-  int size = 0;
+  int _size = 0;
   String? type;
   String? ext;
   int duration = 0;
@@ -50,7 +50,8 @@ class HydrusFile {
 
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
 
-  String get fileSize => filesize(size);
+  set size(int value) => _size = value;
+  String get fileSize => filesize(_size);
 
   bool get loading => !ready.value;
 
