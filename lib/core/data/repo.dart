@@ -92,9 +92,6 @@ class Repo {
     } on HydrusNoServiceException {
       final message = 'No connection with Hydrus';
       return (Result.error, message);
-    } on HydrusTimeoutException {
-      final message = 'No response (timeout)';
-      return (Result.error, message);
     } on TimeoutException {
       final message = 'No response (timeout)';
       return (Result.error, message);

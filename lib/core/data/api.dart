@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -74,7 +75,10 @@ class Client {
         default:
           throw Exception('No such http method "$method"');
       }
-    } on SocketException catch (e, s) {
+    } on TimeoutException {
+      rethrow;
+    }
+    on SocketException catch (e, s) {
       throw Error.throwWithStackTrace(_mapSocketException(e), s);
     }
     return response;
@@ -276,10 +280,10 @@ HydrusException _mapSocketException(SocketException e) {
 
     case 121:
     case 110:
-      return HydrusTimeoutException(e);
+      throw e;
 
     case 11001:
-      throw HydrusUnknownHostException(e);
+      return HydrusUnknownHostException(e);
 
     default:
       return HydrusUnknownException(e);
@@ -292,14 +296,6 @@ class HydrusNoServiceException extends HydrusException {
       'listening. Is your client running?';
 
   HydrusNoServiceException(SocketException e) : super('$msg\nCaused by: $e');
-}
-
-class HydrusTimeoutException extends HydrusException {
-  static const String msg =
-      'No response (timeout). The host got your request and sent no response. '
-      'Is this the correct host?';
-
-  HydrusTimeoutException(SocketException e) : super('$msg\nCaused by: $e');
 }
 
 class HydrusBadRequestException extends HydrusException {

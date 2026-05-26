@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:hydit/core/ui/snack_bar.dart';
 
 import 'package:hydit/utils/dictionaries.dart';
 import 'package:hydit/core/data/api.dart';
@@ -65,14 +69,22 @@ class QueryController extends GetxController {
   }
 
   void handleException(Object e) {
+    final String title;
+    final String message;
+
     switch (e.runtimeType) {
       case const (HydrusNoServiceException):
-        Get.snackbar('Error', 'No connection with Hydrus');
-      case const (HydrusTimeoutException):
-        Get.snackbar('Error', 'No response (timeout)');
+        title = 'Connection error';
+        message = 'Host reached, no response from Hydrus client';
+      case const (TimeoutException):
+        title = 'Connection timeout';
+        message = 'Host unreachable';
       case _:
-        Get.snackbar('Error', '$e');
+        title = 'Connection error';
+        message = '$e';
     }
+
+    snackBar(const Icon(Icons.clear), title, message);
   }
 }
 
