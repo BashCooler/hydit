@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:http/http.dart' show Response, get, post;
+import 'package:http/http.dart' as http;
 import 'package:hydit/utils/dictionaries.dart';
 
 Future<void> main() async {
@@ -33,27 +33,61 @@ class Client {
 
   // MARK: REQUEST
 
-  Future<String> request(String method, String path, [Map<String, dynamic>? params]) async {
-    final response = await _getResponse(method, path, params);
-    return response.body;
+  Future<String> get(String path, [Map<String, dynamic>? params]) {
+    try {
+      return http.get(
+        Uri.http(
+            '$host:$port',
+            path,
+            params?.map((k,v) => MapEntry(k,'$v'))
+        ),
+        headers: {
+          'Hydrus-Client-API-Access-Key' : accessKey ?? ''
+        },
+      ).timeout(Duration(seconds: 5)).then((r) => r.body);
+    } catch (e, s) {
+      rethrow;
+    }
   }
 
-  Future<Uint8List> requestBytes(String method, String path, [Map<String, dynamic>? params]) async {
-    final response = await _getResponse(method, path, params);
-    return response.bodyBytes;
+  Future<Uint8List> getBytes(String path, [Map<String, dynamic>? params]) {
+    try {
+      return http.get(
+        Uri.http(
+            '$host:$port',
+            path,
+            params?.map((k,v) => MapEntry(k,'$v'))
+        ),
+        headers: {
+          'Hydrus-Client-API-Access-Key' : accessKey ?? ''
+        },
+      ).timeout(Duration(seconds: 5)).then((r) => r.bodyBytes);
+    } catch (e, s) {
+      rethrow;
+    }
   }
 
-  Future<int> requestStatus(String method, String path, [Map<String, dynamic>? params]) async {
-    final response = await _getResponse(method, path, params);
-    return response.statusCode;
+  Future<int> postStatus(String path, [Map<String, dynamic>? params]) {
+    try {
+      return http.post(
+        Uri.http('$host:$port', path),
+        headers: {
+          'Hydrus-Client-API-Access-Key': accessKey ?? '',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(params),
+      ).timeout(Duration(seconds: 5)).then((r) => r.statusCode);
+    } catch (e, s) {
+      rethrow;
+    }
   }
 
-  Future<Response> _getResponse(String method, String path, Map<String, dynamic>? params) async {
-    Response response;
+  Future<http.Response> _getResponse(String method, String path, Map<String, dynamic>? params) async {
+    http.Response response;
     try {
       switch (method) {
         case 'get':
-          response = await get(
+          response = await http.get(
             Uri.http(
                 '$host:$port',
                 path,
@@ -64,7 +98,7 @@ class Client {
             },
           ).timeout(Duration(seconds: 5));
         case 'post':
-          response = await post(
+          response = await http.post(
             Uri.http('$host:$port', path),
             headers: {
               'Hydrus-Client-API-Access-Key': accessKey ?? '',
@@ -89,7 +123,7 @@ class Client {
   // MARK: ACCESS MANAGEMENT
 
   Future<String> getApiVersion() {
-    return request('get', 'api_version');
+    return get('api_version');
   }
 
   Future<String> getRequestNewPermission(String name, {bool? permitsEverything, List<int>? basicPermissions}) {
@@ -100,15 +134,15 @@ class Client {
       'basic_permissions': basicPermissions,
     };
 
-    return request('get', 'request_new_permissions', params);
+    return get('request_new_permissions', params);
   }
 
   Future<String> getVerifyAccessKey() {
-    return request('get', 'verify_access_key');
+    return get('verify_access_key');
   }
 
   Future<String> getServices() {
-    return request('get', 'get_services');
+    return get('get_services');
   }
 
   Future<String> getService({String? name, String? key}) {
@@ -117,7 +151,7 @@ class Client {
     if (key != null) params['key'] = key;
     if (name != null) params['service_name'] = name;
 
-    return request('get', 'get_service', params);
+    return get('get_service', params);
   }
 
   // MARK: SEARCHING AND FETCHING FILES
@@ -145,7 +179,7 @@ class Client {
     };
     params.removeWhere((k, v) => (v == null));
 
-    final response = await request('get', '/get_files/search_files', params);
+    final response = await get('/get_files/search_files', params);
     final decoded = jsonDecode(response) as Map<String, dynamic>;
 
     if (decoded['file_ids'] == null) {
@@ -184,19 +218,19 @@ class Client {
     };
     params.removeWhere((k, v) => (v == null));
 
-    return await request('get', '/get_files/file_metadata', params);
+    return await get('/get_files/file_metadata', params);
   }
 
   // MARK: GET FILE
 
   Future<Uint8List> getThumbnail(dynamic fileIdOrHash) async {
     Map<String, dynamic> params = _getImageParams(fileIdOrHash);
-    return requestBytes('get', '/get_files/thumbnail', params);
+    return getBytes('/get_files/thumbnail', params);
   }
 
   Future<Uint8List> getFile(dynamic fileIdOrHash, [bool? download]) async {
     Map<String, dynamic> params = _getImageParams(fileIdOrHash);
-    return requestBytes('get', '/get_files/file', params);
+    return getBytes('/get_files/file', params);
   }
 
   Map<String, dynamic> _getImageParams(dynamic fileIdOrHash) {
@@ -221,7 +255,7 @@ class Client {
     };
     params.removeWhere((k, v) => (v == null));
 
-    return await request('get', '/add_tags/search_tags', params);
+    return await get('/add_tags/search_tags', params);
   }
 
   Future<int> postAddTags(List<int> ids, String serviceKey, Action action,
@@ -234,7 +268,7 @@ class Client {
         }
       }
     };
-    return await requestStatus('post', '/add_tags/add_tags', params);
+    return await postStatus('/add_tags/add_tags', params);
   }
 }
 
