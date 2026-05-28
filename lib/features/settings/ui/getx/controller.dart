@@ -40,17 +40,15 @@ class SettingsController extends GetxController {
     _settings.value = _settings.value.copyWith(key: value);
   }
 
-  Future<Result> verify() async {
-    processing.value = true;
-
+  Future<Result<String>> verify() async {
     final uri = Uri.tryParse($.url);
-    if (uri == null) return Failure('Input error', 'Invalid URL');
-    if (!uri.host.isIP()) return Failure('Input error', 'Invalid IP');
+
+    if (uri == null || !uri.host.isIP()) {
+      return Failure(title: 'Input error', message: 'Invalid URL');
+    }
 
     final client = HydrusApi(uri: uri, key: $.key);
 
-    return Executor.run(() {
-      return client.getVerifyAccessKey();
-    });
+    return Executor.run<String>(() => client.getVerifyAccessKey());
   }
 }

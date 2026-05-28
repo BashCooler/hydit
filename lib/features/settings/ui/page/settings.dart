@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/core/data/executor.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:settings_tiles/settings_tiles.dart';
@@ -24,21 +25,21 @@ class _SettingsPageState extends State<SettingsPage> {
   final settings = Get.put(SettingsController());
 
   void verify() async {
+    settings.processing.value = true;
+
     final result = await settings.verify();
-    switch (result.type) {
-      case .success:
+
+    switch (result) {
+      case Success(data: final _):
         snackBar(
           const Icon(Icons.check),
           'Success',
           'Successfully saved key and url',
         );
-      case .failure:
-        snackBar(
-          const Icon(Icons.clear),
-          'Failure',
-          'Successfully saved key and url',
-        );
+      case Failure(title: final title, message: final message):
+        snackBar(const Icon(Icons.clear), title, message);
     }
+
     settings.processing.value = false;
   }
 

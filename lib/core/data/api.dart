@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:hydit/core/data/dio.dart';
@@ -187,84 +185,21 @@ class HydrusApi with DioClient {
       parser: (r) => r.statusCode,
     );
   }
-}
 
-// MARK: METHODS
-
-String _encodeTags(List<String> tagList) {
-  /// Replace special symbols with Unicode escape sequences (like \uXXXX)
-  String encodeUnicode(String input) {
-    return input.replaceAllMapped(
-      RegExp(r'[^\x00-\x7F]'),
-          (Match m) => '\\u${m
-          .group(0)!
-          .codeUnitAt(0)
-          .toRadixString(16)
-          .padLeft(4, '0')}',
-    );
+  static String _encodeTags(List<String> tagList) {
+    /// Replace special symbols with Unicode escape sequences (like \uXXXX)
+    String encodeUnicode(String input) {
+      return input.replaceAllMapped(
+        RegExp(r'[^\x00-\x7F]'),
+            (Match m) => '\\u${m
+            .group(0)!
+            .codeUnitAt(0)
+            .toRadixString(16)
+            .padLeft(4, '0')}',
+      );
+    }
+    final tagsUnicode = tagList.map((tag) => '"${encodeUnicode(tag)}"').toList();
+    final jsonString = '[${tagsUnicode.join(", ")}]';
+    return Uri.encodeComponent(jsonString);
   }
-  final tagsUnicode = tagList.map((tag) => '"${encodeUnicode(tag)}"').toList();
-  final jsonString = '[${tagsUnicode.join(", ")}]';
-  return Uri.encodeComponent(jsonString);
-}
-
-// MARK: EXCEPTIONS
-
-sealed class HydrusException implements Exception {
-  final String message;
-  final Object? cause;
-  final StackTrace? stack;
-
-  HydrusException(this.message, [this.cause, this.stack]);
-
-  @override
-  String toString() => '$runtimeType: $message';
-}
-
-HydrusException _mapSocketException(SocketException e) {
-  final code = e.osError?.errorCode;
-
-  switch (code) {
-    case 1225:
-    case 111:
-      return HydrusNoServiceException(e);
-
-    case 121:
-    case 110:
-      throw e;
-
-    case 11001:
-      return HydrusUnknownHostException(e);
-
-    default:
-      return HydrusUnknownException(e);
-  }
-}
-
-class HydrusNoServiceException extends HydrusException {
-  static const String msg =
-      'No connection with Hydrus. You reached the target IP/port but no one is '
-      'listening. Is your client running?';
-
-  HydrusNoServiceException(SocketException e) : super('$msg\nCaused by: $e');
-}
-
-class HydrusBadRequestException extends HydrusException {
-  HydrusBadRequestException(super.message);
-}
-
-class HydrusInsufficientCredentialsException extends HydrusException {
-  HydrusInsufficientCredentialsException(super.message);
-}
-
-class HydrusUnknownHostException extends HydrusException {
-  static const String msg = 'This host is unknown. Probably wrong URI.';
-  HydrusUnknownHostException(SocketException e) : super('$msg\nCaused by: $e');
-}
-
-class HydrusUnknownException extends HydrusException {
-  static const String msg = 'Unknown error.';
-  final SocketException? e;
-
-  HydrusUnknownException([this.e]) : super(e == null ? msg : '$msg\nCaused by: $e');
 }

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/core/data/executor.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/theme.dart';
@@ -36,8 +37,15 @@ class _SearchState extends State<Search> {
 
   void verify() async {
     final Repo repo = Get.find();
-    final result = await repo.verify();
-    showErrorOrSuccess(result, success: false);
+
+    final result = await Executor.run(() => repo.api.getVerifyAccessKey());
+
+    switch (result) {
+      case Failure(title: final title, message: final message):
+        snackBar(const Icon(Icons.clear), title, message);
+      case _:
+        break;
+    }
   }
 
   void searchThenBack() {

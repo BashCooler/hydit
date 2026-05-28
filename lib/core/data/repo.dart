@@ -5,11 +5,10 @@ import 'package:hive_ce/hive.dart';
 import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/core/data/api.dart';
+import 'package:hydit/core/data/executor.dart';
 
-import 'mapper.dart';
 import '../domain/entities.dart';
-
-enum Result { success, error }
+import 'mapper.dart';
 
 
 class Repo {
@@ -66,16 +65,24 @@ class Repo {
     }
   }
 
-  Future<void> updateServiceNames() async {
-    final response = await api.getServices();
-    final json = jsonDecode(response);
-    final localTags = json['local_tags'] as List<dynamic>;
-    final local = localTags.map((e) => '${e['name']}').toList();
-    final ptr = pick(json, 'tag_repositories', 0, 'name').asStringOrNull();
-    services
-      ..clear()
-      ..add(pick(json, 'all_known_tags', 0, 'name').asStringOrThrow())
-      ..addAll(local);
-    if (ptr != null) services.add(ptr);
+  Future<Result<String>> updateServiceNames() async {
+    final result = await Executor.run<String>(() => api.getServices());
+
+    switch (result) {
+      case Failure(title: final _, message: final _):
+        return result;
+
+      case Success(data: final data):
+        final json = jsonDecode(data);
+        final localTags = json['local_tags'] as List<dynamic>;
+        final local = localTags.map((e) => '${e['name']}').toList();
+        final ptr = pick(json, 'tag_repositories', 0, 'name').asStringOrNull();
+        services
+          ..clear()
+          ..add(pick(json, 'all_known_tags', 0, 'name').asStringOrThrow())
+          ..addAll(local);
+        if (ptr != null) services.add(ptr);
+        return result;
+    }
   }
 }

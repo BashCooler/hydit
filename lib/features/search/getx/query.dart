@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/core/data/executor.dart';
-import 'package:hydit/core/ui/snack_bar.dart';
 
 import 'package:hydit/utils/dictionaries.dart';
 import 'package:hydit/core/data/repo.dart';
+import 'package:hydit/core/data/executor.dart';
 import 'package:hydit/core/domain/entities.dart';
 import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/ui/snack_bar.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 
@@ -60,34 +60,37 @@ class QueryController extends GetxController {
   }
 
   Future<void> _searchForFiles() async {
-    gallery.refreshing.value = true;
-
-    final result = await Executor.run<List<int>>(() async {
-      return await repo.api.getSearchFiles(
-        _tags.map((t) => t.raw).toList(),
-        fileSortType: _sortType.value,
-        fileSortAsc: _sortAsc,
-      );
-    });
-
     List<int> ids;
 
-    switch (result.type) {
-      case .success:
-        ids = result.data!;
-      case .failure:
-        final failure = result as Failure;
-        snackBar(const Icon(Icons.clear), failure.title, failure.message);
-        saveQuery();
+    final result = await Executor.run<List<int>>(_getIdsUnsafe);
+
+    switch (result) {
+      case Success(data: final data):
+        ids = data;
+      case Failure(title: final title, message: final message):
+        snackBar(const Icon(Icons.clear), title, message);
         return;
     }
 
-    Executor.run(() async => await repo.updateServiceNames());
+    final update = await repo.updateServiceNames();
+
+    switch (update) {
+      case Success(data: final _):
+        break;
+      case Failure(title: final title, message: final message):
+        snackBar(const Icon(Icons.clear), title, message);
+        return;
+    }
 
     final files = ids.map((id) => HydrusFile(id: id)).toList();
     fileRepo.assignAll(files);
-    saveQuery();
   }
+
+  Future<List<int>> _getIdsUnsafe() async => await repo.api.getSearchFiles(
+    _tags.rawList,
+    fileSortType: _sortType.value,
+    fileSortAsc: _sortAsc,
+  );
 
   Future<void> load() async {
     final box = Hive.box('settings');
