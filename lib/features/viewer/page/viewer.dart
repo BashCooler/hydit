@@ -30,10 +30,16 @@ class Viewer extends StatelessWidget {
     this.showFloatingActionButton = true,
   });
 
+  static const message =
+      'It is required for HydrusFile to be loaded '
+      'before building a Viewer widget';
+
   @override
   Widget build(BuildContext context) {
     final FileRepo files = Get.find(tag: tag);
     final PageGetxController page = Get.find(tag: tag);
+
+    assert(files[page.i].loaded, message);
 
     return PopScope(
       canPop: false,

@@ -29,6 +29,7 @@ class HydrusFile {
   bool get loading => metadata.value == null;
 
   Future<void> forceLoadMetadata() async {
+    if (loaded) return;
     final Repo repo = Get.find();
     await repo.setMetadataFor(this);
   }

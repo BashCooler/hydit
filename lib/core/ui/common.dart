@@ -149,20 +149,3 @@ class SnappyPageScrollPhysics extends PageScrollPhysics {
     damping: 30,
   );
 }
-
-
-class LinearHero extends StatelessWidget {
-  final Object tag;
-  final Widget child;
-
-  const LinearHero({super.key, required this.tag, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Hero(
-      tag: tag,
-      createRectTween: (b, e) => RectTween(begin: b, end: e),
-      child: child,
-    );
-  }
-}

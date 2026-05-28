@@ -4,15 +4,11 @@ import 'package:expressive_refresh/expressive_refresh.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydit/core/data/repo.dart';
-import 'package:hydit/core/ui/common.dart';
-import 'package:hydit/core/ui/images.dart';
-import 'package:hydit/core/domain/entities.dart';
 import 'package:hydit/core/domain/file_repo.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
 import '../getx/gallery.dart';
-import '../getx/selection.dart';
-import 'badges.dart';
+import 'tile.dart';
 
 
 class GalleryGridView extends StatelessWidget {
@@ -104,69 +100,6 @@ class GalleryGridView extends StatelessWidget {
             ),
           );
         }),
-      ),
-    );
-  }
-}
-
-
-class Tile extends StatelessWidget {
-  final String tag;
-  final HydrusFile file;
-  final int index;
-  final void Function(int id, int index)? onTap;
-  final void Function(int id)? onLongPress;
-
-  const Tile({
-    super.key,
-    required this.tag,
-    required this.index,
-    required this.file,
-    this.onTap,
-    this.onLongPress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final GalleryController gallery = Get.find(tag: tag);
-    final SelectionController selection = Get.find(tag: tag);
-
-    return GestureDetector(
-      key: ValueKey(file.id),
-      onTap: () => onTap?.call(file.id, index),
-      onLongPress: () => onLongPress?.call(file.id),
-      child: Stack(
-        alignment: .bottomRight,
-        children: [
-          LinearHero(
-            tag: file.id,
-            child: Thumbnail(file),
-          ),
-          Obx(() {
-            return AnimatedOpacity(
-              opacity: gallery.badgesVisible ? 1 : 0,
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeInQuint,
-              child: TileBadges(file),
-            );
-          }),
-          Obx(() {
-            final selected = selection.isSelected(file.id);
-            return Container(
-              decoration: BoxDecoration(
-                border: .all(
-                  color: selected
-                      ? Colors.pink
-                      : Colors.transparent,
-                  width: 3,
-                ),
-                color: selected
-                    ? Colors.black.withAlpha(32)
-                    : Colors.transparent,
-              ),
-            );
-          }),
-        ],
       ),
     );
   }

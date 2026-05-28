@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 
-import 'package:hydit/core/ui/common.dart';
 import 'package:hydit/core/domain/entities.dart';
+import 'package:hydit/core/ui/images.dart';
 
 import '../getx/page.dart';
 import 'image_view.dart';
@@ -29,7 +29,7 @@ class ViewFile extends StatelessWidget {
     }
     return FutureBuilder(
       future: file.forceLoadMetadata(),
-      builder: (_, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == .done) {
           return buildContent(file.meta!.type);
         } else {
