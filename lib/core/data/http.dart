@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
@@ -20,29 +19,26 @@ class Http {
     if (key != null) headers['Hydrus-Client-API-Access-Key'] = key;
   }
 
-  Future<String> get(String path, [Map<String, dynamic>? params]) {
+  Future<T> get<T>(String path,
+      {Map<String, dynamic>? params, T Function(http.Response r)? parser}) {
     return http.get(
       Uri.http('${url.host}:${url.port}', path, params?.prepared),
-      headers: headers,
-    ).timeout(Duration(seconds: 5)).then((r) => r.body);
+      headers: headers)
+        .timeout(Duration(seconds: 5))
+        .then((r) => parser?.call(r) ?? r.body as T);
   }
 
-  Future<Uint8List> getBytes(String path, [Map<String, dynamic>? params]) {
-    return http.get(
-      Uri.http('${url.host}:${url.port}', path, params?.prepared),
-      headers: headers,
-    ).timeout(Duration(seconds: 5)).then((r) => r.bodyBytes);
-  }
-
-  Future<int> postStatus(String path, [Map<String, dynamic>? params]) {
+  Future<T> post<T>(String path,
+      {Map<String, dynamic>? params, T Function(http.Response r)? parser}) {
     return http.post(
       Uri.http('${url.host}:${url.port}', path),
       headers: {
         ...headers,
         'Content-Type': 'application/json',
       },
-      body: jsonEncode(params),
-    ).timeout(Duration(seconds: 5)).then((r) => r.statusCode);
+      body: jsonEncode(params))
+        .timeout(Duration(seconds: 5))
+        .then((r) => parser?.call(r) ?? r.body as T);
   }
 }
 

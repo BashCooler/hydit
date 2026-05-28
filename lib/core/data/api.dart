@@ -32,7 +32,7 @@ class HydrusApi {
       'basic_permissions': basicPermissions,
     };
 
-    return http.get('request_new_permissions', params);
+    return http.get('request_new_permissions', params: params);
   }
 
   Future<String> getVerifyAccessKey() {
@@ -49,7 +49,7 @@ class HydrusApi {
     if (key != null) params['key'] = key;
     if (name != null) params['service_name'] = name;
 
-    return http.get('get_service', params);
+    return http.get('get_service', params: params);
   }
 
   // MARK: SEARCHING AND FETCHING FILES
@@ -77,7 +77,7 @@ class HydrusApi {
     };
     params.removeWhere((k, v) => (v == null));
 
-    final response = await http.get('/get_files/search_files', params);
+    final response = await http.get('/get_files/search_files', params: params);
     final decoded = jsonDecode(response) as Map<String, dynamic>;
 
     if (decoded['file_ids'] == null) {
@@ -116,19 +116,27 @@ class HydrusApi {
     };
     params.removeWhere((k, v) => (v == null));
 
-    return await http.get('/get_files/file_metadata', params);
+    return await http.get('/get_files/file_metadata', params: params);
   }
 
   // MARK: GET FILE
 
   Future<Uint8List> getThumbnail(dynamic fileIdOrHash) async {
     Map<String, dynamic> params = _getImageParams(fileIdOrHash);
-    return http.getBytes('/get_files/thumbnail', params);
+    return http.get<Uint8List>(
+      '/get_files/thumbnail',
+      params: params,
+      parser: (r) => r.bodyBytes,
+    );
   }
 
   Future<Uint8List> getFile(dynamic fileIdOrHash, [bool? download]) async {
     Map<String, dynamic> params = _getImageParams(fileIdOrHash);
-    return http.getBytes('/get_files/file', params);
+    return http.get<Uint8List>(
+      '/get_files/file',
+      params: params,
+      parser: (r) => r.bodyBytes,
+    );
   }
 
   Map<String, dynamic> _getImageParams(dynamic fileIdOrHash) {
@@ -153,7 +161,7 @@ class HydrusApi {
     };
     params.removeWhere((k, v) => (v == null));
 
-    return await http.get('/add_tags/search_tags', params);
+    return await http.get('/add_tags/search_tags', params: params);
   }
 
   Future<int> postAddTags(List<int> ids, String serviceKey, Action action,
@@ -166,7 +174,11 @@ class HydrusApi {
         }
       }
     };
-    return await http.postStatus('/add_tags/add_tags', params);
+    return await http.post<int>(
+      '/add_tags/add_tags',
+      params: params,
+      parser: (r) => r.statusCode,
+    );
   }
 }
 
