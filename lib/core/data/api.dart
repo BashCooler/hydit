@@ -3,11 +3,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:hydit/core/data/dio.dart';
 import 'package:hydit/core/data/http.dart';
 import 'package:hydit/utils/dictionaries.dart';
 
 
-class HydrusApi {
+class HydrusApi with DioClient {
   static const int version = 81;
   final Http http;
 
@@ -16,12 +17,15 @@ class HydrusApi {
   String get url => '${http.url.host}:${http.url.port}';
   String get key => http.key;
 
-  void update(Uri uri, String key) => http.update(uri, key);
+  void update(Uri uri, String key) {
+    updateDio(uri, key);
+    http.update(uri, key);
+  }
 
   // MARK: ACCESS MANAGEMENT
 
   Future<String> getApiVersion() {
-    return http.get('api_version');
+    return get('/api_version');
   }
 
   Future<String> getRequestNewPermission(String name, {bool? permitsEverything, List<int>? basicPermissions}) {
@@ -32,15 +36,15 @@ class HydrusApi {
       'basic_permissions': basicPermissions,
     };
 
-    return http.get('request_new_permissions', params: params);
+    return get('/request_new_permissions', params: params);
   }
 
   Future<String> getVerifyAccessKey() {
-    return http.get('verify_access_key');
+    return get('/verify_access_key');
   }
 
   Future<String> getServices() {
-    return http.get('get_services');
+    return get('/get_services');
   }
 
   Future<String> getService({String? name, String? key}) {
@@ -49,7 +53,7 @@ class HydrusApi {
     if (key != null) params['key'] = key;
     if (name != null) params['service_name'] = name;
 
-    return http.get('get_service', params: params);
+    return get('/get_service', params: params);
   }
 
   // MARK: SEARCHING AND FETCHING FILES
@@ -77,21 +81,24 @@ class HydrusApi {
     };
     params.removeWhere((k, v) => (v == null));
 
-    final response = await http.get('/get_files/search_files', params: params);
-    final decoded = jsonDecode(response) as Map<String, dynamic>;
-
-    if (decoded['file_ids'] == null) {
-      switch (decoded['status_code']) {
+    final response = await get<Map<String, dynamic>>(
+      '/get_files/search_files',
+      params: params,
+    );
+    /*
+    if (response['file_ids'] == null) {
+      switch (response['status_code']) {
         case 400:
-          throw HydrusBadRequestException(decoded['error']);
+          throw HydrusBadRequestException(response['error']);
         case 403:
-          throw HydrusInsufficientCredentialsException(decoded['error']);
+          throw HydrusInsufficientCredentialsException(response['error']);
         default:
           throw HydrusUnknownException();
       }
     }
+    */
 
-    return (decoded['file_ids'] as List).cast<int>();
+    return (response['file_ids'] as List).cast<int>();
   }
 
   Future<String> getFileMetadata(List<int> ids, {

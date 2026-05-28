@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:settings_tiles/settings_tiles.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:hydit/core/data/version.dart';
 import 'package:hydit/core/ui/snack_bar.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../getx/controller.dart';
 import '../widget/text_field.dart';
@@ -25,7 +25,20 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void verify() async {
     final result = await settings.verify();
-    showErrorOrSuccess(result);
+    switch (result.type) {
+      case .success:
+        snackBar(
+          const Icon(Icons.check),
+          'Success',
+          'Successfully saved key and url',
+        );
+      case .failure:
+        snackBar(
+          const Icon(Icons.clear),
+          'Failure',
+          'Successfully saved key and url',
+        );
+    }
     settings.processing.value = false;
   }
 

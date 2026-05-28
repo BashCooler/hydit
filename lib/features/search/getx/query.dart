@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:flutter/material.dart';
+import 'package:hydit/core/data/executor.dart';
 import 'package:hydit/core/ui/snack_bar.dart';
 
 import 'package:hydit/utils/dictionaries.dart';
-import 'package:hydit/core/data/api.dart';
 import 'package:hydit/core/data/repo.dart';
 import 'package:hydit/core/domain/entities.dart';
 import 'package:hydit/core/domain/file_repo.dart';
@@ -16,16 +16,16 @@ import 'package:hydit/features/gallery/getx/gallery.dart';
 class QueryController extends GetxController {
   final _tags = <Tag>[].obs;
 
-  final FileRepo? fileRepo;
+  final FileRepo fileRepo;
   final Repo repo = Get.find();
-  final GalleryController? gallery;
+  final GalleryController gallery;
 
   // Sorting options are global and we can't sort
   // preview galleries for now
   FileSortType _sortType = .importTime;
   bool _sortAsc = false;
 
-  QueryController({this.fileRepo, required this.gallery}) {
+  QueryController({required this.fileRepo, required this.gallery}) {
     loadSortOption();
     loadAscOption();
     load();
@@ -47,47 +47,46 @@ class QueryController extends GetxController {
 
   void clearTags() => _tags.clear();
 
+  void saveQuery() {
+    final box = Hive.box('settings');
+    box.put('query', _tags.map((t) => t.raw).toList());
+  }
+
   Future<void> searchForFiles() async {
-    gallery!.refreshing.value = true;
+    gallery.refreshing.value = true;
+    await _searchForFiles();
+    gallery.refreshing.value = false;
+    saveQuery();
+  }
 
-    final List<int> ids;
+  Future<void> _searchForFiles() async {
+    gallery.refreshing.value = true;
 
-    try {
-      ids = await repo.api.getSearchFiles(
+    final result = await Executor.run<List<int>>(() async {
+      return await repo.api.getSearchFiles(
         _tags.map((t) => t.raw).toList(),
         fileSortType: _sortType.value,
         fileSortAsc: _sortAsc,
       );
-      await repo.updateServiceNames();
-      var list = ids.map((id) => HydrusFile(id: id)).toList();
-      fileRepo!.assignAll(list);
-    } catch (e) {
-      // _handleException(e);
-      rethrow;
-    } finally {
-      gallery!.refreshing.value = false;
-      final box = Hive.box('settings');
-      box.put('query', _tags.map((t) => t.raw).toList());
-    }
-  }
+    });
 
-  void _handleException(Object e) {
-    final String title;
-    final String message;
+    List<int> ids;
 
-    switch (e.runtimeType) {
-      case const (HydrusNoServiceException):
-        title = 'Connection error';
-        message = 'Host reached, no response from Hydrus client';
-      case const (TimeoutException):
-        title = 'Connection timeout';
-        message = 'Host unreachable';
-      case _:
-        title = 'Connection error';
-        message = '$e';
+    switch (result.type) {
+      case .success:
+        ids = result.data!;
+      case .failure:
+        final failure = result as Failure;
+        snackBar(const Icon(Icons.clear), failure.title, failure.message);
+        saveQuery();
+        return;
     }
 
-    snackBar(const Icon(Icons.clear), title, message);
+    Executor.run(() async => await repo.updateServiceNames());
+
+    final files = ids.map((id) => HydrusFile(id: id)).toList();
+    fileRepo.assignAll(files);
+    saveQuery();
   }
 
   Future<void> load() async {

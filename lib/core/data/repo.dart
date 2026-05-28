@@ -78,34 +78,4 @@ class Repo {
       ..addAll(local);
     if (ptr != null) services.add(ptr);
   }
-
-  Future<(Result, String)> verify([HydrusApi? client]) async {
-    String response;
-    try {
-      final c = client ?? api;
-      response = await c.getVerifyAccessKey();
-    } on HydrusUnknownHostException {
-      final message = 'Host is unknown, probably wrong URL';
-      return (Result.error, message);
-    } on HydrusNoServiceException {
-      final message = 'No connection with Hydrus';
-      return (Result.error, message);
-    } on TimeoutException {
-      final message = 'No response (timeout)';
-      return (Result.error, message);
-    } on HydrusUnknownException {
-      final message = 'Unknown error';
-      return (Result.error, message);
-    } catch (e) {
-      final message = e.toString();
-      return (Result.error, message);
-    }
-
-    final decoded = jsonDecode(response) as Map<String, dynamic>;
-    if (decoded['error'] != null) {
-      return decoded['error'];
-    }
-
-    return (Result.success, 'Success');
-  }
 }
