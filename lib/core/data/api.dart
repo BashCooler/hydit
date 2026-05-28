@@ -1,129 +1,27 @@
-import 'dart:async';
 import 'dart:io';
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:http/http.dart' as http;
-import 'package:hydit/utils/dictionaries.dart';
 
-Future<void> main() async {
-  final client = Client(accessKey: '86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813');
-  // my_tags 6c6f63616c2074616773
-  // all known tags 616c6c206b6e6f776e2074616773
-  final response = await client.getServices();
-  // ignore: avoid_print
-  print(response);
-  // var tags = ['creator:呵呜阿花', 'title:白丝秦喵喵。'];
-}
+import 'package:hydit/core/data/http.dart';
+import 'package:hydit/utils/dictionaries.dart';
 
 
 class Client {
   static const int version = 81;
+  final Http http;
 
-  String? accessKey;
-  String host = 'localhost';
-  int port = 45869;
+  Client({Uri? uri, String? key}) : http = Http(uri, key);
 
-  Client({this.accessKey, this.host = 'localhost', this.port = 45869});
+  String get url => http.url;
+  String get key => http.key;
 
-  void updateClient({required String key, required Uri uri}) {
-    accessKey = key;
-    host = uri.host;
-    port = uri.port;
-  }
-
-  // MARK: REQUEST
-
-  Future<String> get(String path, [Map<String, dynamic>? params]) {
-    try {
-      return http.get(
-        Uri.http(
-            '$host:$port',
-            path,
-            params?.map((k,v) => MapEntry(k,'$v'))
-        ),
-        headers: {
-          'Hydrus-Client-API-Access-Key' : accessKey ?? ''
-        },
-      ).timeout(Duration(seconds: 5)).then((r) => r.body);
-    } catch (e, s) {
-      rethrow;
-    }
-  }
-
-  Future<Uint8List> getBytes(String path, [Map<String, dynamic>? params]) {
-    try {
-      return http.get(
-        Uri.http(
-            '$host:$port',
-            path,
-            params?.map((k,v) => MapEntry(k,'$v'))
-        ),
-        headers: {
-          'Hydrus-Client-API-Access-Key' : accessKey ?? ''
-        },
-      ).timeout(Duration(seconds: 5)).then((r) => r.bodyBytes);
-    } catch (e, s) {
-      rethrow;
-    }
-  }
-
-  Future<int> postStatus(String path, [Map<String, dynamic>? params]) {
-    try {
-      return http.post(
-        Uri.http('$host:$port', path),
-        headers: {
-          'Hydrus-Client-API-Access-Key': accessKey ?? '',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(params),
-      ).timeout(Duration(seconds: 5)).then((r) => r.statusCode);
-    } catch (e, s) {
-      rethrow;
-    }
-  }
-
-  Future<http.Response> _getResponse(String method, String path, Map<String, dynamic>? params) async {
-    http.Response response;
-    try {
-      switch (method) {
-        case 'get':
-          response = await http.get(
-            Uri.http(
-                '$host:$port',
-                path,
-                params?.map((k,v) => MapEntry(k,'$v'))
-            ),
-            headers: {
-              'Hydrus-Client-API-Access-Key' : accessKey ?? ''
-            },
-          ).timeout(Duration(seconds: 5));
-        case 'post':
-          response = await http.post(
-            Uri.http('$host:$port', path),
-            headers: {
-              'Hydrus-Client-API-Access-Key': accessKey ?? '',
-              'Content-Type': 'application/json',
-            },
-            body: jsonEncode(params),
-          ).timeout(Duration(seconds: 5));
-        default:
-          throw Exception('No such http method "$method"');
-      }
-    } on TimeoutException {
-      rethrow;
-    }
-    on SocketException catch (e, s) {
-      throw Error.throwWithStackTrace(_mapSocketException(e), s);
-    }
-    return response;
-  }
-
-  // Documentation: https://hydrusnetwork.github.io/hydrus/developer_api.html
+  void update(Uri uri, String key) => http.update(uri, key);
 
   // MARK: ACCESS MANAGEMENT
 
   Future<String> getApiVersion() {
-    return get('api_version');
+    return http.get('api_version');
   }
 
   Future<String> getRequestNewPermission(String name, {bool? permitsEverything, List<int>? basicPermissions}) {
@@ -134,15 +32,15 @@ class Client {
       'basic_permissions': basicPermissions,
     };
 
-    return get('request_new_permissions', params);
+    return http.get('request_new_permissions', params);
   }
 
   Future<String> getVerifyAccessKey() {
-    return get('verify_access_key');
+    return http.get('verify_access_key');
   }
 
   Future<String> getServices() {
-    return get('get_services');
+    return http.get('get_services');
   }
 
   Future<String> getService({String? name, String? key}) {
@@ -151,7 +49,7 @@ class Client {
     if (key != null) params['key'] = key;
     if (name != null) params['service_name'] = name;
 
-    return get('get_service', params);
+    return http.get('get_service', params);
   }
 
   // MARK: SEARCHING AND FETCHING FILES
@@ -179,7 +77,7 @@ class Client {
     };
     params.removeWhere((k, v) => (v == null));
 
-    final response = await get('/get_files/search_files', params);
+    final response = await http.get('/get_files/search_files', params);
     final decoded = jsonDecode(response) as Map<String, dynamic>;
 
     if (decoded['file_ids'] == null) {
@@ -218,19 +116,19 @@ class Client {
     };
     params.removeWhere((k, v) => (v == null));
 
-    return await get('/get_files/file_metadata', params);
+    return await http.get('/get_files/file_metadata', params);
   }
 
   // MARK: GET FILE
 
   Future<Uint8List> getThumbnail(dynamic fileIdOrHash) async {
     Map<String, dynamic> params = _getImageParams(fileIdOrHash);
-    return getBytes('/get_files/thumbnail', params);
+    return http.getBytes('/get_files/thumbnail', params);
   }
 
   Future<Uint8List> getFile(dynamic fileIdOrHash, [bool? download]) async {
     Map<String, dynamic> params = _getImageParams(fileIdOrHash);
-    return getBytes('/get_files/file', params);
+    return http.getBytes('/get_files/file', params);
   }
 
   Map<String, dynamic> _getImageParams(dynamic fileIdOrHash) {
@@ -255,7 +153,7 @@ class Client {
     };
     params.removeWhere((k, v) => (v == null));
 
-    return await get('/add_tags/search_tags', params);
+    return await http.get('/add_tags/search_tags', params);
   }
 
   Future<int> postAddTags(List<int> ids, String serviceKey, Action action,
@@ -268,7 +166,7 @@ class Client {
         }
       }
     };
-    return await postStatus('/add_tags/add_tags', params);
+    return await http.postStatus('/add_tags/add_tags', params);
   }
 }
 

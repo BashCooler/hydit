@@ -25,7 +25,7 @@ class Repo {
     final key = box.get('key') ?? '';
     final url = box.get('url') ?? '';
     final uri = Uri.parse(url);
-    api.updateClient(key: key, uri: uri);
+    api.update(uri, key);
   }
 
   Future<void> setMetadataFor(HydrusFile? file) async {
@@ -39,10 +39,10 @@ class Repo {
   }
 
   String buildUrl(int id, {bool thumbnail = false}) => ""
-      "http://${api.host}:${api.port}/get_files/"
+      "http://${api.url}/get_files/"
       "${thumbnail ? "thumbnail" : "file"}"
       "?file_id=$id"
-      "&Hydrus-Client-API-Access-Key=${api.accessKey}";
+      "&Hydrus-Client-API-Access-Key=${api.key}";
 
   Future<String> serviceKeyOf(String name) async {
     final response = await api.getService(name: name);
