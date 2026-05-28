@@ -20,54 +20,64 @@ import '../data/repo.dart';
 
 
 class HydrusFile {
-  final ready = false.obs;
-
   final int id;
-  double width = -1;
-  double height = -1;
-  int _size = 0;
-  String? type;
-  String? ext;
-  int duration = 0;
+  final metadata = Rxn<FileMetadata>();
+
+  HydrusFile({required this.id});
+
+  bool get loaded => metadata.value != null;
+  bool get loading => metadata.value == null;
+
+  Future<void> forceLoadMetadata() async {
+    final Repo repo = Get.find();
+    await repo.setMetadataFor(this);
+  }
+
+  FileMetadata? get meta => metadata.value;
+}
+
+
+class FileMetadata {
+  final double width;
+  final double height;
+  final int _size;
+  final String type;
+  final String ext;
+  final Duration duration;
 
   /// This [Set] contains all tags from all services, which means
   /// it may have duplicate tags from different services, so don't
   /// show it in UI.
-  final RxSet<Tag> combined = <Tag>{}.obs;
+  final Set<Tag> combined;
 
   late final Map<String, List<String>> namespaces;
 
-  HydrusFile(this.id);
+  FileMetadata({
+    required this.width,
+    required this.height,
+    required this._size,
+    required String mime,
+    required int duration,
+    required this.combined,
+  }) : type = mime.split('/').first,
+       ext = mime.split('/').last,
+       duration = Duration(milliseconds: duration) {
+    namespaces = buildNamespaceIndex(combined);
+  }
+
+  String get size => filesize(_size);
+  String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
+
+  /// Tags from `all known tags` service as [Iterable]
+  Iterable<Tag> get all => combined
+      .where((e) => e.service == 'all known tags');
 
   /// Length of `all known tags` service
   int get length => combined
       .where((e) => e.service == 'all known tags')
       .length;
 
-  /// Tags from `all known tags` service as [Iterable]
-  Iterable<Tag> get all => combined
-      .where((e) => e.service == 'all known tags');
-
-  String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
-
-  set size(int value) => _size = value;
-  String get fileSize => filesize(_size);
-
-  bool get loading => !ready.value;
-
-  set mime(String value) {
-    final m = value.split('/');
-    type = m.first;
-    ext = m.last;
-  }
-
-  Future<void> checkForMetadata() async {
-    if (ready.value) return;
-    final Repo repo = Get.find();
-    await repo.setMetadataFor(this);
-  }
-
-  void buildNamespaceIndex() {
+  static Map<String, List<String>> buildNamespaceIndex(Set<Tag> combined) {
     final map = <String, List<String>>{};
 
     for (final tag in combined) {
@@ -79,7 +89,7 @@ class HydrusFile {
       values.sort();
     }
 
-    namespaces = map;
+    return map;
   }
 }
 

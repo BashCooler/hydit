@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 
 class Http {
-  String url = 'localhost:45869';
+  Uri url = Uri(host: 'localhost', port: 45869);
 
   final Map<String, String> headers = {};
 
@@ -16,27 +16,27 @@ class Http {
   String get key => headers['Hydrus-Client-API-Access-Key'] ?? '';
 
   void update([Uri? uri, String? key]) {
-    if (uri?.host != null) url = uri.toString();
+    if (uri != null) url = uri;
     if (key != null) headers['Hydrus-Client-API-Access-Key'] = key;
   }
 
   Future<String> get(String path, [Map<String, dynamic>? params]) {
     return http.get(
-      Uri.http(url, path, params?.prepared),
+      Uri.http('${url.host}:${url.port}', path, params?.prepared),
       headers: headers,
     ).timeout(Duration(seconds: 5)).then((r) => r.body);
   }
 
   Future<Uint8List> getBytes(String path, [Map<String, dynamic>? params]) {
     return http.get(
-      Uri.http(url, path, params?.prepared),
+      Uri.http('${url.host}:${url.port}', path, params?.prepared),
       headers: headers,
     ).timeout(Duration(seconds: 5)).then((r) => r.bodyBytes);
   }
 
   Future<int> postStatus(String path, [Map<String, dynamic>? params]) {
     return http.post(
-      Uri.http(url, path),
+      Uri.http('${url.host}:${url.port}', path),
       headers: {
         ...headers,
         'Content-Type': 'application/json',

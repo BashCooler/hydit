@@ -33,9 +33,7 @@ class Repo {
     final response = await api.getFileMetadata(
       [file.id],
       includeServicesObject: false);
-    await Mapper.writeMetadata(response, file);
-    file.buildNamespaceIndex();
-    file.ready.value = true;
+    Mapper.writeMetadata(response, file);
   }
 
   String buildUrl(int id, {bool thumbnail = false}) => ""

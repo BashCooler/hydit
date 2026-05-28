@@ -24,14 +24,14 @@ class ViewFile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (file.type != null) {
-      return buildContent(file.type!);
+    if (file.meta?.type != null) {
+      return buildContent(file.meta!.type);
     }
     return FutureBuilder(
-      future: file.checkForMetadata(),
+      future: file.forceLoadMetadata(),
       builder: (_, snapshot) {
         if (snapshot.connectionState == .done) {
-          return buildContent(file.type!);
+          return buildContent(file.meta!.type);
         } else {
           return const Center(
             child: ExpressiveLoadingIndicator(),
@@ -48,7 +48,7 @@ class ViewFile extends StatelessWidget {
       case 'video':
         return ViewVideo(index: index, file: file, tag: tag);
       case _:
-        return NotSupported(file.type);
+        return NotSupported(file.meta!.type);
     }
   }
 }

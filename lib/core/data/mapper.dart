@@ -4,19 +4,33 @@ import 'package:hydit/core/domain/entities.dart';
 
 
 class Mapper {
-  static Future<void> writeMetadata(String rawJson, HydrusFile image) async {
+  static void writeMetadata(String rawJson, HydrusFile image) {
     final json = jsonDecode(rawJson);
     Pick getMeta(String property) => pick(json, 'metadata', 0, property);
 
-    image.width  = getMeta('width').asDoubleOrThrow();
-    image.height = getMeta('height').asDoubleOrThrow();
-    image.size = getMeta('size').asIntOrThrow();
-    image.mime = getMeta('mime').asStringOrThrow();
-    image.duration = getMeta('duration').asIntOrNull() ?? 0;
+    final metadata = FileMetadata(
+      width: getMeta('width').asDoubleOrThrow(),
+      height: getMeta('height').asDoubleOrThrow(),
+      size: getMeta('size').asIntOrThrow(),
+      mime: getMeta('mime').asStringOrThrow(),
+      duration: getMeta('duration').asIntOrNull() ?? 0,
+      combined: getMeta('tags').asMapOrEmpty<String, dynamic>().toTagSet(),
+    );
 
-    final tags = getMeta('tags').asMapOrEmpty<String, dynamic>();
-    image.combined..clear()..addAll(_parseTags(tags));
+    image.metadata.value = metadata;
   }
+
+  static List<Tag> parseSearchResults(String query) {
+    final json = jsonDecode(query);
+    final List<dynamic> tags = json['tags'];
+    return tags.take(15).map((e) =>
+        Tag(e['value'], count: e['count'])).toList();
+  }
+}
+
+
+extension ParseTags on Map<String, dynamic> {
+  Set<Tag> toTagSet() => _parseTags(this);
 
   static Set<Tag> _parseTags(Map<String, dynamic> tags) {
     final Set<Tag> result = {};
@@ -32,12 +46,5 @@ class Mapper {
     }
 
     return result;
-  }
-
-  static List<Tag> parseSearchResults(String query) {
-    final json = jsonDecode(query);
-    final List<dynamic> tags = json['tags'];
-    return tags.take(15).map((e) =>
-        Tag(e['value'], count: e['count'])).toList();
   }
 }

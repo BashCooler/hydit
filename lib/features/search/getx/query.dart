@@ -50,7 +50,7 @@ class QueryController extends GetxController {
   Future<void> searchForFiles() async {
     gallery!.refreshing.value = true;
 
-    List<int> ids = [];
+    final List<int> ids;
 
     try {
       ids = await repo.api.getSearchFiles(
@@ -59,11 +59,11 @@ class QueryController extends GetxController {
         fileSortAsc: _sortAsc,
       );
       await repo.updateServiceNames();
-      var list = ids.map((id) => HydrusFile(id)).toList();
+      var list = ids.map((id) => HydrusFile(id: id)).toList();
       fileRepo!.assignAll(list);
     } catch (e) {
-      handleException(e);
-      return;
+      // _handleException(e);
+      rethrow;
     } finally {
       gallery!.refreshing.value = false;
       final box = Hive.box('settings');
@@ -71,7 +71,7 @@ class QueryController extends GetxController {
     }
   }
 
-  void handleException(Object e) {
+  void _handleException(Object e) {
     final String title;
     final String message;
 

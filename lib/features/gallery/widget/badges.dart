@@ -37,9 +37,11 @@ class BadgesBuilder {
   BadgesBuilder(this._file);
 
   BadgesBuilder duration() {
-    if (_file.duration <= 0) return this;
+    if (_file.loading) return this;
 
-    final duration = Duration(milliseconds: _file.duration);
+    final duration = _file.meta!.duration;
+    if (duration == .zero) return this;
+
     final time = _stripZeros('$duration');
     _badges.add(Badge(label: time.n));
 
@@ -57,7 +59,7 @@ class BadgesBuilder {
 
   BadgesBuilder addNumerical(String namespace, [String? prefix]) {
     final value = _file
-        .namespaces[namespace]?.first
+        .meta!.namespaces[namespace]?.first
         .replaceAll(RegExp(r'^0+'), '');
     if (value != null) _badges.add(Badge(label: '${prefix ?? ''}$value'.n));
     return this;

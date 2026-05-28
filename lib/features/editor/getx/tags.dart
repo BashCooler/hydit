@@ -143,10 +143,11 @@ extension Init on TagManager {
     ready.value = false;
     update();
 
-    await file.checkForMetadata();
+    if (file.loading) await file.forceLoadMetadata();
     if (file.id != _ids.first) return;
 
     final tags = file
+        .meta!
         .combined
         .where((e) => e.service != 'all known tags')
         .toSet();
@@ -164,7 +165,8 @@ extension Init on TagManager {
     for (final id in ids) {
       final file = files.byId(id);
       final tags = file
-          ?.combined
+          ?.meta!
+          .combined
           .where((e) => e.service != 'all known tags')
           .toSet();
       addToServices(tags);

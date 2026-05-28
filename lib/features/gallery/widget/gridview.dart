@@ -88,7 +88,7 @@ class GalleryGridView extends StatelessWidget {
                   onLongPress: onLongPress,
                 );
 
-                if (file.width != -1) return tile;
+                if (file.loaded) return tile;
 
                 return FutureBuilder(
                   future: repo.setMetadataFor(file),
@@ -144,7 +144,7 @@ class Tile extends StatelessWidget {
           ),
           Obx(() {
             return AnimatedOpacity(
-              opacity: file.ready.value && gallery.badgesVisible ? 1 : 0,
+              opacity: gallery.badgesVisible ? 1 : 0,
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeInQuint,
               child: TileBadges(file),

@@ -13,7 +13,7 @@ class HydrusApi {
 
   HydrusApi({Uri? uri, String? key}) : http = Http(uri, key);
 
-  String get url => http.url;
+  String get url => '${http.url.host}:${http.url.port}';
   String get key => http.key;
 
   void update(Uri uri, String key) => http.update(uri, key);

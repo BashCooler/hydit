@@ -33,8 +33,9 @@ class HighResImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final repo = Get.find<Repo>();
-    final aspectRatio = image.width/image.height;
+    final Repo repo = Get.find();
+    final meta = image.meta;
+    final aspectRatio = meta!.width/meta.height;
     return ImageStack(
       aspectRatio: aspectRatio,
       children: [

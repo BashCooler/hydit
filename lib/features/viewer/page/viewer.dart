@@ -60,7 +60,7 @@ class Viewer extends StatelessWidget {
         body: Obx(() {
           final file = files[page.i];
           return TagSheet(
-            tags: file.all.toList(),
+            tags: file.meta!.all.toList(),
             tag: tag,
             gallery: gallery,
             onFloatingActionButtonTap: showFloatingActionButton
@@ -182,11 +182,13 @@ class BottomActions extends StatelessWidget {
           ),
           Obx(() {
             final file = files[page.i];
+            if (file.loading) return const SizedBox.shrink();
+
             final content = Column(
               mainAxisAlignment: .center,
               children: [
-                '${file.length} tags'.n,
-                '${file.res}, ${file.fileSize}'.n
+                '${file.meta!.length} tags'.n,
+                '${file.meta!.res}, ${file.meta!.size}'.n
                   ..labelSmall,
               ],
             );
