@@ -51,7 +51,7 @@ extension Verify on SettingsController
     if (uri == null) return (Result.error, 'Invalid URL');
     if (!uri.host.isIP()) return (Result.error, 'Invalid IP');
 
-    final client = Client(uri: uri, key: $.key);
+    final client = HydrusApi(uri: uri, key: $.key);
 
     final Repo repo = Get.find();
     final result = await repo.verify(client);

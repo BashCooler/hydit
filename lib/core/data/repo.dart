@@ -13,10 +13,10 @@ enum Result { success, error }
 
 
 class Repo {
-  final Client api;
+  final HydrusApi api;
   final List<String> services = [];
 
-  Repo() : api = Client() {
+  Repo() : api = HydrusApi() {
     updateClient();
   }
 
@@ -81,7 +81,7 @@ class Repo {
     if (ptr != null) services.add(ptr);
   }
 
-  Future<(Result, String)> verify([Client? client]) async {
+  Future<(Result, String)> verify([HydrusApi? client]) async {
     String response;
     try {
       final c = client ?? api;

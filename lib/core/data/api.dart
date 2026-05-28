@@ -7,11 +7,11 @@ import 'package:hydit/core/data/http.dart';
 import 'package:hydit/utils/dictionaries.dart';
 
 
-class Client {
+class HydrusApi {
   static const int version = 81;
   final Http http;
 
-  Client({Uri? uri, String? key}) : http = Http(uri, key);
+  HydrusApi({Uri? uri, String? key}) : http = Http(uri, key);
 
   String get url => http.url;
   String get key => http.key;
