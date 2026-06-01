@@ -60,7 +60,7 @@ class HydrusApi with DioClient {
     bool? returnHashes,
   }) async {
     final Map<String, dynamic> params = {
-      'tags': _encodeTags(tags),
+      'tags': tags.encode(),
       // 'file_domain': fileDomain,
       // 'tag_service_key': tagServiceKey,
       'include_current_tags': includeCurrentTags,
@@ -89,7 +89,7 @@ class HydrusApi with DioClient {
     bool? includeMilliseconds,
     bool? includeNotes,
     bool? includeServicesObject,
-  }) async {
+  }) {
     final Map<String, dynamic> params = {
       'file_ids': ids,
       'only_return_identifiers': onlyReturnIdentifiers,
@@ -102,7 +102,7 @@ class HydrusApi with DioClient {
     };
     params.removeWhere((k, v) => (v == null));
 
-    return await get('/get_files/file_metadata', params: params);
+    return get('/get_files/file_metadata', params: params);
   }
 
   // MARK: GET FILE
@@ -156,23 +156,32 @@ class HydrusApi with DioClient {
   // MARK: METHODS
 
   String buildUrl(int id, {bool thumbnail = false}) =>
-      "http://$url/get_files/"
+      "$url/get_files/"
       "${thumbnail ? "thumbnail" : "file"}"
       "?file_id=$id"
       "&Hydrus-Client-API-Access-Key=$key";
+}
 
-  static String _encodeTags(List<String> tagList) {
-    /// Replace special symbols with Unicode escape sequences (like \uXXXX)
-    String encodeUnicode(String input) {
-      return input.replaceAllMapped(RegExp(r'[^\x00-\x7F]'), (Match m) => '\\u${m
-            .group(0)!
-            .codeUnitAt(0)
-            .toRadixString(16)
-            .padLeft(4, '0')}',
-      );
-    }
-    final tagsUnicode = tagList.map((tag) => '"${encodeUnicode(tag)}"').toList();
-    final jsonString = '[${tagsUnicode.join(", ")}]';
+
+extension ListStringUnicodeEscape on List<String> {
+  String encode() {
+    final encoded = map((t) => '"${t.encode()}"').toList();
+    final jsonString = '[${encoded.join(", ")}]';
     return Uri.encodeComponent(jsonString);
   }
+}
+
+extension StringUnicodeEscape on String {
+  static RegExp p = RegExp(r'[^\x00-\x7F]');
+
+  String encode() => replaceAllMapped(p, (m) => '\\u${m.encode()}');
+}
+
+extension MatchUnicodeEscape on Match {
+  // ignore: unnecessary_this
+  String encode() => this
+      .group(0)!
+      .codeUnitAt(0)
+      .toRadixString(16)
+      .padLeft(4, '0');
 }
