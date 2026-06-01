@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:hydit/core/data/dio.dart';
 import 'package:hydit/utils/dictionaries.dart';
 
+import 'extensions.dart';
+
 
 class HydrusApi with DioClient {
   static const int version = 81;
@@ -88,7 +90,7 @@ class HydrusApi with DioClient {
     bool? includeBlurhash,
     bool? includeMilliseconds,
     bool? includeNotes,
-    bool? includeServicesObject,
+    bool includeServicesObject = false,
   }) {
     final Map<String, dynamic> params = {
       'file_ids': ids,
@@ -152,36 +154,4 @@ class HydrusApi with DioClient {
     };
     return post<void>('/add_tags/add_tags', params: params);
   }
-
-  // MARK: METHODS
-
-  String buildUrl(int id, {bool thumbnail = false}) =>
-      "$url/get_files/"
-      "${thumbnail ? "thumbnail" : "file"}"
-      "?file_id=$id"
-      "&Hydrus-Client-API-Access-Key=$key";
-}
-
-
-extension ListStringUnicodeEscape on List<String> {
-  String encode() {
-    final encoded = map((t) => '"${t.encode()}"').toList();
-    final jsonString = '[${encoded.join(", ")}]';
-    return Uri.encodeComponent(jsonString);
-  }
-}
-
-extension StringUnicodeEscape on String {
-  static RegExp p = RegExp(r'[^\x00-\x7F]');
-
-  String encode() => replaceAllMapped(p, (m) => '\\u${m.encode()}');
-}
-
-extension MatchUnicodeEscape on Match {
-  // ignore: unnecessary_this
-  String encode() => this
-      .group(0)!
-      .codeUnitAt(0)
-      .toRadixString(16)
-      .padLeft(4, '0');
 }

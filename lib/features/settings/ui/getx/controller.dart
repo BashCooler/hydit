@@ -62,7 +62,7 @@ class SettingsController extends GetxController {
     switch (result) {
       case Success(data: final _):
         save();
-        Get.find<Repo>().updateClient();
+        Get.find<Repo>().updateFromSettings();
       case _:
         break;
     }

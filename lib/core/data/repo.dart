@@ -16,15 +16,21 @@ class Repo {
   final List<String> services = [];
 
   Repo() : api = HydrusApi() {
-    updateClient();
+    updateFromSettings();
   }
 
-  void updateClient() {
+  void updateFromSettings() {
     final box = Hive.box('settings');
     final key = box.get('key') ?? '';
     final url = box.get('url') ?? '';
     api.update(Uri.parse(url), key);
   }
+
+  String buildUrl(int id, {bool thumbnail = false}) => ""
+      "${api.url}/get_files/"
+      "${thumbnail ? "thumbnail" : "file"}"
+      "?file_id=$id"
+      "&Hydrus-Client-API-Access-Key=${api.key}";
 
   Future<void> setMetadataFor(HydrusFile? file) async {
     if (file == null) return;
@@ -61,21 +67,26 @@ class Repo {
   Future<Result<String>> updateServiceNames() async {
     final result = await Executor.run<String>(() => api.getServices());
 
+    final dynamic json;
     switch (result) {
       case Failure(title: final _, message: final _):
         return result;
-
       case Success(data: final data):
-        final json = jsonDecode(data);
-        final localTags = json['local_tags'] as List<dynamic>;
-        final local = localTags.map((e) => '${e['name']}').toList();
-        final ptr = pick(json, 'tag_repositories', 0, 'name').asStringOrNull();
-        services
-          ..clear()
-          ..add(pick(json, 'all_known_tags', 0, 'name').asStringOrThrow())
-          ..addAll(local);
-        if (ptr != null) services.add(ptr);
-        return result;
+        json = jsonDecode(data);
     }
+
+    final List<dynamic> localTags = json['local_tags'];
+    final local = localTags
+        .map((e) => '${e['name']}')
+        .toList();
+    final ptr = pick(json, 'tag_repositories', 0, 'name')
+        .asStringOrNull();
+    services
+      ..clear()
+      ..add(pick(json, 'all_known_tags', 0, 'name').asStringOrThrow())
+      ..addAll(local);
+    if (ptr != null) services.add(ptr);
+
+    return result;
   }
 }
