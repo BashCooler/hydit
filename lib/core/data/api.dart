@@ -10,12 +10,14 @@ class HydrusApi with DioClient {
   static const int version = 81;
   final Http http;
 
-  HydrusApi({Uri? uri, String? key}) : http = Http(uri, key);
+  HydrusApi({Uri? uri, String? key}) : http = Http(uri, key) {
+    update(uri, key);
+  }
 
   String get url => '${http.url.host}:${http.url.port}';
   String get key => http.key;
 
-  void update(Uri uri, String key) {
+  void update([Uri? uri, String? key]) {
     updateDio(uri, key);
     http.update(uri, key);
   }

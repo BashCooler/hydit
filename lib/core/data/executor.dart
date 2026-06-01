@@ -1,5 +1,8 @@
+import 'dart:convert' hide json;
+
 import 'package:dio/dio.dart';
 import 'package:dartx/dartx.dart';
+import 'package:deep_pick/deep_pick.dart';
 
 
 sealed class Result<T> {}
@@ -37,19 +40,33 @@ class Executor {
       final String message;
 
       switch (e.type) {
+        case .badResponse when e.response?.data == null:
+          title = 'Bad response';
+          message = 'Unknown error';
+
         case .badResponse:
-          message = e.response
-              ?.data['error'] ?? 'No description provided'
-              .replaceAll('!', '');
-          title = e.response
-              ?.data['exception_type'] ?? 'Bad response'
-              .format();
+          final String data = e.response!.data;
+          final json = jsonDecode(data);
+          final String? exception = pick(json, 'exception_type')
+              .asStringOrNull()
+              ?.format();
+          final String? description = pick(json, 'error')
+              .asStringOrNull()
+              ?.replaceAll('!', '');
+          title = exception ?? 'Bad response';
+          message = description ?? 'Unknown error';
 
         case .connectionError:
           title = 'Connection refused';
           message =
               'This indicates the provided url is incorrect or the Hydrus '
               'client is not running';
+
+        case .sendTimeout:
+        case .receiveTimeout:
+        case .connectionTimeout:
+          title = 'Connection timeout';
+          message = 'No response from Hydrus';
 
         case .unknown when e.error.runtimeType == ArgumentError:
           title = 'Client error';

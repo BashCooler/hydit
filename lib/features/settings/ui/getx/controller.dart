@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:hydit/core/data/executor.dart';
+import 'package:hydit/core/data/repo.dart';
 import 'package:string_validator/string_validator.dart';
 
 import 'package:hydit/core/data/api.dart';
@@ -20,10 +21,16 @@ class SettingsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    loadSettings();
+    load();
   }
 
-  void loadSettings() {
+  void save() {
+    final box = Hive.box('settings');
+    box.put('url', $.url);
+    box.put('key', $.key);
+  }
+
+  void load() {
     final box = Hive.box('settings');
     final url = box.get('url') ?? '';
     final key = box.get('key') ?? '';
@@ -49,6 +56,17 @@ class SettingsController extends GetxController {
 
     final client = HydrusApi(uri: uri, key: $.key);
 
-    return Executor.run<String>(() => client.getVerifyAccessKey());
+    final result = await Executor
+        .run<String>(() => client.getVerifyAccessKey());
+
+    switch (result) {
+      case Success(data: final _):
+        save();
+        Get.find<Repo>().updateClient();
+      case _:
+        break;
+    }
+
+    return result;
   }
 }

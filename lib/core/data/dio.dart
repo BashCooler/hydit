@@ -3,7 +3,8 @@ import 'package:dio/dio.dart';
 
 mixin class DioClient {
   final dio = Dio()
-    ..options.baseUrl = 'http://127.0.0.1:45869';
+    ..options.baseUrl = 'http://127.0.0.1:45869'
+    ..options.connectTimeout = const Duration(seconds: 3);
 
   void updateDio([Uri? uri, String? key]) {
     if (uri != null) dio.options.baseUrl = uri.toString();
