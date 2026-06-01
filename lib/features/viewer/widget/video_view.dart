@@ -50,7 +50,7 @@ class _ViewVideoState extends State<ViewVideo> {
     pageController = Get.find(tag: widget.tag);
     unawaited(
       player.open(
-        Media(repo.buildUrl(widget.file.id)),
+        Media(repo.api.buildUrl(widget.file.id)),
         play: pageController.enabled(widget.index),
       ).catchError((_) {}),
     );
@@ -105,7 +105,7 @@ class _ViewVideoState extends State<ViewVideo> {
         fit: .expand,
         children: [
           CachedNetworkImage(
-            imageUrl: repo.buildUrl(widget.file.id, thumbnail: true),
+            imageUrl: repo.api.buildUrl(widget.file.id, thumbnail: true),
             placeholder: (context, url) => SizedBox.shrink(),
             fit: .contain,
           ),

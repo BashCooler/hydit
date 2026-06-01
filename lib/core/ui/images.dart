@@ -17,7 +17,7 @@ class Thumbnail extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 1.0,
       child: CachedNetworkImage(
-        imageUrl: repo.buildUrl(image.id, thumbnail: true),
+        imageUrl: repo.api.buildUrl(image.id, thumbnail: true),
         placeholder: (context, url) => ColoredBox(color: Colors.white10),
         fit: .cover,
       ),
@@ -40,12 +40,12 @@ class HighResImage extends StatelessWidget {
       aspectRatio: aspectRatio,
       children: [
         CachedNetworkImage(
-          imageUrl: repo.buildUrl(image.id, thumbnail: true),
+          imageUrl: repo.api.buildUrl(image.id, thumbnail: true),
           placeholder: (context, url) => const SizedBox.shrink(),
           fit: .cover,
         ),
         CachedNetworkImage(
-          imageUrl: repo.buildUrl(image.id),
+          imageUrl: repo.api.buildUrl(image.id),
           placeholder: (context, url) => const SizedBox.shrink(),
           fit: .cover,
         ),

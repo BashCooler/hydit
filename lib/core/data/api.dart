@@ -2,24 +2,14 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:hydit/core/data/dio.dart';
-import 'package:hydit/core/data/http.dart';
 import 'package:hydit/utils/dictionaries.dart';
 
 
 class HydrusApi with DioClient {
   static const int version = 81;
-  final Http http;
 
-  HydrusApi({Uri? uri, String? key}) : http = Http(uri, key) {
+  HydrusApi({Uri? uri, String? key}) {
     update(uri, key);
-  }
-
-  String get url => '${http.url.host}:${http.url.port}';
-  String get key => http.key;
-
-  void update([Uri? uri, String? key]) {
-    updateDio(uri, key);
-    http.update(uri, key);
   }
 
   // MARK: ACCESS MANAGEMENT
@@ -112,7 +102,7 @@ class HydrusApi with DioClient {
     };
     params.removeWhere((k, v) => (v == null));
 
-    return await http.get('/get_files/file_metadata', params: params);
+    return await get('/get_files/file_metadata', params: params);
   }
 
   // MARK: GET FILE
@@ -160,15 +150,21 @@ class HydrusApi with DioClient {
         }
       }
     };
-    return http.post<void>('/add_tags/add_tags', params: params);
+    return post<void>('/add_tags/add_tags', params: params);
   }
+
+  // MARK: METHODS
+
+  String buildUrl(int id, {bool thumbnail = false}) =>
+      "http://$url/get_files/"
+      "${thumbnail ? "thumbnail" : "file"}"
+      "?file_id=$id"
+      "&Hydrus-Client-API-Access-Key=$key";
 
   static String _encodeTags(List<String> tagList) {
     /// Replace special symbols with Unicode escape sequences (like \uXXXX)
     String encodeUnicode(String input) {
-      return input.replaceAllMapped(
-        RegExp(r'[^\x00-\x7F]'),
-            (Match m) => '\\u${m
+      return input.replaceAllMapped(RegExp(r'[^\x00-\x7F]'), (Match m) => '\\u${m
             .group(0)!
             .codeUnitAt(0)
             .toRadixString(16)

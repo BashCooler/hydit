@@ -23,8 +23,7 @@ class Repo {
     final box = Hive.box('settings');
     final key = box.get('key') ?? '';
     final url = box.get('url') ?? '';
-    final uri = Uri.parse(url);
-    api.update(uri, key);
+    api.update(Uri.parse(url), key);
   }
 
   Future<void> setMetadataFor(HydrusFile? file) async {
@@ -34,12 +33,6 @@ class Repo {
       includeServicesObject: false);
     Mapper.writeMetadata(response, file);
   }
-
-  String buildUrl(int id, {bool thumbnail = false}) => ""
-      "http://${api.url}/get_files/"
-      "${thumbnail ? "thumbnail" : "file"}"
-      "?file_id=$id"
-      "&Hydrus-Client-API-Access-Key=${api.key}";
 
   Future<String> serviceKeyOf(String name) async {
     final response = await api.getService(name: name);
