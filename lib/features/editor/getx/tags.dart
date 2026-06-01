@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hydit/core/data/executor.dart';
 
 import 'package:hydit/core/data/repo.dart';
 import 'package:hydit/core/domain/entities.dart';
@@ -235,16 +236,35 @@ extension Save on TagManager {
     return sb.toString();
   }
 
-  /// Send request to Hydrus to add/remove tags
-  Future<void> save() async {
+  /// Send request to Hydrus to add/remove tags.
+  ///
+  /// If process finishes successfully returns true.
+  Future<bool> save() async {
     final Repo repo = Get.find();
 
-    await repo.addTags(_ids.toList(), additions);
-    await repo.removeTags(_ids.toList(), deletions);
+    final added = await repo.addTags(_ids.toList(), additions);
+
+    switch (added) {
+      case Success(data: final _):
+        break;
+      case Failure(title: final _, message: final _):
+        return false;
+    }
+
+    final removed = await repo.removeTags(_ids.toList(), deletions);
+
+    switch (removed) {
+      case Success(data: final _):
+        break;
+      case Failure(title: final _, message: final _):
+        return false;
+    }
 
     for (final id in _ids) {
       await repo.setMetadataFor(files.byId(id));
     }
+
+    return true;
   }
 }
 

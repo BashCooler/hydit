@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/core/ui/snack_bar.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/core/ui/images.dart';
@@ -161,8 +162,18 @@ class _EditorState extends State<Editor> {
               n.Button('Save'.n)
                 ..onPressed = () async {
                   setState(() => isLoading = true);
-                  await manager.save();
-                  if (context.mounted) nav.pop(Action.save);
+                  final result = await manager.save();
+                  switch (result) {
+                    case true:
+                      if (context.mounted) nav.pop(Action.save);
+                    case false:
+                      snackBar(
+                        const Icon(Icons.clear),
+                        'Save error',
+                        'Failed to save changes',
+                      );
+                      setState(() => isLoading = false);
+                  }
                 },
               n.Button('Discard'.n)
                 ..onPressed = () => nav.pop(Action.discard),

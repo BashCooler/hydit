@@ -6,6 +6,7 @@ import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/core/data/api.dart';
 import 'package:hydit/core/data/executor.dart';
+import 'package:hydit/utils/dictionaries.dart';
 
 import '../domain/entities.dart';
 import 'mapper.dart';
@@ -40,28 +41,28 @@ class Repo {
     Mapper.writeMetadata(response, file);
   }
 
-  Future<String> serviceKeyOf(String name) async {
+  Future<Result<void>> addTags(List<int> ids, Set<Tag> tags) {
+    return _addOrRemove(ids, tags, .addToLocalFileDomain);
+  }
+
+  Future<Result<void>> removeTags(List<int> ids, Set<Tag> tags) {
+    return _addOrRemove(ids, tags, .deleteFromLocalFileDomain);
+  }
+
+  Future<Result<void>> _addOrRemove(List<int> ids, Set<Tag> tags,
+      Action action) {
+    return Executor.run(() async {
+      for (final service in tags.services) {
+        final key = await _unsafeServiceKeyOf(service);
+        await api.postAddTags(ids, key, action, tags[service].rawList);
+      }
+    });
+  }
+
+  Future<String> _unsafeServiceKeyOf(String name) async {
     final response = await api.getService(name: name);
     final decoded = jsonDecode(response);
     return decoded['service']['service_key'];
-  }
-
-  Future<void> addTags(List<int> ids, Set<Tag> tags) async {
-    for (final service in tags.services) {
-      final key = await serviceKeyOf(service);
-      await api.postAddTags(
-        ids, key, .addToLocalFileDomain, tags[service].rawList,
-      );
-    }
-  }
-
-  Future<void> removeTags(List<int> ids, Set<Tag> tags) async {
-    for (final service in tags.services) {
-      final key = await serviceKeyOf(service);
-      await api.postAddTags(
-        ids, key, .deleteFromLocalFileDomain, tags[service].rawList,
-      );
-    }
   }
 
   Future<Result<String>> updateServiceNames() async {
