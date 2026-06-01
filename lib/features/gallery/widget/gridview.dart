@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:expressive_refresh/expressive_refresh.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:hydit/core/data/repo.dart';
 import 'package:hydit/core/domain/file_repo.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
@@ -37,7 +36,6 @@ class GalleryGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Repo repo = Get.find();
     final QueryController query = Get.find();
 
     final FileRepo files = Get.find(tag: tag);
@@ -75,27 +73,21 @@ class GalleryGridView extends StatelessWidget {
               gridDelegate: delegate,
               itemBuilder: (context, index) {
                 final file = files[index];
-
-                final tile = Tile(
-                  tag: tag,
-                  index: index,
-                  file: files[index],
-                  onTap: onTap,
-                  onLongPress: onLongPress,
-                );
-
-                if (file.loaded) return tile;
-
-                return FutureBuilder(
-                  future: repo.setMetadataFor(file),
-                  builder: (_, snapshot) {
-                    if (snapshot.connectionState == .done) {
-                      return tile;
-                    } else {
+                return Obx(() {
+                  switch (file.loaded) {
+                    case false:
+                      file.forceLoadMetadata();
                       return const ColoredBox(color: Colors.white10);
-                    }
-                  },
-                );
+                    case true:
+                      return Tile(
+                        tag: tag,
+                        index: index,
+                        file: files[index],
+                        onTap: onTap,
+                        onLongPress: onLongPress,
+                      );
+                  }
+                });
               },
             ),
           );

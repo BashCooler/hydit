@@ -35,10 +35,14 @@ class Repo {
 
   Future<void> setMetadataFor(HydrusFile? file) async {
     if (file == null) return;
-    final response = await api.getFileMetadata(
-      [file.id],
-      includeServicesObject: false);
-    Mapper.writeMetadata(response, file);
+    final result = await Executor.run(() => api.getFileMetadata([file.id]));
+
+    switch (result) {
+      case Success(data: final data):
+        Mapper.writeMetadata(data, file);
+      case _:
+        break;
+    }
   }
 
   Future<Result<void>> addTags(List<int> ids, Set<Tag> tags) {
