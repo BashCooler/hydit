@@ -3,6 +3,7 @@ import 'dart:convert' hide json;
 import 'package:dio/dio.dart';
 import 'package:dartx/dartx.dart';
 import 'package:deep_pick/deep_pick.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 
 sealed class Result<T> {}
@@ -58,15 +59,17 @@ class Executor {
 
         case .connectionError:
           title = 'Connection refused';
-          message =
-              'This indicates the provided url is incorrect or the Hydrus '
-              'client is not running';
+          message = await _connectionReport(
+            defaultMessage: 'No running Hydrus client found at this host',
+          );
 
         case .sendTimeout:
         case .receiveTimeout:
         case .connectionTimeout:
           title = 'Connection timeout';
-          message = 'No response from Hydrus';
+          message = await _connectionReport(
+            defaultMessage: 'No response from Hydrus',
+          );
 
         case .unknown when e.error.runtimeType == ArgumentError:
           title = 'Client error';
@@ -76,12 +79,28 @@ class Executor {
           title = e.error.runtimeType.toString().format();
           message =
               'Unknown error occurred with the type "${e.error.runtimeType}"';
-
-          rethrow;  // TODO remove this when handled all error types
       }
 
       return Failure(title: title, message: message);
     }
+  }
+
+  static Future<String> _connectionReport({String? defaultMessage}) async {
+    final results = await (Connectivity().checkConnectivity());
+    
+    final connected = results.contains(ConnectivityResult.mobile) 
+        || results.contains(ConnectivityResult.wifi) 
+        || results.contains(ConnectivityResult.ethernet);
+
+    if (!connected) {
+      return 'No internet connection';
+    }
+    
+    if (results.contains(ConnectivityResult.vpn)) {
+      return 'This issue may be caused by an active VPN connection';
+    }
+
+    return defaultMessage ?? 'Unknown error';
   }
 }
 
