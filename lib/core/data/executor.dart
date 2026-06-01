@@ -60,7 +60,7 @@ class Executor {
         case .connectionError:
           title = 'Connection refused';
           message = await _connectionReport(
-            defaultMessage: 'No running Hydrus client found at this host',
+            defaultMessage: 'No running Hydrus client found',
           );
 
         case .sendTimeout:
