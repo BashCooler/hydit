@@ -28,14 +28,15 @@ class HydrusApi with DioClient {
     return get('/api_version');
   }
 
-  Future<String> getRequestNewPermission(String name, {bool? permitsEverything, List<int>? basicPermissions}) {
-
+  Future<String> getRequestNewPermission(String name, {
+    bool? permitsEverything,
+    List<int>? basicPermissions,
+  }) {
     final Map<String, dynamic> params = {
       'name': name,
       'permits_everything': permitsEverything,
       'basic_permissions': basicPermissions,
     };
-
     return get('/request_new_permissions', params: params);
   }
 
@@ -85,18 +86,6 @@ class HydrusApi with DioClient {
       '/get_files/search_files',
       params: params,
     );
-    /*
-    if (response['file_ids'] == null) {
-      switch (response['status_code']) {
-        case 400:
-          throw HydrusBadRequestException(response['error']);
-        case 403:
-          throw HydrusInsufficientCredentialsException(response['error']);
-        default:
-          throw HydrusUnknownException();
-      }
-    }
-    */
 
     return (response['file_ids'] as List).cast<int>();
   }
@@ -128,29 +117,19 @@ class HydrusApi with DioClient {
 
   // MARK: GET FILE
 
-  Future<Uint8List> getThumbnail(dynamic fileIdOrHash) async {
-    Map<String, dynamic> params = _getImageParams(fileIdOrHash);
-    return http.get<Uint8List>(
-      '/get_files/thumbnail',
-      params: params,
-      parser: (r) => r.bodyBytes,
-    );
+  Future<Uint8List> getThumbnail(int fileId) {
+    final params = {
+      'file_id': fileId,
+    };
+    return get<Uint8List>('/get_files/thumbnail', params: params);
   }
 
-  Future<Uint8List> getFile(dynamic fileIdOrHash, [bool? download]) async {
-    Map<String, dynamic> params = _getImageParams(fileIdOrHash);
-    return http.get<Uint8List>(
-      '/get_files/file',
-      params: params,
-      parser: (r) => r.bodyBytes,
-    );
-  }
-
-  Map<String, dynamic> _getImageParams(dynamic fileIdOrHash) {
-    final Map<String, dynamic> params = {};
-    final type = fileIdOrHash.toString().length == 64 ? 'hash' : 'file_id';
-    params[type] = fileIdOrHash;
-    return params;
+  Future<Uint8List> getFile(dynamic fileId, {bool download = false}) {
+    final params = {
+      'file_id': fileId,
+      'download': download,
+    };
+    return get<Uint8List>('/get_files/file', params: params);
   }
 
   // MARK: TAGS
@@ -159,7 +138,7 @@ class HydrusApi with DioClient {
     // List<String>? fileDomain,
     // String? tagServiceKey,
     String? tagDisplayType,
-  }) async {
+  }) {
     final Map<String, dynamic> params = {
       'search': tag,
       // 'file_domain': fileDomain,
@@ -168,11 +147,11 @@ class HydrusApi with DioClient {
     };
     params.removeWhere((k, v) => (v == null));
 
-    return await http.get('/add_tags/search_tags', params: params);
+    return get('/add_tags/search_tags', params: params);
   }
 
-  Future<int> postAddTags(List<int> ids, String serviceKey, Action action,
-      List<String> tags) async {
+  Future<void> postAddTags(List<int> ids, String serviceKey, Action action,
+      List<String> tags) {
     final Map<String, dynamic> params = {
       'file_ids': ids,
       'service_keys_to_actions_to_tags': {
@@ -181,11 +160,7 @@ class HydrusApi with DioClient {
         }
       }
     };
-    return await http.post<int>(
-      '/add_tags/add_tags',
-      params: params,
-      parser: (r) => r.statusCode,
-    );
+    return http.post<void>('/add_tags/add_tags', params: params);
   }
 
   static String _encodeTags(List<String> tagList) {
