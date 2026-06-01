@@ -53,6 +53,7 @@ class QueryController extends GetxController {
   }
 
   Future<void> searchForFiles() async {
+    if (_tags.isEmpty) return;
     gallery.refreshing.value = true;
     await _searchForFiles();
     gallery.refreshing.value = false;
@@ -95,7 +96,7 @@ class QueryController extends GetxController {
   Future<void> load() async {
     final box = Hive.box('settings');
     final List<String>? tags = box.get('query');
-    if (tags != null) {
+    if (tags != null && tags.isNotEmpty) {
       _tags.assignAll(tags.map((t) => Tag(t)));
       await searchForFiles();
     }

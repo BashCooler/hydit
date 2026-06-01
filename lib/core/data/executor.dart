@@ -87,9 +87,9 @@ class Executor {
 
   static Future<String> _connectionReport({String? defaultMessage}) async {
     final results = await (Connectivity().checkConnectivity());
-    
-    final connected = results.contains(ConnectivityResult.mobile) 
-        || results.contains(ConnectivityResult.wifi) 
+
+    final connected = results.contains(ConnectivityResult.mobile)
+        || results.contains(ConnectivityResult.wifi)
         || results.contains(ConnectivityResult.ethernet);
 
     if (!connected) {
@@ -105,7 +105,7 @@ class Executor {
 }
 
 
-extension ToReadable on String {
+extension Format on String {
   // ignore: unnecessary_this
   String format() => this
       .replaceAll('Exception', '')
