@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:expressive_refresh/expressive_refresh.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/states/files.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
 import '../getx/gallery.dart';
@@ -38,7 +38,7 @@ class GalleryGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     final QueryController query = Get.find();
 
-    final FileRepo files = Get.find(tag: tag);
+    final FileStore files = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
 
     return GridViewObserver(

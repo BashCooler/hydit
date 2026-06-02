@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/core/data/executor.dart';
+import 'package:hydit/core/services/executor.dart';
 import 'package:string_validator/string_validator.dart';
 
-import 'package:hydit/core/data/api.dart';
-import 'package:hydit/core/data/repo.dart';
-import 'package:hydit/core/ui/snack_bar.dart';
+import 'package:hydit/core/api/api.dart';
+import 'package:hydit/core/services/repo.dart';
+import 'package:hydit/core/widget/snack_bar.dart';
 
 import '../entity/model.dart';
 

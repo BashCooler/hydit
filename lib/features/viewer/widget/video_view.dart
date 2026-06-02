@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/core/states/file.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:hydit/core/data/repo.dart';
-import 'package:hydit/core/domain/entities.dart';
+import 'package:hydit/core/services/repo.dart';
 
 import '../getx/page.dart';
 import 'seekbar.dart';

@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/states/files.dart';
 import 'package:hydit/features/editor/getx/bindings.dart';
 
 import '../getx/gallery.dart';
@@ -16,7 +16,7 @@ class SelectActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FileRepo files = Get.find(tag: tag);
+    final FileStore files = Get.find(tag: tag);
     final SelectionController selection = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
 
@@ -47,7 +47,7 @@ class SelectActions extends StatelessWidget {
                   selection.clear();
                 case _:
                   final ids = selection.ids.toList();
-                  final fileRepo = FileRepo.pickFrom(files, ids);
+                  final fileRepo = FileStore.pickFrom(files, ids);
                   await toEditorBatch(tag, fileRepo, gallery, ids);
                   selection.clear();
               }

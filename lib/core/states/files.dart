@@ -1,26 +1,27 @@
 import 'package:get/get.dart';
-import 'package:hydit/core/domain/entities.dart';
+
+import 'file.dart';
 
 
-class FileRepo extends GetxController {
+class FileStore {
   final RxList<HydrusFile> _files;
 
-  /// Create empty [FileRepo]
-  FileRepo() : _files = <HydrusFile>[].obs;
+  /// Create empty [FileStore]
+  FileStore() : _files = <HydrusFile>[].obs;
 
   /// Takes files from [fileRepo] with specified [ids] and
-  /// created a new [FileRepo].
+  /// created a new [FileStore].
   ///
-  /// New [FileRepo] will have the same [HydrusFile] objects as
-  /// the original and will impact the original [FileRepo].
-  FileRepo.pickFrom(FileRepo fileRepo, List<int> ids)
+  /// New [FileStore] will have the same [HydrusFile] objects as
+  /// the original and will impact the original [FileStore].
+  FileStore.pickFrom(FileStore fileRepo, List<int> ids)
     : _files = fileRepo.byIds(ids).obs;
 
   /// Create file repo with the same files as given [fileRepo].
   ///
-  /// The copy and the original [FileRepo] share the same list, so
+  /// The copy and the original [FileStore] share the same list, so
   /// all the changes in the copy will affect the original.
-  FileRepo.copy(FileRepo fileRepo) : _files = fileRepo._files;
+  FileStore.copy(FileStore fileRepo) : _files = fileRepo._files;
 
   int get length => _files.length;
 

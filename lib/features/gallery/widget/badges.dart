@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hydit/core/states/file.dart';
 import 'package:niku/extra/primitive.dart';
 
-import 'package:hydit/core/domain/entities.dart';
 
 
 class TileBadges extends StatelessWidget {

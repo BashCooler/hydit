@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/utils/theme.dart';
-import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/theme/theme.dart';
+import 'package:hydit/core/states/files.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
 import '../page/gallery.dart';
@@ -12,7 +12,7 @@ import 'selection.dart';
 enum Mode { full, preview }
 
 
-Future<dynamic>? toGallery({Mode mode = Mode.full, required FileRepo files}) {
+Future<dynamic>? toGallery({Mode mode = Mode.full, required FileStore files}) {
   final tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
   return Get.to(
     () => Gallery(tag: tag, mode: mode),
@@ -27,13 +27,13 @@ Future<dynamic>? toGallery({Mode mode = Mode.full, required FileRepo files}) {
 class GalleryBindings extends Bindings {
   final String tag;
   final Mode mode;
-  final FileRepo files;
+  final FileStore files;
 
   GalleryBindings(this.tag, this.files, [this.mode = .full]);
 
   @override
   void dependencies() {
-    final fileRepo = FileRepo.copy(files);
+    final fileRepo = FileStore.copy(files);
     final gallery = GalleryController();
     final selection = SelectionController(gallery: gallery, fileRepo: fileRepo);
 

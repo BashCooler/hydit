@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/core/states/file.dart';
 import 'package:niku/extra/extra.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'package:hydit/core/domain/entities.dart';
-import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/states/files.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
 import '../getx/tags.dart';
@@ -74,7 +74,7 @@ class Info extends StatelessWidget {
       child: GetBuilder(
         init: Get.find<TagManager>(),
         builder: (manager) {
-          final FileRepo files = Get.find(tag: tag);
+          final FileStore files = Get.find(tag: tag);
           final PageGetxController page = Get.find(tag: tag);
           final file = files[page.i];
           return Obx(() {

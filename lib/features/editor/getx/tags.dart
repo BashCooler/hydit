@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
-import 'package:hydit/core/data/executor.dart';
+import 'package:hydit/core/services/executor.dart';
 
-import 'package:hydit/core/data/repo.dart';
-import 'package:hydit/core/domain/entities.dart';
-import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/services/repo.dart';
+import 'package:hydit/core/entity/tag.dart';
+import 'package:hydit/core/states/file.dart';
+import 'package:hydit/core/states/files.dart';
 
 const readOnlyServices = ['all known tags', 'public tag repository'];
 
@@ -25,7 +26,7 @@ class TagManager extends GetxController {
   final Set<Tag> _original = {};
   final Set<Tag> _current = {};
 
-  final FileRepo files;
+  final FileStore files;
 
   TagManager(this.files);
 

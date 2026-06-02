@@ -4,19 +4,20 @@ import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/utils/dictionaries.dart';
-import 'package:hydit/core/data/repo.dart';
-import 'package:hydit/core/data/executor.dart';
-import 'package:hydit/core/domain/entities.dart';
-import 'package:hydit/core/domain/file_repo.dart';
-import 'package:hydit/core/ui/snack_bar.dart';
+import 'package:hydit/core/api/dictionaries.dart';
+import 'package:hydit/core/services/repo.dart';
+import 'package:hydit/core/services/executor.dart';
+import 'package:hydit/core/entity/tag.dart';
+import 'package:hydit/core/states/file.dart';
+import 'package:hydit/core/states/files.dart';
+import 'package:hydit/core/widget/snack_bar.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 
 class QueryController extends GetxController {
   final _tags = <Tag>[].obs;
 
-  final FileRepo fileRepo;
+  final FileStore fileRepo;
   final Repo repo = Get.find();
   final GalleryController gallery;
 

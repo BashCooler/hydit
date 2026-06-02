@@ -2,8 +2,8 @@ import 'dart:math' hide log;
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/core/domain/entities.dart';
-import 'package:hydit/core/ui/images.dart';
+import 'package:hydit/core/states/file.dart';
+import 'package:hydit/core/widget/images.dart';
 import 'package:hydit/features/viewer/widget/views.dart';
 
 import '../getx/page.dart';

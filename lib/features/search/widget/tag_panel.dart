@@ -2,7 +2,8 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/core/domain/entities_ext.dart';
+import 'package:hydit/core/entity/tag.dart';
+import 'package:hydit/core/theme/theme.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
 
@@ -75,4 +76,10 @@ class PlaceholderText extends StatelessWidget {
       ),
     );
   }
+}
+
+
+extension TagUI on Tag {
+  Color? get color =>
+      namespaceColors[namespace] ?? namespaceColors['namespace'];
 }

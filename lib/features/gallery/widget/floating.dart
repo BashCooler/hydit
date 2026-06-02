@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/core/ui/common.dart';
+import 'package:hydit/core/widget/common.dart';
 import 'package:hydit/features/search/page/search.dart';
 import 'package:hydit/features/settings/page/settings.dart';
 

@@ -5,8 +5,10 @@ import 'package:pub_semver/pub_semver.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 
-const downloadUrl = 'https://github.com/BashCooler/hydit/releases/latest';
-const apiUrl = 'https://api.github.com/repos/OwlCarousel2/OwlCarousel2/releases/latest';
+const downloadUrl =
+    'https://github.com/BashCooler/hydit/releases/latest';
+const apiUrl =
+    'https://api.github.com/repos/OwlCarousel2/OwlCarousel2/releases/latest';
 
 
 Future<String?> getUpdateVersion() async {

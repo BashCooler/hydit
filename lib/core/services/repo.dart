@@ -4,12 +4,13 @@ import 'dart:convert';
 import 'package:hive_ce/hive.dart';
 import 'package:deep_pick/deep_pick.dart';
 
-import 'package:hydit/core/data/api.dart';
-import 'package:hydit/core/data/executor.dart';
-import 'package:hydit/utils/dictionaries.dart';
+import 'package:hydit/core/api/api.dart';
+import 'package:hydit/core/api/dictionaries.dart';
+import 'package:hydit/core/entity/tag.dart';
+import 'package:hydit/core/states/file.dart';
 
-import '../domain/entities.dart';
 import 'mapper.dart';
+import 'executor.dart';
 
 
 class Repo {

@@ -1,6 +1,11 @@
 import 'dart:convert';
+
 import 'package:deep_pick/deep_pick.dart';
-import 'package:hydit/core/domain/entities.dart';
+
+import 'package:hydit/core/entity/tag.dart';
+
+import '../entity/metadata.dart';
+import '../states/file.dart';
 
 
 class Mapper {

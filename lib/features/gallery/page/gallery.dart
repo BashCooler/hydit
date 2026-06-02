@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/states/files.dart';
 import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/viewer/getx/bindings.dart';
 import 'package:hydit/features/search/widget/sorting.dart';
@@ -37,7 +37,7 @@ class Gallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FileRepo files = Get.find(tag: tag);
+    final FileStore files = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
     final SelectionController selection = Get.find(tag: tag);
     final QueryController query = Get.find();

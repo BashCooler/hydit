@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:hydit/core/data/dio.dart';
-import 'package:hydit/utils/dictionaries.dart';
+import 'package:hydit/core/api/dio.dart';
+import 'package:hydit/core/api/dictionaries.dart';
 
 import 'extensions.dart';
 

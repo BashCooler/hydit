@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/states/files.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
 import '../getx/tags.dart';
@@ -23,7 +23,7 @@ class EditorBottomBar extends StatelessWidget {
   });
 
   Future<void> navigateToPage(int target) async {
-    final FileRepo files = Get.find(tag: tag);
+    final FileStore files = Get.find(tag: tag);
     final TagManager manager = Get.find();
     final PageGetxController page = Get.find(tag: tag);
 

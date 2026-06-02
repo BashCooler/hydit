@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
-import 'package:hydit/utils/theme.dart';
+import 'package:hydit/core/theme/theme.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
-import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/states/files.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import '../page/viewer.dart';
@@ -12,7 +12,7 @@ import 'page.dart';
 
 Future<void> toViewer({
   required int index,
-  required FileRepo files,
+  required FileStore files,
   GalleryController? gallery,
   bool showFloatingActionButton = true,
 }) async {
@@ -48,7 +48,7 @@ class ViewerBindings implements Bindings {
   final int index;
   final String tag;
   final GalleryController? gallery;
-  final FileRepo files;
+  final FileStore files;
 
   const ViewerBindings({
     required this.index,
@@ -61,7 +61,7 @@ class ViewerBindings implements Bindings {
   void dependencies() {
     final page = PageGetxController(initial: index, grid: gallery?.grid);
     final sheet = SnappingSheetController();
-    final fileRepo = FileRepo.copy(files);
+    final fileRepo = FileStore.copy(files);
 
     Get
       ..put(fileRepo, tag: tag)

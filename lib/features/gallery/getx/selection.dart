@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/states/files.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 
@@ -8,7 +8,7 @@ class SelectionController extends GetxController {
   final ids = <int>{}.obs;
 
   final GalleryController gallery;
-  final FileRepo fileRepo;
+  final FileStore fileRepo;
 
   SelectionController({required this.gallery, required this.fileRepo});
 

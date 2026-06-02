@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/core/data/executor.dart';
+import 'package:hydit/core/services/executor.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/utils/theme.dart';
-import 'package:hydit/core/data/repo.dart';
-import 'package:hydit/core/ui/snack_bar.dart';
+import 'package:hydit/core/theme/theme.dart';
+import 'package:hydit/core/services/repo.dart';
+import 'package:hydit/core/widget/snack_bar.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 import 'package:hydit/features/search/widget/tag_panel.dart';
 

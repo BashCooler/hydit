@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/core/states/file.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
-import 'package:hydit/core/ui/common.dart';
-import 'package:hydit/core/domain/entities.dart';
-import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/widget/common.dart';
+import 'package:hydit/core/states/files.dart';
 import 'package:hydit/features/editor/getx/bindings.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
@@ -36,7 +36,7 @@ class Viewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FileRepo files = Get.find(tag: tag);
+    final FileStore files = Get.find(tag: tag);
     final PageGetxController page = Get.find(tag: tag);
 
     assert(files[page.i].loaded, message);
@@ -91,7 +91,7 @@ class Pages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FileRepo files = Get.find(tag: tag);
+    final FileStore files = Get.find(tag: tag);
     final PageGetxController page = Get.find(tag: tag);
 
     return Listener(
@@ -169,7 +169,7 @@ class BottomActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PageGetxController page = Get.find(tag: tag);
-    final FileRepo files = Get.find(tag: tag);
+    final FileStore files = Get.find(tag: tag);
 
     return BottomAppBar(
       color: Get.theme.scaffoldBackgroundColor.withAlpha(90),

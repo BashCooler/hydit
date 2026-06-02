@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
 import 'package:hydit/features/search/getx/search.dart';
 
-import 'package:hydit/utils/theme.dart';
-import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/theme/theme.dart';
+import 'package:hydit/core/states/files.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
@@ -11,7 +11,7 @@ import '../page/editor.dart';
 import 'tags.dart';
 
 
-Future<dynamic>? toEditorPaged(String tag, int index, FileRepo files, [GalleryController? gallery]) {
+Future<dynamic>? toEditorPaged(String tag, int index, FileStore files, [GalleryController? gallery]) {
   return Get.to(() => Editor(tag: tag, mode: .paged),
     transition: .leftToRight,
     duration: AppTheme.duration,
@@ -21,7 +21,7 @@ Future<dynamic>? toEditorPaged(String tag, int index, FileRepo files, [GalleryCo
 }
 
 
-Future<dynamic>? toEditorBatch(String tag, FileRepo files, GalleryController gallery, List<int> ids) {
+Future<dynamic>? toEditorBatch(String tag, FileStore files, GalleryController gallery, List<int> ids) {
   return Get.to(() => Editor(tag: tag, mode: .batch),
     transition: .leftToRight,
     duration: AppTheme.duration,
@@ -36,7 +36,7 @@ class EditorBindings extends Bindings {
   final Mode mode;
   final int? index;
   final List<int>? ids;
-  final FileRepo files;
+  final FileStore files;
   final GalleryController? gallery;
 
   EditorBindings.paged(this.tag, this.index, this.files, [this.gallery])
@@ -49,7 +49,7 @@ class EditorBindings extends Bindings {
 
   @override
   void dependencies() {
-    Get.put(FileRepo.copy(files), tag: tag);
+    Get.put(FileStore.copy(files), tag: tag);
     Get.put(TagSearchController(), tag: tag);
 
     switch (mode) {

@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/core/ui/snack_bar.dart';
+import 'package:hydit/core/states/file.dart';
+import 'package:hydit/core/widget/snack_bar.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/core/ui/images.dart';
-import 'package:hydit/core/domain/entities.dart';
-import 'package:hydit/core/domain/file_repo.dart';
+import 'package:hydit/core/widget/images.dart';
+import 'package:hydit/core/states/files.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/viewer/page/preview.dart';
 import 'package:hydit/features/gallery/getx/bindings.dart';
@@ -62,7 +62,7 @@ class _EditorState extends State<Editor> {
   PreferredSizeWidget buildAppBar() {
     switch (widget.mode) {
       case .paged:
-        final FileRepo files = Get.find(tag: widget.tag);
+        final FileStore files = Get.find(tag: widget.tag);
         final PageGetxController page = Get.find(tag: widget.tag);
         return EditorAppBar(
           toolbarHeight: 100,
@@ -88,7 +88,7 @@ class _EditorState extends State<Editor> {
           child: PreviewGrid(
             manager: manager,
             onTap: () {
-              final FileRepo fileRepo = Get.find(tag: widget.tag);
+              final FileStore fileRepo = Get.find(tag: widget.tag);
               toGallery(mode: .preview, files: fileRepo);
             },
           ),

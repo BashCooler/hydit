@@ -6,9 +6,9 @@ import 'package:media_kit/media_kit.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 
-import 'utils/theme.dart';
-import 'core/data/repo.dart';
-import 'core/domain/file_repo.dart';
+import 'core/theme/theme.dart';
+import 'core/services/repo.dart';
+import 'core/states/files.dart';
 import 'features/gallery/page/gallery.dart';
 import 'features/gallery/getx/bindings.dart';
 
@@ -58,7 +58,7 @@ class App extends StatelessWidget {
             transition: .rightToLeft,
             curve: Curves.easeInOutCubic,
             page: () => Gallery(tag: tag),
-            binding: GalleryBindings(tag, FileRepo()),
+            binding: GalleryBindings(tag, FileStore()),
           ),
         ],
       ),
