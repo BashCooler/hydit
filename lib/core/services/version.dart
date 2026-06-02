@@ -1,46 +1,52 @@
 import 'package:dio/dio.dart';
-import 'package:pub_semver/pub_semver.dart';
+import 'package:pub_semver/pub_semver.dart' as sv;
 import 'package:package_info_plus/package_info_plus.dart';
 
 
-const downloadUrl =
-    'https://github.com/BashCooler/hydit/releases/latest';
-const apiUrl =
-    'https://api.github.com/repos/OwlCarousel2/OwlCarousel2/releases/latest';
+class Version {
+  Version._();
 
+  static const _releases =
+      'https://github.com/BashCooler/hydit/releases/latest';
 
-Future<String?> getUpdateVersion() async {
-  final current = await version();
-  final latest = await getLatestVersion();
+  static const _apiUrl =
+      'https://api.github.com/repos/OwlCarousel2/OwlCarousel2/releases/latest';
 
-  if (latest == null) return null;
-  switch (Version.parse(latest) > Version.parse(current)) {
-    case true:
-      return latest;
-    case false:
+  static Uri get updateUrl => Uri.parse(_releases);
+
+  /// Latest version of Hydit available.
+  ///
+  /// Returns null if current version matches latest
+  static Future<String?> update() async {
+    final c = await current();
+    final l = await latest();
+
+    if (l == null) return null;
+
+    final update = sv.Version.parse(l) > sv.Version.parse(c);
+    if (!update) return null;
+
+    return l;
+  }
+
+  static Future<String> current() async {
+    final info = await PackageInfo.fromPlatform();
+    return info.version;
+  }
+
+  static Future<String?> latest() async {
+    final dio = Dio();
+
+    final Response<Map<String, dynamic>> response;
+    try {
+      response = await dio.get<Map<String, dynamic>>(_apiUrl);
+    } catch (e) {
       return null;
+    }
+
+    final Map<String, dynamic>? result = response.data;
+    final String? version = result?['tag_name']?.replaceFirst('v', '');
+
+    return version;
   }
-}
-
-
-Future<String> version() async {
-  final info = await PackageInfo.fromPlatform();
-  return info.version;
-}
-
-
-Future<String?> getLatestVersion() async {
-  final dio = Dio();
-
-  final Response<Map<String, dynamic>> response;
-  try {
-    response = await dio.get<Map<String, dynamic>>(apiUrl);
-  } catch (e) {
-    return null;
-  }
-
-  final Map<String, dynamic>? result = response.data;
-  final String? version = result?['tag_name']?.replaceFirst('v', '');
-
-  return version;
 }

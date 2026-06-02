@@ -9,6 +9,8 @@ import '../state/file.dart';
 
 
 class Mapper {
+  Mapper._();
+
   static void writeMetadata(String rawJson, HydrusFile image) {
     final json = jsonDecode(rawJson);
     Pick getMeta(String property) => pick(json, 'metadata', 0, property);

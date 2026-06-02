@@ -60,7 +60,7 @@ class SettingsPage extends HookWidget {
                 child: FaIcon(FontAwesomeIcons.github, size: 32),
               ),
               title: FutureBuilder(
-                future: version(),
+                future: Version.current(),
                 builder: (context, snapshot) {
                   switch (snapshot.hasData) {
                     case true:
@@ -73,7 +73,7 @@ class SettingsPage extends HookWidget {
               description: n.Row([
                 'Latest version: '.n,
                 FutureBuilder(
-                  future: getLatestVersion(),
+                  future: Version.latest(),
                   builder: (context, snapshot) {
                     switch (snapshot.hasData) {
                       case true:
@@ -87,7 +87,7 @@ class SettingsPage extends HookWidget {
               onTap: () async {
                 try {
                   await launchUrl(
-                    Uri.parse(downloadUrl),
+                    Version.updateUrl,
                     customTabsOptions: CustomTabsOptions(shareState: .off),
                   );
                 } catch (e) {
