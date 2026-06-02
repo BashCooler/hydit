@@ -1,11 +1,10 @@
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:flutter/material.dart';
 import 'package:hydit/core/services/executor.dart';
+import 'package:hydit/core/services/snack.dart';
 import 'package:string_validator/string_validator.dart';
 
 import 'package:hydit/core/services/repo.dart';
-import 'package:hydit/core/widget/snack_bar.dart';
 
 import '../entity/model.dart';
 
@@ -57,13 +56,9 @@ class SettingsController extends GetxController {
 
     switch (result) {
       case Success(data: final _):
-        snackBar(
-          const Icon(Icons.check),
-          'Success',
-          'Successfully saved key and url',
-        );
+        Snack.success('Success', 'Successfully saved key and url');
       case Failure(title: final title, message: final message):
-        snackBar(const Icon(Icons.clear), title, message);
+        Snack.error(title, message);
     }
 
     _processing.value = false;

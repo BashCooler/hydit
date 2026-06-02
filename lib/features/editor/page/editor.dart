@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/core/state/file.dart';
-import 'package:hydit/core/widget/snack_bar.dart';
 import 'package:niku/namespace.dart' as n;
 
+import 'package:hydit/core/state/file.dart';
 import 'package:hydit/core/widget/images.dart';
 import 'package:hydit/core/state/files.dart';
+import 'package:hydit/core/services/snack.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/viewer/page/preview.dart';
 import 'package:hydit/features/gallery/getx/bindings.dart';
@@ -167,11 +167,7 @@ class _EditorState extends State<Editor> {
                     case true:
                       if (context.mounted) nav.pop(Action.save);
                     case false:
-                      snackBar(
-                        const Icon(Icons.clear),
-                        'Save error',
-                        'Failed to save changes',
-                      );
+                      Snack.error('Save error', 'Failed to save changes');
                       setState(() => isLoading = false);
                   }
                 },
