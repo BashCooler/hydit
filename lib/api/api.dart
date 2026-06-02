@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:hydit/api/dio.dart';
 import 'package:hydit/utils/dictionaries.dart';
 
-import 'extensions.dart';
+import 'dio.dart';
+import 'unicode.dart';
 
 
 class HydrusApi with DioClient {

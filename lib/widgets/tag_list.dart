@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:hydit/features/editor/getx/tags.dart';
 import 'package:hydit/utils/theme.dart';
-
-import '../entities/tag.dart';
+import 'package:hydit/entities/tag.dart';
+import 'package:hydit/features/editor/getx/tags.dart';
 
 
 /// Parameters [trailing] and [onTap] apply to each [ListTile] in
@@ -54,6 +53,7 @@ class TagList extends StatelessWidget {
     );
   }
 }
+
 
 class TagListEntry extends StatelessWidget {
   final Widget? trailing;

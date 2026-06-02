@@ -1,3 +1,6 @@
+/// A set of extensions to replace non-ASCII symbols with Unicode
+/// escape sequences
+library;
 
 
 extension ListStringUnicodeEscape on List<String> {

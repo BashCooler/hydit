@@ -1,3 +1,7 @@
+library;
+
+
+/// An action performed by POST /add_tags/add_tags request
 enum Action {
   addToLocalFileDomain(0),
   deleteFromLocalFileDomain(1),

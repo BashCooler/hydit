@@ -9,13 +9,13 @@ class FileStore {
   /// Create empty [FileStore]
   FileStore() : _files = <HydrusFile>[].obs;
 
-  /// Takes files from [fileRepo] with specified [ids] and
+  /// Takes files from [store] with specified [ids] and
   /// created a new [FileStore].
   ///
   /// New [FileStore] will have the same [HydrusFile] objects as
   /// the original and will impact the original [FileStore].
-  FileStore.pickFrom(FileStore fileRepo, List<int> ids)
-    : _files = fileRepo.byIds(ids).obs;
+  FileStore.pickFrom(FileStore store, List<int> ids)
+    : _files = store.byIds(ids).obs;
 
   /// Create file repo with the same files as given [fileRepo].
   ///

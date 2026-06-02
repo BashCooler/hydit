@@ -5,9 +5,9 @@ import 'package:hive_ce/hive.dart';
 import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/api/api.dart';
-import 'package:hydit/utils/dictionaries.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
+import 'package:hydit/utils/dictionaries.dart';
 
 import 'mapper.dart';
 import 'executor.dart';
