@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import 'package:hydit/reactive/files.dart';
-import 'package:hydit/features/gallery/getx/gallery.dart';
+import 'gallery.dart';
 
 
 class SelectionController extends GetxController {

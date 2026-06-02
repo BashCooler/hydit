@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/widgets/tag_list.dart';
 import 'package:hydit/entities/tag.dart';
+import 'package:hydit/widgets/tag_list.dart';
 
 import '../getx/search.dart';
 

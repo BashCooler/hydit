@@ -1,12 +1,13 @@
 import 'dart:math' hide log;
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/widgets/images.dart';
-import 'package:hydit/features/viewer/widget/views.dart';
 
 import '../getx/page.dart';
+import 'views.dart';
 
 
 class ViewImageX extends StatelessWidget {

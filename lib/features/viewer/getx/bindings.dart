@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
-import 'package:hydit/utils/theme.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
+import 'package:hydit/utils/theme.dart';
 import 'package:hydit/reactive/files.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
