@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hydit/core/services/executor.dart';
 import 'package:string_validator/string_validator.dart';
 
-import 'package:hydit/core/api/api.dart';
 import 'package:hydit/core/services/repo.dart';
 import 'package:hydit/core/widget/snack_bar.dart';
 
@@ -77,15 +76,13 @@ class SettingsController extends GetxController {
       return Failure(title: 'Input error', message: 'Invalid URL');
     }
 
-    final client = HydrusApi(uri: uri, key: $.key);
-
-    final result = await Executor
-        .run<String>(() => client.getVerifyAccessKey());
+    final Repo repo = Get.find<Repo>();
+    final result = await repo.verify(uri, $.key);
 
     switch (result) {
       case Success(data: final _):
         save();
-        Get.find<Repo>().updateFromSettings();
+        repo.updateFromSettings();
       case _:
         break;
     }

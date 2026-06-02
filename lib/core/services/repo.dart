@@ -21,6 +21,11 @@ class Repo {
     updateFromSettings();
   }
 
+  Future<Result<String>> verify(Uri uri, String key) {
+    return Executor.run<String>(() =>
+        HydrusApi(uri: uri, key: key).getVerifyAccessKey());
+  }
+
   void updateFromSettings() {
     final box = Hive.box('settings');
     final key = box.get('key') ?? '';
