@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/core/entity/tag.dart';
-import 'package:hydit/core/theme/theme.dart';
+import 'package:hydit/utils/theme.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
 

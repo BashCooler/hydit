@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/core/api/dictionaries.dart';
+import 'package:hydit/utils/dictionaries.dart';
 import 'package:hydit/core/services/repo.dart';
 import 'package:hydit/core/services/executor.dart';
 import 'package:hydit/core/entity/tag.dart';

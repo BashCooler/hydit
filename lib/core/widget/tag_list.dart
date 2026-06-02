@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:hydit/features/editor/getx/tags.dart';
-import 'package:hydit/core/theme/theme.dart';
+import 'package:hydit/utils/theme.dart';
 
 import '../entity/tag.dart';
 

@@ -6,7 +6,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 
-import 'core/theme/theme.dart';
+import 'utils/theme.dart';
 import 'core/services/repo.dart';
 import 'core/state/files.dart';
 import 'features/gallery/page/gallery.dart';

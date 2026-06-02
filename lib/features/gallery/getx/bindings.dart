@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/core/theme/theme.dart';
+import 'package:hydit/utils/theme.dart';
 import 'package:hydit/core/state/files.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
