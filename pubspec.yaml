@@ -38,7 +38,6 @@ dependencies:
   hive_ce_flutter: ^2.3.4
   # Widgets
   smooth_sheets: ^1.0.2
-  flutter_portal: ^1.1.4
   dismissible_page:
     git: https://github.com/itsezlife/Flutter_dismissible_page/
   multi_split_view: ^3.6.1

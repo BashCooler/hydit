@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:hive_ce_flutter/adapters.dart';
-import 'package:flutter_portal/flutter_portal.dart';
 
 import 'utils/theme.dart';
 import 'services/repo.dart';
@@ -46,22 +45,20 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
-    return Portal(
-      child: GetMaterialApp(
-        title: 'Flutter App',
-        debugShowCheckedModeBanner: false,
-        theme: darkTheme(),
-        initialRoute: '/',
-        getPages: [
-          GetPage(
-            name: '/',
-            transition: .rightToLeft,
-            curve: Curves.easeInOutCubic,
-            page: () => Gallery(tag: tag),
-            binding: GalleryBindings(tag, FileStore()),
-          ),
-        ],
-      ),
+    return GetMaterialApp(
+      title: 'Hydit',
+      debugShowCheckedModeBanner: false,
+      theme: darkTheme(),
+      initialRoute: '/',
+      getPages: [
+        GetPage(
+          name: '/',
+          transition: .rightToLeft,
+          curve: Curves.easeInOutCubic,
+          page: () => Gallery(tag: tag),
+          binding: GalleryBindings(tag, FileStore()),
+        ),
+      ],
     );
   }
 }
