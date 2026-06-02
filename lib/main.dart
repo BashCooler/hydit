@@ -7,8 +7,8 @@ import 'package:hive_ce_flutter/adapters.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 
 import 'utils/theme.dart';
-import 'core/services/repo.dart';
-import 'core/state/files.dart';
+import 'services/repo.dart';
+import 'reactive/files.dart';
 import 'features/gallery/page/gallery.dart';
 import 'features/gallery/getx/bindings.dart';
 

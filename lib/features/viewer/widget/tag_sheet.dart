@@ -6,8 +6,8 @@ import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
-import 'package:hydit/core/widget/tag_list.dart';
-import 'package:hydit/core/entity/tag.dart';
+import 'package:hydit/widgets/tag_list.dart';
+import 'package:hydit/entities/tag.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import '../getx/page.dart';

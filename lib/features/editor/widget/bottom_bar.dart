@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/core/state/files.dart';
+import 'package:hydit/reactive/files.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
 import '../getx/tags.dart';

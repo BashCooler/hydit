@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/core/state/file.dart';
+import 'package:hydit/reactive/file.dart';
 
-import 'package:hydit/core/widget/images.dart';
+import 'package:hydit/widgets/images.dart';
 
 import '../getx/gallery.dart';
 import '../getx/selection.dart';

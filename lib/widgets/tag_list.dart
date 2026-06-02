@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hydit/features/editor/getx/tags.dart';
 import 'package:hydit/utils/theme.dart';
 
-import '../entity/tag.dart';
+import '../entities/tag.dart';
 
 
 /// Parameters [trailing] and [onTap] apply to each [ListTile] in

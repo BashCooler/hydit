@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/core/state/files.dart';
+import 'package:hydit/reactive/files.dart';
 import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/viewer/getx/bindings.dart';
 import 'package:hydit/features/search/widget/sorting.dart';

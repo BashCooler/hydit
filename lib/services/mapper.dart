@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:deep_pick/deep_pick.dart';
 
-import 'package:hydit/core/entity/tag.dart';
+import 'package:hydit/entities/tag.dart';
 
-import '../entity/metadata.dart';
-import '../state/file.dart';
+import '../entities/metadata.dart';
+import '../reactive/file.dart';
 
 
 class Mapper {

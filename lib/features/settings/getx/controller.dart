@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:hydit/core/services/executor.dart';
-import 'package:hydit/core/services/snack.dart';
+import 'package:hydit/services/executor.dart';
+import 'package:hydit/services/snack.dart';
 import 'package:string_validator/string_validator.dart';
 
-import 'package:hydit/core/services/repo.dart';
+import 'package:hydit/services/repo.dart';
 
 import '../entity/model.dart';
 

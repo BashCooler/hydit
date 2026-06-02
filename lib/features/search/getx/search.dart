@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/core/services/mapper.dart';
-import 'package:hydit/core/services/repo.dart';
-import 'package:hydit/core/entity/tag.dart';
+import 'package:hydit/services/mapper.dart';
+import 'package:hydit/services/repo.dart';
+import 'package:hydit/entities/tag.dart';
 
 
 class TagSearchController extends GetxController {

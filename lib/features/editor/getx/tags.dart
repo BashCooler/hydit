@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:hydit/core/services/executor.dart';
+import 'package:hydit/services/executor.dart';
 
-import 'package:hydit/core/services/repo.dart';
-import 'package:hydit/core/entity/tag.dart';
-import 'package:hydit/core/state/file.dart';
-import 'package:hydit/core/state/files.dart';
+import 'package:hydit/services/repo.dart';
+import 'package:hydit/entities/tag.dart';
+import 'package:hydit/reactive/file.dart';
+import 'package:hydit/reactive/files.dart';
 
 const readOnlyServices = ['all known tags', 'public tag repository'];
 

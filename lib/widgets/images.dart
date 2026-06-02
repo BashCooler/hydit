@@ -2,9 +2,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:hydit/core/services/repo.dart';
+import 'package:hydit/services/repo.dart';
 
-import '../state/file.dart';
+import '../reactive/file.dart';
 
 
 class Thumbnail extends StatelessWidget {

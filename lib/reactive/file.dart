@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../entity/metadata.dart';
+import '../entities/metadata.dart';
 import '../services/repo.dart';
 
 

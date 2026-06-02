@@ -7,7 +7,7 @@ import 'package:settings_tiles/settings_tiles.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:hydit/core/services/version.dart';
+import 'package:hydit/services/version.dart';
 
 import '../getx/controller.dart';
 import '../widget/text_field.dart';

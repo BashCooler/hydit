@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/theme.dart';
-import 'package:hydit/core/services/repo.dart';
-import 'package:hydit/core/services/executor.dart';
-import 'package:hydit/core/services/snack.dart';
+import 'package:hydit/services/repo.dart';
+import 'package:hydit/services/executor.dart';
+import 'package:hydit/services/snack.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 import 'package:hydit/features/search/widget/tag_panel.dart';
 
