@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -32,14 +30,17 @@ Future<String> version() async {
 
 
 Future<String?> getLatestVersion() async {
-  http.Response response;
+  final dio = Dio();
+
+  final Response<Map<String, dynamic>> response;
   try {
-    response = await http.get(Uri.parse(apiUrl));
+    response = await dio.get<Map<String, dynamic>>(apiUrl);
   } catch (e) {
     return null;
   }
-  if (response.statusCode != 200) return null;
 
-  final version = jsonDecode(response.body)['tag_name'].replaceFirst('v', '');
+  final Map<String, dynamic>? result = response.data;
+  final String? version = result?['tag_name']?.replaceFirst('v', '');
+
   return version;
 }

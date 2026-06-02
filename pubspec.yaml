@@ -54,7 +54,6 @@ dependencies:
   media_kit_video: ^2.0.1
   media_kit_libs_video: ^1.0.7
   # Other packages
-  http: ^1.6.0
   dio: ^5.9.2
   scrollview_observer: ^1.26.3
   deep_pick: ^1.1.0
