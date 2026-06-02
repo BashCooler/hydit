@@ -4,7 +4,7 @@ import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/core/ui/common.dart';
 import 'package:hydit/features/search/page/search.dart';
-import 'package:hydit/features/settings/ui/page/settings.dart';
+import 'package:hydit/features/settings/page/settings.dart';
 
 import '../getx/gallery.dart';
 

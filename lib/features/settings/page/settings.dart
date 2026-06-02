@@ -1,50 +1,25 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/core/data/executor.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:settings_tiles/settings_tiles.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:hydit/core/data/version.dart';
-import 'package:hydit/core/ui/snack_bar.dart';
 
 import '../getx/controller.dart';
 import '../widget/text_field.dart';
 
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends HookWidget {
   const SettingsPage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
-  final settings = Get.put(SettingsController());
-
-  void verify() async {
-    settings.processing.value = true;
-
-    final result = await settings.verify();
-
-    switch (result) {
-      case Success(data: final _):
-        snackBar(
-          const Icon(Icons.check),
-          'Success',
-          'Successfully saved key and url',
-        );
-      case Failure(title: final title, message: final message):
-        snackBar(const Icon(Icons.clear), title, message);
-    }
-
-    settings.processing.value = false;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final settings = useMemoized(() => SettingsController());
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),
@@ -55,22 +30,28 @@ class _SettingsPageState extends State<SettingsPage> {
           spacing: 15,
           children: [
             Divider(color: Colors.transparent),
-            SettingsTextField(
-              label: 'Url',
-              onChanged: settings.updateUrl,
-              initial: settings.$.url,
-            ),
-            SettingsTextField(
-              label: 'API Key',
-              onChanged: settings.updateKey,
-              initial: settings.$.key,
-            ),
+            Obx(() {
+              return SettingsTextField(
+                label: 'Url',
+                onChanged: settings.updateUrl,
+                enabled: settings.ready,
+                initial: settings.$.url,
+              );
+            }),
+            Obx(() {
+              return SettingsTextField(
+                label: 'API Key',
+                onChanged: settings.updateKey,
+                enabled: settings.ready,
+                initial: settings.$.key,
+              );
+            }),
             Obx(() {
               return SettingActionTile(
                 title: const Text('Verify and save'),
                 icon: const SettingTileIcon(Icons.save),
-                enabled: !settings.processing.value,
-                onTap: verify,
+                enabled: settings.ready,
+                onTap: settings.verify,
               );
             }),
             SettingActionTile(

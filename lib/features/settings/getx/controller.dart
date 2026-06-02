@@ -1,11 +1,14 @@
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:flutter/material.dart';
 import 'package:hydit/core/data/executor.dart';
-import 'package:hydit/core/data/repo.dart';
 import 'package:string_validator/string_validator.dart';
 
 import 'package:hydit/core/data/api.dart';
-import 'package:hydit/features/settings/data/model.dart';
+import 'package:hydit/core/data/repo.dart';
+import 'package:hydit/core/ui/snack_bar.dart';
+
+import '../entity/model.dart';
 
 
 class SettingsController extends GetxController {
@@ -14,9 +17,10 @@ class SettingsController extends GetxController {
     key: '',
   ).obs;
 
-  final processing = false.obs;
+  final _processing = false.obs;
 
   AppSettings get $ => _settings.value;
+  bool get ready => !_processing.value;
 
   @override
   void onInit() {
@@ -47,7 +51,26 @@ class SettingsController extends GetxController {
     _settings.value = _settings.value.copyWith(key: value);
   }
 
-  Future<Result<String>> verify() async {
+  void verify() async {
+    _processing.value = true;
+
+    final result = await _verify();
+
+    switch (result) {
+      case Success(data: final _):
+        snackBar(
+          const Icon(Icons.check),
+          'Success',
+          'Successfully saved key and url',
+        );
+      case Failure(title: final title, message: final message):
+        snackBar(const Icon(Icons.clear), title, message);
+    }
+
+    _processing.value = false;
+  }
+
+  Future<Result<String>> _verify() async {
     final uri = Uri.tryParse($.url);
 
     if (uri == null || !uri.host.isIP()) {
