@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import 'package:hydit/widgets/fake_scrollable.dart';
+
 
 class SettingsTextField extends HookWidget {
   final String label;
@@ -26,32 +28,38 @@ class SettingsTextField extends HookWidget {
     final node = useFocusNode();
     node.addListener(() => focus.value = node.hasFocus);
 
-    return n.Column([
-      n.Text(label)..fontSize = 16.5,
-      TextField(
-        enabled: enabled,
-        onChanged: onChanged,
-        onTapOutside: (_) => node.unfocus(),
-        controller: text,
-        focusNode: node,
-        textAlignVertical: .center,
-        decoration: InputDecoration(
-          contentPadding: const .symmetric(vertical: 0, horizontal: 8),
-          border: OutlineInputBorder(
-            borderSide: .none,
-            borderRadius: .circular(8.0),
-          ),
-          floatingLabelBehavior: .always,
-          filled: true,
-          suffixIcon: !focus.value
-              ? const SizedBox.shrink()
-              : Actions(text: text),
-        ),
+    return Padding(
+      padding: const .symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: .start,
+        spacing: 4,
+        children: [
+          n.Text(label)..fontSize = 16.5,
+          FakeScrollableWrapper(
+            child: TextField(
+              enabled: enabled,
+              onChanged: onChanged,
+              onTapOutside: (_) => node.unfocus(),
+              controller: text,
+              focusNode: node,
+              textAlignVertical: .center,
+              decoration: InputDecoration(
+                contentPadding: const .symmetric(horizontal: 8),
+                border: OutlineInputBorder(
+                  borderSide: .none,
+                  borderRadius: .circular(8.0),
+                ),
+                floatingLabelBehavior: .always,
+                filled: true,
+                suffixIcon: !focus.value
+                    ? const SizedBox.shrink()
+                    : Actions(text: text),
+              ),
+            ),
+          )
+        ],
       ),
-    ])
-      ..crossAxisAlignment = .start
-      ..gap = 4
-      ..padding = const .symmetric(horizontal: 24);
+    );
   }
 }
 

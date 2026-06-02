@@ -28,6 +28,7 @@ class SettingsPage extends HookWidget {
       body: SingleChildScrollView(
         child: Column(
           spacing: 15,
+          mainAxisSize: .min,
           children: [
             Divider(color: Colors.transparent),
             Obx(() {

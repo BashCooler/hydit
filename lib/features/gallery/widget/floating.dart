@@ -1,3 +1,4 @@
+import 'package:full_swipe_back_gesture/full_swipe_back_gesture.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
@@ -27,15 +28,17 @@ class FloatingActions extends StatelessWidget {
         child: n.Wrap([
           n.Row([
             FilledIconButton(
-              onPressed: () {
-                Get.to(() => const SettingsPage(), transition: .downToUp);
-              },
+              onPressed: () => Navigator.of(context).push(
+                BackSwipePageRoute(builder: (context) => SettingsPage()),
+              ),
               icon: const Icon(Icons.settings),
             ),
             FilledIconButton(
               onPressed: () {
                 gallery.hideActions();
-                Get.to(() => Search(tag: tag), transition: .downToUp);
+                Navigator.of(context).push(
+                  BackSwipePageRoute(builder: (context) => Search(tag: tag)),
+                );
               },
               icon: const Icon(Icons.search),
             ),
