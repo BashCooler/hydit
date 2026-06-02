@@ -42,7 +42,7 @@ class TagList extends StatelessWidget {
             reverse: reverse,
             itemCount: tags.length,
             controller: scrollController,
-            itemBuilder: (_, index) => SearchEntry(
+            itemBuilder: (_, index) => TagListEntry(
               tag: tags[index],
               trailing: trailing,
               onTap: onTap,
@@ -55,13 +55,13 @@ class TagList extends StatelessWidget {
   }
 }
 
-class SearchEntry extends StatelessWidget {
+class TagListEntry extends StatelessWidget {
   final Widget? trailing;
   final Tag tag;
   final void Function(Tag tag)? onTap;
   final TagManager? manager;
 
-  const SearchEntry({
+  const TagListEntry({
     super.key,
     this.trailing,
     required this.onTap,

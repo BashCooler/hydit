@@ -78,6 +78,7 @@ class ImageStack extends StatelessWidget {
   }
 }
 
+
 class LinearHero extends StatelessWidget {
   final Object tag;
   final Widget child;
