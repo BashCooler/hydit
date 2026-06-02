@@ -2,55 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hydit/utils/theme.dart';
 
 
-enum Shape {
-  rect,
-  rRect,
-  oval,
-}
-
-
-class FrostedGlass extends StatelessWidget {
-  final Widget child;
-  final Shape? shape;
-  final BorderRadius? borderRadius;
-
-  const FrostedGlass({
-    super.key,
-    required this.child,
-    this.shape = .rect,
-    this.borderRadius,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final filter = BackdropFilter(
-      filter: AppTheme.backdropFilter,
-      child: child,
-    );
-    final clipRRect = ClipRRect(
-      clipBehavior: .hardEdge,
-      borderRadius: borderRadius ?? AppTheme.borderRadius,
-      child: filter,
-    );
-    final clipOval = ClipOval(
-      clipBehavior: .hardEdge,
-      child: filter,
-    );
-    final clipRect = ClipRect(
-      clipBehavior: .hardEdge,
-      child: filter,
-    );
-    return RepaintBoundary(
-      child: switch (shape) {
-        Shape.rRect => clipRRect,
-        Shape.oval => clipOval,
-        _ => clipRect,
-      },
-    );
-  }
-}
-
-
 class FilledIconButton extends StatelessWidget {
   final Icon icon;
   final EdgeInsets? padding;
@@ -82,46 +33,6 @@ class FilledIconButton extends StatelessWidget {
                   padding: .all(AppTheme.buttonSize * 0.25),
                   onPressed: onPressed,
                   icon: icon,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-
-class FilledTextButton extends StatelessWidget {
-  final String text;
-  final VoidCallback onPressed;
-
-  const FilledTextButton({
-    super.key,
-    required this.onPressed,
-    required this.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return PhysicalModel(
-      elevation: 2,
-      shape: .circle,
-      color: Colors.transparent,
-      child: RepaintBoundary(
-        child: ClipRRect(
-          borderRadius: .circular(50),
-          clipBehavior: .hardEdge,
-          child: BackdropFilter(
-            filter: AppTheme.backdropFilter,
-            child: Material(
-              color: AppColors.blackWithAlpha,
-              child: SizedBox(
-                height: AppTheme.buttonSize,
-                child: TextButton(
-                  onPressed: onPressed,
-                  child: Text(text),
                 ),
               ),
             ),

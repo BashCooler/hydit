@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:hive_ce/hive.dart';
 import 'package:deep_pick/deep_pick.dart';
 
-import 'package:hydit/core/api/api.dart';
+import 'package:hydit/api/api.dart';
 import 'package:hydit/utils/dictionaries.dart';
 import 'package:hydit/core/entity/tag.dart';
 import 'package:hydit/core/state/file.dart';
