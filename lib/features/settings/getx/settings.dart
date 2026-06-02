@@ -17,14 +17,12 @@ class SettingsController extends GetxController {
 
   final _processing = false.obs;
 
-  AppSettings get $ => _settings.value;
-  bool get ready => !_processing.value;
-
-  @override
-  void onInit() {
-    super.onInit();
+  SettingsController() {
     load();
   }
+
+  AppSettings get $ => _settings.value;
+  bool get ready => !_processing.value;
 
   void save() {
     final box = Hive.box('settings');
