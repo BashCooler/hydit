@@ -8,7 +8,7 @@ import 'package:flutter_portal/flutter_portal.dart';
 
 import 'core/theme/theme.dart';
 import 'core/services/repo.dart';
-import 'core/states/files.dart';
+import 'core/state/files.dart';
 import 'features/gallery/page/gallery.dart';
 import 'features/gallery/getx/bindings.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:expressive_refresh/expressive_refresh.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:hydit/core/states/files.dart';
+import 'package:hydit/core/state/files.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
 import '../getx/gallery.dart';

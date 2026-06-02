@@ -7,7 +7,7 @@ import 'package:deep_pick/deep_pick.dart';
 import 'package:hydit/core/api/api.dart';
 import 'package:hydit/core/api/dictionaries.dart';
 import 'package:hydit/core/entity/tag.dart';
-import 'package:hydit/core/states/file.dart';
+import 'package:hydit/core/state/file.dart';
 
 import 'mapper.dart';
 import 'executor.dart';

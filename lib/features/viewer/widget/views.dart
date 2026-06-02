@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 
-import 'package:hydit/core/states/file.dart';
+import 'package:hydit/core/state/file.dart';
 import 'package:hydit/core/widget/images.dart';
 
 import '../getx/page.dart';

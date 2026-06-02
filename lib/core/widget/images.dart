@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:hydit/core/services/repo.dart';
 
-import '../states/file.dart';
+import '../state/file.dart';
 
 
 class Thumbnail extends StatelessWidget {

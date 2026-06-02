@@ -5,7 +5,7 @@ import 'package:deep_pick/deep_pick.dart';
 import 'package:hydit/core/entity/tag.dart';
 
 import '../entity/metadata.dart';
-import '../states/file.dart';
+import '../state/file.dart';
 
 
 class Mapper {

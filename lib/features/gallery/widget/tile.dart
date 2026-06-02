@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/core/states/file.dart';
+import 'package:hydit/core/state/file.dart';
 
 import 'package:hydit/core/widget/images.dart';
 

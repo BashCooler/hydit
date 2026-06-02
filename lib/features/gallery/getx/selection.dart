@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'package:hydit/core/states/files.dart';
+import 'package:hydit/core/state/files.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 

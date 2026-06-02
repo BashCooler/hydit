@@ -3,8 +3,8 @@ import 'package:hydit/core/services/executor.dart';
 
 import 'package:hydit/core/services/repo.dart';
 import 'package:hydit/core/entity/tag.dart';
-import 'package:hydit/core/states/file.dart';
-import 'package:hydit/core/states/files.dart';
+import 'package:hydit/core/state/file.dart';
+import 'package:hydit/core/state/files.dart';
 
 const readOnlyServices = ['all known tags', 'public tag repository'];
 

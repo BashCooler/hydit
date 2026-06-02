@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 
-import 'package:hydit/core/states/file.dart';
+import 'package:hydit/core/state/file.dart';
 
 import '../getx/page.dart';
 import '../widget/views.dart';

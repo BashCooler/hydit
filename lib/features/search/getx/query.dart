@@ -8,8 +8,8 @@ import 'package:hydit/core/api/dictionaries.dart';
 import 'package:hydit/core/services/repo.dart';
 import 'package:hydit/core/services/executor.dart';
 import 'package:hydit/core/entity/tag.dart';
-import 'package:hydit/core/states/file.dart';
-import 'package:hydit/core/states/files.dart';
+import 'package:hydit/core/state/file.dart';
+import 'package:hydit/core/state/files.dart';
 import 'package:hydit/core/widget/snack_bar.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
