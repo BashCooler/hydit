@@ -185,6 +185,7 @@ extension Init on TagManager {
 
     _ids.clear();
     _current.clear();
+    _original.clear();
   }
 
   void addToServices(Set<Tag>? tags) {
