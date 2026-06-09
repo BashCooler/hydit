@@ -53,7 +53,6 @@ class QueryController extends GetxController {
   }
 
   Future<void> searchForFiles() async {
-    if (_tags.isEmpty) return;
     gallery.refreshing.value = true;
     await _searchForFiles();
     gallery.refreshing.value = false;

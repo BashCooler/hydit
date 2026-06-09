@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/theme.dart';
-import 'package:hydit/services/repo.dart';
-import 'package:hydit/services/snack.dart';
-import 'package:hydit/services/executor.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import '../getx/query.dart';
@@ -28,25 +25,6 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   final tagSearch = TagSearchController();
   final QueryController query = Get.find();
-
-  @override
-  void initState() {
-    super.initState();
-    verify();
-  }
-
-  void verify() async {
-    final Repo repo = Get.find();
-
-    final result = await Executor.run(() => repo.api.getVerifyAccessKey());
-
-    switch (result) {
-      case Failure(title: final title, message: final message):
-        Snack.error(title, message);
-      case _:
-        break;
-    }
-  }
 
   void searchThenBack() {
     if (query.tags.isEmpty) {
