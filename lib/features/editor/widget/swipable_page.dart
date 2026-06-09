@@ -244,12 +244,10 @@ class _BackSwipeRecognizer extends OneSequenceGestureRecognizer {
     required this.onAccepted,
     required this.onDelta,
     required this.onEnd,
-    required this.isPointerInsideEditableText,
   });
 
   final bool Function() isEligible;
   final bool Function(Offset globalPosition) isPointerInHorizontal;
-  final bool Function(Offset globalPosition) isPointerInsideEditableText;
   final double edgeStartWidthPx;
   final VoidCallback onAccepted;
   final void Function(double deltaDx) onDelta;
