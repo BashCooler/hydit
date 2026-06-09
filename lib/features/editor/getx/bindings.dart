@@ -6,6 +6,7 @@ import 'package:hydit/reactive/files.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/search/getx/search.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
+import 'package:hydit/widgets/swipable_page.dart';
 
 import '../page/editor.dart';
 import 'tags.dart';

@@ -67,7 +67,6 @@ class BackSwipePageRoute<T> extends PageRouteBuilder<T> {
   final Curve popCurve;
 }
 
-
 class SwipeablePage extends StatelessWidget {
   const SwipeablePage({
     super.key,
@@ -92,7 +91,6 @@ class SwipeablePage extends StatelessWidget {
     );
   }
 }
-
 
 class _BackSwipeInteractor extends StatefulWidget {
   const _BackSwipeInteractor({
@@ -208,7 +206,7 @@ class _BackSwipeInteractorState extends State<_BackSwipeInteractor>
         final width = MediaQuery.of(context).size.width;
         final shouldPop = velocity > 900 || totalDx > width * 0.50;
         if (shouldPop) {
-          if (mounted) Navigator.of(context).pop();
+          if (mounted) Navigator.of(context).maybePop();
           _controller.duration = widget.reverseTransitionDuration;
           _dxAnim = Tween(begin: _dx, end: width).animate(
             CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
