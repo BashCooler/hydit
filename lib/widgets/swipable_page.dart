@@ -105,6 +105,26 @@ class _BackSwipeInteractorState extends State<_BackSwipeInteractor>
     return _anyHorizontalViewportContains(root, globalPosition);
   }
 
+  bool _isPointerInEditable(Offset globalPosition) {
+    final HitTestResult result = HitTestResult();
+
+    WidgetsBinding.instance.hitTestInView(
+      result,
+      globalPosition,
+      View.of(context).viewId,
+    );
+
+    for (final entry in result.path) {
+      final target = entry.target;
+
+      if (target is RenderEditable) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   bool _anyHorizontalViewportContains(
       RenderObject renderObject,
       Offset globalPosition,
@@ -142,6 +162,7 @@ class _BackSwipeInteractorState extends State<_BackSwipeInteractor>
     _recognizer = _BackSwipeRecognizer(
       isEligible: () => _isAtLeftEdge,
       isPointerInHorizontal: _isPointerInHorizontalScrollable,
+      isPointerInEditable: _isPointerInEditable,
       edgeStartWidthPx: widget.edgeStartWidthPx,
       onAccepted: () {
         setState(() => _dragging = true);
@@ -244,10 +265,12 @@ class _BackSwipeRecognizer extends OneSequenceGestureRecognizer {
     required this.onAccepted,
     required this.onDelta,
     required this.onEnd,
+    required this.isPointerInEditable,
   });
 
   final bool Function() isEligible;
   final bool Function(Offset globalPosition) isPointerInHorizontal;
+  final bool Function(Offset globalPosition) isPointerInEditable;
   final double edgeStartWidthPx;
   final VoidCallback onAccepted;
   final void Function(double deltaDx) onDelta;
@@ -257,6 +280,7 @@ class _BackSwipeRecognizer extends OneSequenceGestureRecognizer {
   bool _accepted = false;
   double _totalDx = 0.0;
   bool _startedInHorizontal = false;
+  bool _startedInEditable = false;
   bool _startedNearLeftEdge = false;
   final VelocityTracker _tracker = VelocityTracker.withKind(
     PointerDeviceKind.touch,
@@ -271,6 +295,7 @@ class _BackSwipeRecognizer extends OneSequenceGestureRecognizer {
     _accepted = false;
     _totalDx = 0.0;
     _startedInHorizontal = isPointerInHorizontal(event.position);
+    _startedInEditable = isPointerInEditable(event.position);
     _startedNearLeftEdge = event.position.dx <= edgeStartWidthPx;
     _tracker.addPosition(event.timeStamp, event.position);
   }
@@ -288,8 +313,9 @@ class _BackSwipeRecognizer extends OneSequenceGestureRecognizer {
         final movedEnough = delta.distance >= _minDistance;
         final isRight = dx > 0;
         final horizontalDominant = dx.abs() > dy * 1.2;
-        final eligibleNow =
-            _startedNearLeftEdge || (!_startedInHorizontal || isEligible());
+        final eligibleNow = _startedInEditable
+            ? _startedNearLeftEdge
+            : (_startedNearLeftEdge || (!_startedInHorizontal || isEligible()));
 
         if (movedEnough && isRight && horizontalDominant && eligibleNow) {
           _accepted = true;

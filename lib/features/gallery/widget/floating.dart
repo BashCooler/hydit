@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/editor/widget/swipable_page.dart';
+import 'package:hydit/widgets/swipable_page.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/theme.dart';

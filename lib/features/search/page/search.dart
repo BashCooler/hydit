@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/widgets/fake_scrollable.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/theme.dart';
@@ -94,17 +93,15 @@ class _SearchState extends State<Search> {
               },
             ),
           ),
-          FakeScrollableWrapper(
-            child: TagSearchBar(
-              autofocus: true,
-              hintText: 'Enter tags here',
-              tagSearchController: tagSearch,
-              actions: TagActions(
-                onClear: tagSearch.clear,
-                onSearch: searchThenBack,
-              ),
-              onSubmitted: searchThenBack,
+          TagSearchBar(
+            autofocus: true,
+            hintText: 'Enter tags here',
+            tagSearchController: tagSearch,
+            actions: TagActions(
+              onClear: tagSearch.clear,
+              onSearch: searchThenBack,
             ),
+            onSubmitted: searchThenBack,
           ),
         ])
           ..mainAxisAlignment = .end
