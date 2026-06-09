@@ -31,6 +31,7 @@ class FloatingActions extends StatelessWidget {
               onPressed: () => Get.to(
                 () => SwipeablePage(child: SettingsPage()),
                 opaque: false,
+                transition: .rightToLeft,
               ),
               icon: const Icon(Icons.settings),
             ),

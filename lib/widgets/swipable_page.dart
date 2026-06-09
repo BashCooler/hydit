@@ -68,39 +68,44 @@ class BackSwipePageRoute<T> extends PageRouteBuilder<T> {
 }
 
 
-class SwipeablePage extends StatefulWidget {
+class SwipeablePage extends StatelessWidget {
   const SwipeablePage({
     super.key,
     required this.child,
     this.edgeStartWidthPx = 24.0,
+    this.transitionDuration = const Duration(milliseconds: 200),
+    this.reverseTransitionDuration = const Duration(milliseconds: 200),
   });
 
   final Widget child;
   final double edgeStartWidthPx;
+  final Duration transitionDuration;
+  final Duration reverseTransitionDuration;
 
-  @override
-  State<SwipeablePage> createState() => _SwipeablePageState();
-}
-
-class _SwipeablePageState extends State<SwipeablePage> {
   @override
   Widget build(BuildContext context) {
     return _BackSwipeInteractor(
-      edgeStartWidthPx: widget.edgeStartWidthPx,
-      child: widget.child,
+      edgeStartWidthPx: edgeStartWidthPx,
+      transitionDuration: transitionDuration,
+      reverseTransitionDuration: reverseTransitionDuration,
+      child: child,
     );
   }
 }
-
 
 
 class _BackSwipeInteractor extends StatefulWidget {
   const _BackSwipeInteractor({
     required this.child,
     required this.edgeStartWidthPx,
+    this.transitionDuration = const Duration(milliseconds: 200),
+    this.reverseTransitionDuration = const Duration(milliseconds: 200),
   });
+
   final Widget child;
   final double edgeStartWidthPx;
+  final Duration transitionDuration;
+  final Duration reverseTransitionDuration;
 
   @override
   State<_BackSwipeInteractor> createState() => _BackSwipeInteractorState();
@@ -179,10 +184,9 @@ class _BackSwipeInteractorState extends State<_BackSwipeInteractor>
   @override
   void initState() {
     super.initState();
-    _controller =
-    AnimationController(
+    _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: widget.transitionDuration,
     )..addListener(() {
       setState(() => _dx = _dxAnim.value);
     });
@@ -204,9 +208,12 @@ class _BackSwipeInteractorState extends State<_BackSwipeInteractor>
         final width = MediaQuery.of(context).size.width;
         final shouldPop = velocity > 900 || totalDx > width * 0.50;
         if (shouldPop) {
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
+          if (mounted) Navigator.of(context).pop();
+          _controller.duration = widget.reverseTransitionDuration;
+          _dxAnim = Tween(begin: _dx, end: width).animate(
+            CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+          );
+          _controller.forward(from: 0);
         } else {
           _dxAnim = Tween(begin: _dx, end: 0.0).animate(
             CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
