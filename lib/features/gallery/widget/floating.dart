@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/widgets/swipable_page.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/theme.dart';
 import 'package:hydit/features/search/page/search.dart';
 import 'package:hydit/features/settings/page/settings.dart';
+import 'package:full_swipe_back_gesture/full_swipe_back_gesture.dart';
 
 import '../getx/gallery.dart';
 
@@ -14,6 +14,12 @@ class FloatingActions extends StatelessWidget {
   final String tag;
 
   const FloatingActions({super.key, required this.tag});
+
+  void to(Widget page) => Get.to(
+    () => SwipeablePage(child: page),
+    opaque: false,
+    transition: .rightToLeft,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -28,20 +34,11 @@ class FloatingActions extends StatelessWidget {
         child: n.Wrap([
           n.Row([
             FilledIconButton(
-              onPressed: () => Get.to(
-                () => SwipeablePage(child: SettingsPage()),
-                opaque: false,
-                transition: .rightToLeft,
-              ),
+              onPressed: () => to(SettingsPage()),
               icon: const Icon(Icons.settings),
             ),
             FilledIconButton(
-              onPressed: () {
-                gallery.hideActions();
-                Navigator.of(context).push(
-                  BackSwipePageRoute(builder: (context) => Search(tag: tag)),
-                );
-              },
+              onPressed: () => to(Search(tag: tag)),
               icon: const Icon(Icons.search),
             ),
           ])
