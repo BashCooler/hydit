@@ -67,6 +67,33 @@ class BackSwipePageRoute<T> extends PageRouteBuilder<T> {
   final Curve popCurve;
 }
 
+
+class SwipeablePage extends StatefulWidget {
+  const SwipeablePage({
+    super.key,
+    required this.child,
+    this.edgeStartWidthPx = 24.0,
+  });
+
+  final Widget child;
+  final double edgeStartWidthPx;
+
+  @override
+  State<SwipeablePage> createState() => _SwipeablePageState();
+}
+
+class _SwipeablePageState extends State<SwipeablePage> {
+  @override
+  Widget build(BuildContext context) {
+    return _BackSwipeInteractor(
+      edgeStartWidthPx: widget.edgeStartWidthPx,
+      child: widget.child,
+    );
+  }
+}
+
+
+
 class _BackSwipeInteractor extends StatefulWidget {
   const _BackSwipeInteractor({
     required this.child,

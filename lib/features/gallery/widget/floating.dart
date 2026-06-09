@@ -28,8 +28,9 @@ class FloatingActions extends StatelessWidget {
         child: n.Wrap([
           n.Row([
             FilledIconButton(
-              onPressed: () => Navigator.of(context).push(
-                BackSwipePageRoute(builder: (context) => SettingsPage()),
+              onPressed: () => Get.to(
+                () => SwipeablePage(child: SettingsPage()),
+                opaque: false,
               ),
               icon: const Icon(Icons.settings),
             ),
