@@ -40,6 +40,11 @@ kotlin {
     }
 }
 
+dependencies {
+    implementation("androidx.work:work-runtime-ktx:2.11.2")
+    implementation("com.squareup.okhttp3:okhttp:5.4.0")
+}
+
 flutter {
     source = "../.."
 }
