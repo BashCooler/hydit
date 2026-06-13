@@ -43,7 +43,12 @@
                 <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
-
+        
+        <!-- Copy link to clipboard -->
+        <receiver
+            android:name=".CopyUrlReceiver"
+            android:exported="false"/>
+        
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

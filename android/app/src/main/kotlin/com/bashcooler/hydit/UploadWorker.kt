@@ -24,8 +24,9 @@ class UploadWorker(context: Context, params: WorkerParameters)
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override suspend fun doWork(): Result {
+        val url = inputData.getString("url") ?: return Result.failure()
+
         return try {
-            val url = inputData.getString("url") ?: return Result.failure()
             Log.d("UploadWorker", "url=$url")
 
             val result = HydrusApi.addUrl(url)
@@ -33,11 +34,12 @@ class UploadWorker(context: Context, params: WorkerParameters)
             NotificationHelper.showSuccess(
                 applicationContext,
                 result?.human_result_text ?: "Url added",
-                )
+                url,
+            )
 
             Result.success()
         } catch (e: Exception) {
-            NotificationHelper.showError(applicationContext, e.message ?: "Error")
+            NotificationHelper.showError(applicationContext, e.message ?: "Error", url)
 
             Log.e(
                 "UploadWorker",

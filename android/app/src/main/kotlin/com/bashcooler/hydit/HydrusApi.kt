@@ -6,9 +6,12 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okio.IOException
+import java.util.concurrent.TimeUnit
 
 object HydrusApi {
-    private val client = OkHttpClient()
+    private val client = OkHttpClient.Builder()
+        .callTimeout(3, TimeUnit.SECONDS)
+        .build()
 
     fun addUrl(url: String): AddUrlResponse? {
         val json =
