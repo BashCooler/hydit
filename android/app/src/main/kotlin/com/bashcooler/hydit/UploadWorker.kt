@@ -28,9 +28,12 @@ class UploadWorker(context: Context, params: WorkerParameters)
             val url = inputData.getString("url") ?: return Result.failure()
             Log.d("UploadWorker", "url=$url")
 
-            HydrusApi.upload(url)
+            val result = HydrusApi.addUrl(url)
 
-            NotificationHelper.showSuccess(applicationContext, "URL added")
+            NotificationHelper.showSuccess(
+                applicationContext,
+                result?.human_result_text ?: "Url added",
+                )
 
             Result.success()
         } catch (e: Exception) {

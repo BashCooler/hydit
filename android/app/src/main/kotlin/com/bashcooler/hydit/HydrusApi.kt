@@ -1,5 +1,6 @@
 package com.bashcooler.hydit
 
+import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -9,7 +10,7 @@ import okio.IOException
 object HydrusApi {
     private val client = OkHttpClient()
 
-    fun upload(url: String) {
+    fun addUrl(url: String): AddUrlResponse? {
         val json =
             """
             {
@@ -23,10 +24,19 @@ object HydrusApi {
             .post(json.toRequestBody("application/json".toMediaType()))
             .build()
 
-        client.newCall(request).execute().use {
-            if (!it.isSuccessful) {
-                throw IOException("HTTP ${it.code}")
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) {
+                throw IOException("HTTP ${response.code}")
             }
+
+            val jsonString = response.body.string()
+
+            return Gson().fromJson(jsonString, AddUrlResponse::class.java)
         }
     }
+
+    data class AddUrlResponse(
+        val human_result_text: String,
+        val normalised_url: String
+    )
 }
