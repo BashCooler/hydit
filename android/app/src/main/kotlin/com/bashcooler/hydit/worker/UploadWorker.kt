@@ -1,4 +1,4 @@
-package com.bashcooler.hydit
+package com.bashcooler.hydit.worker
 
 import android.Manifest
 import android.content.Context
@@ -9,6 +9,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.bashcooler.hydit.api.HydrusApi
+import com.bashcooler.hydit.service.NotificationHelper
 
 class UploadWorker(context: Context, params: WorkerParameters)
     : CoroutineWorker(context, params) {
@@ -19,7 +21,7 @@ class UploadWorker(context: Context, params: WorkerParameters)
                 .setInputData(workDataOf("url" to url))
                 .build()
 
-            WorkManager
+            WorkManager.Companion
                 .getInstance(context)
                 .enqueue(request)
         }

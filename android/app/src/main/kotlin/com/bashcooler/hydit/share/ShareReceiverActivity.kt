@@ -1,10 +1,12 @@
-package com.bashcooler.hydit
+package com.bashcooler.hydit.share
 
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import com.bashcooler.hydit.worker.FileUploadWorker
+import com.bashcooler.hydit.worker.UploadWorker
 import java.io.File
 import java.util.UUID
 

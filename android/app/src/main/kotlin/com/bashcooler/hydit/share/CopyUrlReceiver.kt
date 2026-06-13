@@ -1,4 +1,4 @@
-package com.bashcooler.hydit
+package com.bashcooler.hydit.share
 
 import android.content.BroadcastReceiver
 import android.content.ClipData

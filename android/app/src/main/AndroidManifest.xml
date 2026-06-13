@@ -33,7 +33,7 @@
 
         <!-- Send URL or file to Hydit -->
         <activity
-            android:name=".ShareReceiverActivity"
+            android:name=".share.ShareReceiverActivity"
             android:exported="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
 
@@ -48,7 +48,7 @@
         
         <!-- Copy link to clipboard -->
         <receiver
-            android:name=".CopyUrlReceiver"
+            android:name=".share.CopyUrlReceiver"
             android:exported="false"/>
         
         <!-- Don't delete the meta-data below.

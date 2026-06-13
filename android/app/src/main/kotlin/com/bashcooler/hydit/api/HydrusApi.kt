@@ -1,18 +1,12 @@
-package com.bashcooler.hydit
+package com.bashcooler.hydit.api
 
-import android.content.Context
-import android.net.Uri
 import android.util.Log
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import okio.BufferedSink
-import okio.IOException
-import okio.source
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -41,7 +35,7 @@ object HydrusApi {
 
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) {
-                throw IOException("HTTP ${response.code}")
+                throw okio.IOException("HTTP ${response.code}")
             }
 
             val jsonString = response.body.string()

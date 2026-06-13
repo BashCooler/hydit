@@ -1,4 +1,4 @@
-package com.bashcooler.hydit
+package com.bashcooler.hydit.service
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -10,6 +10,10 @@ import android.os.Build
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.bashcooler.hydit.MainActivity
+import com.bashcooler.hydit.R
+import com.bashcooler.hydit.api.HydrusApi
+import com.bashcooler.hydit.share.CopyUrlReceiver
 
 object NotificationHelper {
 
@@ -110,8 +114,7 @@ object NotificationHelper {
             context,
             url.hashCode(),
             copyIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or
-                    PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 
