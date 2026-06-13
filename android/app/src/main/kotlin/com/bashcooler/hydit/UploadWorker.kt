@@ -30,11 +30,11 @@ class UploadWorker(context: Context, params: WorkerParameters)
 
             HydrusApi.upload(url)
 
-            // NotificationHelper.showSuccess(applicationContext, "URL added")
+            NotificationHelper.showSuccess(applicationContext, "URL added")
 
             Result.success()
         } catch (e: Exception) {
-            // NotificationHelper.showError(applicationContext, e.message ?: "Error")
+            NotificationHelper.showError(applicationContext, e.message ?: "Error")
 
             Log.e(
                 "UploadWorker",
