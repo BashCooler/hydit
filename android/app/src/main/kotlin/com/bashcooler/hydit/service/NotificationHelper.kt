@@ -18,7 +18,7 @@ import com.bashcooler.hydit.share.CopyUrlReceiver
 object NotificationHelper {
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun success(context: Context, text: String, bigText: String? = null) {
+    fun success(context: Context, text: String, bigText: String? = null, copy: String? = null) {
         val id = "upload_success"
 
         createChannel(
@@ -36,21 +36,21 @@ object NotificationHelper {
                 NotificationCompat.BigTextStyle()
                     .bigText(bigText)
             )
-            .addAction(
-                android.R.drawable.ic_menu_save,
-                "Copy link",
-                getCopyIntent(context, text))
             .setContentIntent(getOpenAppIntent(context))
             .setAutoCancel(true)
-            .build()
+
+        if (copy != null) notification.addAction(
+            R.drawable.copy,
+            "Copy link",
+            getCopyIntent(context, copy))
 
         NotificationManagerCompat
             .from(context)
-            .notify(System.currentTimeMillis().toInt(), notification)
+            .notify(System.currentTimeMillis().toInt(), notification.build())
     }
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun error(context: Context, text: String, bigText: String? = null) {
+    fun error(context: Context, text: String, bigText: String? = null, copy: String? = null) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
 
         val id = "upload_error"
@@ -72,15 +72,15 @@ object NotificationHelper {
             )
             .setContentIntent(getOpenAppIntent(context))
             .setAutoCancel(true)
-            .addAction(
-                android.R.drawable.ic_menu_save,
-                "Copy link",
-                getCopyIntent(context, text))
-            .build()
+
+        if (copy != null) notification.addAction(
+            R.drawable.copy,
+            "Copy link",
+            getCopyIntent(context, copy))
 
         NotificationManagerCompat
             .from(context)
-            .notify(System.currentTimeMillis().toInt(), notification)
+            .notify(System.currentTimeMillis().toInt(), notification.build())
     }
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
@@ -91,6 +91,20 @@ object NotificationHelper {
             3 -> error(context, "Previously deleted")
             4 -> error(context, "Failed to import")
             7 -> error(context, "Ignored")
+        }
+    }
+
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
+    fun showBatchFileImportResult(context: Context, successCount: Int, failCount: Int) {
+        val total = successCount + failCount
+
+        if (successCount == 0) {
+            error(context, "No files imported")
+        }
+
+        when (failCount) {
+            0 -> success(context, "$successCount files imported")
+            else -> error(context, "$successCount/$total files imported")
         }
     }
 

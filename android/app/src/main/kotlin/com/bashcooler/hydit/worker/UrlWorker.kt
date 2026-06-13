@@ -38,6 +38,7 @@ class UrlWorker(context: Context, params: WorkerParameters)
                 applicationContext,
                 url,
                 result?.human_result_text,
+                url,
             )
 
             Result.success()
