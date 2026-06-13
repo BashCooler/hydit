@@ -10,28 +10,23 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
 object NotificationHelper {
-    private const val CHANNEL_ID = "upload_results"
-
-    fun createChannel(context: Context) {
-        if (Build.VERSION.SDK_INT >= 26) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Upload results",
-                NotificationManager.IMPORTANCE_DEFAULT,
-                )
-
-            context
-                .getSystemService(NotificationManager::class.java)
-                .createNotificationChannel(channel)
-        }
-    }
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun showSuccess(context: Context, text: String) {
-        createChannel(context)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
 
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+        val id = "upload_success"
+        val name = "Upload success"
+        val importance = NotificationManager.IMPORTANCE_LOW
+
+        val channel = NotificationChannel(id, name, importance)
+
+        context
+            .getSystemService(NotificationManager::class.java)
+            .createNotificationChannel(channel)
+
+        val notification = NotificationCompat.Builder(context, id)
+            .setSmallIcon(R.drawable.check)
             .setContentTitle("Success")
             .setContentText(text)
             .build()
@@ -43,10 +38,20 @@ object NotificationHelper {
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun showError(context: Context, text: String) {
-        createChannel(context)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
 
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+        val id = "upload_error"
+        val name = "Upload error"
+        val importance = NotificationManager.IMPORTANCE_HIGH
+
+        val channel = NotificationChannel(id, name, importance)
+
+        context
+            .getSystemService(NotificationManager::class.java)
+            .createNotificationChannel(channel)
+
+        val notification = NotificationCompat.Builder(context, id)
+            .setSmallIcon(R.drawable.close)
             .setContentTitle("Failure")
             .setContentText(text)
             .build()
