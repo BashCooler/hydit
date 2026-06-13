@@ -5,8 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import com.bashcooler.hydit.worker.FileUploadWorker
-import com.bashcooler.hydit.worker.UploadWorker
+import com.bashcooler.hydit.worker.FileWorker
+import com.bashcooler.hydit.worker.UrlWorker
 import java.io.File
 import java.util.UUID
 
@@ -26,7 +26,7 @@ class ShareReceiverActivity : Activity() {
         val url = intent.getStringExtra(Intent.EXTRA_TEXT)
 
         if (!url.isNullOrBlank()) {
-            UploadWorker.enqueue(this, url)
+            UrlWorker.enqueue(this, url)
         }
     }
 
@@ -53,7 +53,7 @@ class ShareReceiverActivity : Activity() {
                 }
             }
 
-        FileUploadWorker
+        FileWorker
             .enqueue(this, cacheFile.absolutePath)
     }
 }

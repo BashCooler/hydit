@@ -13,7 +13,7 @@ import com.bashcooler.hydit.api.HydrusApi
 import com.bashcooler.hydit.service.NotificationHelper
 import java.io.File
 
-class FileUploadWorker(context: Context, params: WorkerParameters)
+class FileWorker(context: Context, params: WorkerParameters)
     : CoroutineWorker(context, params) {
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
@@ -54,7 +54,7 @@ class FileUploadWorker(context: Context, params: WorkerParameters)
 
     companion object {
         fun enqueue(context: Context, filePath: String) {
-            val request = OneTimeWorkRequestBuilder<FileUploadWorker>()
+            val request = OneTimeWorkRequestBuilder<FileWorker>()
                 .setInputData(workDataOf("file_path" to filePath))
                 .build()
 

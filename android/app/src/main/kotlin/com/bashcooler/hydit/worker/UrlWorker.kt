@@ -12,12 +12,12 @@ import androidx.work.workDataOf
 import com.bashcooler.hydit.api.HydrusApi
 import com.bashcooler.hydit.service.NotificationHelper
 
-class UploadWorker(context: Context, params: WorkerParameters)
+class UrlWorker(context: Context, params: WorkerParameters)
     : CoroutineWorker(context, params) {
 
     companion object {
         fun enqueue(context: Context, url: String) {
-            val request = OneTimeWorkRequestBuilder<UploadWorker>()
+            val request = OneTimeWorkRequestBuilder<UrlWorker>()
                 .setInputData(workDataOf("url" to url))
                 .build()
 
