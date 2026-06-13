@@ -11,9 +11,9 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 
 object HydrusApi {
-    const val HOST = "http://192.168.31.176:45869"
-    const val KEY_HEADER = "Hydrus-Client-API-Access-Key"
-    const val ACCESS_KEY = "86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813"
+    private const val HOST = "http://192.168.31.176:45869"
+    private const val KEY_HEADER = "Hydrus-Client-API-Access-Key"
+    private const val ACCESS_KEY = "86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813"
 
     private val client = OkHttpClient.Builder()
         .callTimeout(3, TimeUnit.SECONDS)
@@ -40,29 +40,29 @@ object HydrusApi {
 
             val jsonString = response.body.string()
 
-            return Gson().fromJson(jsonString, AddUrlResponse::class.java)
+            return Gson()
+                .fromJson(jsonString, AddUrlResponse::class.java)
         }
     }
 
     fun addFile(file: File): AddFileResponse {
-        val body =
-            file.asRequestBody(
-                "application/octet-stream".toMediaType()
-            )
+        val body = file.asRequestBody(
+            "application/octet-stream".toMediaType()
+        )
 
-        val request =
-            Request.Builder()
-                .url("$HOST/add_files/add_file")
-                .header(KEY_HEADER, ACCESS_KEY)
-                .post(body)
-                .build()
+        val request = Request.Builder()
+            .url("$HOST/add_files/add_file")
+            .header(KEY_HEADER, ACCESS_KEY)
+            .post(body)
+            .build()
 
         client.newCall(request).execute().use { response ->
             val jsonString = response.body.string()
 
             Log.d("HydrusApi", jsonString)
 
-            return Gson().fromJson(jsonString, AddFileResponse::class.java)
+            return Gson()
+                .fromJson(jsonString, AddFileResponse::class.java)
         }
     }
 

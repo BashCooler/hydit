@@ -38,11 +38,7 @@ object NotificationHelper {
             )
             .setContentIntent(getOpenAppIntent(context))
             .setAutoCancel(true)
-
-        if (copy != null) notification.addAction(
-            R.drawable.copy,
-            "Copy link",
-            getCopyIntent(context, copy))
+            .addCopyIntent(context, copy)
 
         NotificationManagerCompat
             .from(context)
@@ -72,11 +68,7 @@ object NotificationHelper {
             )
             .setContentIntent(getOpenAppIntent(context))
             .setAutoCancel(true)
-
-        if (copy != null) notification.addAction(
-            R.drawable.copy,
-            "Copy link",
-            getCopyIntent(context, copy))
+            .addCopyIntent(context, copy)
 
         NotificationManagerCompat
             .from(context)
@@ -100,6 +92,7 @@ object NotificationHelper {
 
         if (successCount == 0) {
             error(context, "No files imported")
+            return
         }
 
         when (failCount) {
@@ -108,7 +101,7 @@ object NotificationHelper {
         }
     }
 
-    fun createChannel(context: Context, id: String, name: String, importance: Int) {
+    private fun createChannel(context: Context, id: String, name: String, importance: Int) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
 
         val channel = NotificationChannel(id, name, importance)
@@ -118,7 +111,20 @@ object NotificationHelper {
             .createNotificationChannel(channel)
     }
 
-    fun getCopyIntent(context: Context, url: String): PendingIntent? {
+    private fun NotificationCompat.Builder.addCopyIntent(
+        context: Context,
+        copy: String? = null
+    ): NotificationCompat.Builder {
+        if (copy == null) return this
+
+        return this.addAction(
+            R.drawable.copy,
+            "Copy link",
+            getCopyIntent(context, copy)
+        )
+    }
+
+    private fun getCopyIntent(context: Context, url: String): PendingIntent? {
         val copyIntent = Intent(
             context,
             CopyUrlReceiver::class.java
@@ -134,7 +140,7 @@ object NotificationHelper {
         )
     }
 
-    fun getOpenAppIntent(context: Context): PendingIntent? {
+    private fun getOpenAppIntent(context: Context): PendingIntent? {
         val intent = Intent(
             context,
             MainActivity::class.java

@@ -15,18 +15,6 @@ import com.bashcooler.hydit.service.NotificationHelper
 class UrlWorker(context: Context, params: WorkerParameters)
     : CoroutineWorker(context, params) {
 
-    companion object {
-        fun enqueue(context: Context, url: String) {
-            val request = OneTimeWorkRequestBuilder<UrlWorker>()
-                .setInputData(workDataOf("url" to url))
-                .build()
-
-            WorkManager
-                .getInstance(context)
-                .enqueue(request)
-        }
-    }
-
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override suspend fun doWork(): Result {
         val url = inputData.getString("url") ?: return Result.failure()
@@ -57,6 +45,18 @@ class UrlWorker(context: Context, params: WorkerParameters)
             )
 
             Result.failure()
+        }
+    }
+
+    companion object {
+        fun enqueue(context: Context, url: String) {
+            val request = OneTimeWorkRequestBuilder<UrlWorker>()
+                .setInputData(workDataOf("url" to url))
+                .build()
+
+            WorkManager
+                .getInstance(context)
+                .enqueue(request)
         }
     }
 }

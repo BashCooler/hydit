@@ -24,12 +24,12 @@ class ShareReceiverActivity : Activity() {
         finish()
     }
 
-    fun handleSingle(intent: Intent) = when (intent.type) {
+    private fun handleSingle(intent: Intent) = when (intent.type) {
         "text/plain" -> handleText(intent)
         else -> handleFile(intent)
     }
 
-    fun handleText(intent: Intent) {
+    private fun handleText(intent: Intent) {
         val url = intent.getStringExtra(Intent.EXTRA_TEXT)
 
         if (!url.isNullOrBlank()) {
@@ -37,7 +37,7 @@ class ShareReceiverActivity : Activity() {
         }
     }
 
-    fun handleFile(intent: Intent) {
+    private fun handleFile(intent: Intent) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
 
         val uri = intent
@@ -60,7 +60,7 @@ class ShareReceiverActivity : Activity() {
             .enqueue(this, cacheFile.absolutePath)
     }
 
-    fun handleFiles(intent: Intent) {
+    private fun handleFiles(intent: Intent) {
         val uris = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
 
         val batchDir = File(
