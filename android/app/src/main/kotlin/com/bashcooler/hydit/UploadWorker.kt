@@ -16,9 +16,12 @@ class UploadWorker(context: Context, params: WorkerParameters)
     companion object {
         fun enqueue(context: Context, url: String) {
             val request = OneTimeWorkRequestBuilder<UploadWorker>()
-                .setInputData(workDataOf("url" to url)).build()
+                .setInputData(workDataOf("url" to url))
+                .build()
 
-            WorkManager.getInstance(context).enqueue(request)
+            WorkManager
+                .getInstance(context)
+                .enqueue(request)
         }
     }
 
@@ -31,7 +34,7 @@ class UploadWorker(context: Context, params: WorkerParameters)
 
             val result = HydrusApi.addUrl(url)
 
-            NotificationHelper.showSuccess(
+            NotificationHelper.success(
                 applicationContext,
                 result?.human_result_text ?: "Url added",
                 url,
@@ -39,7 +42,7 @@ class UploadWorker(context: Context, params: WorkerParameters)
 
             Result.success()
         } catch (e: Exception) {
-            NotificationHelper.showError(applicationContext, e.message ?: "Error", url)
+            NotificationHelper.error(applicationContext, e.message ?: "Error", url)
 
             Log.e(
                 "UploadWorker",

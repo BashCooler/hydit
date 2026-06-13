@@ -14,7 +14,7 @@ import androidx.core.app.NotificationManagerCompat
 object NotificationHelper {
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun showSuccess(context: Context, text: String, url: String) {
+    fun success(context: Context, bigText: String? = null, text: String) {
         val id = "upload_success"
 
         createChannel(
@@ -27,26 +27,26 @@ object NotificationHelper {
         val notification = NotificationCompat.Builder(context, id)
             .setSmallIcon(R.drawable.check)
             .setContentTitle("Success")
-            .setContentText(url)
+            .setContentText(text)
             .setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText(text)
+                    .bigText(bigText)
             )
             .addAction(
                 android.R.drawable.ic_menu_save,
                 "Copy link",
-                getCopyIntent(context, url))
+                getCopyIntent(context, text))
             .setContentIntent(getOpenAppIntent(context))
             .setAutoCancel(true)
             .build()
 
         NotificationManagerCompat
             .from(context)
-            .notify(url.hashCode(), notification)
+            .notify(System.currentTimeMillis().toInt(), notification)
     }
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun showError(context: Context, text: String, url: String) {
+    fun error(context: Context, bigText: String? = null, text: String) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
 
         val id = "upload_error"
@@ -61,22 +61,33 @@ object NotificationHelper {
         val notification = NotificationCompat.Builder(context, id)
             .setSmallIcon(R.drawable.close)
             .setContentTitle("Failure")
-            .setContentText(url)
+            .setContentText(text)
             .setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText(text)
+                    .bigText(bigText)
             )
             .setContentIntent(getOpenAppIntent(context))
             .setAutoCancel(true)
             .addAction(
                 android.R.drawable.ic_menu_save,
                 "Copy link",
-                getCopyIntent(context, url))
+                getCopyIntent(context, text))
             .build()
 
         NotificationManagerCompat
             .from(context)
-            .notify(url.hashCode(), notification)
+            .notify(System.currentTimeMillis().toInt(), notification)
+    }
+
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
+    fun showFileImportResult(context: Context, response: HydrusApi.AddFileResponse?) {
+        when (response?.status) {
+            1 -> success(context, text = "Import successful")
+            2 -> success(context, text = "Already in database")
+            3 -> error(context, text = "Previously deleted")
+            4 -> error(context, text = "Failed to import")
+            7 -> error(context, text = "Ignored")
+        }
     }
 
     fun createChannel(context: Context, id: String, name: String, importance: Int) {

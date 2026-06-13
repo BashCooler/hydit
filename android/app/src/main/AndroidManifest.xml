@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Send link to Hydit -->
+        <!-- Send URL or file to Hydit -->
         <activity
             android:name=".ShareReceiverActivity"
             android:exported="true"
@@ -41,6 +41,8 @@
                 <action android:name="android.intent.action.SEND"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="text/plain"/>
+                <data android:mimeType="image/*"/>
+                <data android:mimeType="video/*"/>
             </intent-filter>
         </activity>
         

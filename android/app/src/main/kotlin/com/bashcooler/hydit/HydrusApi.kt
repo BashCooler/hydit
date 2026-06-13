@@ -1,14 +1,26 @@
 package com.bashcooler.hydit
 
+import android.content.Context
+import android.net.Uri
+import android.util.Log
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okio.BufferedSink
 import okio.IOException
+import okio.source
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 object HydrusApi {
+    const val HOST = "http://192.168.31.176:45869"
+    const val KEY_HEADER = "Hydrus-Client-API-Access-Key"
+    const val ACCESS_KEY = "86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813"
+
     private val client = OkHttpClient.Builder()
         .callTimeout(3, TimeUnit.SECONDS)
         .build()
@@ -22,8 +34,8 @@ object HydrusApi {
             """.trimIndent()
 
         val request = Request.Builder()
-            .url("http://192.168.31.176:45869/add_urls/add_url")
-            .header("Hydrus-Client-API-Access-Key", "86106807bd3cfe58cd0c5664981799dbaf978454a91b26afd3c5a60e3ad2c813")
+            .url("$HOST/add_urls/add_url")
+            .header(KEY_HEADER, ACCESS_KEY)
             .post(json.toRequestBody("application/json".toMediaType()))
             .build()
 
@@ -38,8 +50,36 @@ object HydrusApi {
         }
     }
 
+    fun addFile(file: File): AddFileResponse {
+        val body =
+            file.asRequestBody(
+                "application/octet-stream".toMediaType()
+            )
+
+        val request =
+            Request.Builder()
+                .url("$HOST/add_files/add_file")
+                .header(KEY_HEADER, ACCESS_KEY)
+                .post(body)
+                .build()
+
+        client.newCall(request).execute().use { response ->
+            val jsonString = response.body.string()
+
+            Log.d("HydrusApi", jsonString)
+
+            return Gson().fromJson(jsonString, AddFileResponse::class.java)
+        }
+    }
+
     data class AddUrlResponse(
         val human_result_text: String,
         val normalised_url: String
+    )
+
+    data class AddFileResponse(
+        val status: Int,
+        val hash: String,
+        val note: String
     )
 }
