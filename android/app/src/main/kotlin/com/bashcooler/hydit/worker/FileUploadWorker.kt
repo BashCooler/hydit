@@ -45,7 +45,7 @@ class FileUploadWorker(context: Context, params: WorkerParameters)
 
             NotificationHelper.error(
                 applicationContext,
-                text = e.message ?: "Unknown error"
+                e.message ?: "Unknown error"
             )
 
             Result.failure()
@@ -54,14 +54,11 @@ class FileUploadWorker(context: Context, params: WorkerParameters)
 
     companion object {
         fun enqueue(context: Context, filePath: String) {
-            val request =
-                OneTimeWorkRequestBuilder<FileUploadWorker>()
-                    .setInputData(
-                        workDataOf("file_path" to filePath)
-                    )
-                    .build()
+            val request = OneTimeWorkRequestBuilder<FileUploadWorker>()
+                .setInputData(workDataOf("file_path" to filePath))
+                .build()
 
-            WorkManager.Companion
+            WorkManager
                 .getInstance(context)
                 .enqueue(request)
         }

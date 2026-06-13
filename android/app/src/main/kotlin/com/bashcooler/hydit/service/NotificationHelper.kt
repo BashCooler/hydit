@@ -18,7 +18,7 @@ import com.bashcooler.hydit.share.CopyUrlReceiver
 object NotificationHelper {
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun success(context: Context, bigText: String? = null, text: String) {
+    fun success(context: Context, text: String, bigText: String? = null) {
         val id = "upload_success"
 
         createChannel(
@@ -50,7 +50,7 @@ object NotificationHelper {
     }
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun error(context: Context, bigText: String? = null, text: String) {
+    fun error(context: Context, text: String, bigText: String? = null) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
 
         val id = "upload_error"
@@ -86,11 +86,11 @@ object NotificationHelper {
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun showFileImportResult(context: Context, response: HydrusApi.AddFileResponse?) {
         when (response?.status) {
-            1 -> success(context, text = "Import successful")
-            2 -> success(context, text = "Already in database")
-            3 -> error(context, text = "Previously deleted")
-            4 -> error(context, text = "Failed to import")
-            7 -> error(context, text = "Ignored")
+            1 -> success(context, "Import successful")
+            2 -> success(context, "Already in database")
+            3 -> error(context, "Previously deleted")
+            4 -> error(context, "Failed to import")
+            7 -> error(context, "Ignored")
         }
     }
 
@@ -105,10 +105,12 @@ object NotificationHelper {
     }
 
     fun getCopyIntent(context: Context, url: String): PendingIntent? {
-        val copyIntent =
-            Intent(context, CopyUrlReceiver::class.java).apply {
-                putExtra("url", url)
-            }
+        val copyIntent = Intent(
+            context,
+            CopyUrlReceiver::class.java
+        ).apply {
+            putExtra("url", url)
+        }
 
         return PendingIntent.getBroadcast(
             context,
