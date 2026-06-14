@@ -20,7 +20,7 @@ class UrlWorker(context: Context, params: WorkerParameters)
         val url = inputData.getString("url") ?: return Result.failure()
 
         return try {
-            val result = HydrusApi.addUrl(url)
+            val result = HydrusApi.addUrl(applicationContext, url)
 
             NotificationHelper.success(
                 applicationContext,

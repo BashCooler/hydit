@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.bashcooler.hydit.MainActivity
 import com.bashcooler.hydit.R
-import com.bashcooler.hydit.api.HydrusApi
+import com.bashcooler.hydit.api.AddFileResponse
 import com.bashcooler.hydit.share.CopyUrlReceiver
 
 object NotificationHelper {
@@ -76,7 +76,7 @@ object NotificationHelper {
     }
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun showFileImportResult(context: Context, response: HydrusApi.AddFileResponse?) {
+    fun showFileImportResult(context: Context, response: AddFileResponse?) {
         when (response?.status) {
             1 -> success(context, "Import successful")
             2 -> success(context, "Already in database")
