@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/widgets/app_pop_scope.dart';
 import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/search/widget/sorting.dart';
 import 'package:hydit/features/viewer/getx/bindings.dart';
@@ -42,35 +42,16 @@ class Gallery extends StatelessWidget {
     final SelectionController selection = Get.find(tag: tag);
     final QueryController query = Get.find();
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-
-        if (mode == .preview) {
-          Get.back();
-          return;
+    return AppPopScope(
+      shouldShow: () {
+        switch (selection.on) {
+          case true:
+            selection.clear();
+            gallery..unlockActions()..showActions();
+            return false;
+          case false:
+            return true;
         }
-
-        if (selection.on) {
-          selection.clear();
-          gallery..unlockActions()..showActions();
-          return;
-        }
-
-        final alert = AlertDialog(
-          actionsAlignment: .center,
-          icon: const Icon(Icons.close),
-          title: 'Close application?'.n,
-          actions: [
-            n.Button('No'.n)
-              ..onPressed = () => Get.back(),
-            n.Button('Yes'.n)
-              ..onPressed = () => SystemNavigator.pop(),
-          ],
-        );
-
-        n.showDialog(context: context, builder: (context) => alert);
       },
       child: Obx(() {
         final count = '${files.length} files'.n
