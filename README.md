@@ -39,7 +39,7 @@ ___
 
 ### Manage tags
 
-Select one or more files, open tag editor, add new tags or remove existing tags
+Select one or multiple files, open tag editor, add new tags or remove existing tags
 
 <table>
   <thead>
@@ -72,7 +72,6 @@ Select one or more files, open tag editor, add new tags or remove existing tags
 ## Roadmap
 
 Planned features:
-- uploading files from your Android device to Hydrus
 - ~~namespace sorting~~ I tried. It's like impossible to do with a lot of search results, too damn network heavy. So... we should do something like *comics view*? Simply make a quick way to navigate through chapters, pages and stuff. I'll try to think of something
 
 ## Contributing
