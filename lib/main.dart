@@ -8,7 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'utils/theme.dart';
 import 'services/repo.dart';
-import 'reactive/files.dart';
+import 'reactive/file_store.dart';
 import 'features/gallery/page/gallery.dart';
 import 'features/gallery/getx/bindings.dart';
 

@@ -5,7 +5,7 @@ import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/reactive/files.dart';
+import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
 import '../getx/tags.dart';

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'package:hydit/reactive/files.dart';
+import 'package:hydit/reactive/file_store.dart';
 import 'gallery.dart';
 
 

@@ -9,7 +9,7 @@ import 'package:hydit/services/snack.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/reactive/files.dart';
+import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 

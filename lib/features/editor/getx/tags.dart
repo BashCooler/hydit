@@ -4,7 +4,7 @@ import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/reactive/files.dart';
+import 'package:hydit/reactive/file_store.dart';
 
 const readOnlyServices = ['all known tags', 'public tag repository'];
 

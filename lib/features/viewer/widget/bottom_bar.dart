@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
-import 'package:hydit/reactive/files.dart';
+import 'package:hydit/reactive/file_store.dart';
 
 import '../getx/page.dart';
 

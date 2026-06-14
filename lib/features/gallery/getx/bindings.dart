@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/utils/theme.dart';
-import 'package:hydit/reactive/files.dart';
+import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
 import '../page/gallery.dart';
