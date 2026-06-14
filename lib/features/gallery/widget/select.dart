@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/editor/getx/bindings.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/features/editor/getx/bindings.dart';
 
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
@@ -38,18 +38,24 @@ class SelectActions extends StatelessWidget {
             icon: const Icon(Icons.edit),
             color: Colors.white,
             onPressed: () async {
-              final tag = 'Editor-${DateTime.now().microsecondsSinceEpoch}';
               switch (selection.ids.length) {
                 case 1:
                   final id = selection.ids.first;
                   final index = files.indexWhere((f) => f.id == id);
-                  await toEditorPaged(tag, index, files, gallery);
-                  selection.clear();
+
+                  EditorPage(files)
+                      .paged(index, gallery)
+                      .onClose(selection.clear)
+                      .push();
+
                 case _:
                   final ids = selection.ids.toList();
-                  final fileRepo = FileStore.pickFrom(files, ids);
-                  await toEditorBatch(tag, fileRepo, gallery, ids);
-                  selection.clear();
+                  final subFiles = FileStore.pickFrom(files, ids);
+
+                  EditorPage(subFiles)
+                      .batch(gallery, ids)
+                      .onClose(selection.clear)
+                      .push();
               }
             },
           ),

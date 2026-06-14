@@ -69,9 +69,10 @@ class Viewer extends StatelessWidget {
             tags: file.meta!.all.toList(),
             tag: tag,
             gallery: gallery,
-            onFloatingActionButtonTap: showFloatingActionButton
-                ? () => toEditorPaged(tag, page.i, files, gallery)
-                : null,
+            onFloatingActionButtonTap: EditorPage(files)
+                .paged(page.i, gallery)
+                .passTag(tag)
+                .push,
             child: Pages(tag: tag),
           );
         }),

@@ -11,56 +11,107 @@ import '../page/editor.dart';
 import 'tags.dart';
 
 
-Future<dynamic>? toEditorPaged(String tag, int index, FileStore files, [GalleryController? gallery]) {
-  return Get.to(() => Editor(tag: tag, mode: .paged),
-    transition: .leftToRight,
-    duration: AppTheme.duration,
-    curve: Curves.easeInOutCubic,
-    binding: EditorBindings.paged(tag, index, files, gallery),
-  );
-}
-
-
-Future<dynamic>? toEditorBatch(String tag, FileStore files, GalleryController gallery, List<int> ids) {
-  return Get.to(() => Editor(tag: tag, mode: .batch),
-    transition: .leftToRight,
-    duration: AppTheme.duration,
-    curve: Curves.easeInOutCubic,
-    binding: EditorBindings.batch(tag, files, gallery, ids),
-  );
-}
-
-
-class EditorBindings extends Bindings {
-  final String tag;
-  final Mode mode;
-  final int? index;
-  final List<int>? ids;
+/// Builds an [Editor] page.
+///
+/// First initialize the [EditorPage], then call [paged] or [batch] to
+/// select the page type. Finish with a [push] to push a newly created
+/// [Editor] page.
+///
+/// You can also provide an [onClose] similar to awaiting
+/// the result then performing an action with a regular route.
+///
+/// You can also [passTag]. You should only do this if you want to connect
+/// pages together. For example, if you pass the tag of the `Viewer` page,
+/// then `Viewer` and [Editor] will use the same [PageGetxController],
+/// because it was already instantiated in `Viewer` and [Get] will not
+/// create the controller again.
+class EditorPage {
   final FileStore files;
-  final GalleryController? gallery;
 
-  EditorBindings.paged(this.tag, this.index, this.files, [this.gallery])
-      : mode = .paged,
-        ids = null;
+  String? tag;
+  int? index;
+  GalleryController? gallery;
+  List<int>? ids;
+  Mode mode = Mode.paged;
+  VoidCallback? _onClose;
 
-  EditorBindings.batch(this.tag, this.files, this.gallery, this.ids)
-      : mode = .batch,
-        index = null;
+  EditorPage(this.files);
+
+  EditorPage paged(int index, [GalleryController? gallery]) {
+    this.index = index;
+    this.gallery = gallery;
+    mode = .paged;
+
+    return this;
+  }
+
+  EditorPage batch(GalleryController gallery, List<int> ids) {
+    this.gallery = gallery;
+    this.ids = ids;
+    mode = .batch;
+
+    return this;
+  }
+
+  EditorPage onClose(VoidCallback callback) {
+    _onClose = callback;
+
+    return this;
+  }
+
+  EditorPage passTag(String tag) {
+    this.tag = tag;
+
+    return this;
+  }
+
+  void push() {
+    tag ??= 'Editor-${DateTime.now().microsecondsSinceEpoch}';
+
+    Get.to(() => Editor(tag: tag!, mode: mode),
+      transition: .leftToRight,
+      duration: AppTheme.duration,
+      curve: Curves.easeInOutCubic,
+      binding: _EditorBindings(this),
+    )?.then((result) {
+      _onClose?.call();
+    });
+  }
+}
+
+
+class _EditorBindings extends Bindings {
+  final EditorPage page;
+
+  _EditorBindings(this.page);
 
   @override
   void dependencies() {
-    Get.put(FileStore.copy(files), tag: tag);
-    Get.put(TagSearchController(), tag: tag);
+    Get.put(FileStore.copy(page.files), tag: page.tag);
+    Get.put(TagSearchController(), tag: page.tag);
 
-    switch (mode) {
+    switch (page.mode) {
       case .paged:
-        final page = PageGetxController(initial: index!, grid: gallery?.grid);
-        Get.put(page, tag: tag);
-        Get.put(TagManager(files)..init(files[index!]));
+        Get.put(
+          PageGetxController(
+            initial: page.index!,
+            grid: page.gallery?.grid,
+          ),
+          tag: page.tag,
+        );
+        Get.put(
+          TagManager(page.files)
+            ..init(page.files[page.index!]),
+        );
       case .batch:
-        final page = PageGetxController(initial: 0, grid: gallery?.grid);
-        Get.put(page, tag: tag);
-        Get.put(TagManager(files)..initBatch(ids!));
+        Get.put(
+          PageGetxController(initial: 0, grid: page.gallery?.grid),
+          tag: page.tag,
+        );
+        Get.put(
+          TagManager(page.files)
+            ..initBatch(page.ids!),
+        );
     }
   }
 }
