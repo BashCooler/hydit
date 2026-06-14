@@ -118,12 +118,11 @@ class Gallery extends StatelessWidget {
                     case true:
                       selection.toggle(id);
                     case false:
-                      toViewer(
-                        index: index,
-                        files: files,
-                        gallery: gallery,
-                        showFloatingActionButton: full,
-                      );
+                      ViewerPage(files, index, gallery)
+                          .editor(full)
+                          .beforePush(gallery.hide)
+                          .onClose(gallery.show)
+                          .push();
                   }
                 },
                 onLongPress: full ? selection.selectTile : null,

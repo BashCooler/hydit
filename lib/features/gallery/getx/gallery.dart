@@ -36,6 +36,10 @@ class GalleryController extends GetxController {
     }
   }
 
+  void hide() => this..hideActions()..hideBadges();
+
+  void show() => this..showActions()..showBadges();
+
   void showActions() => _actionsLocked
       ? null
       : _actionsVisible.value = true;
@@ -49,5 +53,6 @@ class GalleryController extends GetxController {
   void unlockActions() => _actionsLocked = false;
 
   void showBadges() => _badgesVisible.value = true;
+
   void hideBadges() => _badgesVisible.value = false;
 }

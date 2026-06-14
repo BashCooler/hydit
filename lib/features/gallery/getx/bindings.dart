@@ -36,7 +36,7 @@ class GalleryPage {
   }
 
   void push() {
-    tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
+    tag ??= 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
 
     Get.to(
       () => Gallery(tag: tag!, mode: mode),
