@@ -120,11 +120,12 @@ class Down extends HookWidget {
           enabled: manager.loading,
           child: Suggests(
             scrollController: scroll,
-            trailing: Skeleton.ignore(child: Icon(icon)),
             tagSearchController: tagSearch,
-            onTap: manager.editable
-                ? manager.add
-                : null,
+            itemBuilder: (context, tag) => TagTile(
+              tag: tag,
+              onTap: manager.editable ? manager.add : null,
+              trailing: Skeleton.ignore(child: Icon(icon)),
+            ),
           ),
         );
       },

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/widgets/tag_list.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/theme.dart';
@@ -55,10 +56,16 @@ class _SearchState extends State<Search> {
           Expanded(
             child: Suggests(
               tagSearchController: tagSearch,
-              onTap: (tag) {
-                tagSearch.clear();
-                query.add(tag.raw);
-              },
+              itemBuilder: (context, tag) => TagTile(
+                tag: tag,
+                trailing: tag.count?.toString().n
+                  ?..color = colorOf(tag)
+                  ..fontSize = 14,
+                onTap: (tag) {
+                  tagSearch.clear();
+                  query.add(tag.raw);
+                },
+              ),
             ),
           ),
           const Divider(height: 1),

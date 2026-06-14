@@ -8,17 +8,15 @@ import '../getx/search.dart';
 
 
 class Suggests extends StatelessWidget {
-  final Widget? trailing;
   final ScrollController? scrollController;
-  final void Function(Tag tag)? onTap;
   final TagSearchController tagSearchController;
+  final Widget Function(BuildContext context, Tag tag) itemBuilder;
 
   const Suggests({
     super.key,
     this.scrollController,
-    this.trailing,
-    required this.onTap,
     required this.tagSearchController,
+    required this.itemBuilder,
   });
 
   @override
@@ -30,11 +28,7 @@ class Suggests extends StatelessWidget {
             tags: tagSearchController.suggests.toList(),
             scrollController: scrollController,
             reverse: true,
-            itemBuilder: (context, tag) => TagTile(
-              tag: tag,
-              trailing: trailing,
-              onTap: onTap,
-            ),
+            itemBuilder: itemBuilder,
           );
         case false:
           return const Center();
