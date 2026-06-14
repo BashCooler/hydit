@@ -44,6 +44,10 @@ class Gallery extends StatelessWidget {
 
     return AppPopScope(
       shouldShow: () {
+        if (!full) {
+          Get.back();
+          return false;
+        }
         switch (selection.on) {
           case true:
             selection.clear();
