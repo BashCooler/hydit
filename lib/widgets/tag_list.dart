@@ -74,18 +74,28 @@ class TagListEntry extends StatelessWidget {
     final color = namespaceColors[tag.namespace] ?? namespaceColors['_'];
 
     final TagState? state = manager?.stateOf(tag);
-    final Color? tileColor = switch (state) {
-      TagState.added => AppColors.addition,
-      TagState.removed => AppColors.deletion,
-      _ => null,
-    };
+
+    final Color? tileColor;
+    final Icon? icon;
+
+    switch (state) {
+      case TagState.added:
+        tileColor = AppColors.addition;
+        icon = Icon(Icons.playlist_remove);
+      case TagState.removed:
+        tileColor = AppColors.deletion;
+        icon = Icon(Icons.undo);
+      case _:
+        tileColor = null;
+        icon = null;
+    }
 
     return ListTile(
       tileColor: tileColor,
       enabled: onTap != null,
       minTileHeight: AppTheme.fieldHeight,
       title: Text(tag.pretty, style: TextStyle(color: color)),
-      trailing: trailing ?? Text(
+      trailing: icon ?? trailing ?? Text(
         tag.count?.toString() ?? '',
         style: TextStyle(color: color, fontSize: 14.0),
       ),
