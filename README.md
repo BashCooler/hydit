@@ -4,17 +4,38 @@
 
 ## Features
 
+### Send URL, file or multiple files to Hydrus
+
+> Sharing URL is not recommended. This operation is considered successful if the link reaches the Hydrus client. However, if the client tries to import the file with the provided URL and fails we really have no clue about it. Best practice is to send the file itself from your gallery or browser or whatever. This way we can be sure that the file is successfully added to Hydrus database
+
+Use Android share menu to send a URL, a file or multiple files to Hydrus. Hydit will show you a notification with results
+
+___
+
 ### Browse your Hydrus database
 
-Search for one or multiple tags, sort results and get to browsing
+Search for one or multiple tags, sort results and get to browsing. Hydit has a built-in media viewer with support for gestures, zooming and quick navigation.
 
-<img width="240" height="536" alt="search" src="https://github.com/user-attachments/assets/23cc3731-cc5d-4c24-a6c8-7620d6c235cf" />
+<table>
+  <thead>
+    <tr>
+      <th>Gallery</th>
+      <th>Viewer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <img width="240" height="536" alt="search" src="https://github.com/user-attachments/assets/23cc3731-cc5d-4c24-a6c8-7620d6c235cf" />
+      </td>
+      <td>
+        <img width="240" height="536" alt="view" src="https://github.com/user-attachments/assets/b306ffd3-6981-488a-b9ca-c7e3411ed469" />
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-### View images and videos
-
-Hydit has a built-in media viewer with support for gestures, zooming and quick navigation
-
-<img width="240" height="536" alt="view" src="https://github.com/user-attachments/assets/b306ffd3-6981-488a-b9ca-c7e3411ed469" />
+___
 
 ### Manage tags
 
