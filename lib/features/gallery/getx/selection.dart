@@ -8,9 +8,9 @@ class SelectionController extends GetxController {
   final ids = <int>{}.obs;
 
   final GalleryController gallery;
-  final FileStore fileRepo;
+  final FileStore files;
 
-  SelectionController({required this.gallery, required this.fileRepo});
+  SelectionController(this.files, this.gallery);
 
   bool get rangeSelected => ids.length == 2;
 
@@ -39,8 +39,8 @@ class SelectionController extends GetxController {
   void selectRange() {
     if (!rangeSelected) return;
 
-    final index1 = fileRepo.indexWhere((e) => e.id == ids.first);
-    final index2 = fileRepo.indexWhere((e) => e.id == ids.last);
+    final index1 = files.indexWhere((e) => e.id == ids.first);
+    final index2 = files.indexWhere((e) => e.id == ids.last);
 
     if (index1 < 0 || index2 < 0) return;
 
@@ -55,7 +55,7 @@ class SelectionController extends GetxController {
     ids.remove(lastId);
 
     for (int i = begin; i < end; i++) {
-      ids.add(fileRepo[i].id);
+      ids.add(files[i].id);
     }
 
     ids.add(lastId);

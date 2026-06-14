@@ -72,7 +72,7 @@ class EditorPage {
       transition: .leftToRight,
       duration: AppTheme.duration,
       curve: Curves.easeInOutCubic,
-      binding: _EditorBindings(this),
+      binding: EditorBindings(this),
     )?.then((result) {
       _onClose?.call();
     });
@@ -80,10 +80,10 @@ class EditorPage {
 }
 
 
-class _EditorBindings extends Bindings {
+class EditorBindings extends Bindings {
   final EditorPage page;
 
-  _EditorBindings(this.page);
+  EditorBindings(this.page);
 
   @override
   void dependencies() {

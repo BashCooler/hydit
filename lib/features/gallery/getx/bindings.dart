@@ -12,39 +12,64 @@ import 'selection.dart';
 enum Mode { full, preview }
 
 
-Future<dynamic>? toGallery({Mode mode = Mode.full, required FileStore files}) {
-  final tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
-  return Get.to(
-    () => Gallery(tag: tag, mode: mode),
-    transition: .rightToLeft,
-    duration: AppTheme.duration,
-    curve: Curves.easeInOutCubic,
-    binding: GalleryBindings(tag, files, mode),
-  );
+class GalleryPage {
+  final FileStore files;
+
+  String? tag;
+  Mode mode = .full;
+
+  GalleryPage(this.files);
+
+  GalleryPage full() {
+    mode = .full;
+    return this;
+  }
+
+  GalleryPage preview() {
+    mode = .preview;
+    return this;
+  }
+
+  GalleryPage passTag(String tag) {
+    this.tag = tag;
+    return this;
+  }
+
+  void push() {
+    tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
+
+    Get.to(
+      () => Gallery(tag: tag!, mode: mode),
+      transition: .rightToLeft,
+      duration: AppTheme.duration,
+      curve: Curves.easeInOutCubic,
+      binding: GalleryBindings(this),
+    );
+  }
 }
 
 
 class GalleryBindings extends Bindings {
-  final String tag;
-  final Mode mode;
-  final FileStore files;
+  final GalleryPage page;
 
-  GalleryBindings(this.tag, this.files, [this.mode = .full]);
+  GalleryBindings(this.page);
+
+  GalleryBindings.fromTag(String tag)
+      : page = GalleryPage(FileStore()).passTag(tag);
 
   @override
   void dependencies() {
-    final fileRepo = FileStore.copy(files);
+    final fileRepo = FileStore.copy(page.files);
     final gallery = GalleryController();
-    final selection = SelectionController(gallery: gallery, fileRepo: fileRepo);
+    final selection = SelectionController(fileRepo, gallery);
 
-    if (mode == .full) {
+    Get.put(gallery, tag: page.tag);
+    Get.put(fileRepo, tag: page.tag);
+    Get.put(selection, tag: page.tag);
+
+    if (page.mode == .full) {
       final query = QueryController(fileRepo: fileRepo, gallery: gallery);
       Get.put(query);
     }
-
-    Get
-      ..put(gallery, tag: tag)
-      ..put(fileRepo, tag: tag)
-      ..put(selection, tag: tag);
   }
 }

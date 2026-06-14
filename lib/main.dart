@@ -8,7 +8,6 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'utils/theme.dart';
 import 'services/repo.dart';
-import 'reactive/file_store.dart';
 import 'features/gallery/page/gallery.dart';
 import 'features/gallery/getx/bindings.dart';
 
@@ -59,7 +58,7 @@ class App extends StatelessWidget {
           transition: .rightToLeft,
           curve: Curves.easeInOutCubic,
           page: () => Gallery(tag: tag),
-          binding: GalleryBindings(tag, FileStore()),
+          binding: GalleryBindings.fromTag(tag),
         ),
       ],
     );

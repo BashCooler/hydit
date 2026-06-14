@@ -88,8 +88,10 @@ class _EditorState extends State<Editor> {
           child: PreviewGrid(
             manager: manager,
             onTap: () {
-              final FileStore fileRepo = Get.find(tag: widget.tag);
-              toGallery(mode: .preview, files: fileRepo);
+              final FileStore files = Get.find(tag: widget.tag);
+              GalleryPage(files)
+                  .preview()
+                  .push();
             },
           ),
         );
