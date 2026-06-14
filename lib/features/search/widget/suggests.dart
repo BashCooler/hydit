@@ -27,11 +27,14 @@ class Suggests extends StatelessWidget {
       switch (tagSearchController.suggestsVisible) {
         case true:
           return TagList(
-            trailing: trailing,
-            onTap: onTap,
-            scrollController: scrollController,
             tags: tagSearchController.suggests.toList(),
+            scrollController: scrollController,
             reverse: true,
+            itemBuilder: (context, tag) => TagTile(
+              tag: tag,
+              trailing: trailing,
+              onTap: onTap,
+            ),
           );
         case false:
           return const Center();

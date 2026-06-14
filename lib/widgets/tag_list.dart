@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/theme.dart';
 import 'package:hydit/entities/tag.dart';
-import 'package:hydit/features/editor/getx/tags.dart';
 
 
 /// Parameters [trailing] and [onTap] apply to each [ListTile] in
@@ -10,21 +10,17 @@ import 'package:hydit/features/editor/getx/tags.dart';
 ///
 /// Default [trailing] is [Tag.count].
 class TagList extends StatelessWidget {
-  final Widget? trailing;
   final List<Tag> tags;
   final ScrollController? scrollController;
-  final void Function(Tag tag)? onTap;
   final bool reverse;
-  final TagManager? manager;
+  final Widget Function(BuildContext context, Tag tag) itemBuilder;
 
   const TagList({
     super.key,
-    this.trailing,
-    this.onTap,
     this.scrollController,
     required this.tags,
     this.reverse = false,
-    this.manager,
+    required this.itemBuilder,
   });
 
   @override
@@ -37,16 +33,13 @@ class TagList extends StatelessWidget {
         removeTop: true,
         child: Scrollbar(
           controller: scrollController,
-          child:  ListView.builder(
+          child: ListView.builder(
             reverse: reverse,
             itemCount: tags.length,
             controller: scrollController,
-            itemBuilder: (_, index) => TagListEntry(
-              tag: tags[index],
-              trailing: trailing,
-              onTap: onTap,
-              manager: manager,
-            ),
+            itemBuilder: (context, index) {
+              return itemBuilder(context, tags[index]);
+            },
           ),
         ),
       ),
@@ -55,51 +48,31 @@ class TagList extends StatelessWidget {
 }
 
 
-class TagListEntry extends StatelessWidget {
-  final Widget? trailing;
+class TagTile extends StatelessWidget {
   final Tag tag;
+  final Color? background;
+  final Widget? trailing;
   final void Function(Tag tag)? onTap;
-  final TagManager? manager;
 
-  const TagListEntry({
+  const TagTile({
     super.key,
-    this.trailing,
-    required this.onTap,
     required this.tag,
-    this.manager,
+    this.background,
+    this.trailing,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final color = namespaceColors[tag.namespace] ?? namespaceColors['_'];
-
-    final TagState? state = manager?.stateOf(tag);
-
-    final Color? tileColor;
-    final Icon? icon;
-
-    switch (state) {
-      case TagState.added:
-        tileColor = AppColors.addition;
-        icon = Icon(Icons.playlist_remove);
-      case TagState.removed:
-        tileColor = AppColors.deletion;
-        icon = Icon(Icons.undo);
-      case _:
-        tileColor = null;
-        icon = null;
-    }
-
     return ListTile(
-      tileColor: tileColor,
       enabled: onTap != null,
-      minTileHeight: AppTheme.fieldHeight,
-      title: Text(tag.pretty, style: TextStyle(color: color)),
-      trailing: icon ?? trailing ?? Text(
-        tag.count?.toString() ?? '',
-        style: TextStyle(color: color, fontSize: 14.0),
-      ),
       onTap: () => onTap?.call(tag),
+      tileColor: background,
+      minTileHeight: AppTheme.fieldHeight,
+      title: tag.pretty.n
+        ..color = colorOf(tag),
+      trailing: trailing,
     );
   }
 }
+

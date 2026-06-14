@@ -73,8 +73,9 @@ class TagSheet extends HookWidget {
           background,
           Scaffold(
             body: TagList(
-              scrollController: scrollBelow,
               tags: tags,
+              scrollController: scrollBelow,
+              itemBuilder: (context, tag) => TagTile(tag: tag),
             ),
             floatingActionButton: buildFloatingActionButton(),
             floatingActionButtonLocation: .miniEndFloat,

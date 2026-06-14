@@ -4,6 +4,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:multi_split_view/multi_split_view.dart';
 
+import 'package:hydit/utils/theme.dart';
 import 'package:hydit/widgets/tag_list.dart';
 import 'package:hydit/features/search/getx/search.dart';
 import 'package:hydit/features/search/widget/suggests.dart';
@@ -44,6 +45,20 @@ class EditorSplitView extends HookWidget {
 class Up extends HookWidget {
   const Up({super.key});
 
+  Color? background(TagState state) => switch (state) {
+    .added => AppColors.addition,
+    .removed => AppColors.deletion,
+    .unchanged => null,
+  };
+
+  IconData icon(bool editable, TagState state) => switch (editable) {
+    false => Icons.lock_outline,
+    true => switch (state) {
+      .removed => Icons.undo,
+      _ => Icons.playlist_remove,
+    },
+  };
+
   @override
   Widget build(BuildContext context) {
     final scroll = useScrollController();
@@ -66,15 +81,17 @@ class Up extends HookWidget {
           case false:
             return TagList(
               tags: manager.tags().toList(),
-              manager: manager,
-              trailing: Icon(manager.editable
-                  ? Icons.playlist_remove
-                  : Icons.lock_outline),
               scrollController: scroll,
-              onTap: manager.editable
-                  ? manager.remove
-                  : null,
               reverse: true,
+              itemBuilder: (context, tag) {
+                final state = manager.stateOf(tag);
+                return TagTile(
+                  tag: tag,
+                  onTap: manager.editable ? manager.remove : null,
+                  background: background(state),
+                  trailing: Icon(icon(manager.editable, state)),
+                );
+              },
             );
         }
       },

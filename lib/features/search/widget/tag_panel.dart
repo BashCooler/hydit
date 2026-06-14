@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/theme.dart';
-import 'package:hydit/entities/tag.dart';
 
 import '../getx/query.dart';
 
@@ -49,7 +48,7 @@ class TagPanel extends StatelessWidget {
     return controller.tags.map((tag) {
       return InputChip(
         label: tag.value.n,
-        backgroundColor: tag.color,
+        backgroundColor: colorOf(tag),
         onDeleted: () => controller.remove(tag),
       );
     }).toList();
@@ -77,10 +76,4 @@ class PlaceholderText extends StatelessWidget {
       ),
     );
   }
-}
-
-
-extension TagUI on Tag {
-  Color? get color =>
-      namespaceColors[namespace] ?? namespaceColors['namespace'];
 }
