@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/features/editor/getx/bindings.dart';
+import 'package:hydit/features/editor/bindings.dart';
 
 import '../getx/gallery.dart';
 import '../getx/selection.dart';

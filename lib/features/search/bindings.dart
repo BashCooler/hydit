@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:full_swipe_back_gesture/full_swipe_back_gesture.dart';
 
-import '../page/search.dart';
+import 'page/search.dart';
 
 
 class SearchPage {

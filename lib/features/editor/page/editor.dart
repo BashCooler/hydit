@@ -8,7 +8,7 @@ import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/services/snack.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/viewer/page/preview.dart';
-import 'package:hydit/features/gallery/getx/bindings.dart';
+import 'package:hydit/features/gallery/bindings.dart';
 
 import '../getx/tags.dart';
 import '../widget/app_bar.dart';

@@ -5,8 +5,8 @@ import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
-import '../page/viewer.dart';
-import 'page.dart';
+import 'page/viewer.dart';
+import 'getx/page.dart';
 
 
 class ViewerPage {

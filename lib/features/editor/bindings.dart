@@ -7,8 +7,8 @@ import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/search/getx/search.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
-import '../page/editor.dart';
-import 'tags.dart';
+import 'page/editor.dart';
+import 'getx/tags.dart';
 
 
 /// Builds an [Editor] page.

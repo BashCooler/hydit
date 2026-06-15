@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/search/getx/bindings.dart';
+import 'package:hydit/features/search/bindings.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/widget/sorting.dart';
-import 'package:hydit/features/viewer/getx/bindings.dart';
+import 'package:hydit/features/viewer/bindings.dart';
 
 import '../getx/gallery.dart';
 import '../getx/selection.dart';

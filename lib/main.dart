@@ -8,7 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'utils/theme.dart';
 import 'services/repo.dart';
-import 'features/gallery/getx/bindings.dart';
+import 'features/gallery/bindings.dart';
 
 
 void main() async {
