@@ -53,7 +53,7 @@ dependencies:
   full_swipe_back_gesture:
     git: https://github.com/BashCooler/full-swipe-back-gesture
   flutter_inner_drawer:
-    git: https://github.com/NO-ob/flutter_inner_drawer  # thx a lot for this!
+    git: https://github.com/NANI-SORE/flutter_inner_drawer  # thx
   scrollview_observer: ^1.26.3
   flutter_custom_tabs: ^2.5.0
   # Video player

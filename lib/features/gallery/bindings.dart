@@ -1,15 +1,14 @@
-import 'package:full_swipe_back_gesture/full_swipe_back_gesture.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:full_swipe_back_gesture/full_swipe_back_gesture.dart';
 
 import 'package:hydit/utils/theme.dart';
-import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/getx/query.dart';
-import 'package:hydit/widgets/app_pop_scope.dart';
+import 'package:hydit/reactive/file_store.dart';
 
-import 'page/gallery_page.dart';
 import 'getx/gallery.dart';
 import 'getx/selection.dart';
+import 'page/gallery_page.dart';
 
 enum Mode { full, preview }
 
@@ -21,7 +20,6 @@ class GalleryPage {
   bool _search = false;
   bool _editor = false;
   bool _swipe = false;
-  bool _popScope = false;
 
   GalleryPage() : tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
 
@@ -40,11 +38,6 @@ class GalleryPage {
     return this;
   }
 
-  GalleryPage withAppPopScope() {
-    _popScope = true;
-    return this;
-  }
-
   GalleryPage withSwipeBackGesture() {
     _swipe = true;
     return this;
@@ -54,7 +47,6 @@ class GalleryPage {
     Widget gallery = Gallery(tag: tag, search: _search, editor: _editor);
 
     if (_swipe) gallery = SwipeablePage(child: gallery);
-    if (_popScope) gallery = _wrapWithPopScope(gallery);
 
     return gallery;
   }
@@ -70,26 +62,23 @@ class GalleryPage {
     );
   }
 
-  // MARK: WRAPPERS
+  /// Callback to pass to [AppShell].
+  ///
+  /// Returns:
+  /// - true - show dialog
+  /// - false - don't show dialog
+  bool dialog() {
+    final SelectionController selection = Get.find(tag: tag);
+    final GalleryController gallery = Get.find(tag: tag);
 
-  Widget _wrapWithPopScope(Widget child) {
-    return AppPopScope(
-      canPop: false,
-      showDialog: () {
-        final SelectionController selection = Get.find(tag: tag);
-        final GalleryController gallery = Get.find(tag: tag);
-
-        switch (selection.on) {
-          case true:
-            selection.clear();
-            gallery..unlockActions()..showActions();
-            return false;
-          case false:
-            return true;
-        }
-      },
-      child: child,
-    );
+    switch (selection.on) {
+      case true:
+        selection.clear();
+        gallery..unlockActions()..showActions();
+        return false;
+      case false:
+        return true;
+    }
   }
 }
 

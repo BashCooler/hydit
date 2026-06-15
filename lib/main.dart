@@ -6,9 +6,10 @@ import 'package:media_kit/media_kit.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'utils/theme.dart';
-import 'services/repo.dart';
 import 'features/gallery/bindings.dart';
+import 'services/repo.dart';
+import 'widgets/shell.dart';
+import 'utils/theme.dart';
 
 
 void main() async {
@@ -47,8 +48,12 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     final page = GalleryPage()
         .withSearch()
-        .withEditor()
-        .withAppPopScope();
+        .withEditor();
+
+    final gallery = AppShell(
+      dialog: page.dialog,
+      child: page.build(),
+    );
 
     return GetMaterialApp(
       title: 'Hydit',
@@ -60,7 +65,7 @@ class App extends StatelessWidget {
           name: '/',
           transition: .rightToLeft,
           curve: Curves.easeInOutCubic,
-          page: () => page.build(),
+          page: () => gallery,
           binding: GalleryBindings(page),
         ),
       ],
