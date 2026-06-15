@@ -1,10 +1,9 @@
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide RefreshCallback;
 import 'package:expressive_refresh/expressive_refresh.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/features/search/getx/query.dart';
 
 import '../getx/gallery.dart';
 import 'tile.dart';
@@ -12,6 +11,7 @@ import 'tile.dart';
 
 class GalleryGridView extends StatelessWidget {
   final String tag;
+  final RefreshCallback? onRefresh;
   final void Function(int id, int index)? onTap;
   final void Function(int id)? onLongPress;
   final bool Function(ScrollNotification) allowRefresh;
@@ -19,6 +19,7 @@ class GalleryGridView extends StatelessWidget {
   const GalleryGridView({
     super.key,
     required this.tag,
+    this.onRefresh,
     this.onTap,
     this.onLongPress,
     this.allowRefresh = defaultScrollNotificationPredicate,
@@ -36,8 +37,6 @@ class GalleryGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QueryController query = Get.find();
-
     final FileStore files = Get.find(tag: tag);
     final GalleryController gallery = Get.find(tag: tag);
 
@@ -46,7 +45,7 @@ class GalleryGridView extends StatelessWidget {
       child: ExpressiveRefreshIndicator(
         displacement: 100.0,
         notificationPredicate: allowRefresh,
-        onRefresh: () => query.searchForFiles(),
+        onRefresh: onRefresh ?? () async {},
         onStatusChange: (status) {
           switch (status) {
             case .done:

@@ -10,6 +10,35 @@ import 'package:full_swipe_back_gesture/full_swipe_back_gesture.dart';
 import '../getx/gallery.dart';
 
 
+class SearchFAB extends StatelessWidget {
+  final GalleryController gallery;
+
+  const SearchFAB(this.gallery, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      backgroundColor: const Color.fromARGB(108, 0, 0, 0),
+      shape: RoundedRectangleBorder(
+        borderRadius: .circular(16),
+      ),
+      onPressed: () {},
+      child: RepaintBoundary(
+        child: ClipRRect(
+          borderRadius: .circular(16),
+          child: BackdropFilter(
+            filter: AppTheme.backdropFilter,
+            child: Center(
+              child: const Icon(Icons.search),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 class FloatingActions extends StatelessWidget {
   final String tag;
 

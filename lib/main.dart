@@ -45,7 +45,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final page = GalleryPage().withAppPopScope();
+    final page = GalleryPage()
+        .withSearch()
+        .withEditor()
+        .withAppPopScope();
 
     return GetMaterialApp(
       title: 'Hydit',

@@ -14,8 +14,14 @@ class GalleryAppBar extends StatelessWidget
 
   final String tag;
   final List<Widget>? actions;
+  final QueryController? query;
 
-  const GalleryAppBar({super.key, required this.tag, this.actions});
+  const GalleryAppBar({
+    super.key,
+    required this.tag,
+    this.actions,
+    this.query,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +39,7 @@ class GalleryAppBar extends StatelessWidget
             crossAxisAlignment: .start,
             children: [
               count(tag),
-              ?query(Get.find<QueryController>()),
+              ?queryInfo(query),
             ],
           );
         }),
@@ -81,8 +87,8 @@ mixin GalleryInfo {
       ..shadows = shadows;
   }
 
-  Widget? query(QueryController query) {
-    if (query.values.isEmpty) return null;
+  Widget? queryInfo(QueryController? query) {
+    if (query == null || query.values.isEmpty) return null;
 
     final text = '${query.values}'
         .replaceAll(RegExp(r'[\[\]]'), '');

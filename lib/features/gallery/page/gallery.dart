@@ -1,26 +1,27 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/search/getx/query.dart';
 
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/widget/sorting.dart';
 import 'package:hydit/features/viewer/getx/bindings.dart';
 
 import '../getx/gallery.dart';
-import '../getx/bindings.dart';
 import '../getx/selection.dart';
-import '../widget/app_bar.dart';
-import '../widget/floating.dart';
-import '../widget/gridview.dart';
-import '../widget/select.dart';
+import '../widget/widgets.dart';
 
 
 class Gallery extends StatelessWidget {
   final String tag;
-  final Mode mode;
+  final bool search;
+  final bool editor;
 
-  const Gallery({super.key, required this.tag, this.mode = .full});
-
-  bool get full => mode == .full;
+  const Gallery({
+    super.key,
+    required this.tag,
+    required this.search,
+    required this.editor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +35,9 @@ class Gallery extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: GalleryAppBar(
         tag: tag,
+        query: search ? Get.find<QueryController>() : null,
         actions: [
-          if (mode == .full && selection.off) const SortPopUp(),
+          if (search && selection.off) const SortPopUp(),
         ],
       ),
       body: Stack(
@@ -43,7 +45,10 @@ class Gallery extends StatelessWidget {
         children: [
           GalleryGridView(
             tag: tag,
-            allowRefresh: (_) => full && selection.off,
+            allowRefresh: (_) => search && selection.off,
+            onRefresh: () async {
+              if (search) Get.find<QueryController>().searchForFiles();
+            },
             onTap: (id, index) {
               if (gallery.refreshing.value) return;
               switch (selection.on) {
@@ -51,15 +56,15 @@ class Gallery extends StatelessWidget {
                   selection.toggle(id);
                 case false:
                   ViewerPage(files, index, gallery)
-                      .editor(full)
+                      .editor(editor)
                       .beforePush(gallery.hide)
                       .onClose(gallery.show)
                       .push();
               }
             },
-            onLongPress: full ? selection.selectTile : null,
+            onLongPress: editor ? selection.selectTile : null,
           ),
-          if (full) FloatingActions(tag: tag),
+          if (search) FloatingActions(tag: tag),
         ],
       ),
       bottomNavigationBar: selection.on

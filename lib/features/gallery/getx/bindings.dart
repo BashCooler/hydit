@@ -18,19 +18,20 @@ class GalleryPage {
   final String tag;
 
   FileStore? files;
-  Mode mode = .full;
-  bool _popScope = false;
+  bool _search = false;
+  bool _editor = false;
   bool _swipe = false;
+  bool _popScope = false;
 
   GalleryPage() : tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
 
-  GalleryPage full() {
-    mode = .full;
+  GalleryPage withSearch() {
+    _search = true;
     return this;
   }
 
-  GalleryPage preview() {
-    mode = .preview;
+  GalleryPage withEditor() {
+    _editor = true;
     return this;
   }
 
@@ -50,7 +51,7 @@ class GalleryPage {
   }
 
   Widget build() {
-    Widget gallery = Gallery(tag: tag, mode: mode);
+    Widget gallery = Gallery(tag: tag, search: _search, editor: _editor);
 
     if (_swipe) gallery = SwipeablePage(child: gallery);
     if (_popScope) gallery = _wrapWithPopScope(gallery);
@@ -75,11 +76,6 @@ class GalleryPage {
     return AppPopScope(
       canPop: false,
       showDialog: () {
-        if (mode == .preview) {
-          Get.back();
-          return false;
-        }
-
         final SelectionController selection = Get.find(tag: tag);
         final GalleryController gallery = Get.find(tag: tag);
 
@@ -113,7 +109,7 @@ class GalleryBindings extends Bindings {
     Get.put(fileRepo, tag: page.tag);
     Get.put(selection, tag: page.tag);
 
-    if (page.mode == .full) {
+    if (page._search) {
       final query = QueryController(fileRepo: fileRepo, gallery: gallery);
       Get.put(query);
     }
