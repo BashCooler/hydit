@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'features/gallery/bindings.dart';
 import 'services/repo.dart';
 import 'widgets/shell.dart';
+import 'widgets/sidebar.dart';
 import 'utils/theme.dart';
 
 
@@ -52,6 +53,7 @@ class App extends StatelessWidget {
 
     final gallery = AppShell(
       dialog: page.dialog,
+      sidebar: const AppSideBar(),
       child: page.build(),
     );
 

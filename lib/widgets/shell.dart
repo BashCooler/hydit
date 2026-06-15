@@ -6,12 +6,14 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 
 class AppShell extends StatefulWidget {
-  final Widget child;
+  final Widget? sidebar;
   final bool Function()? dialog;
+  final Widget child;
 
   const AppShell({
     super.key,
     this.dialog,
+    this.sidebar,
     required this.child,
   });
 
@@ -54,13 +56,7 @@ class _AppShellState extends State<AppShell> {
           drawerOpened = opened;
         },
         scaffold: widget.child,
-        rightChild: Material(
-          child: ListView(
-            children: [
-              ListTile(title: Text('Settings')),
-            ],
-          ),
-        ),
+        rightChild: widget.sidebar,
       ),
     );
   }
