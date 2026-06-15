@@ -1,12 +1,40 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/editor/getx/bindings.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/features/editor/getx/bindings.dart';
 
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
+
+
+class HidableBottomBar extends StatelessWidget {
+  final String tag;
+  final Widget child;
+  final bool show;
+
+  const HidableBottomBar({
+    super.key,
+    required this.tag,
+    required this.child,
+    required this.show,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSlide(
+      curve: Curves.easeOutCubic,
+      duration: const Duration(milliseconds: 250),
+      offset: show ? .zero : const Offset(0, 1),
+      child: Wrap(
+        children: [
+          SelectActions(tag: tag),
+        ],
+      ),
+    );
+  }
+}
 
 
 class SelectActions extends StatelessWidget {

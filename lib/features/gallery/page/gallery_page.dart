@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/search/getx/bindings.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
 import 'package:hydit/reactive/file_store.dart';
@@ -68,7 +69,7 @@ class Gallery extends StatelessWidget {
           ],
         ),
         floatingActionButton: search && selection.off
-            ? const SearchFAB()
+            ? AcrylicFAB(onTap: SearchPage(tag).push)
             : null,
         bottomNavigationBar: HidableBottomBar(
           tag: tag,

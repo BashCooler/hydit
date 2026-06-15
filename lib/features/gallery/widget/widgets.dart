@@ -2,7 +2,7 @@ library;
 
 export 'app_bar.dart';
 export 'badges.dart';
-export 'floating.dart';
+export 'bottom_bar.dart';
+export 'fab.dart';
 export 'gridview.dart';
-export 'select.dart';
 export 'tile.dart';
