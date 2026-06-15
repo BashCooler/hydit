@@ -11,9 +11,7 @@ import '../getx/gallery.dart';
 
 
 class SearchFAB extends StatelessWidget {
-  final GalleryController gallery;
-
-  const SearchFAB(this.gallery, {super.key});
+  const SearchFAB({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +20,9 @@ class SearchFAB extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: .circular(16),
       ),
-      onPressed: () {},
+      onPressed: () {
+
+      },
       child: RepaintBoundary(
         child: ClipRRect(
           borderRadius: .circular(16),
@@ -39,43 +39,30 @@ class SearchFAB extends StatelessWidget {
 }
 
 
-class FloatingActions extends StatelessWidget {
+class HidableBottomBar extends StatelessWidget {
   final String tag;
+  final Widget child;
+  final bool show;
 
-  const FloatingActions({super.key, required this.tag});
-
-  void to(Widget page) => Get.to(
-    () => SwipeablePage(child: page),
-    opaque: false,
-    transition: .rightToLeft,
-  );
+  const HidableBottomBar({
+    super.key,
+    required this.tag,
+    required this.child,
+    required this.show,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final GalleryController gallery = Get.find(tag: tag);
-    return Obx(() {
-      return AnimatedContainer(
-        curve: Curves.easeOutCubic,
-        duration: const Duration(milliseconds: 350),
-        height: gallery.actionsVisible
-            ? MediaQuery.of(context).viewPadding.bottom * 2
-            : 0,
-        child: n.Wrap([
-          n.Row([
-            FilledIconButton(
-              onPressed: () => to(SettingsPage()),
-              icon: const Icon(Icons.settings),
-            ),
-            FilledIconButton(
-              onPressed: () => to(Search(tag: tag)),
-              icon: const Icon(Icons.search),
-            ),
-          ])
-            ..mainAxisAlignment = .spaceBetween
-            ..n.padding = const .only(left: 15.0, right: 15.0, bottom: 15.0),
-        ]),
-      );
-    });
+    return AnimatedSlide(
+      curve: Curves.easeOutCubic,
+      duration: const Duration(milliseconds: 350),
+      offset: show ? .zero : const Offset(0, 1),
+      child: Wrap(
+        children: [
+          child,
+        ],
+      ),
+    );
   }
 }
 

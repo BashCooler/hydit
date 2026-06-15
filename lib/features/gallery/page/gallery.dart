@@ -29,47 +29,53 @@ class Gallery extends StatelessWidget {
     final GalleryController gallery = Get.find(tag: tag);
     final SelectionController selection = Get.find(tag: tag);
 
-    return Scaffold(
-      extendBody: true,
-      extendBodyBehindAppBar: true,
-      resizeToAvoidBottomInset: false,
-      appBar: GalleryAppBar(
-        tag: tag,
-        query: search ? Get.find<QueryController>() : null,
-        actions: [
-          if (search && selection.off) const SortPopUp(),
-        ],
-      ),
-      body: Stack(
-        alignment: .bottomRight,
-        children: [
-          GalleryGridView(
-            tag: tag,
-            allowRefresh: (_) => search && selection.off,
-            onRefresh: () async {
-              if (search) Get.find<QueryController>().searchForFiles();
-            },
-            onTap: (id, index) {
-              if (gallery.refreshing.value) return;
-              switch (selection.on) {
-                case true:
-                  selection.toggle(id);
-                case false:
-                  ViewerPage(files, index, gallery)
-                      .editor(editor)
-                      .beforePush(gallery.hide)
-                      .onClose(gallery.show)
-                      .push();
-              }
-            },
-            onLongPress: editor ? selection.selectTile : null,
-          ),
-          if (search) FloatingActions(tag: tag),
-        ],
-      ),
-      bottomNavigationBar: selection.on
-          ? SelectActions(tag: tag)
-          : null,
-    );
+    return Obx(() {
+      return Scaffold(
+        extendBody: true,
+        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: false,
+        appBar: GalleryAppBar(
+          tag: tag,
+          query: search ? Get.find<QueryController>() : null,
+          actions: [
+            if (search && selection.off) const SortPopUp(),
+          ],
+        ),
+        body: Stack(
+          alignment: .bottomRight,
+          children: [
+            GalleryGridView(
+              tag: tag,
+              allowRefresh: (_) => search && selection.off,
+              onRefresh: () async {
+                if (search) Get.find<QueryController>().searchForFiles();
+              },
+              onTap: (id, index) {
+                if (gallery.refreshing.value) return;
+                switch (selection.on) {
+                  case true:
+                    selection.toggle(id);
+                  case false:
+                    ViewerPage(files, index, gallery)
+                        .editor(editor)
+                        .beforePush(gallery.hide)
+                        .onClose(gallery.show)
+                        .push();
+                }
+              },
+              onLongPress: editor ? selection.selectTile : null,
+            ),
+          ],
+        ),
+        floatingActionButton: search && selection.off
+            ? const SearchFAB()
+            : null,
+        bottomNavigationBar: HidableBottomBar(
+          tag: tag,
+          show: selection.on,
+          child: SelectActions(tag: tag),
+        ),
+      );
+    });
   }
 }

@@ -15,26 +15,9 @@ class GalleryController extends GetxController {
       : grid = GridObserverController(controller: ScrollController());
 
   ScrollController get scroll => grid.controller!;
+
   bool get actionsVisible => _actionsVisible.value;
   bool get badgesVisible => _badgesVisible.value;
-
-  @override
-  void onInit() {
-    super.onInit();
-    scroll.addListener(listener);
-  }
-
-  void listener() {
-    final direction = scroll.position.userScrollDirection;
-    switch (direction) {
-      case .forward:
-        showActions();
-      case .reverse:
-        hideActions();
-      case _:
-        break;
-    }
-  }
 
   void scrollUp() {
     scroll.animateTo(
