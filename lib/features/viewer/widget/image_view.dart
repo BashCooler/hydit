@@ -1,3 +1,10 @@
+/// This widget is created by Codex.
+///
+/// At this moment there's no out of the box solution with a good feeling
+/// double tap gesture and the level of control needed for this application.
+/// If such library appears, I will migrate to it as soon as possible.
+library;
+
 import 'dart:math' hide log;
 
 import 'package:get/get.dart';
@@ -10,12 +17,12 @@ import '../getx/page.dart';
 import 'views.dart';
 
 
-class ViewImageX extends StatelessWidget {
+class ImageView extends StatelessWidget {
   final int index;
   final String tag;
   final HydrusFile file;
 
-  const ViewImageX({
+  const ImageView({
     super.key,
     required this.index,
     required this.tag,

@@ -14,12 +14,12 @@ import 'seekbar.dart';
 import 'views.dart';
 
 
-class ViewVideo extends StatefulWidget {
+class VideoView extends StatefulWidget {
   final int index;
   final String tag;
   final HydrusFile file;
 
-  const ViewVideo({
+  const VideoView({
     super.key,
     required this.index,
     required this.tag,
@@ -27,10 +27,10 @@ class ViewVideo extends StatefulWidget {
   });
 
   @override
-  State<ViewVideo> createState() => _ViewVideoState();
+  State<VideoView> createState() => _VideoViewState();
 }
 
-class _ViewVideoState extends State<ViewVideo> {
+class _VideoViewState extends State<VideoView> {
   late final player = Player(configuration: PlayerConfiguration())
     ..setVolume(0.0);
   late final controller = VideoController(player);

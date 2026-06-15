@@ -44,9 +44,9 @@ class ViewFile extends StatelessWidget {
   Widget buildContent(String type) {
     switch (type) {
       case 'image':
-        return ViewImageX(index: index, file: file, tag: tag);
+        return ImageView(index: index, file: file, tag: tag);
       case 'video':
-        return ViewVideo(index: index, file: file, tag: tag);
+        return VideoView(index: index, file: file, tag: tag);
       case _:
         return NotSupported(file.meta!.type);
     }
