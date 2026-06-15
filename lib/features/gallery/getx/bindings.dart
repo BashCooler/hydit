@@ -1,9 +1,11 @@
+import 'package:full_swipe_back_gesture/full_swipe_back_gesture.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/utils/theme.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/getx/query.dart';
+import 'package:hydit/widgets/app_pop_scope.dart';
 
 import '../page/gallery.dart';
 import 'gallery.dart';
@@ -13,12 +15,14 @@ enum Mode { full, preview }
 
 
 class GalleryPage {
-  final FileStore files;
+  final String tag;
 
-  String? tag;
+  FileStore? files;
   Mode mode = .full;
+  bool _popScope = false;
+  bool _swipe = false;
 
-  GalleryPage(this.files);
+  GalleryPage() : tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
 
   GalleryPage full() {
     mode = .full;
@@ -30,20 +34,65 @@ class GalleryPage {
     return this;
   }
 
-  GalleryPage passTag(String tag) {
-    this.tag = tag;
+  GalleryPage withFiles(FileStore files) {
+    this.files = files;
     return this;
   }
 
-  void push() {
-    tag ??= 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
+  GalleryPage withAppPopScope() {
+    _popScope = true;
+    return this;
+  }
 
+  GalleryPage withSwipeBackGesture() {
+    _swipe = true;
+    return this;
+  }
+
+  Widget build() {
+    Widget gallery = Gallery(tag: tag, mode: mode);
+
+    if (_swipe) gallery = SwipeablePage(child: gallery);
+    if (_popScope) gallery = _wrapWithPopScope(gallery);
+
+    return gallery;
+  }
+
+  void push() {
     Get.to(
-      () => Gallery(tag: tag!, mode: mode),
+      () => build(),
+      opaque: false,
       transition: .rightToLeft,
       duration: AppTheme.duration,
       curve: Curves.easeInOutCubic,
       binding: GalleryBindings(this),
+    );
+  }
+
+  // MARK: WRAPPERS
+
+  Widget _wrapWithPopScope(Widget child) {
+    return AppPopScope(
+      canPop: false,
+      showDialog: () {
+        if (mode == .preview) {
+          Get.back();
+          return false;
+        }
+
+        final SelectionController selection = Get.find(tag: tag);
+        final GalleryController gallery = Get.find(tag: tag);
+
+        switch (selection.on) {
+          case true:
+            selection.clear();
+            gallery..unlockActions()..showActions();
+            return false;
+          case false:
+            return true;
+        }
+      },
+      child: child,
     );
   }
 }
@@ -54,12 +103,9 @@ class GalleryBindings extends Bindings {
 
   GalleryBindings(this.page);
 
-  GalleryBindings.fromTag(String tag)
-      : page = GalleryPage(FileStore()).passTag(tag);
-
   @override
   void dependencies() {
-    final fileRepo = FileStore.copy(page.files);
+    final fileRepo = page.files?.copy() ?? FileStore();
     final gallery = GalleryController();
     final selection = SelectionController(fileRepo, gallery);
 

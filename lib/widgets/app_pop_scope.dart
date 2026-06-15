@@ -5,19 +5,21 @@ import 'package:niku/namespace.dart' as n;
 
 
 class AppPopScope extends StatelessWidget {
-  final bool Function()? shouldShow;
+  final bool Function()? showDialog;
   final Widget child;
+  final bool canPop;
 
   const AppPopScope({
     super.key,
-    this.shouldShow,
+    this.showDialog,
+    this.canPop = true,
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: canPop,
       onPopInvokedWithResult: handle,
       child: child,
     );
@@ -26,7 +28,7 @@ class AppPopScope extends StatelessWidget {
   void handle(bool didPop, Object? result) {
     if (didPop) return;
 
-    final show = shouldShow?.call() ?? true;
+    final show = showDialog?.call() ?? true;
     if (show) {
       Get.dialog(
         AppPopDialog(),

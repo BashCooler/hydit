@@ -36,6 +36,15 @@ class GalleryController extends GetxController {
     }
   }
 
+  void scrollUp() {
+    scroll.animateTo(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInCubic,
+    );
+    showActions();
+  }
+
   void hide() => this..hideActions()..hideBadges();
 
   void show() => this..showActions()..showBadges();

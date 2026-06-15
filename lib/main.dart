@@ -8,7 +8,6 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'utils/theme.dart';
 import 'services/repo.dart';
-import 'features/gallery/page/gallery.dart';
 import 'features/gallery/getx/bindings.dart';
 
 
@@ -46,7 +45,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
+    final page = GalleryPage().withAppPopScope();
+
     return GetMaterialApp(
       title: 'Hydit',
       debugShowCheckedModeBanner: false,
@@ -57,8 +57,8 @@ class App extends StatelessWidget {
           name: '/',
           transition: .rightToLeft,
           curve: Curves.easeInOutCubic,
-          page: () => Gallery(tag: tag),
-          binding: GalleryBindings.fromTag(tag),
+          page: () => page.build(),
+          binding: GalleryBindings(page),
         ),
       ],
     );

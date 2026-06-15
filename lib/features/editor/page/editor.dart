@@ -89,8 +89,10 @@ class _EditorState extends State<Editor> {
             manager: manager,
             onTap: () {
               final FileStore files = Get.find(tag: widget.tag);
-              GalleryPage(files)
+              GalleryPage()
                   .preview()
+                  .withSwipeBackGesture()
+                  .withFiles(files)
                   .push();
             },
           ),

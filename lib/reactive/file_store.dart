@@ -44,3 +44,8 @@ class FileStore {
       .whereType<HydrusFile>()
       .toList();
 }
+
+
+extension Copy on FileStore {
+  FileStore copy() => FileStore.copy(this);
+}
