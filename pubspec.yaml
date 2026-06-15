@@ -36,8 +36,10 @@ dependencies:
   # Storage
   hive_ce: ^2.19.3
   hive_ce_flutter: ^2.3.4
+  # Network
+  dio: ^5.9.2
+  connectivity_plus: ^7.1.1
   # Widgets
-  smooth_sheets: ^1.0.2
   dismissible_page:
     git: https://github.com/itsezlife/Flutter_dismissible_page/
   multi_split_view: ^3.6.1
@@ -50,13 +52,15 @@ dependencies:
   snapping_sheet_2: ^3.1.5
   full_swipe_back_gesture:
     git: https://github.com/BashCooler/full-swipe-back-gesture
+  flutter_inner_drawer:
+    git: https://github.com/NO-ob/flutter_inner_drawer  # thx a lot for this!
+  scrollview_observer: ^1.26.3
+  flutter_custom_tabs: ^2.5.0
   # Video player
   media_kit: ^1.2.6
   media_kit_video: ^2.0.1
   media_kit_libs_video: ^1.0.7
   # Other packages
-  dio: ^5.9.2
-  scrollview_observer: ^1.26.3
   deep_pick: ^1.1.0
   filesize: ^2.0.1
   equatable: ^2.0.8
@@ -65,9 +69,7 @@ dependencies:
   font_awesome_flutter: ^11.0.0
   package_info_plus: ^10.1.0
   pub_semver: ^2.2.0
-  flutter_custom_tabs: ^2.5.0
   dartx: ^1.2.0
-  connectivity_plus: ^7.1.1
   permission_handler: ^12.0.3
 
   # The following adds the Cupertino Icons font to your application.
