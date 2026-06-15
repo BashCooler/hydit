@@ -7,7 +7,7 @@ import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/widgets/app_pop_scope.dart';
 
-import '../page/gallery.dart';
+import '../page/gallery_page.dart';
 import 'gallery.dart';
 import 'selection.dart';
 
