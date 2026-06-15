@@ -13,8 +13,8 @@ import '../getx/settings.dart';
 import '../widget/text_field.dart';
 
 
-class SettingsPage extends HookWidget {
-  const SettingsPage({super.key});
+class Settings extends HookWidget {
+  const Settings({super.key});
 
   @override
   Widget build(BuildContext context) {
