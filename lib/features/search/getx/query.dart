@@ -45,7 +45,7 @@ class QueryController extends GetxController {
 
   void remove(Tag tag) => _tags.remove(tag);
 
-  void clearTags() => _tags.clear();
+  void clear() => _tags.clear();
 
   void saveQuery() {
     final box = Hive.box('settings');

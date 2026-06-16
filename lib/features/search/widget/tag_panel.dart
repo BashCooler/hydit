@@ -8,17 +8,23 @@ import '../getx/query.dart';
 
 
 class TagPanel extends StatelessWidget {
+  final QueryController query;
   final VoidCallback? onTap;
   final Widget? actions;
 
-  const TagPanel({super.key, this.onTap, this.actions});
+  const TagPanel({
+    super.key,
+    required this.query,
+    this.onTap,
+    this.actions,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       fit: .expand,
       children: [
-        const PlaceholderText(),
+        PlaceholderText(query: query),
         InkWell(
           onTap: onTap,
           child: Padding(
@@ -44,12 +50,11 @@ class TagPanel extends StatelessWidget {
   }
 
   List<InputChip> buildChips() {
-    final QueryController controller = Get.find();
-    return controller.tags.map((tag) {
+    return query.tags.map((tag) {
       return InputChip(
         label: tag.value.n,
         backgroundColor: colorOf(tag),
-        onDeleted: () => controller.remove(tag),
+        onDeleted: () => query.remove(tag),
       );
     }).toList();
   }
@@ -57,18 +62,18 @@ class TagPanel extends StatelessWidget {
 
 
 class PlaceholderText extends StatelessWidget {
-  const PlaceholderText({super.key});
+  final QueryController query;
+
+  const PlaceholderText({super.key, required this.query});
 
   @override
   Widget build(BuildContext context) {
-    final QueryController controller = Get.find();
-
     return Padding(
       padding: const .only(left: 16),
       child: Align(
         alignment: .centerLeft,
         child: Obx(() {
-          if (controller.tags.isNotEmpty) {
+          if (query.tags.isNotEmpty) {
             return const SizedBox.shrink();
           }
           return 'No tags'.n..fontSize = 16;

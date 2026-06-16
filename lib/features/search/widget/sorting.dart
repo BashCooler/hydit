@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/extra/primitive.dart';
 
@@ -8,11 +7,12 @@ import '../getx/query.dart';
 
 
 class SortPopUp extends StatelessWidget {
-  const SortPopUp({super.key});
+  final QueryController query;
+
+  const SortPopUp({super.key, required this.query});
 
   @override
   Widget build(BuildContext context) {
-    final query = Get.find<QueryController>();
     return PopupMenuButton<FileSortType>(
       icon: const Icon(
         Icons.sort,

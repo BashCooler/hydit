@@ -51,7 +51,6 @@ class GalleryGridView extends StatelessWidget {
             case .done:
             case .canceled:
               gallery.refreshing.value = false;
-              gallery.showActions();
             case _:
               gallery.refreshing.value = true;
           }

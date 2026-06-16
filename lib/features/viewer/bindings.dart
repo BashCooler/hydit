@@ -66,14 +66,17 @@ class ViewerBindings implements Bindings {
 
   @override
   void dependencies() {
-    final sheet = SnappingSheetController();
-    final fileRepo = FileStore.copy(page.files);
-
-    Get.put(fileRepo, tag: page.tag);
+    Get.put(
+      FileStore.copy(page.files),
+      tag: page.tag,
+    );
     Get.put(
       PageGetxController(initial: page.index, grid: page.gallery.grid),
       tag: page.tag,
     );
-    Get.put(sheet, tag: page.tag);
+    Get.put(
+      SnappingSheetController(),
+      tag: page.tag,
+    );
   }
 }

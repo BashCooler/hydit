@@ -1,18 +1,19 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:full_swipe_back_gesture/full_swipe_back_gesture.dart';
+import 'package:hydit/features/search/getx/query.dart';
 
 import 'page/search.dart';
 
 
 class SearchPage {
-  final String tag;
+  final QueryController query;
 
-  SearchPage(this.tag);
+  SearchPage({required this.query});
 
   Widget build() {
     return SwipeablePage(
-      child: Search(tag: tag),
+      child: Search(query: query),
     );
   }
 

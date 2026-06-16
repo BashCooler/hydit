@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/widgets/tag_list.dart';
 import 'package:niku/namespace.dart' as n;
+import 'package:hydit/widgets/tag_list.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:hydit/utils/theme.dart';
-import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import '../getx/query.dart';
 import '../getx/search.dart';
@@ -14,84 +14,67 @@ import '../widget/tag_panel.dart';
 import '../widget/tag_actions.dart';
 
 
-class Search extends StatefulWidget {
-  final String tag;
+class Search extends HookWidget {
+  final QueryController query;
 
-  const Search({super.key, required this.tag});
+  const Search({super.key, required this.query});
 
-  @override
-  State<Search> createState() => _SearchState();
-}
-
-class _SearchState extends State<Search> {
-  final tagSearch = TagSearchController();
-  final QueryController query = Get.find();
-
-  void searchThenBack() {
-    if (query.tags.isEmpty) {
-      query.add(tagSearch.text);
-    }
+  void searchThenBack(String entry) {
+    if (query.tags.isEmpty) query.add(entry);
     query.searchForFiles();
     Get.back();
   }
 
-  void onLeave(bool didPop, Object? result) {
-    Future.delayed(AppTheme.duration, () {
-      final GalleryController gallery = Get.find(tag: widget.tag);
-      gallery.showActions();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      onPopInvokedWithResult: onLeave,
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 2,
-          scrolledUnderElevation: 0,
-          title: Text('Search'),
-        ),
-        body: n.Column([
-          Expanded(
-            child: Suggests(
-              tagSearchController: tagSearch,
-              itemBuilder: (context, tag) => TagTile(
-                tag: tag,
-                trailing: tag.count?.toString().n
-                  ?..color = colorOf(tag)
-                  ..fontSize = 14,
-                onTap: (tag) {
-                  tagSearch.clear();
-                  query.add(tag.raw);
-                },
-              ),
-            ),
-          ),
-          const Divider(height: 1),
-          TagPanel(
-            actions: TagActions(
-              onClear: query.clearTags,
-              onInsert: () {
-                query.add(tagSearch.text);
-                tagSearch.clear();
+    final search = useMemoized(() => TagSearchController());
+
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 2,
+        scrolledUnderElevation: 0,
+        title: Text('Search'),
+      ),
+      body: n.Column([
+        Expanded(
+          child: Suggests(
+            tagSearchController: search,
+            itemBuilder: (context, tag) => TagTile(
+              tag: tag,
+              trailing: tag.count?.toString().n
+                ?..color = colorOf(tag)
+                ..fontSize = 14,
+              onTap: (tag) {
+                search.clear();
+                query.add(tag.raw);
               },
             ),
           ),
-          TagSearchBar(
-            autofocus: true,
-            hintText: 'Enter tags here',
-            tagSearchController: tagSearch,
-            actions: TagActions(
-              onClear: tagSearch.clear,
-              onSearch: searchThenBack,
-            ),
-            onSubmitted: searchThenBack,
+        ),
+        const Divider(height: 1),
+        TagPanel(
+          query: query,
+          actions: TagActions(
+            onClear: query.clear,
+            onInsert: () {
+              query.add(search.text);
+              search.clear();
+            },
           ),
-        ])
-          ..mainAxisAlignment = .end
-          ..safe,
-      ),
+        ),
+        TagSearchBar(
+          autofocus: true,
+          hintText: 'Enter tags here',
+          tagSearchController: search,
+          actions: TagActions(
+            onClear: search.clear,
+            onSearch: () => searchThenBack(search.text),
+          ),
+          onSubmitted: () => searchThenBack(search.text),
+        ),
+      ])
+        ..mainAxisAlignment = .end
+        ..safe,
     );
   }
 }

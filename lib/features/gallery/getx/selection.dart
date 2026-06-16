@@ -24,15 +24,9 @@ class SelectionController extends GetxController {
       case false:
         ids.add(id);
     }
-    if (on) {
-      gallery..unlockActions()..showActions();
-    }
   }
 
-  void clear() {
-    ids.clear();
-    gallery..unlockActions()..showActions();
-  }
+  void clear() => ids.clear();
 
   bool isSelected(int id) => ids.contains(id);
 
@@ -64,6 +58,5 @@ class SelectionController extends GetxController {
   void selectTile(int id) {
     if (gallery.refreshing.value) return;
     toggle(id);
-    if (on) gallery..hideActions()..lockActions();
   }
 }

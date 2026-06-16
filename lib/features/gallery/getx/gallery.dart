@@ -4,8 +4,6 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 
 
 class GalleryController extends GetxController {
-  bool _actionsLocked = false;
-  final _actionsVisible = true.obs;
   final refreshing = false.obs;
   final _badgesVisible = true.obs;
 
@@ -16,7 +14,6 @@ class GalleryController extends GetxController {
 
   ScrollController get scroll => grid.controller!;
 
-  bool get actionsVisible => _actionsVisible.value;
   bool get badgesVisible => _badgesVisible.value;
 
   void scrollUp() {
@@ -25,24 +22,7 @@ class GalleryController extends GetxController {
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInCubic,
     );
-    showActions();
   }
-
-  void hide() => this..hideActions()..hideBadges();
-
-  void show() => this..showActions()..showBadges();
-
-  void showActions() => _actionsLocked
-      ? null
-      : _actionsVisible.value = true;
-
-  void hideActions() => _actionsLocked
-      ? null
-      : _actionsVisible.value = false;
-
-  void lockActions() => _actionsLocked = true;
-
-  void unlockActions() => _actionsLocked = false;
 
   void showBadges() => _badgesVisible.value = true;
 

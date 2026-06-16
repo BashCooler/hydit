@@ -26,9 +26,14 @@ class Gallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FileStore files = Get.find(tag: tag);
-    final GalleryController gallery = Get.find(tag: tag);
-    final SelectionController selection = Get.find(tag: tag);
+    final files = Get
+        .find<FileStore>(tag: tag);
+    final query = Get
+        .find<QueryController>(tag: tag);
+    final gallery = Get
+        .find<GalleryController>(tag: tag);
+    final selection = Get
+        .find<SelectionController>(tag: tag);
 
     return Obx(() {
       return Scaffold(
@@ -37,9 +42,9 @@ class Gallery extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: GalleryAppBar(
           tag: tag,
-          query: search ? Get.find<QueryController>() : null,
+          query: search ? query : null,
           actions: [
-            if (search && selection.off) const SortPopUp(),
+            if (search && selection.off) SortPopUp(query: query),
           ],
         ),
         body: Stack(
@@ -49,7 +54,7 @@ class Gallery extends StatelessWidget {
               tag: tag,
               allowRefresh: (_) => search && selection.off,
               onRefresh: () async {
-                if (search) Get.find<QueryController>().searchForFiles();
+                if (search) Get.find<QueryController>(tag: tag).searchForFiles();
               },
               onTap: (id, index) {
                 if (gallery.refreshing.value) return;
@@ -59,8 +64,8 @@ class Gallery extends StatelessWidget {
                   case false:
                     ViewerPage(files, index, gallery)
                         .editor(editor)
-                        .beforePush(gallery.hide)
-                        .onClose(gallery.show)
+                        .beforePush(gallery.hideBadges)
+                        .onClose(gallery.showBadges)
                         .push();
                 }
               },
@@ -69,7 +74,7 @@ class Gallery extends StatelessWidget {
           ],
         ),
         floatingActionButton: search && selection.off
-            ? AcrylicFAB(onTap: SearchPage(tag).push)
+            ? AcrylicFAB(onTap: SearchPage(query: query).push)
             : null,
         bottomNavigationBar: HidableBottomBar(
           tag: tag,

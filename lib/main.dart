@@ -6,7 +6,9 @@ import 'package:media_kit/media_kit.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'features/search/getx/query.dart';
 import 'features/gallery/bindings.dart';
+import 'features/settings/bindings.dart';
 import 'services/repo.dart';
 import 'widgets/shell.dart';
 import 'widgets/sidebar.dart';
@@ -51,9 +53,32 @@ class App extends StatelessWidget {
         .withSearch()
         .withEditor();
 
+    final tiles = [
+      ListTile(
+        leading: const Icon(Icons.mail_outline),
+        title: const Text("Inbox"),
+        onTap: () {
+          final query = Get
+              .find<QueryController>(tag: page.tag);
+          query
+            ..clear()
+            ..add('system:inbox')
+            ..searchForFiles();
+          Get.back();
+        },
+      ),
+      ListTile(
+        leading: const Icon(Icons.settings),
+        title: const Text('Settings'),
+        onTap: SettingsPage().push,
+      ),
+    ];
+
     final gallery = AppShell(
       dialog: page.dialog,
-      sidebar: const AppSideBar(),
+      sidebar: SideBar(
+        tiles: tiles,
+      ),
       child: page.build(),
     );
 

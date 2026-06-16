@@ -69,12 +69,10 @@ class GalleryPage {
   /// - false - don't show dialog
   bool dialog() {
     final SelectionController selection = Get.find(tag: tag);
-    final GalleryController gallery = Get.find(tag: tag);
 
     switch (selection.on) {
       case true:
         selection.clear();
-        gallery..unlockActions()..showActions();
         return false;
       case false:
         return true;
@@ -99,8 +97,10 @@ class GalleryBindings extends Bindings {
     Get.put(selection, tag: page.tag);
 
     if (page._search) {
-      final query = QueryController(fileRepo: fileRepo, gallery: gallery);
-      Get.put(query);
+      Get.put(
+        QueryController(fileRepo: fileRepo, gallery: gallery),
+        tag: page.tag,
+      );
     }
   }
 }

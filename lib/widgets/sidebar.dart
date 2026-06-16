@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hydit/features/settings/bindings.dart';
 
 
-class AppSideBar extends StatelessWidget {
-  const AppSideBar({super.key});
+class SideBar extends StatelessWidget {
+  final List<Widget> tiles;
+
+  const SideBar({super.key, required this.tiles});
 
   @override
   Widget build(BuildContext context) {
-    final tiles = [
-      ListTile(
-        leading: Icon(Icons.settings),
-        title: Text('Settings'),
-        onTap: SettingsPage().push,
-      ),
-    ];
-
     return Material(
       child: Align(
         alignment: .center,
