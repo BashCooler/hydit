@@ -54,7 +54,7 @@ class Gallery extends StatelessWidget {
               tag: tag,
               allowRefresh: (_) => search && selection.off,
               onRefresh: () async {
-                if (search) Get.find<QueryController>(tag: tag).searchForFiles();
+                if (search) query.searchForFiles();
               },
               onTap: (id, index) {
                 if (gallery.refreshing.value) return;

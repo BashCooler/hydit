@@ -14,6 +14,12 @@ class AcrylicFAB extends StatelessWidget {
       backgroundColor: const Color.fromARGB(108, 0, 0, 0),
       shape: RoundedRectangleBorder(
         borderRadius: .circular(16),
+        side: BorderSide(
+          color: Theme.of(context)
+              .colorScheme
+              .onInverseSurface
+              .withAlpha(92),
+        ),
       ),
       onPressed: onTap,
       child: RepaintBoundary(
