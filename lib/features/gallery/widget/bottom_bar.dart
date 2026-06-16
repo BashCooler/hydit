@@ -72,7 +72,7 @@ class SelectionBottomBar extends StatelessWidget {
               }),
 
               Obx(() {
-                switch (selection.rangeSelected) {
+                switch (selection.selectedRange) {
                   case true:
                     return IconButton(
                       tooltip: 'Select range',

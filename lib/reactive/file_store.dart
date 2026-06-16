@@ -35,6 +35,11 @@ class FileStore {
     return _files.indexWhere(test, start);
   }
 
+  int? indexById(int id) {
+    final index = indexWhere((e) => e.id == id);
+    return index > -1 ? index : null;
+  }
+
   HydrusFile? byId(int id) {
     return _files.firstWhereOrNull((f) => f.id == id);
   }
@@ -43,9 +48,6 @@ class FileStore {
       .map((id) => byId(id))
       .whereType<HydrusFile>()
       .toList();
-}
 
-
-extension Copy on FileStore {
   FileStore copy() => FileStore.copy(this);
 }

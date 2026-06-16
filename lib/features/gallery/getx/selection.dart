@@ -12,8 +12,16 @@ class SelectionController extends GetxController {
 
   SelectionController(this.files, this.gallery);
 
-  bool get rangeSelected => ids.length == 2;
   bool get selectedAll => ids.length == files.length;
+
+  bool get selectedRange {
+    if (ids.length != 2) return false;  // important
+    final r = range();
+    return switch (r) {
+      null => false,
+      _ => r.$2 - r.$1 > 1,
+    };
+  }
 
   bool get on => ids.isNotEmpty;
   bool get off => ids.isEmpty;
@@ -33,24 +41,13 @@ class SelectionController extends GetxController {
   }
 
   void selectRange() {
-    if (!rangeSelected) return;
-
-    final index1 = files.indexWhere((e) => e.id == ids.first);
-    final index2 = files.indexWhere((e) => e.id == ids.last);
-
-    if (index1 < 0 || index2 < 0) return;
-
-    final begin = index1 < index2
-        ? index1
-        : index2;
-    final end = index1 < index2
-        ? index2
-        : index1;
+    final r = range();
+    if (r == null) return;
 
     final lastId = ids.last;
     ids.remove(lastId);
 
-    for (int i = begin; i < end; i++) {
+    for (int i = r.$1; i < r.$2; i++) {
       ids.add(files[i].id);
     }
 
@@ -61,5 +58,20 @@ class SelectionController extends GetxController {
     for (int i = 0; i < files.length; i++) {
       ids.add(files[i].id);
     }
+  }
+
+  (int, int)? range() {
+    if (ids.length != 2) return null;
+
+    final indices = <int>[
+      ?files.indexById(ids.first),
+      ?files.indexById(ids.last),
+    ];
+
+    if (indices.length < 2) return null;
+
+    indices.sort();
+
+    return (indices.first, indices.last);
   }
 }
