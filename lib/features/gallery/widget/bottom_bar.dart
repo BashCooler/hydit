@@ -1,110 +1,146 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/features/editor/bindings.dart';
 
-import '../getx/gallery.dart';
 import '../getx/selection.dart';
 
 
-class HidableBottomBar extends StatelessWidget {
+class SelectionBottomBar extends StatelessWidget {
   final String tag;
-  final Widget child;
   final bool show;
+  final void Function(int index)? onEdit;
+  final void Function(FileStore files, List<int> ids)? onBatchEdit;
 
-  const HidableBottomBar({
+  const SelectionBottomBar({
     super.key,
     required this.tag,
-    required this.child,
-    required this.show,
+    this.show = true,
+    this.onEdit,
+    this.onBatchEdit,
   });
 
   @override
   Widget build(BuildContext context) {
+    final FileStore files = Get.find(tag: tag);
+    final SelectionController selection = Get.find(tag: tag);
+
     return AnimatedSlide(
       curve: Curves.easeOutCubic,
       duration: const Duration(milliseconds: 250),
       offset: show ? .zero : const Offset(0, 1),
-      child: Wrap(
-        children: [
-          SelectActions(tag: tag),
-        ],
+      child: BottomAppBar(
+        color: Get.theme
+            .scaffoldBackgroundColor
+            .withAlpha(90),
+        padding: const .fromLTRB(10, 0, 10, 0),
+        child: Row(
+          mainAxisAlignment: .spaceBetween,
+          children: [
+            Counter(count: selection.ids.length),
+
+            n.Row([
+
+              IconButton(
+                tooltip: 'Edit tags',
+                icon: const Icon(Icons.edit),
+                color: Colors.white,
+                onPressed: () async {
+                  switch (selection.ids.length) {
+                    case 1:
+                      final id = selection.ids.first;
+                      final index = files.indexWhere((f) => f.id == id);
+                      onEdit?.call(index);
+                    case _:
+                      final ids = selection.ids.toList();
+                      onBatchEdit?.call(
+                        FileStore.pickFrom(files, ids),
+                        ids,
+                      );
+                  }
+                },
+              ),
+
+              Obx(() {
+                return SelectAllButton(
+                  selected: selection.selectedAll,
+                  select: selection.selectAll,
+                  clear: selection.clear,
+                );
+              }),
+
+              Obx(() {
+                switch (selection.rangeSelected) {
+                  case true:
+                    return IconButton(
+                      tooltip: 'Select range',
+                      icon: const Icon(Symbols.fit_width),
+                      color: Colors.white,
+                      onPressed: selection.selectRange,
+                    );
+                  case false:
+                    return const SizedBox.shrink();
+                }
+              }),
+
+            ])
+              ..gap = 10
+          ],
+        ),
       ),
     );
   }
 }
 
 
-class SelectActions extends StatelessWidget {
-  final String tag;
+class Counter extends StatelessWidget {
+  final int count;
 
-  const SelectActions({super.key, required this.tag});
+  const Counter({super.key, required this.count});
 
   @override
   Widget build(BuildContext context) {
-    final FileStore files = Get.find(tag: tag);
-    final SelectionController selection = Get.find(tag: tag);
-    final GalleryController gallery = Get.find(tag: tag);
-
-    return BottomAppBar(
-      color: Get.theme.scaffoldBackgroundColor.withAlpha(90),
-      child: n.Row([
-        Obx(() {
-          return '${selection.ids.length} selected'.n
-            ..expanded
-            ..color = Colors.white
-            ..fontSize = 16
-            ..fontWeight = .w500
-            ..shadows = [Shadow(blurRadius: 24)]
-            ..textAlign = .center;
-        }),
-        n.Row([
-          IconButton(
-            tooltip: 'Edit tags',
-            icon: const Icon(Icons.edit),
-            color: Colors.white,
-            onPressed: () async {
-              switch (selection.ids.length) {
-                case 1:
-                  final id = selection.ids.first;
-                  final index = files.indexWhere((f) => f.id == id);
-
-                  EditorPage(files)
-                      .paged(index, gallery)
-                      .onClose(selection.clear)
-                      .push();
-
-                case _:
-                  final ids = selection.ids.toList();
-                  final subFiles = FileStore.pickFrom(files, ids);
-
-                  EditorPage(subFiles)
-                      .batch(gallery, ids)
-                      .onClose(selection.clear)
-                      .push();
-              }
-            },
-          ),
-          Obx(() {
-            switch (selection.rangeSelected) {
-              case true:
-                return IconButton(
-                  tooltip: 'Select range',
-                  icon: const Icon(Icons.select_all),
-                  color: Colors.white,
-                  onPressed: selection.selectRange,
-                );
-              case false:
-                return const SizedBox.shrink();
-            }
-          }),
-        ])
-          ..gap = 10
-          ..padding = const .only(right: 10),
-      ])
-        ..mainAxisAlignment = .spaceBetween,
+    final colors = Theme.of(context).colorScheme;
+    return Container(
+      padding: const .fromLTRB(22, 0, 10, 0),
+      child: Material(
+        borderRadius: .circular(12),
+        color: colors.error,
+        child: '$count'.n
+          ..titleMedium
+          ..color = colors.onError
+          ..n.padding = const .fromLTRB(8, 0, 8, 0),
+      ),
     );
   }
 }
+
+
+class SelectAllButton extends StatelessWidget {
+  final bool selected;
+  final void Function()? select;
+  final void Function()? clear;
+
+  const SelectAllButton({
+    super.key,
+    required this.selected,
+    this.select,
+    this.clear,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: selected ? 'Clear selection' : 'Select all',
+      icon: selected
+          ? const Icon(Symbols.select)
+          : const Icon(Symbols.select_all),
+      color: Colors.white,
+      onPressed: selected ? clear : select,
+    );
+  }
+}
+
+

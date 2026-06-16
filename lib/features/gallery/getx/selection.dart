@@ -13,11 +13,17 @@ class SelectionController extends GetxController {
   SelectionController(this.files, this.gallery);
 
   bool get rangeSelected => ids.length == 2;
+  bool get selectedAll => ids.length == files.length;
 
   bool get on => ids.isNotEmpty;
   bool get off => ids.isEmpty;
 
-  void toggle(int id) {
+  void clear() => ids.clear();
+
+  bool isSelected(int id) => ids.contains(id);
+
+  void selectTile(int id, int index) {
+    if (gallery.refreshing.value) return;
     switch (ids.contains(id)) {
       case true:
         ids.remove(id);
@@ -25,10 +31,6 @@ class SelectionController extends GetxController {
         ids.add(id);
     }
   }
-
-  void clear() => ids.clear();
-
-  bool isSelected(int id) => ids.contains(id);
 
   void selectRange() {
     if (!rangeSelected) return;
@@ -55,8 +57,9 @@ class SelectionController extends GetxController {
     ids.add(lastId);
   }
 
-  void selectTile(int id) {
-    if (gallery.refreshing.value) return;
-    toggle(id);
+  void selectAll() {
+    for (int i = 0; i < files.length; i++) {
+      ids.add(files[i].id);
+    }
   }
 }

@@ -14,7 +14,7 @@ class Tile extends StatelessWidget {
   final HydrusFile file;
   final int index;
   final void Function(int id, int index)? onTap;
-  final void Function(int id)? onLongPress;
+  final void Function(int id, int index)? onLongPress;
 
   const Tile({
     super.key,
@@ -39,7 +39,7 @@ class Tile extends StatelessWidget {
     return GestureDetector(
       key: ValueKey(file.id),
       onTap: () => onTap?.call(file.id, index),
-      onLongPress: () => onLongPress?.call(file.id),
+      onLongPress: () => onLongPress?.call(file.id, index),
       child: Stack(
         alignment: .bottomRight,
         children: [

@@ -13,7 +13,7 @@ class GalleryGridView extends StatelessWidget {
   final String tag;
   final RefreshCallback? onRefresh;
   final void Function(int id, int index)? onTap;
-  final void Function(int id)? onLongPress;
+  final void Function(int id, int index)? onLongPress;
   final bool Function(ScrollNotification) allowRefresh;
 
   const GalleryGridView({

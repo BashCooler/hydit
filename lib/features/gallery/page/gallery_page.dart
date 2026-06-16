@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/editor/bindings.dart';
 import 'package:hydit/features/search/bindings.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
@@ -57,10 +58,9 @@ class Gallery extends StatelessWidget {
                 if (search) query.searchForFiles();
               },
               onTap: (id, index) {
-                if (gallery.refreshing.value) return;
                 switch (selection.on) {
                   case true:
-                    selection.toggle(id);
+                    selection.selectTile(id, index);
                   case false:
                     ViewerPage(files, index, gallery)
                         .editor(editor)
@@ -76,10 +76,17 @@ class Gallery extends StatelessWidget {
         floatingActionButton: search && selection.off
             ? AcrylicFAB(onTap: SearchPage(query: query).push)
             : null,
-        bottomNavigationBar: HidableBottomBar(
+        bottomNavigationBar: SelectionBottomBar(
           tag: tag,
           show: selection.on,
-          child: SelectActions(tag: tag),
+          onEdit: (index) => EditorPage(files)
+              .paged(index, gallery)
+              .onClose(selection.clear)
+              .push(),
+          onBatchEdit: (files, ids) => EditorPage(files)
+              .batch(gallery, ids)
+              .onClose(selection.clear)
+              .push(),
         ),
       );
     });
