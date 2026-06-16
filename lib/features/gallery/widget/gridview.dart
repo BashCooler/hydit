@@ -15,6 +15,7 @@ class GalleryGridView extends StatelessWidget {
   final void Function(int id, int index)? onTap;
   final void Function(int id, int index)? onLongPress;
   final bool Function(ScrollNotification) allowRefresh;
+  final bool Function(int id)? selected;
 
   const GalleryGridView({
     super.key,
@@ -23,6 +24,7 @@ class GalleryGridView extends StatelessWidget {
     this.onTap,
     this.onLongPress,
     this.allowRefresh = defaultScrollNotificationPredicate,
+    this.selected,
   });
 
   static const physics = BouncingScrollPhysics(
@@ -77,10 +79,13 @@ class GalleryGridView extends StatelessWidget {
                       file.forceLoadMetadata();
                       return const ColoredBox(color: Colors.white10);
                     case true:
+                      final file = files[index];
                       return Tile(
                         tag: tag,
                         index: index,
-                        file: files[index],
+                        file: file,
+                        selected: selected?.call(file.id) ?? false,
+                        badges: gallery.badgesVisible,
                         onTap: onTap,
                         onLongPress: onLongPress,
                       );

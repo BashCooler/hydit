@@ -57,6 +57,7 @@ class Gallery extends StatelessWidget {
               onRefresh: () async {
                 if (search) query.searchForFiles();
               },
+              selected: (id) => selection.isSelected(id),
               onTap: (id, index) {
                 switch (selection.on) {
                   case true:

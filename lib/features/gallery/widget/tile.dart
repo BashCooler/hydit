@@ -1,11 +1,8 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/widgets/images.dart';
 
-import '../getx/gallery.dart';
-import '../getx/selection.dart';
 import 'badges.dart';
 
 
@@ -15,6 +12,8 @@ class Tile extends StatelessWidget {
   final int index;
   final void Function(int id, int index)? onTap;
   final void Function(int id, int index)? onLongPress;
+  final bool selected;
+  final bool badges;
 
   const Tile({
     super.key,
@@ -23,6 +22,8 @@ class Tile extends StatelessWidget {
     required this.file,
     this.onTap,
     this.onLongPress,
+    this.selected = false,
+    this.badges = true,
   });
 
   static const message =
@@ -33,9 +34,6 @@ class Tile extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(file.loaded, message);
 
-    final GalleryController gallery = Get.find(tag: tag);
-    final SelectionController selection = Get.find(tag: tag);
-
     return GestureDetector(
       key: ValueKey(file.id),
       onTap: () => onTap?.call(file.id, index),
@@ -44,30 +42,25 @@ class Tile extends StatelessWidget {
         alignment: .bottomRight,
         children: [
           LinearHero(tag: file.id, child: Thumbnail(file)),
-          Obx(() {
-            return AnimatedOpacity(
-              opacity: gallery.badgesVisible ? 1 : 0,
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeInQuint,
-              child: TileBadges(file),
-            );
-          }),
-          Obx(() {
-            final selected = selection.isSelected(file.id);
-            return Container(
-              decoration: BoxDecoration(
-                border: .all(
-                  color: selected
-                      ? Colors.pink
-                      : Colors.transparent,
-                  width: 3,
-                ),
+          AnimatedOpacity(
+            opacity: badges ? 1 : 0,
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInQuint,
+            child: TileBadges(file),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: .all(
                 color: selected
-                    ? Colors.black.withAlpha(32)
+                    ? Colors.pink
                     : Colors.transparent,
+                width: 3,
               ),
-            );
-          }),
+              color: selected
+                  ? Colors.black.withAlpha(32)
+                  : Colors.transparent,
+            ),
+          ),
         ],
       ),
     );
