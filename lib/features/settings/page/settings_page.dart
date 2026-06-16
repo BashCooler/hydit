@@ -100,7 +100,7 @@ class Settings extends HookWidget {
                   try {
                     await launchUrl(
                       Version.updateUrl,
-                      customTabsOptions: CustomTabsOptions(shareState: .off),
+                      customTabsOptions: CustomTabsOptions(),
                     );
                   } catch (e) {
                     return;
