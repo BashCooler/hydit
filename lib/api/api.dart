@@ -107,7 +107,7 @@ class HydrusApi with DioClient {
     return get('/get_files/file_metadata', params: params);
   }
 
-  // MARK: GET FILE
+  // MARK: GET FILES
 
   Future<Uint8List> getThumbnail(int fileId) {
     final params = {
@@ -123,6 +123,16 @@ class HydrusApi with DioClient {
     };
     return get<Uint8List>('/get_files/file', params: params);
   }
+
+  // MARK: ADD FILES
+
+  Future<void> deleteFiles(List<int> ids) =>
+      post<void>(
+        '/add_files/delete_files',
+        params: {
+          'file_ids': ids,
+        },
+      );
 
   // MARK: TAGS
 
@@ -144,14 +154,13 @@ class HydrusApi with DioClient {
 
   Future<void> postAddTags(List<int> ids, String serviceKey, Action action,
       List<String> tags) {
-    final Map<String, dynamic> params = {
+    return post<void>('/add_tags/add_tags', params: {
       'file_ids': ids,
       'service_keys_to_actions_to_tags': {
         serviceKey: {
           "${action.value}": tags,
         }
       }
-    };
-    return post<void>('/add_tags/add_tags', params: params);
+    });
   }
 }
