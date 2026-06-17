@@ -1,8 +1,6 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 
-import 'package:hydit/services/repo.dart';
 import 'package:hydit/reactive/file.dart';
 
 
@@ -13,12 +11,13 @@ class Thumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final repo = Get.find<Repo>();
     return AspectRatio(
       aspectRatio: 1.0,
       child: CachedNetworkImage(
-        imageUrl: repo.buildUrl(image.id, thumbnail: true),
-        placeholder: (context, url) => ColoredBox(color: Colors.white10),
+        imageUrl: image.thumbnailUrl,
+        placeholder: (context, url) {
+          return const ColoredBox(color: Colors.white10);
+        },
         fit: .cover,
       ),
     );
@@ -33,19 +32,18 @@ class HighResImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Repo repo = Get.find();
     final meta = image.meta;
     final aspectRatio = meta!.width/meta.height;
     return ImageStack(
       aspectRatio: aspectRatio,
       children: [
         CachedNetworkImage(
-          imageUrl: repo.buildUrl(image.id, thumbnail: true),
+          imageUrl: image.thumbnailUrl,
           placeholder: (context, url) => const SizedBox.shrink(),
           fit: .cover,
         ),
         CachedNetworkImage(
-          imageUrl: repo.buildUrl(image.id),
+          imageUrl: image.url,
           placeholder: (context, url) => const SizedBox.shrink(),
           fit: .cover,
         ),
