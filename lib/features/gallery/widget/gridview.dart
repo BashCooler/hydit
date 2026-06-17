@@ -3,9 +3,11 @@ import 'package:flutter/material.dart' hide RefreshCallback;
 import 'package:expressive_refresh/expressive_refresh.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
+import 'package:hydit/widgets/images.dart';
 import 'package:hydit/reactive/file_store.dart';
 
 import '../getx/gallery.dart';
+import 'badges.dart';
 import 'tile.dart';
 
 
@@ -72,24 +74,20 @@ class GalleryGridView extends StatelessWidget {
               itemCount: files.length,
               gridDelegate: delegate,
               itemBuilder: (context, index) {
-                final file = files[index];
+                final file = files[index]
+                  ..ensureMetadataLoaded();
                 return Obx(() {
-                  switch (file.loaded) {
-                    case false:
-                      file.ensureMetadataLoaded();
-                      return const ColoredBox(color: Colors.white10);
-                    case true:
-                      final file = files[index];
-                      return Tile(
-                        tag: tag,
-                        index: index,
-                        file: file,
-                        selected: selected?.call(file.id) ?? false,
-                        badges: gallery.badgesVisible,
-                        onTap: onTap,
-                        onLongPress: onLongPress,
-                      );
-                  }
+                  return Tile(
+                    index: index,
+                    file: file,
+                    selected: selected?.call(file.id) ?? false,
+                    badges: gallery.badgesVisible && file.loaded
+                        ? TileBadges(file)
+                        : null,
+                    onTap: onTap,
+                    onLongPress: onLongPress,
+                    thumbnail: Thumbnail(file),
+                  );
                 });
               },
             ),
