@@ -98,7 +98,7 @@ class GalleryBindings extends Bindings {
 
     if (page._search) {
       Get.put(
-        QueryController(fileRepo: fileRepo, gallery: gallery),
+        QueryController(files: fileRepo, gallery: gallery),
         tag: page.tag,
       );
     }

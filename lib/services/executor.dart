@@ -1,4 +1,5 @@
 import 'dart:convert' hide json;
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide GetStringUtils;
@@ -104,13 +105,16 @@ class Executor {
     return defaultMessage ?? 'Unknown error';
   }
 
-  /// Toggles the [rx], performs an [action], then toggles [rx] again.
-  static Future<void> refresh(RxBool rx,
+  /// Set [loading] = true, then [action], then [loading]= false.
+  static Future<void> refresh(RxBool loading,
       Future<void> Function() action) async {
 
-    rx.value = !rx.value;
-    await action();
-    rx.value = !rx.value;
+    loading.value = true;
+    try {
+      await action();
+    } finally {
+      loading.value = false;
+    }
   }
 }
 
@@ -126,4 +130,18 @@ extension Format on String {
 
   String addSpaces() =>
       replaceAllMapped(RegExp(r'(?<!^)(?=[A-Z])'), (match) => ' ');
+}
+
+
+extension Unwrap<T> on Result<T> {
+
+  T? unwrap({void Function(String title, String message)? onFailure}) {
+    switch (this) {
+      case Success(data: final data):
+        return data;
+      case Failure(title: final title, message: final message):
+        onFailure?.call(title, message);
+        return null;
+    }
+  }
 }

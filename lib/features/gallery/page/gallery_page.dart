@@ -55,11 +55,10 @@ class Gallery extends StatelessWidget {
             GalleryGridView(
               tag: tag,
               allowRefresh: (_) => search && selection.off,
-              onRefresh: () async {
-                if (search) query.search();
-              },
+              onRefresh: () => query.search(),
               selected: (id) => selection.isSelected(id),
               onTap: (id, index) {
+                if (gallery.loading.value) return;
                 switch (selection.on) {
                   case true:
                     selection.selectTile(id, index);

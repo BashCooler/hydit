@@ -16,7 +16,7 @@ import 'package:hydit/features/gallery/getx/gallery.dart';
 class QueryController extends GetxController {
   final _tags = <Tag>[].obs;
 
-  final FileStore fileRepo;
+  final FileStore files;
   final Repo repo = Get.find();
   final GalleryController gallery;
 
@@ -25,7 +25,7 @@ class QueryController extends GetxController {
   FileSortType _sortType = .importTime;
   bool _sortAsc = false;
 
-  QueryController({required this.fileRepo, required this.gallery}) {
+  QueryController({required this.files, required this.gallery}) {
     loadSortOption();
     loadAscOption();
     load();
@@ -53,29 +53,16 @@ class QueryController extends GetxController {
   }
 
   Future<void> search() => Executor.refresh(gallery.loading, () async {
-    final List<int> ids;
+    final List<int>? ids = await Executor
+        .run<List<int>>(_getIdsUnsafe)
+        .then((result) => result.unwrap(onFailure: Snack.error));
 
-    final result = await Executor.run<List<int>>(_getIdsUnsafe);
+    if (ids == null) return;
+    files.assignAll(ids.map(fileFromId).toList());
 
-    switch (result) {
-      case Success(data: final data):
-        ids = data;
-      case Failure(title: final title, message: final message):
-        Snack.error(title, message);
-        return;
-    }
-
-    final update = await repo.updateServiceNames();
-
-    switch (update) {
-      case Success(data: final _):
-        break;
-      case Failure(title: final title, message: final message):
-        Snack.error(title, message);
-        return;
-    }
-
-    fileRepo.assignAll(ids.map(fileFromId).toList());
+    await repo
+        .updateServiceNames()
+        .then((result) => result.unwrap(onFailure: Snack.error));
   });
 
   HydrusFile fileFromId(int id) => HydrusFile(
