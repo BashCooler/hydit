@@ -1,7 +1,5 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-
-import '../entities/tag.dart';
+import 'package:hydit/utils/utils.dart';
 
 
 ThemeData darkTheme() => ThemeData(
@@ -32,28 +30,14 @@ ThemeData darkTheme() => ThemeData(
 );
 
 
-abstract class AppColors {
-  static const filled = Color(0xFF32353a);
-  static const fontDark = Color(0xFF000000);
-  static const fontLight = Colors.white70;
-  static const blackWithAlpha = Color.fromARGB(96, 0, 0, 0);
-  static const addition = Color(0x333fb950);
-  static const deletion = Color(0x33f85149);
-}
+Duration get transition => 300.ms;
 
 
-abstract class AppTheme {
-  static const radius = 10.0;
-  static const buttonSize = 48.0;
-  static const fieldHeight = 55.0;
-  static const outerPadding = 15.0;
-  static final backdropFilter = ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0);
-  static final borderRadius = BorderRadius.circular(radius);
-  static final duration = Duration(milliseconds: 300);
-}
+const addition = Color(0x333fb950);
+const deletion = Color(0x33f85149);
 
 
-Color colorOf(Tag tag) => switch (tag.namespace) {
+Color colorOf(String? namespace) => switch (namespace) {
   'character' => Color.fromARGB(255, 0, 170, 0),
   'creator' => Color.fromARGB(255, 170, 0, 0),
   'meta' => Color.fromARGB(255, 255, 136, 0),
@@ -64,11 +48,3 @@ Color colorOf(Tag tag) => switch (tag.namespace) {
   null => Color.fromARGB(255, 0, 111, 250),
   _ => Color.fromARGB(255, 114, 160, 193),
 };
-
-
-OutlineInputBorder outlineInputBorder({Color borderColor = AppColors.filled}) {
-  return OutlineInputBorder(
-    borderRadius: BorderRadius.circular(AppTheme.radius),
-    borderSide: BorderSide(color: borderColor),
-  );
-}

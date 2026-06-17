@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:equatable/equatable.dart';
+import 'package:hydit/utils/theme.dart';
 
 
 class Tag extends Equatable {
@@ -8,11 +11,13 @@ class Tag extends Equatable {
   final String value;
   final String pretty;
   final int? count;
+  late final Color color;
 
   Tag(this.raw, {this.service, this.count})
       : namespace = _namespace(raw),
         value = _value(raw),
-        pretty = _pretty(raw);
+        pretty = _pretty(raw),
+        color = colorOf(_namespace(raw));
 
   Tag copyWith({String? service, int? count}) {
     return Tag(

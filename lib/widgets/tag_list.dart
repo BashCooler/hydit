@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/utils/theme.dart';
 import 'package:hydit/entities/tag.dart';
 
 
@@ -68,9 +67,9 @@ class TagTile extends StatelessWidget {
       enabled: onTap != null,
       onTap: () => onTap?.call(tag),
       tileColor: background,
-      minTileHeight: AppTheme.fieldHeight,
+      minTileHeight: 55,
       title: tag.pretty.n
-        ..color = colorOf(tag),
+        ..color = tag.color,
       trailing: trailing,
     );
   }

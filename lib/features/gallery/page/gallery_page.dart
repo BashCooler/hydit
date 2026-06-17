@@ -7,7 +7,7 @@ import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/widget/sorting.dart';
 import 'package:hydit/features/viewer/bindings.dart';
-import 'package:hydit/utils/theme.dart';
+import 'package:hydit/utils/utils.dart';
 
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
@@ -56,7 +56,7 @@ class Gallery extends StatelessWidget {
               tag: tag,
               allowRefresh: (_) => search && selection.off,
               onRefresh: () async {
-                if (search) query.searchForFiles();
+                if (search) query.search();
               },
               selected: (id) => selection.isSelected(id),
               onTap: (id, index) {
@@ -67,7 +67,7 @@ class Gallery extends StatelessWidget {
                     ViewerPage(files, index, gallery)
                         .editor(editor)
                         .beforePush(gallery.hide)
-                        .onClose(gallery.show.delayed(AppTheme.duration))
+                        .onClose(gallery.show.delayed(transition))
                         .push();
                 }
               },

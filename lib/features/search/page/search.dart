@@ -4,8 +4,6 @@ import 'package:niku/namespace.dart' as n;
 import 'package:hydit/widgets/tag_list.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import 'package:hydit/utils/theme.dart';
-
 import '../getx/query.dart';
 import '../getx/search.dart';
 import '../widget/search.dart';
@@ -21,7 +19,7 @@ class Search extends HookWidget {
 
   void searchThenBack(String entry) {
     if (query.tags.isEmpty) query.add(entry);
-    query.searchForFiles();
+    query.search();
     Get.back();
   }
 
@@ -42,7 +40,7 @@ class Search extends HookWidget {
             itemBuilder: (context, tag) => TagTile(
               tag: tag,
               trailing: tag.count?.toString().n
-                ?..color = colorOf(tag)
+                ?..color = tag.color
                 ..fontSize = 14,
               onTap: (tag) {
                 search.clear();

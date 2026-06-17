@@ -56,7 +56,7 @@ class GalleryPage {
       () => build(),
       opaque: false,
       transition: .rightToLeft,
-      duration: AppTheme.duration,
+      duration: transition,
       curve: Curves.easeInOutCubic,
       binding: GalleryBindings(this),
     );

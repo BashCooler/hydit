@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/widgets/images.dart';
@@ -30,10 +32,14 @@ class Tile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       key: ValueKey(file.id),
-      onTap: () => onTap
-          ?.call(file.id, index),
-      onLongPress: () => onLongPress
-          ?.call(file.id, index),
+      onTap: () {
+        if (file.loading) return;
+        onTap?.call(file.id, index);
+      },
+      onLongPress: () {
+        if (file.loading) return;
+        onLongPress?.call(file.id, index);
+      },
       child: Stack(
         alignment: .bottomRight,
         children: [

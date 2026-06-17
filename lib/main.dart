@@ -63,7 +63,7 @@ class App extends StatelessWidget {
           query
             ..clear()
             ..add('system:inbox')
-            ..searchForFiles();
+            ..search();
           Get.back();
         },
       ),

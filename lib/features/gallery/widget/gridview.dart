@@ -54,9 +54,9 @@ class GalleryGridView extends StatelessWidget {
           switch (status) {
             case .done:
             case .canceled:
-              gallery.refreshing.value = false;
+              gallery.loading.value = false;
             case _:
-              gallery.refreshing.value = true;
+              gallery.loading.value = true;
           }
         },
         child: Obx(() {
@@ -82,7 +82,7 @@ class GalleryGridView extends StatelessWidget {
                     file: file,
                     selected: selected?.call(file.id) ?? false,
                     badges: TileBadges(file),
-                    showBadges: gallery.badgesVisible && file.loaded,
+                    showBadges: gallery.badges && file.loaded,
                     onTap: onTap,
                     onLongPress: onLongPress,
                     thumbnail: Thumbnail(file),

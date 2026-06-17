@@ -2,8 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/utils/theme.dart';
-
 import '../getx/query.dart';
 
 
@@ -53,7 +51,7 @@ class TagPanel extends StatelessWidget {
     return query.tags.map((tag) {
       return InputChip(
         label: tag.value.n,
-        backgroundColor: colorOf(tag),
+        backgroundColor: tag.color,
         onDeleted: () => query.remove(tag),
       );
     }).toList();

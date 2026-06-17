@@ -31,7 +31,7 @@ class SelectionController extends GetxController {
   bool isSelected(int id) => ids.contains(id);
 
   void selectTile(int id, int index) {
-    if (gallery.refreshing.value) return;
+    if (gallery.loading.value) return;
     switch (ids.contains(id)) {
       case true:
         ids.remove(id);

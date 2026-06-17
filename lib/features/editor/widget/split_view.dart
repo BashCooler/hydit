@@ -46,8 +46,8 @@ class Up extends HookWidget {
   const Up({super.key});
 
   Color? background(TagState state) => switch (state) {
-    .added => AppColors.addition,
-    .removed => AppColors.deletion,
+    .added => addition,
+    .removed => deletion,
     .unchanged => null,
   };
 

@@ -70,7 +70,7 @@ class EditorPage {
 
     Get.to(() => Editor(tag: tag!, mode: mode),
       transition: .leftToRight,
-      duration: AppTheme.duration,
+      duration: transition,
       curve: Curves.easeInOutCubic,
       binding: EditorBindings(this),
     )?.then((result) {

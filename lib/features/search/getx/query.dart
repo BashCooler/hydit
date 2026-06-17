@@ -52,15 +52,8 @@ class QueryController extends GetxController {
     box.put('query', _tags.map((t) => t.raw).toList());
   }
 
-  Future<void> searchForFiles() async {
-    gallery.refreshing.value = true;
-    await _searchForFiles();
-    gallery.refreshing.value = false;
-    saveQuery();
-  }
-
-  Future<void> _searchForFiles() async {
-    List<int> ids;
+  Future<void> search() => Executor.refresh(gallery.loading, () async {
+    final List<int> ids;
 
     final result = await Executor.run<List<int>>(_getIdsUnsafe);
 
@@ -82,12 +75,8 @@ class QueryController extends GetxController {
         return;
     }
 
-    final files = ids
-        .map(fileFromId)
-        .toList();
-
-    fileRepo.assignAll(files);
-  }
+    fileRepo.assignAll(ids.map(fileFromId).toList());
+  });
 
   HydrusFile fileFromId(int id) => HydrusFile(
     id: id,
@@ -106,7 +95,7 @@ class QueryController extends GetxController {
     final List<String>? tags = box.get('query');
     if (tags != null && tags.isNotEmpty) {
       _tags.assignAll(tags.map((t) => Tag(t)));
-      await searchForFiles();
+      await search();
     }
   }
 
@@ -117,7 +106,7 @@ class QueryController extends GetxController {
 
   set sortType(FileSortType sortType) {
     _sortType = sortType;
-    searchForFiles();
+    search();
     Hive.box('settings').put(typeKey, sortType.name);
   }
 
@@ -141,7 +130,7 @@ class QueryController extends GetxController {
 
   set sortAsc(bool sortAsc) {
     _sortAsc = sortAsc;
-    searchForFiles();
+    search();
     Hive.box('settings').put(ascKey, sortAsc);
   }
 

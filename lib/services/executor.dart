@@ -1,6 +1,7 @@
 import 'dart:convert' hide json;
 
 import 'package:dio/dio.dart';
+import 'package:get/get.dart' hide GetStringUtils;
 import 'package:dartx/dartx.dart';
 import 'package:deep_pick/deep_pick.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -101,6 +102,15 @@ class Executor {
     }
 
     return defaultMessage ?? 'Unknown error';
+  }
+
+  /// Toggles the [rx], performs an [action], then toggles [rx] again.
+  static Future<void> refresh(RxBool rx,
+      Future<void> Function() action) async {
+
+    rx.value = !rx.value;
+    await action();
+    rx.value = !rx.value;
   }
 }
 
