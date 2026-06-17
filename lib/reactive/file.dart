@@ -16,25 +16,29 @@ class HydrusFile {
     required this.url,
   });
 
-  Future<void>? _metadataFuture;
+  Future<void>? _loadingFuture;
 
   bool get loaded => metadata.value != null;
   bool get loading => metadata.value == null;
 
   FileMetadata? get meta => metadata.value;
 
-  Future<void> loadMetadata() async {
+  Future<void> ensureMetadataLoaded() async {
     if (loaded) {
-      return;
+      return Future.value();
     }
 
-    if (_metadataFuture != null) {
-      return _metadataFuture;
+    if (_loadingFuture != null) {
+      return _loadingFuture;
     }
 
-    _metadataFuture = Get
+    return _loadingFuture ??= _loadMetadata();
+  }
+
+  Future<void> _loadMetadata() {
+    return Get
         .find<Repo>()
         .setMetadataFor(this)
-        .then((r) => _metadataFuture = null);
+        .then((_) => _loadingFuture = null);
   }
 }

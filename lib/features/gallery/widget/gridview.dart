@@ -76,7 +76,7 @@ class GalleryGridView extends StatelessWidget {
                 return Obx(() {
                   switch (file.loaded) {
                     case false:
-                      file.loadMetadata();
+                      file.ensureMetadataLoaded();
                       return const ColoredBox(color: Colors.white10);
                     case true:
                       final file = files[index];
