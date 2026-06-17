@@ -24,7 +24,14 @@ class GalleryController extends GetxController {
     );
   }
 
-  void showBadges() => _badgesVisible.value = true;
+  void show() => _badgesVisible.value = true;
 
-  void hideBadges() => _badgesVisible.value = false;
+  void hide() => _badgesVisible.value = false;
+}
+
+
+extension Delay on void Function() {
+  void Function() delayed(Duration duration) {
+    return () => Future.delayed(duration, this);
+  }
 }

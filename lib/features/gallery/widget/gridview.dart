@@ -81,9 +81,8 @@ class GalleryGridView extends StatelessWidget {
                     index: index,
                     file: file,
                     selected: selected?.call(file.id) ?? false,
-                    badges: gallery.badgesVisible && file.loaded
-                        ? TileBadges(file)
-                        : null,
+                    badges: TileBadges(file),
+                    showBadges: gallery.badgesVisible && file.loaded,
                     onTap: onTap,
                     onLongPress: onLongPress,
                     thumbnail: Thumbnail(file),

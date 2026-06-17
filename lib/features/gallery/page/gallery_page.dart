@@ -7,6 +7,7 @@ import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/widget/sorting.dart';
 import 'package:hydit/features/viewer/bindings.dart';
+import 'package:hydit/utils/theme.dart';
 
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
@@ -65,8 +66,8 @@ class Gallery extends StatelessWidget {
                   case false:
                     ViewerPage(files, index, gallery)
                         .editor(editor)
-                        .beforePush(gallery.hideBadges)
-                        .onClose(gallery.showBadges)
+                        .beforePush(gallery.hide)
+                        .onClose(gallery.show.delayed(AppTheme.duration))
                         .push();
                 }
               },
