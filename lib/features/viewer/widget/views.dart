@@ -28,7 +28,7 @@ class ViewFile extends StatelessWidget {
       return buildContent(file.meta!.type);
     }
     return FutureBuilder(
-      future: file.forceLoadMetadata(),
+      future: file.loadMetadata(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == .done) {
           return buildContent(file.meta!.type);

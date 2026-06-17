@@ -145,7 +145,7 @@ extension Init on TagManager {
     ready.value = false;
     update();
 
-    if (file.loading) await file.forceLoadMetadata();
+    if (file.loading) await file.loadMetadata();
     if (file.id != _ids.first) return;
 
     final tags = file
