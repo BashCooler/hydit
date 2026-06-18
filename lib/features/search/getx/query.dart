@@ -34,6 +34,9 @@ class QueryController extends GetxController {
   List<Tag> get tags => _tags;
   List<String> get values => _tags.map((t) => t.raw).toList();
 
+  @override
+  String toString() => values.toString().replaceAll(RegExp(r'[\[\]]'), '');
+
   bool hasTag(Tag tag) => values.contains(tag.raw);
 
   void add(String tag) {

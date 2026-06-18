@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:niku/extra/primitive.dart';
 
 import 'package:hydit/utils/dictionaries.dart';
@@ -7,9 +8,11 @@ import '../getx/query.dart';
 
 
 class SortPopUp extends StatelessWidget {
-  final QueryController query;
+  final String tag;
 
-  const SortPopUp({super.key, required this.query});
+  const SortPopUp({super.key, required this.tag});
+
+  QueryController get query => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {

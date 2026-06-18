@@ -33,6 +33,7 @@ dependencies:
   # State management
   get: 4.7.3
   flutter_hooks: ^0.21.3+1
+  signals: ^7.1.0
   # Storage
   hive_ce: ^2.19.3
   hive_ce_flutter: ^2.3.4
