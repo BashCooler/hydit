@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/utils/utils.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/reactive/file.dart';
@@ -20,21 +21,15 @@ enum Action { save, discard, cancel }
 enum Mode { paged, batch }
 
 
-class Editor extends StatefulWidget {
+class Editor extends StatelessWidget {
   final String tag;
   final Mode mode;
 
   const Editor({super.key, required this.tag, required this.mode});
 
-  @override
-  State<Editor> createState() => _EditorState();
-}
-
-class _EditorState extends State<Editor> {
-
   TagManager get manager => Get.find();
-  FileStore get files => Get.find(tag: widget.tag);
-  PageGetxController get page => Get.find(tag: widget.tag);
+  FileStore get files => Get.find(tag: tag);
+  PageGetxController get page => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {
@@ -43,23 +38,23 @@ class _EditorState extends State<Editor> {
       onPopInvokedWithResult: onLeave,
       child: Scaffold(
         appBar: EditorAppBar(
-          tag: widget.tag,
-          mode: widget.mode,
-          onTap: () => switch (widget.mode) {
-                .paged => openPreview(page.i, files[page.i]),
-                .batch => GalleryPage()
-                .withSwipeBackGesture()
+          tag: tag,
+          mode: mode,
+          onTap: () => switch (mode) {
+            .paged => openPreview(page.i, files[page.i]),
+            .batch => GalleryPage()
+                .predictive()
                 .withFiles(files)
                 .push(),
           },
           child: buildPreview(),
         ),
         body: n.Column([
-          TabBuilder(tag: widget.tag),
+          TabBuilder(tag: tag),
           const Divider(height: 1),
           EditorBottomBar(
-            tag: widget.tag,
-            mode: widget.mode,
+            tag: tag,
+            mode: mode,
             callback: confirmPendingChanges,
           ),
         ])
@@ -77,9 +72,8 @@ class _EditorState extends State<Editor> {
   }
 
   // MARK: BUILDERS
-
   Widget buildPreview() {
-    switch (widget.mode) {
+    switch (mode) {
       case .paged:
         return Obx(() {
           return HeroMode(
@@ -96,7 +90,6 @@ class _EditorState extends State<Editor> {
   }
 
   // MARK: NAV
-
   void openPreview(int index, HydrusFile file) {
     final tag = 'Preview-${DateTime.now().microsecondsSinceEpoch}';
     Get.to(() => Preview(tag: tag, index: index, file: file),
@@ -111,9 +104,7 @@ class _EditorState extends State<Editor> {
   Future<void> onLeave(bool didPop, Object? result) async {
     if (didPop) return;
     final shouldLeave = await confirmPendingChanges();
-    if (shouldLeave && mounted) {
-      Navigator.of(context).pop();
-    }
+    if (shouldLeave) Get.back();
   }
 
   Future<bool> confirmPendingChanges() async {
@@ -125,15 +116,10 @@ class _EditorState extends State<Editor> {
   Future<bool?> showPopDialog(String message) {
     final loading = ValueNotifier<bool>(false);
 
-    return showDialog<bool>(
-      context: context,
-      barrierDismissible: !loading.value,
-      builder: (context) {
-        return EditorDialog(
-          loading: loading,
-          message: Text(message),
-        );
-      },
-    );
+    return Get.dialog(
+      EditorDialog(loading: loading, message: Text(message)),
+      transitionDuration: 150.ms,
+    )
+      ..then((_) => loading.dispose());
   }
 }

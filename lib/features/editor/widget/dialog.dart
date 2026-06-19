@@ -6,7 +6,7 @@ import 'package:hydit/services/snack.dart';
 import '../getx/tags.dart';
 
 
-class EditorDialog extends StatelessWidget {
+class EditorDialog extends GetView<TagManager> {
   final ValueNotifier<bool> loading;
   final Widget message;
 
@@ -16,12 +16,10 @@ class EditorDialog extends StatelessWidget {
     required this.message,
   });
 
-  TagManager get manager => Get.find();
-
   Future<void> save() async {
     loading.value = true;
 
-    final success = await manager.save();
+    final success = await controller.save();
     if (success) Get.back(result: true);
 
     Snack.error('Save error', 'Failed to save changes');

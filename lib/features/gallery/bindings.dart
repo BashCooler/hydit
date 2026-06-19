@@ -41,7 +41,7 @@ class GalleryPage {
     return this;
   }
 
-  GalleryPage withSwipeBackGesture() {
+  GalleryPage predictive() {
     _swipe = true;
     return this;
   }
