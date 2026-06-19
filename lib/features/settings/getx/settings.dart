@@ -23,6 +23,8 @@ class SettingsController extends GetxController {
   AppSettings get $ => _settings.value;
   bool get ready => !_processing.value;
 
+  Repo get repo => Get.find();
+
   void save() {
     final box = Hive.box('settings');
     box.put('url', $.url);
@@ -48,40 +50,24 @@ class SettingsController extends GetxController {
     _settings.value = _settings.value.copyWith(key: value);
   }
 
-  void verify() async {
-    _processing.value = true;
-
-    final result = await _verify();
-
-    switch (result) {
-      case Success(data: final _):
-        Snack.success('Success', 'Successfully saved key and url');
-      case Failure(title: final title, message: final message):
-        Snack.error(title, message);
-    }
-
-    _processing.value = false;
-  }
-
-  Future<Result<String>> _verify() async {
+  Future<void> verify() async {
     final uri = Uri.tryParse($.url);
 
     if (uri == null || !uri.host.isIP()) {
-      return Failure(title: 'Input error', message: 'Invalid URL');
+      Snack.error('Input error', 'Invalid URL');
+      return;
     }
 
-    final Repo repo = Get.find<Repo>();
-    final result = await repo.verify(uri, $.key);
+    await repo.verify(uri, $.key)
+        .loading(_processing)
+        .onSuccess(_onSuccess)
+        .onFailure(Snack.error);
+  }
 
-    switch (result) {
-      case Success(data: final _):
-        save();
-        repo.updateFromSettings();
-      case _:
-        break;
-    }
-
-    return result;
+  void _onSuccess(String data) {
+    save();
+    repo.updateFromSettings();
+    Snack.success('Success', 'Successfully saved key and url');
   }
 }
 

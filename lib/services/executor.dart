@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert' hide json;
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide GetStringUtils;
@@ -26,12 +28,9 @@ class Failure<T> extends Result<T> {
 class Executor {
   Executor._();
 
-  /// Safely runs an [action], handles [DioException]s, returns
-  /// either [Success] or [Failure].
-  ///
-  /// [Success] contains data of type [T].
-  ///
-  /// [Failure] contains a title and a description of the error.
+  @Deprecated(
+      'Use the `run` extension instead, it support a much more readable'
+      'fluent api')
   static Future<Result<T>> run<T>(Future<T> Function() action) async {
     try {
       final data = await action();
@@ -147,17 +146,47 @@ extension Unwrap<T> on Result<T> {
 
 
 extension SafeExecute<T> on Future<T> {
+  /// Safely runs an [action], handles [DioException]s.
+  Future<Result<T>> run() => Executor.run(() => this);
 
-  Future<Result<T>> execute() => Executor.run(() => this);
+  Future<T> loading(RxBool interface) async {
+    interface.value = true;
+    try {
+      return await this;
+    } finally {
+      interface.value = false;
+    }
+  }
 }
 
 
-extension UnwrapFuture<T> on Future<Result<T>> {
+extension FutureOperations<T> on Future<Result<T>> {
 
-  Future<T?> unwrap({
-    void Function(String title, String message)? onFailure,
-  }) async {
-    return (await this)
-        .unwrap(onFailure: onFailure);
+  Future<Result<T>> onSuccess(
+      FutureOr<void> Function(T value) callback) async {
+
+    final result = await this;
+
+    if (result case Success<T>(data: final data)) {
+      await callback(data);
+    }
+
+    return result;
+  }
+
+  Future<Result<T>> onFailure(
+      FutureOr<void> Function(String title, String message) callback) async {
+
+    final result = await this;
+
+    if (result case Failure<T>(title: final title, message: final message)) {
+      await callback(title, message);
+    }
+
+    return result;
+  }
+
+  Future<T?> unwrap() async {
+    return (await this).unwrap();
   }
 }

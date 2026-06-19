@@ -58,15 +58,16 @@ class QueryController extends GetxController {
   Future<void> search() => Executor.refresh(gallery.loading, () async {
 
     final List<int>? ids = await _getIdsUnsafe()
-        .execute()
-        .unwrap(onFailure: Snack.error);
+        .run()
+        .onFailure(Snack.error)
+        .unwrap();
 
     if (ids == null) return;
     files.assignAll(ids.map(fileFromId).toList());
 
-    final result = await repo
+    await repo
         .updateServiceNames()
-        .unwrap(onFailure: Snack.error);
+        .onFailure(Snack.error);
   });
 
   HydrusFile fileFromId(int id) => HydrusFile(
