@@ -55,20 +55,17 @@ class QueryController extends GetxController {
     box.put('query', _tags.map((t) => t.raw).toList());
   }
 
-  Future<void> search() => Executor.refresh(gallery.loading, () async {
-
+  Future<void> search() async {
     final List<int>? ids = await _getIdsUnsafe()
         .run()
+        .loading(gallery.loading)
+        .onSuccess((_) => repo.updateServiceNames().onFailure(Snack.error))
         .onFailure(Snack.error)
         .unwrap();
 
     if (ids == null) return;
     files.assignAll(ids.map(fileFromId).toList());
-
-    await repo
-        .updateServiceNames()
-        .onFailure(Snack.error);
-  });
+  }
 
   HydrusFile fileFromId(int id) => HydrusFile(
     id: id,

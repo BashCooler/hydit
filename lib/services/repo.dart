@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:hive_ce/hive.dart';
 import 'package:deep_pick/deep_pick.dart';
@@ -98,6 +99,7 @@ class Repo {
       ..addAll(local);
     if (ptr != null) services.add(ptr);
 
+    log('Updated');
     return result;
   }
 }

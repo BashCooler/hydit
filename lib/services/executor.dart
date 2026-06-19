@@ -149,12 +149,12 @@ extension SafeExecute<T> on Future<T> {
   /// Safely runs an [action], handles [DioException]s.
   Future<Result<T>> run() => Executor.run(() => this);
 
-  Future<T> loading(RxBool interface) async {
-    interface.value = true;
+  Future<T> loading(RxBool loading) async {
+    loading.value = true;
     try {
       return await this;
     } finally {
-      interface.value = false;
+      loading.value = false;
     }
   }
 }
