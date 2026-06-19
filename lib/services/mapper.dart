@@ -33,6 +33,31 @@ class Mapper {
     return tags.take(15).map((e) =>
         Tag(e['value'], count: e['count'])).toList();
   }
+
+  static Map<String, String> mapServices(String response) {
+    final json = jsonDecode(response);
+    final map = <String, String>{};
+
+    pick(json['all_known_tags']).asListOrThrow((pick) {
+      final key = pick('service_key').required().asString();
+      final name = pick('name').required().asString();
+      map[name] = key;
+    });
+
+    pick(json['local_tags']).asListOrEmpty((pick) {
+      final key = pick('service_key').required().asString();
+      final name = pick('name').required().asString();
+      map[name] = key;
+    });
+
+    pick(json['tag_repositories']).asListOrEmpty((pick) {
+      final key = pick('service_key').required().asString();
+      final name = pick('name').required().asString();
+      map[name] = key;
+    });
+
+    return map;
+  }
 }
 
 
@@ -57,7 +82,7 @@ extension ParseTags on Map<String, dynamic> {
 }
 
 
-extension DeepPick on String {
+extension Parsers on String {
 
   Pick pick([
     Object? arg0,
@@ -84,4 +109,11 @@ extension DeepPick on String {
       ?arg9,
     ]);
   }
+
+  dynamic decode() => jsonDecode(this);
+}
+
+
+extension AssignAll<K, V> on Map<K, V> {
+  void assignAll(Map<K, V> map) => this..clear()..addAll(map);
 }

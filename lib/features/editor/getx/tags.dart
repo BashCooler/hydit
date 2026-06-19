@@ -181,7 +181,7 @@ extension Init on TagManager {
 
   void clear() {
     final all = Get.find<Repo>().services;
-    services..clear()..addAll(all);
+    services..clear()..addAll(all.keys);
 
     _ids.clear();
     _current.clear();

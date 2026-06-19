@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:hive_ce/hive.dart';
-import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/api/api.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
+import 'package:hydit/services/snack.dart';
 import 'package:hydit/utils/dictionaries.dart';
 
 import 'mapper.dart';
@@ -16,7 +15,7 @@ import 'executor.dart';
 
 class Repo {
   final HydrusApi api;
-  final List<String> services = [];
+  final Map<String, String> services = {};
 
   Repo() : api = HydrusApi() {
     updateFromSettings();
@@ -58,44 +57,24 @@ class Repo {
 
   Future<Result<void>> _addOrRemove(List<int> ids, Set<Tag> tags,
       Action action) {
+
     return Executor.run(() async {
-      for (final service in tags.services) {
-        final key = await _unsafeServiceKeyOf(service);
-        await api.postAddTags(ids, key, action, tags[service].rawList);
+      for (final name in tags.services) {
+        final key = services[name];
+        await api.postAddTags(ids, key!, action, tags[name].rawList);
       }
     });
   }
 
-  Future<String> _unsafeServiceKeyOf(String name) async {
-    final response = await api.getService(name: name);
-    final decoded = jsonDecode(response);
-    return decoded['service']['service_key'];
-  }
+  Future<void> updateServices() async {
+    final response = await api
+        .getServices()
+        .run()
+        .onFailure(Snack.error)
+        .unwrap();
 
-  Future<Result<String>> updateServiceNames() async {
-    final result = await Executor.run<String>(() => api.getServices());
+    if (response == null) return;
 
-    final dynamic json;
-    switch (result) {
-      case Failure(title: final _, message: final _):
-        return result;
-      case Success(data: final data):
-        json = jsonDecode(data);
-    }
-
-    final List<dynamic> localTags = json['local_tags'];
-    final local = localTags
-        .map((e) => '${e['name']}')
-        .toList();
-    final ptr = pick(json, 'tag_repositories', 0, 'name')
-        .asStringOrNull();
-    services
-      ..clear()
-      ..add(pick(json, 'all_known_tags', 0, 'name').asStringOrThrow())
-      ..addAll(local);
-    if (ptr != null) services.add(ptr);
-
-    log('Updated');
-    return result;
+    services.assignAll(Mapper.mapServices(response));
   }
 }
