@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 
-class SideBar extends StatelessWidget {
+class Sidebar extends StatelessWidget {
   final List<Widget> tiles;
 
-  const SideBar({super.key, required this.tiles});
+  const Sidebar({super.key, required this.tiles});
 
   @override
   Widget build(BuildContext context) {

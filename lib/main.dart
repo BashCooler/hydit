@@ -1,20 +1,22 @@
 import 'package:get/get.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hydit/widgets/shell.dart';
+
 import 'package:media_kit/media_kit.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:hydit/utils/theme.dart';
+import 'package:hydit/services/repo.dart';
+import 'package:hydit/widgets/shell.dart';
 import 'package:hydit/widgets/sidebar.dart';
-import 'features/gallery/getx/selection.dart';
-import 'features/search/getx/query.dart';
-import 'features/gallery/bindings.dart';
-import 'features/settings/bindings.dart';
-import 'services/repo.dart';
-import 'utils/theme.dart';
+
+import 'package:hydit/features/gallery/bindings.dart';
+import 'package:hydit/features/gallery/widget/menu_tiles.dart';
+
 
 
 void main() async {
@@ -84,35 +86,15 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tiles = [
-      ListTile(
-        leading: const Icon(Icons.mail_outline),
-        title: const Text("Inbox"),
-        onTap: () {
-          Get.find<SelectionController>(tag: page.tag)
-             .clear();
-          Get.find<QueryController>(tag: page.tag)
-            ..clear()
-            ..add('system:inbox')
-            ..search();
-          Get.back();
-        },
-      ),
-      ListTile(
-        leading: const Icon(Icons.settings),
-        title: const Text('Settings'),
-        onTap: () {
-          Get.find<SelectionController>(tag: page.tag)
-              .clear();
-          SettingsPage().push();
-        },
-      ),
-    ];
-
     return AppShell(
       state: state,
       dialog: page.dialog,
-      sidebar: SideBar(tiles: tiles),
+      sidebar: Sidebar(
+        tiles: [
+          InboxTile(tag: page.tag),
+          SettingsTile(tag: page.tag),
+        ],
+      ),
       child: page.build(),
     );
   }
