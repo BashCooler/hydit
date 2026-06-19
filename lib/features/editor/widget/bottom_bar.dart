@@ -12,7 +12,7 @@ import 'search_bar.dart';
 
 class EditorBottomBar extends StatelessWidget {
   final String tag;
-  final Future<bool> Function(String tag) callback;
+  final Future<bool> Function() callback;
   final Mode mode;
 
   const EditorBottomBar({
@@ -30,7 +30,7 @@ class EditorBottomBar extends StatelessWidget {
     if (target < 0) return;
     if (target >= files.length) return;
 
-    final shouldSwitch = await callback(tag);
+    final shouldSwitch = await callback();
     if (!shouldSwitch) return;
 
     page.navigateToPage(target);

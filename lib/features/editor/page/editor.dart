@@ -5,16 +5,13 @@ import 'package:niku/namespace.dart' as n;
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/widgets/images.dart';
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/services/snack.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/viewer/page/preview.dart';
 import 'package:hydit/features/gallery/bindings.dart';
 
 import '../getx/tags.dart';
-import '../widget/app_bar.dart';
-import '../widget/bottom_bar.dart';
-import '../widget/tab_builder.dart';
-import '../widget/preview_grid.dart';
+import '../widget/widgets.dart';
+
 
 const additions = Color(0xFF3fb950);
 const deletions = Color(0xFFf85149);
@@ -34,13 +31,29 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
+
+  TagManager get manager => Get.find();
+  FileStore get files => Get.find(tag: widget.tag);
+  PageGetxController get page => Get.find(tag: widget.tag);
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: onLeave,
       child: Scaffold(
-        appBar: buildAppBar(),
+        appBar: EditorAppBar(
+          tag: widget.tag,
+          mode: widget.mode,
+          onTap: () => switch (widget.mode) {
+                .paged => openPreview(page.i, files[page.i]),
+                .batch => GalleryPage()
+                .withSwipeBackGesture()
+                .withFiles(files)
+                .push(),
+          },
+          child: buildPreview(),
+        ),
         body: n.Column([
           TabBuilder(tag: widget.tag),
           const Divider(height: 1),
@@ -52,61 +65,34 @@ class _EditorState extends State<Editor> {
         ])
           ..safe,
         floatingActionButtonLocation: .miniEndFloat,
-        floatingActionButton: buildActionButton(),
+        floatingActionButton: Padding(
+          padding: const .only(bottom: 60),
+          child: FloatingActionButton(
+            onPressed: Navigator.of(context).maybePop,
+            child: const Icon(Icons.check),
+          ),
+        ),
       ),
     );
   }
 
   // MARK: BUILDERS
 
-  PreferredSizeWidget buildAppBar() {
+  Widget buildPreview() {
     switch (widget.mode) {
       case .paged:
-        final FileStore files = Get.find(tag: widget.tag);
-        final PageGetxController page = Get.find(tag: widget.tag);
-        return EditorAppBar(
-          toolbarHeight: 100,
-          tag: widget.tag,
-          onTap: () => openPreview(page.i, files[page.i]),
-          mode: .paged,
-          child: Obx(() {
-            return HeroMode(
-              enabled: page.enabled(page.i),
-              child: LinearHero(
-                tag: files[page.i].id,
-                child: Thumbnail(files[page.i]),
-              ),
-            );
-          }),
-        );
+        return Obx(() {
+          return HeroMode(
+            enabled: page.enabled(page.i),
+            child: LinearHero(
+              tag: files[page.i].id,
+              child: Thumbnail(files[page.i]),
+            ),
+          );
+        });
       case .batch:
-        final TagManager manager = Get.find();
-        return EditorAppBar(
-          toolbarHeight: 100,
-          mode: .batch,
-          tag: widget.tag,
-          child: PreviewGrid(
-            manager: manager,
-            onTap: () {
-              final FileStore files = Get.find(tag: widget.tag);
-              GalleryPage()
-                  .withSwipeBackGesture()
-                  .withFiles(files)
-                  .push();
-            },
-          ),
-        );
+        return PreviewGrid(manager: manager);
     }
-  }
-
-  Widget buildActionButton() {
-    return Padding(
-      padding: const .only(bottom: 60),
-      child: FloatingActionButton(
-        onPressed: Navigator.of(context).maybePop,
-        child: const Icon(Icons.check),
-      ),
-    );
   }
 
   // MARK: NAV
@@ -117,89 +103,35 @@ class _EditorState extends State<Editor> {
       transition: .fadeIn,
       curve: Curves.easeInCubic,
       opaque: false,
-      binding: BindingsBuilder.put(() => PageGetxController(initial: index), tag: tag),
+      binding: BindingsBuilder.put(() =>
+          PageGetxController(initial: index), tag: tag),
     );
   }
 
   Future<void> onLeave(bool didPop, Object? result) async {
     if (didPop) return;
-    final shouldLeave = await confirmPendingChanges(widget.tag);
+    final shouldLeave = await confirmPendingChanges();
     if (shouldLeave && mounted) {
       Navigator.of(context).pop();
     }
   }
 
-  Future<bool> confirmPendingChanges(String tag) async {
-    final TagManager manager = Get.find();
-
+  Future<bool> confirmPendingChanges() async {
     final message = manager.summarize();
-    if (message == 'No changes') return true;
-
-    final result = await showPopDialog(context, message, tag);
-
-    switch (result) {
-      case .save:
-        return true;
-      case .discard:
-        return true;
-      case _:
-        return false;
-    }
+    if (message == null) return true;
+    return await showPopDialog(message) ?? true;
   }
 
-  // MARK: DIALOG
+  Future<bool?> showPopDialog(String message) {
+    final loading = ValueNotifier<bool>(false);
 
-  Future<Action?> showPopDialog(BuildContext context, String message,
-      String tag) {
-    bool isLoading = false;
-    final TagManager manager = Get.find();
-
-    return showDialog<Action>(
+    return showDialog<bool>(
       context: context,
-      barrierDismissible: !isLoading,
+      barrierDismissible: !loading.value,
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            final nav = Navigator.of(context);
-            final actions = <Widget>[
-              n.Button('Save'.n)
-                ..onPressed = () async {
-                  setState(() => isLoading = true);
-                  final result = await manager.save();
-                  switch (result) {
-                    case true:
-                      if (context.mounted) nav.pop(Action.save);
-                    case false:
-                      Snack.error('Save error', 'Failed to save changes');
-                      setState(() => isLoading = false);
-                  }
-                },
-              n.Button('Discard'.n)
-                ..onPressed = () => nav.pop(Action.discard),
-              n.Button('Cancel'.n)
-                ..onPressed = () => nav.pop(Action.cancel),
-            ];
-
-            return PopScope(
-              canPop: false,
-              onPopInvokedWithResult: (didPop, result) {
-                if (didPop) return;
-                if (isLoading) return;
-                Get.back();
-              },
-              child: AlertDialog(
-                actionsAlignment: .center,
-                icon: const Icon(Icons.save),
-                title: isLoading
-                    ? const Text('Saving...')
-                    : const Text('Save changes?'),
-                content: isLoading
-                    ? const LinearProgressIndicator()
-                    : Text(message),
-                actions: isLoading ? <Widget>[] : actions,
-              ),
-            );
-          },
+        return EditorDialog(
+          loading: loading,
+          message: Text(message),
         );
       },
     );

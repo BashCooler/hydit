@@ -7,9 +7,8 @@ import 'package:hydit/features/editor/getx/tags.dart';
 
 class PreviewGrid extends StatelessWidget {
   final TagManager manager;
-  final GestureTapCallback? onTap;
 
-  const PreviewGrid({super.key, required this.manager, this.onTap});
+  const PreviewGrid({super.key, required this.manager});
 
   static const placeholder = ColoredBox(color: Colors.black12);
 
@@ -27,20 +26,17 @@ class PreviewGrid extends StatelessWidget {
     final files = manager.take(4);
     final count = buildCount(manager.fileCount - 3);
 
-    return GestureDetector(
-      onTap: onTap,
-      child: GridView.count(
-        crossAxisCount: 2,
-        physics: const NeverScrollableScrollPhysics(),
-        crossAxisSpacing: 3,
-        mainAxisSpacing: 3,
-        children: [
-          files.isNotEmpty ? Thumbnail(files[0]) : placeholder,
-          files.length > 1 ? Thumbnail(files[1]) : placeholder,
-          files.length > 2 ? Thumbnail(files[2]) : placeholder,
-          files.length > 3 ? count : placeholder,
-        ],
-      ),
+    return GridView.count(
+      crossAxisCount: 2,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisSpacing: 3,
+      mainAxisSpacing: 3,
+      children: [
+        files.isNotEmpty ? Thumbnail(files[0]) : placeholder,
+        files.length > 1 ? Thumbnail(files[1]) : placeholder,
+        files.length > 2 ? Thumbnail(files[2]) : placeholder,
+        files.length > 3 ? count : placeholder,
+      ],
     );
   }
 }

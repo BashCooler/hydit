@@ -65,14 +65,14 @@ class Gallery extends StatelessWidget {
           GalleryGridView(
             tag: tag,
             allowRefresh: (_) => search && selection.off,
-            onRefresh: query.search,
+            onRefresh: search ? query.search : null,
             selected: selection.isSelected,
             onTap: onTileTap,
             onLongPress: editor ? selection.selectTile : null,
           ),
         ],
       ),
-      floatingActionButton: search && selection.off
+      floatingActionButton: selection.off && search
           ? AcrylicFAB(onTap: SearchPage(query: query).push)
           : null,
       bottomNavigationBar: SelectionBottomBar(tag: tag),

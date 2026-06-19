@@ -213,26 +213,26 @@ extension Save on TagManager {
   /// Remove X tags from Y services
   /// ```
   /// if X and Y are not zero.
-  String summarize() {
+  String? summarize() {
     assert(_ids.isNotEmpty);
 
     final add = additions;
     final del = deletions;
 
-    if (add.isEmpty && del.isEmpty) return 'No changes';
+    if (add.isEmpty && del.isEmpty) return null;
 
     final sb = StringBuffer();
 
     if (add.isNotEmpty) {
       final services = add.services.length;
       final count = add.length;
-      sb.writeln('Add $count tags to $services services');
+      sb.write('Add $count tags to $services services\n');
     }
 
     if (del.isNotEmpty) {
       final services = del.services.length;
       final count = del.length;
-      sb.writeln('Remove $count tags from $services services');
+      sb.write('Remove $count tags from $services services');
     }
 
     return sb.toString();

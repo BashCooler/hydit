@@ -52,7 +52,7 @@ class GalleryAppBar extends StatelessWidget
         ),
       ),
       actions: [
-        Obx(() => search && selection.off
+        Obx(() => selection.off && search
             ? SortPopUp(tag: tag)
             : const SizedBox.shrink()),
         if (state != null) SidebarButton(state),

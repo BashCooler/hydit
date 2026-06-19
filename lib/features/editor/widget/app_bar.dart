@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/viewer/page/preview.dart';
 import 'package:niku/extra/extra.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
@@ -13,19 +14,19 @@ import '../page/editor.dart';
 
 
 class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final double toolbarHeight;
   final String tag;
-  final Widget? child;
+  final double toolbarHeight;
   final GestureTapCallback? onTap;
   final Mode mode;
+  final Widget? child;
 
   const EditorAppBar({
     super.key,
-    required this.toolbarHeight,
     required this.tag,
-    this.child,
-    this.onTap,
+    this.toolbarHeight = 100,
     required this.mode,
+    this.onTap,
+    this.child,
   });
 
   @override
