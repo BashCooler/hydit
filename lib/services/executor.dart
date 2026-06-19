@@ -1,5 +1,4 @@
 import 'dart:convert' hide json;
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide GetStringUtils;
@@ -143,5 +142,22 @@ extension Unwrap<T> on Result<T> {
         onFailure?.call(title, message);
         return null;
     }
+  }
+}
+
+
+extension SafeExecute<T> on Future<T> {
+
+  Future<Result<T>> execute() => Executor.run(() => this);
+}
+
+
+extension UnwrapFuture<T> on Future<Result<T>> {
+
+  Future<T?> unwrap({
+    void Function(String title, String message)? onFailure,
+  }) async {
+    return (await this)
+        .unwrap(onFailure: onFailure);
   }
 }

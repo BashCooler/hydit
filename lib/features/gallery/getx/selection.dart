@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:hydit/features/editor/bindings.dart';
 
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/services/executor.dart';
+import 'package:hydit/services/repo.dart';
 import 'gallery.dart';
 
 
@@ -92,5 +94,10 @@ class SelectionController extends GetxController {
             .onClose(clear)
             .push();
     }
+  }
+
+  Future<void> delete() async {
+    // TODO implement this
+    throw UnimplementedError();
   }
 }
