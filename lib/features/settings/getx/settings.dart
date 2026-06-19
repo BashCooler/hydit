@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:hydit/api/api.dart';
 import 'package:string_validator/string_validator.dart';
 
 import 'package:hydit/services/repo.dart';
@@ -58,8 +59,9 @@ class SettingsController extends GetxController {
       return;
     }
 
-    await repo.verify(uri, $.key)
-        .loading(_processing)
+    await HydrusApi(uri: uri, key: $.key)
+        .getVerifyAccessKey()
+        .run()
         .onSuccess(_onSuccess)
         .onFailure(Snack.error);
   }

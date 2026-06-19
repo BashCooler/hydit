@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert' hide json;
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide GetStringUtils;
@@ -28,9 +27,6 @@ class Failure<T> extends Result<T> {
 class Executor {
   Executor._();
 
-  @Deprecated(
-      'Use the `run` extension instead, it support a much more readable'
-      'fluent api')
   static Future<Result<T>> run<T>(Future<T> Function() action) async {
     try {
       final data = await action();

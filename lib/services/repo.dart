@@ -22,11 +22,6 @@ class Repo {
     updateFromSettings();
   }
 
-  Future<Result<String>> verify(Uri uri, String key) {
-    return Executor.run<String>(() =>
-        HydrusApi(uri: uri, key: key).getVerifyAccessKey());
-  }
-
   void updateFromSettings() {
     final box = Hive.box('settings');
     final key = box.get('key') ?? '';
@@ -43,9 +38,10 @@ class Repo {
   Future<void> setMetadataFor(HydrusFile? file) async {
     if (file == null) return;
 
-    final data = await Executor
-        .run(() => api.getFileMetadata([file.id]))
-        .then((result) => result.unwrap());
+    final data = await api
+        .getFileMetadata([file.id])
+        .run()
+        .unwrap();
 
     if (data != null) {
       Mapper.writeMetadata(data, file);
