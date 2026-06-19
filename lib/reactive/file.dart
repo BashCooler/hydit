@@ -7,14 +7,8 @@ import '../services/repo.dart';
 class HydrusFile {
   final int id;
   final metadata = Rxn<FileMetadata>();
-  final String thumbnailUrl;
-  final String url;
 
-  HydrusFile({
-    required this.id,
-    required this.thumbnailUrl,
-    required this.url,
-  });
+  HydrusFile(this.id);
 
   Future<void>? _loadingFuture;
 
@@ -22,6 +16,11 @@ class HydrusFile {
   bool get loading => metadata.value == null;
 
   FileMetadata? get meta => metadata.value;
+
+  Repo get repo => Get.find();
+
+  String get url => repo.buildUrl(id);
+  String get thumbnailUrl => repo.buildUrl(id, thumbnail: true);
 
   Future<void> ensureMetadataLoaded() async {
     if (loaded) {

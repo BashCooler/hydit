@@ -7,7 +7,6 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/services/repo.dart';
 
 import '../getx/page.dart';
 import 'seekbar.dart';
@@ -35,7 +34,6 @@ class _VideoViewState extends State<VideoView> {
     ..setVolume(0.0);
   late final controller = VideoController(player);
 
-  final repo = Get.find<Repo>();
   late final PageGetxController pageController;
 
   StreamSubscription<Duration>? _bufferSubscription;
@@ -50,7 +48,7 @@ class _VideoViewState extends State<VideoView> {
     pageController = Get.find(tag: widget.tag);
     unawaited(
       player.open(
-        Media(repo.buildUrl(widget.file.id)),
+        Media(widget.file.url),
         play: pageController.enabled(widget.index),
       ).catchError((_) {}),
     );
@@ -105,7 +103,7 @@ class _VideoViewState extends State<VideoView> {
         fit: .expand,
         children: [
           CachedNetworkImage(
-            imageUrl: repo.buildUrl(widget.file.id, thumbnail: true),
+            imageUrl: widget.file.thumbnailUrl,
             placeholder: (context, url) => SizedBox.shrink(),
             fit: .contain,
           ),

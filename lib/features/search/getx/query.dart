@@ -67,11 +67,7 @@ class QueryController extends GetxController {
     files.assignAll(ids.map(fileFromId).toList());
   }
 
-  HydrusFile fileFromId(int id) => HydrusFile(
-    id: id,
-    thumbnailUrl: repo.buildUrl(id, thumbnail: true),
-    url: repo.buildUrl(id),
-  );
+  HydrusFile fileFromId(int id) => HydrusFile(id);
 
   Future<List<int>> _getIdsUnsafe() async => await repo.api.getSearchFiles(
     _tags.rawList,
