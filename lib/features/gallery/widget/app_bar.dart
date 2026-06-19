@@ -1,11 +1,14 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/gallery/getx/selection.dart';
-import 'package:hydit/features/search/widget/sorting.dart';
 import 'package:niku/extra/primitive.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/getx/query.dart';
+import 'package:hydit/features/search/widget/sorting.dart';
+
+import '../getx/selection.dart';
 
 
 const shadows = [
@@ -19,11 +22,13 @@ class GalleryAppBar extends StatelessWidget
   final String tag;
   final bool search;
   final void Function()? onTap;
+  final GlobalKey<InnerDrawerState>? state;
 
   const GalleryAppBar({
     super.key,
     required this.tag,
     this.search = false,
+    this.state,
     this.onTap,
   });
 
@@ -48,9 +53,9 @@ class GalleryAppBar extends StatelessWidget
       ),
       actions: [
         Obx(() => search && selection.off
-                ? SortPopUp(tag: tag)
-                : const SizedBox.shrink()
-        ),
+            ? SortPopUp(tag: tag)
+            : const SizedBox.shrink()),
+        if (state != null) SidebarButton(state),
       ],
     );
   }
@@ -119,13 +124,27 @@ class QueryInfo extends StatelessWidget {
 }
 
 
-class Actions extends StatelessWidget {
-  final String tag;
+class SidebarButton extends StatelessWidget {
+  final GlobalKey<InnerDrawerState>? drawerKey;
 
-  const Actions({super.key, required this.tag});
+  const SidebarButton(this.drawerKey, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return RepaintBoundary(
+      child: IconButton(
+        tooltip: 'Sidebar',
+        icon: const Icon(
+          Symbols.dock_to_left,
+          color: Colors.white,
+          shadows: [
+            Shadow(blurRadius: 16),
+          ],
+        ),
+        onPressed: () => drawerKey
+            ?.currentState
+            ?.toggle(),
+      ),
+    );
   }
 }

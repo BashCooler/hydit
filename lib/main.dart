@@ -2,16 +2,18 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hydit/widgets/shell.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:hive_ce_flutter/adapters.dart';
+import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:hydit/widgets/sidebar.dart';
+import 'features/gallery/getx/selection.dart';
 import 'features/search/getx/query.dart';
 import 'features/gallery/bindings.dart';
 import 'features/settings/bindings.dart';
 import 'services/repo.dart';
-import 'widgets/shell.dart';
-import 'widgets/sidebar.dart';
 import 'utils/theme.dart';
 
 
@@ -49,38 +51,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final page = GalleryPage()
+    final state = GlobalKey<InnerDrawerState>();
+
+    final page = GalleryPage(state: state)
         .withSearch()
         .withEditor();
-
-    final tiles = [
-      ListTile(
-        leading: const Icon(Icons.mail_outline),
-        title: const Text("Inbox"),
-        onTap: () {
-          final query = Get
-              .find<QueryController>(tag: page.tag);
-          query
-            ..clear()
-            ..add('system:inbox')
-            ..search();
-          Get.back();
-        },
-      ),
-      ListTile(
-        leading: const Icon(Icons.settings),
-        title: const Text('Settings'),
-        onTap: SettingsPage().push,
-      ),
-    ];
-
-    final gallery = AppShell(
-      dialog: page.dialog,
-      sidebar: SideBar(
-        tiles: tiles,
-      ),
-      child: page.build(),
-    );
 
     return GetMaterialApp(
       title: 'Hydit',
@@ -92,10 +67,53 @@ class App extends StatelessWidget {
           name: '/',
           transition: .rightToLeft,
           curve: Curves.easeInOutCubic,
-          page: () => gallery,
           binding: GalleryBindings(page),
+          page: () => HomePage(page: page, state: state),
         ),
       ],
+    );
+  }
+}
+
+
+class HomePage extends StatelessWidget {
+  final GalleryPage page;
+  final GlobalKey<InnerDrawerState> state;
+
+  const HomePage({super.key, required this.page, required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    final tiles = [
+      ListTile(
+        leading: const Icon(Icons.mail_outline),
+        title: const Text("Inbox"),
+        onTap: () {
+          Get.find<SelectionController>(tag: page.tag)
+             .clear();
+          Get.find<QueryController>(tag: page.tag)
+            ..clear()
+            ..add('system:inbox')
+            ..search();
+          Get.back();
+        },
+      ),
+      ListTile(
+        leading: const Icon(Icons.settings),
+        title: const Text('Settings'),
+        onTap: () {
+          Get.find<SelectionController>(tag: page.tag)
+              .clear();
+          SettingsPage().push();
+        },
+      ),
+    ];
+
+    return AppShell(
+      state: state,
+      dialog: page.dialog,
+      sidebar: SideBar(tiles: tiles),
+      child: page.build(),
     );
   }
 }

@@ -9,12 +9,14 @@ class AppShell extends StatefulWidget {
   final Widget? sidebar;
   final bool Function()? dialog;
   final Widget child;
+  final GlobalKey<InnerDrawerState> state;
 
   const AppShell({
     super.key,
     this.dialog,
     this.sidebar,
     required this.child,
+    required this.state,
   });
 
   @override
@@ -22,15 +24,13 @@ class AppShell extends StatefulWidget {
 }
 
 class _AppShellState extends State<AppShell> {
-  final drawerKey = GlobalKey<InnerDrawerState>();
-
   bool drawerOpened = false;
 
   void handlePop(bool didPop, Object? result) {
     if (didPop) return;
 
     if (drawerOpened) {
-      drawerKey.currentState?.toggle();
+      widget.state.currentState?.toggle();
       return;
     }
 
@@ -48,7 +48,7 @@ class _AppShellState extends State<AppShell> {
       canPop: false,
       onPopInvokedWithResult: handlePop,
       child: InnerDrawer(
-        key: drawerKey,
+        key: widget.state,
         onTapClose: true,
         swipeChild: true,
         rightAnimationType: .quadratic,

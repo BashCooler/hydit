@@ -1,3 +1,4 @@
+import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/features/editor/bindings.dart';
@@ -17,12 +18,14 @@ class Gallery extends StatelessWidget {
   final String tag;
   final bool search;
   final bool editor;
+  final GlobalKey<InnerDrawerState>? state;
 
   const Gallery({
     super.key,
     required this.tag,
     required this.search,
     required this.editor,
+    this.state,
   });
 
   FileStore get files => Get.find(tag: tag);
@@ -54,6 +57,7 @@ class Gallery extends StatelessWidget {
       appBar: GalleryAppBar(
         tag: tag,
         search: search,
+        state: state,
         onTap: gallery.scrollUp,
       ),
       body: Stack(

@@ -1,3 +1,4 @@
+import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:full_swipe_back_gesture/full_swipe_back_gesture.dart';
@@ -15,13 +16,15 @@ enum Mode { full, preview }
 
 class GalleryPage {
   final String tag;
+  final GlobalKey<InnerDrawerState>? state;
 
   FileStore? files;
   bool _search = false;
   bool _editor = false;
   bool _swipe = false;
 
-  GalleryPage() : tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
+  GalleryPage({this.state})
+      : tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
 
   GalleryPage withSearch() {
     _search = true;
@@ -44,7 +47,12 @@ class GalleryPage {
   }
 
   Widget build() {
-    Widget gallery = Gallery(tag: tag, search: _search, editor: _editor);
+    Widget gallery = Gallery(
+      tag: tag,
+      state: state,
+      search: _search,
+      editor: _editor,
+    );
 
     if (_swipe) gallery = SwipeablePage(child: gallery);
 

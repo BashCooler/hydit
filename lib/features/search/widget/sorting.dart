@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:niku/extra/primitive.dart';
 
 import 'package:hydit/utils/dictionaries.dart';
@@ -18,7 +19,7 @@ class SortPopUp extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<FileSortType>(
       icon: const Icon(
-        Icons.sort,
+        Symbols.sort,
         color: Colors.white,
         shadows: [
           Shadow(blurRadius: 16),
