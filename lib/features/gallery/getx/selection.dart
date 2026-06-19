@@ -4,6 +4,7 @@ import 'package:hydit/features/editor/bindings.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/services/repo.dart';
+import 'package:hydit/services/snack.dart';
 import 'gallery.dart';
 
 
@@ -14,6 +15,8 @@ class SelectionController extends GetxController {
   final FileStore files;
 
   SelectionController(this.files, this.gallery);
+
+  Repo get repo => Get.find();
 
   bool get selectedAll => ids.length == files.length;
 
@@ -96,8 +99,10 @@ class SelectionController extends GetxController {
     }
   }
 
-  Future<void> delete() async {
-    // TODO implement this
-    throw UnimplementedError();
+  Future<void> delete() {
+    return repo.api
+      .deleteFiles(ids.toList())
+      .run()
+      .onFailure(Snack.error);
   }
 }
