@@ -24,21 +24,6 @@ class SelectionBottomBar extends StatelessWidget {
   FileStore get files => Get.find(tag: tag);
   SelectionController get selection => Get.find(tag: tag);
 
-  void edit() {
-    switch (selection.ids.length) {
-      case 1:
-        final id = selection.ids.first;
-        final index = files.indexWhere((f) => f.id == id);
-        onEdit?.call(index);
-      case _:
-        final ids = selection.ids.toList();
-        onBatchEdit?.call(
-          FileStore.pickFrom(files, ids),
-          ids,
-        );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return AnimatedSlide(
@@ -62,7 +47,7 @@ class SelectionBottomBar extends StatelessWidget {
                   tooltip: 'Edit tags',
                   icon: const Icon(Icons.edit),
                   color: const Color(0xFFFFFFFF),
-                  onPressed: edit,
+                  onPressed: selection.edit,
                 ),
                 SelectRangeButton(tag: tag),
               ],

@@ -39,11 +39,11 @@ class GalleryGridView extends StatelessWidget {
     crossAxisSpacing: 5,
   );
 
+  FileStore get files => Get.find(tag: tag);
+  GalleryController get gallery => Get.find(tag: tag);
+
   @override
   Widget build(BuildContext context) {
-    final FileStore files = Get.find(tag: tag);
-    final GalleryController gallery = Get.find(tag: tag);
-
     return GridViewObserver(
       controller: gallery.grid,
       child: ExpressiveRefreshIndicator(

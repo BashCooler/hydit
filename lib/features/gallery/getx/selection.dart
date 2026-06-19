@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hydit/features/editor/bindings.dart';
 
 import 'package:hydit/reactive/file_store.dart';
 import 'gallery.dart';
@@ -73,5 +74,23 @@ class SelectionController extends GetxController {
     indices.sort();
 
     return (indices.first, indices.last);
+  }
+
+  void edit() {
+    switch (ids.length) {
+      case 1:
+        final index = files.indexById(ids.first);
+        EditorPage(files)
+            .paged(index!, gallery)
+            .onClose(clear)
+            .push();
+      case _:
+        final ids = this.ids.toList();
+        final files = FileStore.pickFrom(this.files, ids);
+        EditorPage(files)
+            .batch(gallery, ids)
+            .onClose(clear)
+            .push();
+    }
   }
 }

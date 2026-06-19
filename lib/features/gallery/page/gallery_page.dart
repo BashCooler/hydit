@@ -76,17 +76,7 @@ class Gallery extends StatelessWidget {
       floatingActionButton: search && selection.off
           ? AcrylicFAB(onTap: SearchPage(query: query).push)
           : null,
-      bottomNavigationBar: SelectionBottomBar(
-        tag: tag,
-        onEdit: (index) => EditorPage(files)
-            .paged(index, gallery)
-            .onClose(selection.clear)
-            .push(),
-        onBatchEdit: (files, ids) => EditorPage(files)
-            .batch(gallery, ids)
-            .onClose(selection.clear)
-            .push(),
-      ),
+      bottomNavigationBar: SelectionBottomBar(tag: tag),
     );
   });
 }
