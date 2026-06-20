@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' hide RefreshCallback;
 import 'package:expressive_refresh/expressive_refresh.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/widgets/images.dart';
 import 'package:hydit/reactive/file_store.dart';
 
@@ -77,15 +78,20 @@ class GalleryGridView extends StatelessWidget {
                 final file = files[index]
                   ..ensureMetadataLoaded();
                 return Obx(() {
-                  return Tile(
-                    index: index,
-                    file: file,
-                    selected: selected?.call(file.id) ?? false,
-                    badges: TileBadges(file),
-                    showBadges: gallery.badges && file.loaded,
-                    onTap: onTap,
-                    onLongPress: onLongPress,
-                    thumbnail: Thumbnail(file),
+                  return AnimatedScale(
+                    key: ValueKey(file.id),
+                    duration: deletionDuration,
+                    scale: file.deleted ? 0 : 1,
+                    child: Tile(
+                      index: index,
+                      file: file,
+                      selected: selected?.call(file.id) ?? false,
+                      badges: TileBadges(file),
+                      showBadges: gallery.badges && file.loaded,
+                      onTap: onTap,
+                      onLongPress: onLongPress,
+                      thumbnail: Thumbnail(file),
+                    ),
                   );
                 });
               },

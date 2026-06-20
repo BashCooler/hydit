@@ -31,6 +31,7 @@ ThemeData darkTheme() => ThemeData(
 
 
 Duration get transition => 300.ms;
+Duration get deletionDuration => 250.ms;
 
 
 const addition = Color(0x333fb950);

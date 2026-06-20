@@ -2,7 +2,9 @@ import 'dart:collection';
 
 import 'package:get/get.dart';
 
-import '../services/executor.dart';
+import 'package:hydit/utils/utils.dart';
+import 'package:hydit/services/executor.dart';
+
 import 'file.dart';
 
 
@@ -74,4 +76,21 @@ class FileStore with IterableMixin<HydrusFile> {
       .map((id) => byId(id))
       .whereType<HydrusFile>()
       .toList();
+
+  /// Remove files with provided [ids].
+  Future<void> removeWithIds(Iterable<int> ids) async {
+    final toRemove = rx
+        .where((file) => ids.contains(file.id))
+        .toList();
+
+    for (final file in toRemove) {
+      file.delete();
+    }
+
+    await sleep(deletionDuration + 100.ms);
+
+    for (final file in toRemove) {
+      rx.remove(file);
+    }
+  }
 }

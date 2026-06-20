@@ -1,14 +1,17 @@
 import 'package:get/get.dart';
 
-import '../entities/metadata.dart';
-import '../services/executor.dart';
-import '../services/mapper.dart';
-import '../services/repo.dart';
+import 'package:hydit/services/repo.dart';
+import 'package:hydit/services/mapper.dart';
+import 'package:hydit/services/executor.dart';
+import 'package:hydit/entities/metadata.dart';
+
+import 'file_store.dart';
 
 
 class HydrusFile {
   final int id;
   final metadata = Rxn<FileMetadata>();
+  final _deleted = false.obs;
 
   HydrusFile(this.id);
 
@@ -16,6 +19,7 @@ class HydrusFile {
 
   bool get loaded => metadata.value != null;
   bool get loading => metadata.value == null;
+  bool get deleted => _deleted.value;
 
   FileMetadata? get meta => metadata.value;
 
@@ -42,6 +46,13 @@ class HydrusFile {
         .tapSuccess((data) => Mapper.writeMetadata(data, this))
       ..then((_) => _loadingFuture = null);
   }
+
+  /// Mark file as [deleted].
+  ///
+  /// This method serves only to signal UI elements that file
+  /// is being deleted. Make sure to remove it from [FileStore]
+  /// manually to clear the resources.
+  void delete() => _deleted.value = true;
 }
 
 
