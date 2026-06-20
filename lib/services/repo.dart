@@ -32,21 +32,21 @@ class Repo {
       "?file_id=$id"
       "&Hydrus-Client-API-Access-Key=${api.key}";
 
-  Future<Result<void>> addTags(List<int> ids, Set<Tag> tags) {
+  Future<Result<void>> addTags(Iterable<int> ids, Set<Tag> tags) {
     return _addOrRemove(ids, tags, .addToLocalFileDomain);
   }
 
-  Future<Result<void>> removeTags(List<int> ids, Set<Tag> tags) {
+  Future<Result<void>> removeTags(Iterable<int> ids, Set<Tag> tags) {
     return _addOrRemove(ids, tags, .deleteFromLocalFileDomain);
   }
 
-  Future<Result<void>> _addOrRemove(List<int> ids, Set<Tag> tags,
-      Action action) {
+  Future<Result<void>> _addOrRemove(Iterable<int> ids, Set<Tag> tags,
+      Action action) async {
 
     return Executor.run(() async {
       for (final name in tags.services) {
         final key = services[name];
-        await api.postAddTags(ids, key!, action, tags[name].rawList);
+        await api.postAddTags(ids.toList(), key!, action, tags[name].rawList);
       }
     });
   }

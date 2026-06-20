@@ -236,8 +236,8 @@ extension Save on TagManager {
 
   Future<Result<void>> save() {
     return ExecutorBatch()
-        .queue(repo.addTags(_ids.toList(), additions))
-        .queue(repo.removeTags(_ids.toList(), deletions))
+        .queue(repo.addTags(_ids, additions))
+        .queue(repo.removeTags(_ids, deletions))
         .queueAll(_ids.map(files.updateById))
         .run();
   }
