@@ -125,8 +125,8 @@ class Editor extends StatelessWidget {
         content: manager.summarize()!.n,
         loadingTitle: 'Saving...'.n,
         discardButton: true,
-        onApply: () async {
-          return await manager
+        onApply: () {
+          return manager
               .save()
               .tapSuccess((_) => Get.back())
               .tapFailure(Snack.error);

@@ -1,10 +1,14 @@
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:niku/extra/primitive.dart';
 import 'package:hydit/features/editor/bindings.dart';
 
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/snack.dart';
+import 'package:hydit/utils/utils.dart';
+import 'package:hydit/widgets/dialog.dart';
 import 'gallery.dart';
 
 
@@ -70,8 +74,8 @@ class SelectionController extends GetxController {
     if (ids.length != 2) return null;
 
     final indices = <int>[
-      ?files.indexById(ids.first),
-      ?files.indexById(ids.last),
+      files.indexById(ids.first),
+      files.indexById(ids.last),
     ];
 
     if (indices.length < 2) return null;
@@ -86,7 +90,7 @@ class SelectionController extends GetxController {
       case 1:
         final index = files.indexById(ids.first);
         EditorPage(files)
-            .paged(index!, gallery)
+            .paged(index, gallery)
             .onClose(clear)
             .push();
       case _:
@@ -100,9 +104,21 @@ class SelectionController extends GetxController {
   }
 
   Future<void> delete() {
-    return repo.api
-      .deleteFiles(ids.toList())
-      .run()
-      .tapFailure(Snack.error);
+    return Get.dialog(
+      barrierDismissible: true,
+      transitionDuration: 150.ms,
+      LoadingDialog(
+        icon: const Icon(Icons.delete_forever),
+        title: 'Delete files?'.n,
+        loadingTitle: 'Deleting...'.n,
+        content: 'Selected files will be marked as deleted in Hydrus'.n,
+        onApply: () {
+          return repo.api
+              .deleteFiles(ids.toList())
+              .run()
+              .tapFailure(Snack.error);
+        },
+      ),
+    );
   }
 }

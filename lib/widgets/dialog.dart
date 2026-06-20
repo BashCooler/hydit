@@ -46,8 +46,7 @@ class LoadingDialog extends HookWidget {
             actions: loading.value ? [] : [
               TextButton(
                 onPressed: () async => await onApply()
-                    .loading(loading)
-                    .tapFailure(Snack.error),
+                    .loading(loading),
                 child: const Text('Save'),
               ),
               if (discardButton) TextButton(

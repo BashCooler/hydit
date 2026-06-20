@@ -47,7 +47,7 @@ class SelectionBottomBar extends StatelessWidget {
                   tooltip: 'Delete',
                   icon: const Icon(Icons.delete_forever),
                   color: const Color(0xFFFFFFFF),
-                  onPressed: selection.delete,
+                  onPressed: () async => await selection.delete(),
                 ),
                 IconButton(
                   tooltip: 'Edit tags',
