@@ -145,7 +145,7 @@ extension SafeExecute<T> on Future<T> {
   /// Safely runs an [action], handles [DioException]s.
   Future<Result<T>> run() => Executor.run(() => this);
 
-  Future<T> loading(RxBool loading) async {
+  Future<T> loading(dynamic loading) async {
     loading.value = true;
     try {
       return await this;

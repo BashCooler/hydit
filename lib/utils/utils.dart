@@ -21,6 +21,11 @@ extension ToDuration on num {
 }
 
 
+Future<void> sleep(Duration duration) {
+  return Future.delayed(duration);
+}
+
+
 extension FluentApi on RxBool {
   Future<RxBool> set(bool value) async {
     this.value = value;

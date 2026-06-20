@@ -74,9 +74,9 @@ class AppPopDialog extends StatelessWidget {
       title: 'Close application?'.n,
       actions: [
         n.Button('No'.n)
-          ..onPressed = () => Get.back(),
+          ..onPressed = Get.back,
         n.Button('Yes'.n)
-          ..onPressed = () => SystemNavigator.pop(),
+          ..onPressed = SystemNavigator.pop,
       ],
     );
   }

@@ -33,6 +33,8 @@ class TagManager extends GetxController {
   /// Selected service
   String get service => selectedService.value;
 
+  bool get unlocked => additions.isEmpty && deletions.isEmpty;
+
   /// Sorted tags to show in UI
   List<Tag> tags([String? service]) {
     final Iterable<Tag> set = _tags(service);
@@ -207,31 +209,22 @@ extension Save on TagManager {
   Map<String, List<Tag>> removeEmpty(Map<String, List<Tag>> map) =>
       Map.from(map)..removeWhere((k, v) => v.isEmpty);
 
-  /// Returns "No changes" if no changes were made, otherwise returns:
-  /// ```
-  /// Add X tags to Y services
-  /// Remove X tags from Y services
-  /// ```
-  /// if X and Y are not zero.
   String? summarize() {
     assert(_ids.isNotEmpty);
 
-    final add = additions;
-    final del = deletions;
-
-    if (add.isEmpty && del.isEmpty) return null;
+    if (unlocked) return null;
 
     final sb = StringBuffer();
 
-    if (add.isNotEmpty) {
-      final services = add.services.length;
-      final count = add.length;
+    if (additions.isNotEmpty) {
+      final services = additions.services.length;
+      final count = additions.length;
       sb.write('Add $count tags to $services services\n');
     }
 
-    if (del.isNotEmpty) {
-      final services = del.services.length;
-      final count = del.length;
+    if (deletions.isNotEmpty) {
+      final services = deletions.services.length;
+      final count = deletions.length;
       sb.write('Remove $count tags from $services services');
     }
 

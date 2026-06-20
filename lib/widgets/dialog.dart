@@ -1,44 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hydit/services/executor.dart';
 
 
-class ConfirmDialog extends StatelessWidget {
-  final Icon icon;
-  final Widget message;
-  final ValueNotifier<bool> loading;
-  final Widget loadingTitle;
+class LoadingDialog extends HookWidget {
+  final Widget? icon;
   final Widget title;
-  final List<Widget> actions;
+  final Widget loadingTitle;
+  final Widget? content;
+  final bool discardButton;
+  final Future<void> Function() onApply;
 
-  const ConfirmDialog({
+  const LoadingDialog({
     super.key,
-    required this.icon,
-    required this.message,
-    required this.loading,
-    required this.loadingTitle,
+    this.icon,
+    this.content,
     required this.title,
-    required this.actions,
+    required this.loadingTitle,
+    this.discardButton = false,
+    required this.onApply,
   });
 
   @override
   Widget build(BuildContext context) {
+    final loading = useState(false);
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
         if (loading.value) return;
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(false);
       },
       child: ValueListenableBuilder(
         valueListenable: loading,
         builder: (context, value, child) {
           return AlertDialog(
-            actionsAlignment: .center,
             icon: icon,
+            actionsAlignment: .center,
             title: loading.value ? loadingTitle : title,
             content: loading.value
                 ? const LinearProgressIndicator()
-                : message,
-            actions: loading.value ? [] : actions,
+                : content,
+            actions: loading.value ? [] : [
+              TextButton(
+                onPressed: () async => await onApply().loading(loading),
+                child: const Text('Save'),
+              ),
+              if (discardButton) TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Discard'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+            ],
           );
         },
       ),

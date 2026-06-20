@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/utils/utils.dart';
+import 'package:hydit/widgets/dialog.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/reactive/file.dart';
@@ -90,6 +91,7 @@ class Editor extends StatelessWidget {
   }
 
   // MARK: NAV
+
   void openPreview(int index, HydrusFile file) {
     final tag = 'Preview-${DateTime.now().microsecondsSinceEpoch}';
     Get.to(() => Preview(tag: tag, index: index, file: file),
@@ -103,23 +105,26 @@ class Editor extends StatelessWidget {
 
   Future<void> onLeave(bool didPop, Object? result) async {
     if (didPop) return;
-    final shouldLeave = await confirmPendingChanges();
-    if (shouldLeave) Get.back();
+    if (await confirmPendingChanges()) Get.back();
   }
 
   Future<bool> confirmPendingChanges() async {
-    final message = manager.summarize();
-    if (message == null) return true;
-    return await showPopDialog(message) ?? true;
+    if (manager.unlocked) return true;
+    return await showPopDialog() ?? true;
   }
 
-  Future<bool?> showPopDialog(String message) {
-    final loading = ValueNotifier<bool>(false);
-
+  Future<bool?> showPopDialog() async {
     return Get.dialog(
-      EditorDialog(loading: loading, message: Text(message)),
+      barrierDismissible: true,
       transitionDuration: 150.ms,
-    )
-      ..then((_) => loading.dispose());
+      LoadingDialog(
+        icon: const Icon(Icons.save),
+        title: 'Save changes'.n,
+        content: manager.summarize()!.n,
+        loadingTitle: 'Saving...'.n,
+        discardButton: true,
+        onApply: manager.save,
+      ),
+    );
   }
 }
