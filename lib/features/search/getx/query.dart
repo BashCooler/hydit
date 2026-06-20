@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:hydit/api/models.dart';
 
 import 'package:hydit/utils/dictionaries.dart';
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/snack.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/tag.dart';
-import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
@@ -18,6 +18,7 @@ class QueryController extends GetxController {
 
   final FileStore files;
   final Repo repo = Get.find();
+  final box = Hive.box('settings');
   final GalleryController gallery;
 
   // Sorting options are global and we can't sort
@@ -26,13 +27,12 @@ class QueryController extends GetxController {
   bool _sortAsc = false;
 
   QueryController({required this.files, required this.gallery}) {
-    loadSortOption();
-    loadAscOption();
+    loadSearchOptions();
     load();
   }
 
   List<Tag> get tags => _tags;
-  List<String> get values => _tags.map((t) => t.raw).toList();
+  List<String> get values => _tags.rawList();
 
   @override
   String toString() => values.toString().replaceAll(RegExp(r'[\[\]]'), '');
@@ -51,40 +51,35 @@ class QueryController extends GetxController {
   void clear() => _tags.clear();
 
   void saveQuery() {
-    final box = Hive.box('settings');
-    box.put('query', _tags.map((t) => t.raw).toList());
+    box.put('query', _tags.rawList());
   }
 
-  Future<void> search() async {
-    final List<int>? ids = await _getIdsUnsafe()
+  Future<Result<List<int>>> search() {
+    saveQuery();
+
+    final params = SearchFilesParamsBuilder()
+      ..tags = _tags
+      ..fileSortType = _sortType
+      ..fileSortAsc = _sortAsc;
+
+    return repo.api
+        .getSearchFiles(params.build())
         .run()
         .loading(gallery.loading)
         .tapSuccess((_) => repo.updateServices())
-        .tapFailure(Snack.error)
-        .unwrap();
-
-    if (ids == null) return;
-    files.assignAll(ids.map(fileFromId).toList());
+        .tapSuccess((ids) => files.assignFromIds(ids))
+        .tapFailure(Snack.error);
   }
 
-  HydrusFile fileFromId(int id) => HydrusFile(id);
+  void load() {
+    final query = box.get('query') as List<String>?;
+    if (query == null || query.isEmpty) return;
 
-  Future<List<int>> _getIdsUnsafe() async => await repo.api.getSearchFiles(
-    _tags.rawList(),
-    fileSortType: _sortType.value,
-    fileSortAsc: _sortAsc,
-  );
-
-  Future<void> load() async {
-    final box = Hive.box('settings');
-    final List<String>? tags = box.get('query');
-    if (tags != null && tags.isNotEmpty) {
-      _tags.assignAll(tags.map((t) => Tag(t)));
-      await search();
-    }
+    _tags.assignAll(query.toTags());
+    search();
   }
 
-  // MARK: SORT TYPE
+  // MARK: SEARCH OPTIONS
 
   static const typeKey = 'sort type';
   FileSortType get sortType => _sortType;
@@ -92,11 +87,19 @@ class QueryController extends GetxController {
   set sortType(FileSortType sortType) {
     _sortType = sortType;
     search();
-    Hive.box('settings').put(typeKey, sortType.name);
+    box.put(typeKey, sortType.name);
   }
 
-  void loadSortOption() {
-    final box = Hive.box('settings');
+  static const ascKey = 'sort ascending';
+  bool get sortAsc => _sortAsc;
+
+  set sortAsc(bool sortAsc) {
+    _sortAsc = sortAsc;
+    search();
+    box.put(ascKey, sortAsc);
+  }
+
+  void loadSearchOptions() {
     final String? sort = box.get(typeKey);
     switch (sort) {
       case null:
@@ -106,21 +109,7 @@ class QueryController extends GetxController {
             .values
             .firstWhere((e) => e.name == sort);
     }
-  }
 
-  // MARK: ASC/DESC
-
-  static const ascKey = 'sort ascending';
-  bool get sortAsc => _sortAsc;
-
-  set sortAsc(bool sortAsc) {
-    _sortAsc = sortAsc;
-    search();
-    Hive.box('settings').put(ascKey, sortAsc);
-  }
-
-  void loadAscOption() {
-    final box = Hive.box('settings');
     final bool? asc = box.get(ascKey);
     switch (asc) {
       case null:

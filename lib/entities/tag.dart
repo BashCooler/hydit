@@ -73,8 +73,13 @@ extension TagOperations on Set<Tag> {
 }
 
 
-extension RawList on Iterable<Tag> {
+extension IterableOperations on Iterable<Tag> {
   List<String> rawList() => map((t) => t.raw).toList();
+}
+
+
+extension ToTags on List<String> {
+  Iterable<Tag> toTags() => map((t) => Tag(t));
 }
 
 

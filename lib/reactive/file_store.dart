@@ -32,6 +32,12 @@ class FileStore {
 
   void assignAll(Iterable<HydrusFile> items) => _files.assignAll(items);
 
+  void assignFromIds(List<int> ids) {
+    _files.assignAll(ids.map(fileFromId).toList());
+  }
+
+  HydrusFile fileFromId(int id) => HydrusFile(id);
+
   int indexWhere(bool Function(HydrusFile) test, [int start = 0]) {
     return _files.indexWhere(test, start);
   }

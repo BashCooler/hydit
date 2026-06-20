@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:hydit/api/models.dart';
-import 'package:hydit/utils/dictionaries.dart';
 
 import 'dio.dart';
-import 'unicode.dart';
 
 
 class HydrusApi with DioClient {
@@ -52,35 +50,14 @@ class HydrusApi with DioClient {
 
   // MARK: SEARCHING AND FETCHING FILES
 
-  Future<List<int>> getSearchFiles(List<String> tags, {
-    // List<String>? fileDomain,
-    // String? tagServiceKey,
-    bool? includeCurrentTags,
-    bool? includePendingTags,
-    int? fileSortType,
-    bool? fileSortAsc,
-    bool? returnFileIds,
-    bool? returnHashes,
-  }) async {
-    final Map<String, dynamic> params = {
-      'tags': tags.encode(),
-      // 'file_domain': fileDomain,
-      // 'tag_service_key': tagServiceKey,
-      'include_current_tags': includeCurrentTags,
-      'include_pending_tags': includePendingTags,
-      'file_sort_type': fileSortType,
-      'file_sort_asc': fileSortAsc,
-      'return_file_ids': returnFileIds,
-      'return_hashes': returnHashes,
-    };
-    params.removeWhere((k, v) => (v == null));
-
-    final response = await get<Map<String, dynamic>>(
+  Future<List<int>> getSearchFiles(SearchFilesParams params) {
+    final request = get<Map<String, dynamic>>(
       '/get_files/search_files',
-      params: params,
+      params: params.toMap(),
     );
-
-    return (response['file_ids'] as List).cast<int>();
+    return request
+        .then((r) => r['file_ids'] as List)
+        .then((l) => l.cast<int>());
   }
 
   Future<String> getFileMetadata(List<int> ids, {
