@@ -2,7 +2,7 @@ library;
 
 
 /// An action performed by POST /add_tags/add_tags request
-enum Action {
+enum AddTagsAction {
   addToLocalFileDomain(0),
   deleteFromLocalFileDomain(1),
   pendToTagRepository(2),
@@ -11,7 +11,7 @@ enum Action {
   rescindPetitionFromTagRepository(5);
 
   final int value;
-  const Action(this.value);
+  const AddTagsAction(this.value);
 }
 
 

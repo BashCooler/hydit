@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:hive_ce/hive.dart';
 
 import 'package:hydit/api/api.dart';
+import 'package:hydit/api/models.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/snack.dart';
 import 'package:hydit/utils/dictionaries.dart';
@@ -32,34 +33,38 @@ class Repo {
       "?file_id=$id"
       "&Hydrus-Client-API-Access-Key=${api.key}";
 
-  Future<Result<void>> addTags(Iterable<int> ids, Set<Tag> tags) {
-    return _addOrRemove(ids, tags, .addToLocalFileDomain);
+  // MARK: ADD & DELETE TAGS
+
+  Future<Result<void>> addTags(Iterable<int> ids, Set<Tag> additions) {
+    return _addOrRemove(ids, additions, .addToLocalFileDomain);
   }
 
-  Future<Result<void>> removeTags(Iterable<int> ids, Set<Tag> tags) {
-    return _addOrRemove(ids, tags, .deleteFromLocalFileDomain);
+  Future<Result<void>> removeTags(Iterable<int> ids, Set<Tag> deletions) {
+    return _addOrRemove(ids, deletions, .deleteFromLocalFileDomain);
   }
 
   Future<Result<void>> _addOrRemove(Iterable<int> ids, Set<Tag> tags,
-      Action action) async {
+      AddTagsAction action) async {
+
+    final params = AddTagsParamsBuilder()
+      ..ids = ids
+      ..action = action;
 
     return Executor.run(() async {
       for (final name in tags.services) {
-        final key = services[name];
-        await api.postAddTags(ids.toList(), key!, action, tags[name].rawList);
+        final p = params
+          ..key = services[name]!
+          ..tags = tags.of(name);
+        await api.postAddTags(p.build());
       }
     });
   }
 
-  Future<void> updateServices() async {
-    final response = await api
+  Future<Result<String>> updateServices() async {
+    return await api
         .getServices()
         .run()
-        .tapFailure(Snack.error)
-        .unwrap();
-
-    if (response == null) return;
-
-    services.assignAll(Mapper.mapServices(response));
+        .tapSuccess((s) => services.assignAll(s.mapServices()))
+        .tapFailure(Snack.error);
   }
 }

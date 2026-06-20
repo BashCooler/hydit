@@ -70,7 +70,7 @@ class QueryController extends GetxController {
   HydrusFile fileFromId(int id) => HydrusFile(id);
 
   Future<List<int>> _getIdsUnsafe() async => await repo.api.getSearchFiles(
-    _tags.rawList,
+    _tags.rawList(),
     fileSortType: _sortType.value,
     fileSortAsc: _sortAsc,
   );

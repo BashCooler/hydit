@@ -82,6 +82,11 @@ extension ParseTags on Map<String, dynamic> {
 }
 
 
+extension Mappers on String {
+  Map<String, String> mapServices() => Mapper.mapServices(this);
+}
+
+
 extension Parsers on String {
 
   Pick pick([

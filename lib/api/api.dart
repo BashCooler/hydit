@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:hydit/api/models.dart';
 import 'package:hydit/utils/dictionaries.dart';
 
 import 'dio.dart';
@@ -152,15 +153,7 @@ class HydrusApi with DioClient {
     return get('/add_tags/search_tags', params: params);
   }
 
-  Future<void> postAddTags(List<int> ids, String serviceKey, Action action,
-      List<String> tags) {
-    return post<void>('/add_tags/add_tags', params: {
-      'file_ids': ids,
-      'service_keys_to_actions_to_tags': {
-        serviceKey: {
-          "${action.value}": tags,
-        }
-      }
-    });
+  Future<void> postAddTags(AddTagsParams params) {
+    return post<void>('/add_tags/add_tags', params: params.toMap());
   }
 }

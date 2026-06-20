@@ -49,11 +49,14 @@ class TagManager extends GetxController {
     switch (service) {
       case null:
         if (this.service == 'all known tags') return unique();
-        return _current[this.service].union(_original[this.service]);
+        return _current.of(this.service)
+            .union(_original.of(this.service));
       case 'all known tags':
         return unique();
       case _:
-        return _current[service].union(_original[service]);
+        return _current
+            .of(service)
+            .union(_original.of(service));
     }
   }
 

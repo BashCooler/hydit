@@ -63,7 +63,7 @@ class Tag extends Equatable {
 
 
 extension TagOperations on Set<Tag> {
-  Set<Tag> operator [](String service) {
+  Set<Tag> of(String service) {
     return Set.unmodifiable(where((e) => e.service == service));
   }
 
@@ -74,7 +74,7 @@ extension TagOperations on Set<Tag> {
 
 
 extension RawList on Iterable<Tag> {
-  List<String> get rawList => map((t) => t.raw).toList();
+  List<String> rawList() => map((t) => t.raw).toList();
 }
 
 
