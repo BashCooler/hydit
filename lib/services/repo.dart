@@ -46,18 +46,17 @@ class Repo {
   Future<Result<void>> _addOrRemove(Iterable<int> ids, Set<Tag> tags,
       AddTagsAction action) async {
 
-    final params = AddTagsParamsBuilder()
-      ..ids = ids
-      ..action = action;
+    final operations = tags.services.map((name) {
+      final params = AddTagsParamsBuilder()
+        ..ids = ids
+        ..action = action
+        ..key = services[name]!
+        ..tags = tags.of(name);
 
-    return Executor.run(() async {
-      for (final name in tags.services) {
-        final p = params
-          ..key = services[name]!
-          ..tags = tags.of(name);
-        await api.postAddTags(p.build());
-      }
+      return api.postAddTags(params.build()).run();
     });
+
+    return await ExecutorBatch().queueAll(operations).run();
   }
 
   Future<Result<String>> updateServices() async {

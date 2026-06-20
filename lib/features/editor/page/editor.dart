@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/services/executor.dart';
+import 'package:hydit/services/snack.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/widgets/dialog.dart';
 import 'package:niku/namespace.dart' as n;
@@ -123,7 +125,12 @@ class Editor extends StatelessWidget {
         content: manager.summarize()!.n,
         loadingTitle: 'Saving...'.n,
         discardButton: true,
-        onApply: manager.save,
+        onApply: () async {
+          return await manager
+              .save()
+              .tapSuccess((_) => Get.back())
+              .tapFailure(Snack.error);
+        },
       ),
     );
   }
