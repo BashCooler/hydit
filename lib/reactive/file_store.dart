@@ -40,8 +40,8 @@ class FileStore {
     return index > -1 ? index : null;
   }
 
-  HydrusFile? byId(int id) {
-    return _files.firstWhereOrNull((f) => f.id == id);
+  HydrusFile byId(int id) {
+    return _files.firstWhere((f) => f.id == id);
   }
 
   List<HydrusFile> byIds(List<int> ids) => ids

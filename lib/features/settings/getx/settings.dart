@@ -62,8 +62,8 @@ class SettingsController extends GetxController {
     await HydrusApi(uri: uri, key: $.key)
         .getVerifyAccessKey()
         .run()
-        .onSuccess(_onSuccess)
-        .onFailure(Snack.error);
+        .tapSuccess(_onSuccess)
+        .tapFailure(Snack.error);
   }
 
   void _onSuccess(String data) {

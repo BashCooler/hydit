@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 
 import '../entities/metadata.dart';
+import '../services/executor.dart';
+import '../services/mapper.dart';
 import '../services/repo.dart';
 
 
@@ -22,11 +24,14 @@ class HydrusFile {
   String get url => repo.buildUrl(id);
   String get thumbnailUrl => repo.buildUrl(id, thumbnail: true);
 
-  Future<void> ensureMetadataLoaded() async {
+  Future<void> ensureMetadataLoaded() {
     if (loaded) {
       return Future.value();
     }
+    return update();
+  }
 
+  Future<void> update() async {
     if (_loadingFuture != null) {
       return _loadingFuture;
     }
@@ -35,9 +40,9 @@ class HydrusFile {
   }
 
   Future<void> _loadMetadata() {
-    return Get
-        .find<Repo>()
-        .setMetadataFor(this)
-        .then((_) => _loadingFuture = null);
+    return repo.api
+        .getFileMetadata([id])
+        .run()
+        .tapSuccess((data) => Mapper.writeMetadata(data, this));
   }
 }

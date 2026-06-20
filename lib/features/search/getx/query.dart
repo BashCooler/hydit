@@ -59,8 +59,8 @@ class QueryController extends GetxController {
     final List<int>? ids = await _getIdsUnsafe()
         .run()
         .loading(gallery.loading)
-        .onSuccess((_) => repo.updateServices())
-        .onFailure(Snack.error)
+        .tapSuccess((_) => repo.updateServices())
+        .tapFailure(Snack.error)
         .unwrap();
 
     if (ids == null) return;

@@ -256,7 +256,7 @@ extension Save on TagManager {
     }
 
     for (final id in _ids) {
-      await repo.setMetadataFor(files.byId(id));
+      await files.byId(id).update();
     }
 
     return true;

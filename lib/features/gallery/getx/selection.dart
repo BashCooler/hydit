@@ -103,6 +103,6 @@ class SelectionController extends GetxController {
     return repo.api
       .deleteFiles(ids.toList())
       .run()
-      .onFailure(Snack.error);
+      .tapFailure(Snack.error);
   }
 }

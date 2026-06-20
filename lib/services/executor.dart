@@ -144,8 +144,8 @@ extension SafeExecute<T> on Future<T> {
 
 extension FutureOperations<T> on Future<Result<T>> {
 
-  Future<Result<T>> onSuccess(
-      FutureOr<void> Function(T value) callback) async {
+  Future<Result<T>> tapSuccess(
+      FutureOr<void> Function(T data) callback) async {
 
     final result = await this;
 
@@ -156,7 +156,7 @@ extension FutureOperations<T> on Future<Result<T>> {
     return result;
   }
 
-  Future<Result<T>> onFailure(
+  Future<Result<T>> tapFailure(
       FutureOr<void> Function(String title, String message) callback) async {
 
     final result = await this;

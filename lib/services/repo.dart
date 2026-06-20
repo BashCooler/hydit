@@ -33,19 +33,6 @@ class Repo {
       "?file_id=$id"
       "&Hydrus-Client-API-Access-Key=${api.key}";
 
-  Future<void> setMetadataFor(HydrusFile? file) async {
-    if (file == null) return;
-
-    final data = await api
-        .getFileMetadata([file.id])
-        .run()
-        .unwrap();
-
-    if (data != null) {
-      Mapper.writeMetadata(data, file);
-    }
-  }
-
   Future<Result<void>> addTags(List<int> ids, Set<Tag> tags) {
     return _addOrRemove(ids, tags, .addToLocalFileDomain);
   }
@@ -69,7 +56,7 @@ class Repo {
     final response = await api
         .getServices()
         .run()
-        .onFailure(Snack.error)
+        .tapFailure(Snack.error)
         .unwrap();
 
     if (response == null) return;
