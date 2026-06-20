@@ -1,14 +1,16 @@
+import 'dart:collection';
+
 import 'package:get/get.dart';
 
 import '../services/executor.dart';
 import 'file.dart';
 
 
-class FileStore {
-  final RxList<HydrusFile> _files;
+class FileStore with IterableMixin<HydrusFile> {
+  final RxList<HydrusFile> rx;
 
   /// Create empty [FileStore]
-  FileStore() : _files = <HydrusFile>[].obs;
+  FileStore() : rx = <HydrusFile>[].obs;
 
   /// Takes files from [store] with specified [ids] and
   /// created a new [FileStore].
@@ -16,47 +18,60 @@ class FileStore {
   /// New [FileStore] will have the same [HydrusFile] objects as
   /// the original and will impact the original [FileStore].
   FileStore.pickFrom(FileStore store, List<int> ids)
-    : _files = store.byIds(ids).obs;
+    : rx = store.byIds(ids).obs;
 
   /// Create file repo with the same files as given [fileRepo].
   ///
   /// The copy and the original [FileStore] share the same list, so
   /// all the changes in the copy will affect the original.
-  FileStore.copy(FileStore fileRepo) : _files = fileRepo._files;
+  FileStore.copy(FileStore fileRepo) : rx = fileRepo.rx;
 
-  int get length => _files.length;
+  HydrusFile operator [](int index) => rx[index];
 
-  HydrusFile operator [](int index) => _files[index];
+  @override
+  Iterator<HydrusFile> get iterator => rx.iterator;
 
-  void clear() => _files.clear();
+  /// Create file repo with the same files as given [fileRepo].
+  ///
+  /// The copy and the original [FileStore] share the same list, so
+  /// all the changes in the copy will affect the original.
+  FileStore copy() => FileStore.copy(this);
 
-  void assignAll(Iterable<HydrusFile> items) => _files.assignAll(items);
-
+  /// Replaces all existing items of this list with items
+  /// generated from [ids].
   void assignFromIds(List<int> ids) {
-    _files.assignAll(ids.map(fileFromId).toList());
+    final files = ids.map((id) => id.toFile());
+    rx.assignAll(files);
   }
 
-  HydrusFile fileFromId(int id) => HydrusFile(id);
-
+  /// The first index in the list that satisfies the provided test.
+  /// Returns -1 if element is not found.
   int indexWhere(bool Function(HydrusFile) test, [int start = 0]) {
-    return _files.indexWhere(test, start);
+    return rx.indexWhere(test, start);
   }
 
-  int? indexById(int id) {
-    final index = indexWhere((e) => e.id == id);
-    return index > -1 ? index : null;
+  /// The first index in the list with provided [id].
+  /// Returns -1 if element is not found.
+  int indexById(int id) {
+    return indexWhere((e) => e.id == id);
   }
 
+
+  /// The first element with provided [id].
+  /// If no file is found throws [StateError].
   HydrusFile byId(int id) {
-    return _files.firstWhere((f) => f.id == id);
+    return rx.firstWhere((f) => f.id == id);
   }
 
+  /// Load and write metadata fot file with provided [id].
+  ///
+  /// This method is safe and can be continued with `onSuccess`,
+  /// `onFailure` and other fluent API methods.
   Future<Result<void>> updateById(int id) => byId(id).update();
 
+  /// Find all files with provided [ids].
   List<HydrusFile> byIds(List<int> ids) => ids
       .map((id) => byId(id))
       .whereType<HydrusFile>()
       .toList();
-
-  FileStore copy() => FileStore.copy(this);
 }

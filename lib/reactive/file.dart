@@ -43,3 +43,8 @@ class HydrusFile {
       ..then((_) => _loadingFuture = null);
   }
 }
+
+
+extension ToFile on int {
+  HydrusFile toFile() => HydrusFile(this);
+}
