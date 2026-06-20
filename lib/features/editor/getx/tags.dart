@@ -30,6 +30,8 @@ class TagManager extends GetxController {
 
   TagManager(this.files);
 
+  Repo repo = Get.find();
+
   /// Selected service
   String get service => selectedService.value;
 
@@ -169,7 +171,7 @@ extension Init on TagManager {
     for (final id in ids) {
       final file = files.byId(id);
       final tags = file
-          ?.meta!
+          .meta!
           .combined
           .where((e) => e.service != 'all known tags')
           .toSet();
@@ -182,8 +184,9 @@ extension Init on TagManager {
   }
 
   void clear() {
-    final all = Get.find<Repo>().services;
-    services..clear()..addAll(all.keys);
+    services
+      ..clear()
+      ..addAll(repo.services.keys);
 
     _ids.clear();
     _current.clear();
@@ -231,35 +234,12 @@ extension Save on TagManager {
     return sb.toString();
   }
 
-  /// Send request to Hydrus to add/remove tags.
-  ///
-  /// If process finishes successfully returns true.
-  Future<bool> save() async {
-    final Repo repo = Get.find();
-
-    final added = await repo.addTags(_ids.toList(), additions);
-
-    switch (added) {
-      case Success(data: final _):
-        break;
-      case Failure(title: final _, message: final _):
-        return false;
-    }
-
-    final removed = await repo.removeTags(_ids.toList(), deletions);
-
-    switch (removed) {
-      case Success(data: final _):
-        break;
-      case Failure(title: final _, message: final _):
-        return false;
-    }
-
-    for (final id in _ids) {
-      await files.byId(id).update();
-    }
-
-    return true;
+  Future<Result<void>> save() {
+    return ExecutorBatch()
+        .queue(repo.addTags(_ids.toList(), additions))
+        .queue(repo.removeTags(_ids.toList(), deletions))
+        .queueAll(_ids.map(files.updateById))
+        .run();
   }
 }
 

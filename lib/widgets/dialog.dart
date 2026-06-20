@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hydit/services/executor.dart';
+import 'package:hydit/services/snack.dart';
 
 
 class LoadingDialog extends HookWidget {
@@ -9,7 +10,7 @@ class LoadingDialog extends HookWidget {
   final Widget loadingTitle;
   final Widget? content;
   final bool discardButton;
-  final Future<void> Function() onApply;
+  final Future<Result<void>> Function() onApply;
 
   const LoadingDialog({
     super.key,
@@ -44,7 +45,9 @@ class LoadingDialog extends HookWidget {
                 : content,
             actions: loading.value ? [] : [
               TextButton(
-                onPressed: () async => await onApply().loading(loading),
+                onPressed: () async => await onApply()
+                    .loading(loading)
+                    .tapFailure(Snack.error),
                 child: const Text('Save'),
               ),
               if (discardButton) TextButton(

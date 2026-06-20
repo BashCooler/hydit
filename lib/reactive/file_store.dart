@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../services/executor.dart';
 import 'file.dart';
 
 
@@ -43,6 +44,8 @@ class FileStore {
   HydrusFile byId(int id) {
     return _files.firstWhere((f) => f.id == id);
   }
+
+  Future<Result<void>> updateById(int id) => byId(id).update();
 
   List<HydrusFile> byIds(List<int> ids) => ids
       .map((id) => byId(id))

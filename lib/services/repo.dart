@@ -4,7 +4,6 @@ import 'package:hive_ce/hive.dart';
 
 import 'package:hydit/api/api.dart';
 import 'package:hydit/entities/tag.dart';
-import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/snack.dart';
 import 'package:hydit/utils/dictionaries.dart';
 

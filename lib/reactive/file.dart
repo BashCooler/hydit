@@ -12,7 +12,7 @@ class HydrusFile {
 
   HydrusFile(this.id);
 
-  Future<void>? _loadingFuture;
+  Future<Result<void>>? _loadingFuture;
 
   bool get loaded => metadata.value != null;
   bool get loading => metadata.value == null;
@@ -31,19 +31,15 @@ class HydrusFile {
     return update();
   }
 
-  Future<void> update() async {
-    if (_loadingFuture != null) {
-      return _loadingFuture;
-    }
-
+  Future<Result<void>> update() async {
     return _loadingFuture ??= _loadMetadata();
   }
 
-  Future<void> _loadMetadata() {
+  Future<Result<void>> _loadMetadata() {
     return repo.api
         .getFileMetadata([id])
         .run()
         .tapSuccess((data) => Mapper.writeMetadata(data, this))
-        .then((_) => _loadingFuture = null);
+      ..then((_) => _loadingFuture = null);
   }
 }

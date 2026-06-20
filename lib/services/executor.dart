@@ -130,8 +130,17 @@ extension Format on String {
 extension SafeExecute<T> on Future<T> {
   /// Safely runs an [action], handles [DioException]s.
   Future<Result<T>> run() => Executor.run(() => this);
+}
 
-  Future<T> loading(dynamic loading) async {
+
+extension FutureOperations<T> on Future<Result<T>> {
+  /// Toggles [loading] on, then awaits for a composable
+  /// function to complete, then toggles [loading] off.
+  ///
+  /// Parameter [loading] must have `ValueNotifier<bool>`
+  /// signature, this means it should have a `bool value`
+  /// property
+  Future<Result<T>> loading(dynamic loading) async {
     loading.value = true;
     try {
       return await this;
@@ -139,10 +148,6 @@ extension SafeExecute<T> on Future<T> {
       loading.value = false;
     }
   }
-}
-
-
-extension FutureOperations<T> on Future<Result<T>> {
 
   Future<Result<T>> tapSuccess(
       FutureOr<void> Function(T data) callback) async {
