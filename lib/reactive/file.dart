@@ -43,6 +43,7 @@ class HydrusFile {
     return repo.api
         .getFileMetadata([id])
         .run()
-        .tapSuccess((data) => Mapper.writeMetadata(data, this));
+        .tapSuccess((data) => Mapper.writeMetadata(data, this))
+        .then((_) => _loadingFuture = null);
   }
 }
