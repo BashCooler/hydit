@@ -127,20 +127,6 @@ extension Format on String {
 }
 
 
-extension Unwrap<T> on Result<T> {
-
-  T? unwrap({void Function(String title, String message)? onFailure}) {
-    switch (this) {
-      case Success(data: final data):
-        return data;
-      case Failure(title: final title, message: final message):
-        onFailure?.call(title, message);
-        return null;
-    }
-  }
-}
-
-
 extension SafeExecute<T> on Future<T> {
   /// Safely runs an [action], handles [DioException]s.
   Future<Result<T>> run() => Executor.run(() => this);
@@ -184,5 +170,45 @@ extension FutureOperations<T> on Future<Result<T>> {
 
   Future<T?> unwrap() async {
     return (await this).unwrap();
+  }
+}
+
+
+extension Unwrap<T> on Result<T> {
+
+  T? unwrap({void Function(String title, String message)? onFailure}) {
+    switch (this) {
+      case Success(data: final data):
+        return data;
+      case Failure(title: final title, message: final message):
+        onFailure?.call(title, message);
+        return null;
+    }
+  }
+}
+
+
+class ExecutorBatch {
+  final List<Future<Result>> _operations = [];
+
+  ExecutorBatch queue(Future<Result> operation) {
+    _operations.add(operation);
+    return this;
+  }
+
+  ExecutorBatch queueAll(Iterable<Future<Result>> operations) {
+    _operations.addAll(operations);
+    return this;
+  }
+
+  Future<Result<void>> run() async {
+
+    for (final operation in _operations) {
+      final result = await operation;
+
+      if (result is Failure) return result;
+    }
+
+    return Success(data: null);
   }
 }
