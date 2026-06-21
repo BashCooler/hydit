@@ -62,6 +62,36 @@ class GradientBottomAppBar extends StatelessWidget {
 }
 
 
+class OnGradientIconButton extends StatelessWidget {
+  final IconData? icon;
+  final String? tooltip;
+  final void Function()? onPressed;
+
+  const OnGradientIconButton(this.icon, {
+    super.key,
+    required this.tooltip,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: IconButton(
+        tooltip: tooltip,
+        icon: Icon(
+          icon,
+          color: Colors.white,
+          shadows: const [
+            Shadow(blurRadius: 16),
+          ],
+        ),
+        onPressed: onPressed,
+      ),
+    );
+  }
+}
+
+
 
 class FlexibleSpace extends StatelessWidget {
   const FlexibleSpace({super.key});

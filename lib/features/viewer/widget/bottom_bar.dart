@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/widgets/acrylic.dart';
+import 'package:hydit/widgets/gradient.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
@@ -25,8 +27,7 @@ class BottomActions extends StatelessWidget {
     final PageGetxController page = Get.find(tag: tag);
     final FileStore files = Get.find(tag: tag);
 
-    return BottomAppBar(
-      color: Get.theme.scaffoldBackgroundColor.withAlpha(90),
+    return GradientBottomAppBar(
       child: Row(
         mainAxisAlignment: .spaceBetween,
         spacing: 10.0,

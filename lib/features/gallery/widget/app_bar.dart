@@ -52,8 +52,15 @@ class GalleryAppBar extends StatelessWidget
       actions: [
         Obx(() => selection.off && search
             ? SortPopUp(tag: tag)
-            : const SizedBox.shrink()),
-        if (state != null) SidebarButton(state),
+            : const SizedBox.shrink(),
+        ),
+        if (state != null) OnGradientIconButton(
+          Symbols.dock_to_left,
+          tooltip: 'Sidebar',
+          onPressed: () => state
+              ?.currentState
+              ?.toggle(),
+        ),
       ],
     );
   }
@@ -98,30 +105,4 @@ class QueryInfo extends StatelessWidget {
           ..shadows = shadows,
     };
   });
-}
-
-
-class SidebarButton extends StatelessWidget {
-  final GlobalKey<InnerDrawerState>? drawerKey;
-
-  const SidebarButton(this.drawerKey, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return RepaintBoundary(
-      child: IconButton(
-        tooltip: 'Sidebar',
-        icon: const Icon(
-          Symbols.dock_to_left,
-          color: Colors.white,
-          shadows: [
-            Shadow(blurRadius: 16),
-          ],
-        ),
-        onPressed: () => drawerKey
-            ?.currentState
-            ?.toggle(),
-      ),
-    );
-  }
 }
