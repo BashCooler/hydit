@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/widgets/gradient.dart';
 import 'package:niku/extra/primitive.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
@@ -36,11 +37,8 @@ class GalleryAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
+    return GradientAppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      flexibleSpace: const FlexibleSpace(),
       title: GestureDetector(
         onTap: onTap,
         child: Column(
@@ -62,27 +60,6 @@ class GalleryAppBar extends StatelessWidget
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
-}
-
-
-class FlexibleSpace extends StatelessWidget {
-  const FlexibleSpace({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Get.theme.scaffoldBackgroundColor.withAlpha(128),
-            Colors.transparent,
-          ],
-          begin: .topCenter,
-          end: .bottomCenter,
-        ),
-      ),
-    );
-  }
 }
 
 

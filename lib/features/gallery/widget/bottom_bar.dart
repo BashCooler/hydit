@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/utils/utils.dart';
+import 'package:hydit/widgets/gradient.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:niku/namespace.dart' as n;
 
@@ -29,52 +30,36 @@ class SelectionBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return IgnorePointer(
       ignoring: selection.off,
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.transparent,
-              Get.theme.scaffoldBackgroundColor.withAlpha(128),
-            ],
-            begin: .topCenter,
-            end: .bottomCenter,
-          ),
-        ),
-        child: BottomAppBar(
-          color: Colors.transparent,
-          child: Padding(
-            padding: .symmetric(horizontal: 10),
-            child: AnimatedOpacity(
-              curve: Curves.easeOutCubic,
-              duration: 250.ms,
-              opacity: selection.on ? 1 : 0,
-              child: Row(
-                mainAxisAlignment: .spaceBetween,
+      child: GradientBottomAppBar(
+        child: AnimatedOpacity(
+          curve: Curves.easeOutCubic,
+          duration: 250.ms,
+          opacity: selection.on ? 1 : 0,
+          child: Row(
+            mainAxisAlignment: .spaceBetween,
+            children: [
+              AcrylicPill(
                 children: [
-                  AcrylicPill(
-                    children: [
-                      Counter(tag: tag),
-                    ],
-                  ),
-                  AcrylicPill(
-                    children: [
-                      SelectAllButton(tag: tag),
-                      IconButton(
-                        tooltip: 'Delete',
-                        icon: const Icon(Icons.delete_forever),
-                        onPressed: () async => await selection.delete(),
-                      ),
-                      IconButton(
-                        tooltip: 'Edit tags',
-                        icon: const Icon(Icons.edit),
-                        onPressed: selection.edit,
-                      ),
-                      SelectRangeButton(tag: tag),
-                    ],
-                  ),
+                  Counter(tag: tag),
                 ],
               ),
-            ),
+              AcrylicPill(
+                children: [
+                  SelectAllButton(tag: tag),
+                  IconButton(
+                    tooltip: 'Delete',
+                    icon: const Icon(Icons.delete_forever),
+                    onPressed: () async => await selection.delete(),
+                  ),
+                  IconButton(
+                    tooltip: 'Edit tags',
+                    icon: const Icon(Icons.edit),
+                    onPressed: selection.edit,
+                  ),
+                  SelectRangeButton(tag: tag),
+                ],
+              ),
+            ],
           ),
         ),
       ),
