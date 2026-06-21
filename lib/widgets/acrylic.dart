@@ -71,7 +71,7 @@ class AcrylicPill extends StatelessWidget {
                   style: IconButton.styleFrom(
                     foregroundColor: Theme.of(context)
                         .colorScheme
-                        .onSurface,
+                        .onPrimaryContainer,
                   ),
                 ),
                 child: Row(

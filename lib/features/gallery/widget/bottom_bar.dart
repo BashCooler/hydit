@@ -4,9 +4,9 @@ import 'package:hydit/utils/utils.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:niku/namespace.dart' as n;
 
+import 'package:hydit/widgets/acrylic.dart';
 import 'package:hydit/reactive/file_store.dart';
 
-import 'acrylic.dart';
 import '../getx/selection.dart';
 
 
