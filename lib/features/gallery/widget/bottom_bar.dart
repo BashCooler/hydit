@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/gallery/widget/fab.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:niku/namespace.dart' as n;
@@ -26,39 +27,55 @@ class SelectionBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSlide(
-      curve: Curves.easeOutCubic,
-      duration: 250.ms,
-      offset: selection.on ? .zero : const Offset(0, 1),
-      child: BottomAppBar(
-        color: Theme.of(context)
-            .scaffoldBackgroundColor
-            .withAlpha(90),
-        padding: const .fromLTRB(10, 0, 10, 0),
-        child: Row(
-          mainAxisAlignment: .spaceBetween,
-          children: [
-            Counter(tag: tag),
-            Row(
-              spacing: 10,
-              children: [
-                SelectAllButton(tag: tag),
-                IconButton(
-                  tooltip: 'Delete',
-                  icon: const Icon(Icons.delete_forever),
-                  color: const Color(0xFFFFFFFF),
-                  onPressed: () async => await selection.delete(),
-                ),
-                IconButton(
-                  tooltip: 'Edit tags',
-                  icon: const Icon(Icons.edit),
-                  color: const Color(0xFFFFFFFF),
-                  onPressed: selection.edit,
-                ),
-                SelectRangeButton(tag: tag),
-              ],
+    return IgnorePointer(
+      ignoring: selection.off,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.transparent,
+              Get.theme.scaffoldBackgroundColor.withAlpha(128),
+            ],
+            begin: .topCenter,
+            end: .bottomCenter,
+          ),
+        ),
+        child: BottomAppBar(
+          color: Colors.transparent,
+          child: Padding(
+            padding: .symmetric(horizontal: 10),
+            child: AnimatedOpacity(
+              curve: Curves.easeOutCubic,
+              duration: 250.ms,
+              opacity: selection.on ? 1 : 0,
+              child: Row(
+                mainAxisAlignment: .spaceBetween,
+                children: [
+                  AcrylicPill(
+                    children: [
+                      Counter(tag: tag),
+                    ],
+                  ),
+                  AcrylicPill(
+                    children: [
+                      SelectAllButton(tag: tag),
+                      IconButton(
+                        tooltip: 'Delete',
+                        icon: const Icon(Icons.delete_forever),
+                        onPressed: () async => await selection.delete(),
+                      ),
+                      IconButton(
+                        tooltip: 'Edit tags',
+                        icon: const Icon(Icons.edit),
+                        onPressed: selection.edit,
+                      ),
+                      SelectRangeButton(tag: tag),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -77,7 +94,7 @@ class Counter extends StatelessWidget {
   Widget build(BuildContext context) => Obx(() {
     final colors = Theme.of(context).colorScheme;
     return Container(
-      padding: const .fromLTRB(22, 0, 10, 0),
+      padding: const .all(8),
       child: Material(
         borderRadius: .circular(12),
         color: colors.error,
@@ -113,7 +130,6 @@ class SelectAllButton extends StatelessWidget {
       icon: selected
           ? const Icon(Symbols.select)
           : const Icon(Symbols.select_all),
-      color: Colors.white,
       onPressed: selected
           ? selection.clear
           : selection.selectAll,
