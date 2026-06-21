@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
+import 'package:hydit/features/viewer/widget/image_view.dart';
 
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/widgets/images.dart';
 
 import '../getx/page.dart';
-import 'image_view.dart';
 import 'video_view.dart';
 
 
@@ -44,7 +44,13 @@ class ViewFile extends StatelessWidget {
   Widget buildContent(String type) {
     switch (type) {
       case 'image':
-        return ImageView(index: index, file: file, tag: tag);
+        return ZoomableImageView(
+          key: ValueKey(file.id),
+          tag: tag,
+          index: index,
+          image: file,
+          page: Get.find<PageGetxController>(tag: tag),
+        );
       case 'video':
         return VideoView(index: index, file: file, tag: tag);
       case _:

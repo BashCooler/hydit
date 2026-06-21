@@ -7,7 +7,6 @@ library;
 
 import 'dart:math' hide log;
 
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/reactive/file.dart';
@@ -17,47 +16,25 @@ import '../getx/page.dart';
 import 'views.dart';
 
 
-class ImageView extends StatelessWidget {
-  final int index;
-  final String tag;
-  final HydrusFile file;
-
-  const ImageView({
-    super.key,
-    required this.index,
-    required this.tag,
-    required this.file,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return _ZoomableImageView(
-      key: ObjectKey(index),
-      index: index,
-      image: file,
-      tag: tag,
-    );
-  }
-}
-
-
-class _ZoomableImageView extends StatefulWidget {
+class ZoomableImageView extends StatefulWidget {
   final int index;
   final HydrusFile image;
   final String tag;
+  final PageGetxController page;
 
-  const _ZoomableImageView({
+  const ZoomableImageView({
     super.key,
     required this.index,
     required this.image,
     required this.tag,
+    required this.page,
   });
 
   @override
-  State<_ZoomableImageView> createState() => _ZoomableImageViewState();
+  State<ZoomableImageView> createState() => _ZoomableImageViewState();
 }
 
-class _ZoomableImageViewState extends State<_ZoomableImageView>
+class _ZoomableImageViewState extends State<ZoomableImageView>
     with SingleTickerProviderStateMixin {
 
   static const double _minScale = 1.0;
@@ -67,7 +44,6 @@ class _ZoomableImageViewState extends State<_ZoomableImageView>
   static const double _elasticOffsetFactor = 0.35;
 
   final Map<int, Offset> _pointers = {};
-  late final PageGetxController _pageController;
 
   late final AnimationController _animationController;
   Animation<double>? _scaleAnimation;
@@ -95,7 +71,6 @@ class _ZoomableImageViewState extends State<_ZoomableImageView>
   @override
   void initState() {
     super.initState();
-    _pageController = Get.find(tag: widget.tag);
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 150),
@@ -129,7 +104,7 @@ class _ZoomableImageViewState extends State<_ZoomableImageView>
   }
 
   void _syncPageSwipeLock() {
-    _pageController.zoom.value = _isZoomed;
+    widget.page.zoom.value = _isZoomed;
   }
 
   void _stopAnimation() {
