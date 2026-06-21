@@ -43,20 +43,22 @@ class AcrylicPill extends StatelessWidget {
 
   const AcrylicPill({super.key, required this.children});
 
+  BorderRadius get radius => BorderRadius.circular(20);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const .symmetric(horizontal: 5),
       child: RepaintBoundary(
         child: ClipRRect(
-          borderRadius: .circular(16),
+          borderRadius: radius,
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
             child: Container(
               padding: .symmetric(horizontal: 5),
               decoration: BoxDecoration(
                 color: const Color.fromARGB(108, 0, 0, 0),
-                borderRadius: .circular(16),
+                borderRadius: radius,
                 border: Border.fromBorderSide(
                   BorderSide(
                     color: Theme.of(context)

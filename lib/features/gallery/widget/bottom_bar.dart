@@ -80,14 +80,10 @@ class Counter extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return Container(
       padding: const .all(8),
-      child: Material(
-        borderRadius: .circular(12),
-        color: colors.error,
-        child: '${selection.ids.length}'.n
-          ..titleMedium
-          ..color = colors.onError
-          ..n.padding = const .fromLTRB(8, 0, 8, 0),
-      ),
+      child: '${selection.ids.length}'.n
+        ..titleMedium
+        ..color = colors.onPrimaryContainer
+        ..n.padding = const .symmetric(horizontal: 2),
     );
   });
 }
