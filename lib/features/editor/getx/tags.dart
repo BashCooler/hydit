@@ -35,13 +35,14 @@ class TagManager extends GetxController {
   /// Selected service
   String get service => selectedService.value;
 
+  /// Allowed to safely pop the editor page
   bool get unlocked => additions.isEmpty && deletions.isEmpty;
 
   /// Sorted tags to show in UI
   List<Tag> tags([String? service]) {
-    return _tags(service)
-        .sortBuilder()
+    return _tags(service).sortBuilder()
         .state(_original)
+        .namespace()
         .alphabetical()
         .sort();
   }
@@ -50,9 +51,11 @@ class TagManager extends GetxController {
   /// returns tags of currently selected service
   Iterable<Tag> _tags([String? service]) {
     switch (service) {
+      case null when this.service == 'all known tags':
+        return unique();
       case null:
-        if (this.service == 'all known tags') return unique();
-        return _current.of(this.service)
+        return _current
+            .of(this.service)
             .union(_original.of(this.service));
       case 'all known tags':
         return unique();
@@ -214,9 +217,6 @@ extension Init on TagManager {
 
 
 extension Save on TagManager {
-  /// Removes entries with empty lists from map
-  Map<String, List<Tag>> removeEmpty(Map<String, List<Tag>> map) =>
-      Map.from(map)..removeWhere((k, v) => v.isEmpty);
 
   String? summarize() {
     assert(_ids.isNotEmpty);
