@@ -30,17 +30,11 @@ class Viewer extends StatelessWidget {
     this.showFloatingActionButton = true,
   });
 
-  static const message =
-      'It is required for HydrusFile to be loaded '
-      'before building a Viewer widget';
+  FileStore get files => Get.find(tag: tag);
+  PageGetxController get page => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {
-    final FileStore files = Get.find(tag: tag);
-    final PageGetxController page = Get.find(tag: tag);
-
-    assert(files[page.i].loaded, message);
-
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -67,19 +61,14 @@ class Viewer extends StatelessWidget {
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
-        body: Obx(() {
-          final file = files[page.i];
-          return TagSheet(
-            tags: file.meta!.all.toList(),
-            tag: tag,
-            gallery: gallery,
-            onFloatingActionButtonTap: EditorPage(files)
-                .paged(page.i, gallery)
-                .passTag(tag)
-                .push,
-            child: Pages(tag: tag),
-          );
-        }),
+        body: TagSheet(
+          tag: tag,
+          onFloatingActionButtonTap: EditorPage(files)
+              .paged(page.i, gallery)
+              .passTag(tag)
+              .push,
+          child: Pages(tag: tag),
+        ),
         bottomNavigationBar: BottomActions(tag: tag),
       ),
     );

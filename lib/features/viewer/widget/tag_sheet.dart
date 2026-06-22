@@ -2,32 +2,31 @@ import 'dart:ui';
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/reactive/file_store.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
-import 'package:hydit/entities/tag.dart';
 import 'package:hydit/widgets/tag_list.dart';
-import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import '../getx/page.dart';
 
 
 class TagSheet extends HookWidget {
-  final Widget child;
-  final List<Tag> tags;
   final String tag;
-  final GalleryController? gallery;
   final void Function()? onFloatingActionButtonTap;
+  final Widget child;
 
   const TagSheet({
     super.key,
-    required this.child,
-    required this.tags,
     required this.tag,
-    required this.gallery,
     this.onFloatingActionButtonTap,
+    required this.child,
   });
+
+  FileStore get files => Get.find(tag: tag);
+  PageGetxController get page => Get.find(tag: tag);
 
   static const snaps = <SnappingPosition>[
     SnappingPosition.factor(positionFactor: 0.0),
@@ -72,11 +71,31 @@ class TagSheet extends HookWidget {
         child: n.Stack([
           background,
           Scaffold(
-            body: TagList(
-              tags: tags,
-              scrollController: scrollBelow,
-              itemBuilder: (context, tag) => TagTile(tag: tag),
-            ),
+            body: Obx(() {
+              final tags = files[page.i].meta?.all;
+              switch (tags) {
+                case null:
+                  return MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: Skeletonizer(
+                      child: ListView.builder(
+                        itemCount: 6,
+                        controller: scrollBelow,
+                        itemBuilder: (context, index) {
+                          return ListTile(title: Text('X' * 16));
+                        },
+                      ),
+                    ),
+                  );
+                case _:
+                  return TagList(
+                    tags: tags.toList(),
+                    scrollController: scrollBelow,
+                    itemBuilder: (context, tag) => TagTile(tag: tag),
+                  );
+              }
+            }),
             floatingActionButton: buildFloatingActionButton(),
             floatingActionButtonLocation: .miniEndFloat,
           ).niku
