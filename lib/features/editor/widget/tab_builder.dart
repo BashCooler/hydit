@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/utils/utils.dart';
 import 'package:niku/namespace.dart' as n;
 
 import '../getx/tags.dart';
@@ -40,13 +41,21 @@ class TabBuilder extends StatelessWidget {
             length: manager.services.length,
             child: Column(
               children: [
+                const Flexible(child: Up()),
+                const Divider(height: 1),
                 TabBar(
                   isScrollable: true,
                   tabAlignment: .center,
                   onTap: manager.selectServiceByIndex,
                   tabs: getTabs(manager),
                 ),
-                EditorSplitView(tag: tag),
+                AnimatedSize(
+                  duration: 150.ms,
+                  child: SizedBox(
+                    height: 55 * 4,
+                    child: Down(tag: tag),
+                  ),
+                ),
               ],
             ),
           );

@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:multi_split_view/multi_split_view.dart';
 
 import 'package:hydit/utils/theme.dart';
 import 'package:hydit/widgets/tag_list.dart';
@@ -10,36 +9,6 @@ import 'package:hydit/features/search/getx/search.dart';
 import 'package:hydit/features/search/widget/suggests.dart';
 
 import '../getx/tags.dart';
-
-
-class EditorSplitView extends HookWidget {
-  final String tag;
-
-  const EditorSplitView({super.key, required this.tag});
-
-  @override
-  Widget build(BuildContext context) {
-    final areas = [
-      Area(min: 0, flex: 1.4, max: 2.375, builder: (_, area) => Up()),
-      Area(flex: 1, builder: (_, area) => Down(tag: tag)),
-    ];
-
-    final controller = useMemoized(() {
-      return MultiSplitViewController(areas: areas);
-    });
-
-    return Expanded(
-      child: MultiSplitView(
-        axis: .vertical,
-        resizable: true,
-        controller: controller,
-        dividerBuilder: (_, _, _, drag, hover, _) {
-          return Container(color: Get.theme.dividerColor);
-        },
-      ),
-    );
-  }
-}
 
 
 class Up extends HookWidget {

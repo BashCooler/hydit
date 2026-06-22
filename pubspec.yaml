@@ -42,7 +42,6 @@ dependencies:
   # Widgets
   dismissible_page:
     git: https://github.com/itsezlife/Flutter_dismissible_page/
-  multi_split_view: ^3.6.1
   preload_page_view: ^0.2.0
   cached_network_image_ce: ^4.8.0
   settings_tiles: ^6.0.1
