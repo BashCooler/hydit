@@ -57,8 +57,12 @@ class Viewer extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          toolbarHeight: Get.mediaQuery.viewInsets.top,
-          backgroundColor: Get.theme.scaffoldBackgroundColor.withAlpha(90),
+          toolbarHeight: MediaQuery.of(context)
+              .viewInsets
+              .top,
+          backgroundColor: Theme.of(context)
+              .scaffoldBackgroundColor
+              .withAlpha(90),
         ),
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,

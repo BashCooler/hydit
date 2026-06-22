@@ -39,8 +39,11 @@ class TagManager extends GetxController {
 
   /// Sorted tags to show in UI
   List<Tag> tags([String? service]) {
-    final Iterable<Tag> set = _tags(service);
-    return set.sort.state(_original).alphabetical().build();
+    return _tags(service)
+        .sortBuilder()
+        .state(_original)
+        .alphabetical()
+        .sort();
   }
 
   /// Returns tags of specified [service], if [service] is null

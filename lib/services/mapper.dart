@@ -77,7 +77,11 @@ extension ParseTags on Map<String, dynamic> {
       result.addAll(serviceTags);
     }
 
-    return result;
+    return TagSortBuilder(result)
+        .namespace()
+        .alphabetical()
+        .sort()
+        .toSet();
   }
 }
 

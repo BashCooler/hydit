@@ -27,6 +27,8 @@ class Tag extends Equatable {
     );
   }
 
+  String? get ns => namespace;
+
   static String? _namespace(String raw) {
     final idx = raw.indexOf(':');
     return idx == -1 ? null : raw.substring(0 , idx);
@@ -84,7 +86,7 @@ extension ToTags on List<String> {
 
 
 extension Sorting on Iterable<Tag> {
-  TagSortBuilder get sort => TagSortBuilder(this);
+  TagSortBuilder sortBuilder() => TagSortBuilder(this);
 }
 
 
@@ -98,6 +100,21 @@ class TagSortBuilder {
   /// Sort tags in alphabetical order
   TagSortBuilder alphabetical() {
     _comparators.add((a, b) => a.raw.compareTo(b.raw));
+    return this;
+  }
+
+  /// Tags with namespace first, then tags
+  /// without namespace
+  TagSortBuilder namespace() {
+    _comparators.add((a, b) {
+      final aNs = a.ns != null;
+      final bNs = b.ns != null;
+
+      if (aNs && !bNs) return -1;
+      if (!aNs && bNs) return 1;
+
+      return 0;
+    });
     return this;
   }
 
@@ -117,7 +134,7 @@ class TagSortBuilder {
 
   /// Apply all sorting operations and return
   /// a [List] of [Tag]s
-  List<Tag> build() {
+  List<Tag> sort() {
     final list = _tags.toList();
 
     list.sort((a, b) {
