@@ -22,16 +22,15 @@ class EditorBottomBar extends StatelessWidget {
     required this.mode,
   });
 
-  Future<void> navigateToPage(int target) async {
-    final FileStore files = Get.find(tag: tag);
-    final TagManager manager = Get.find();
-    final PageGetxController page = Get.find(tag: tag);
+  FileStore get files => Get.find(tag: tag);
+  TagManager get manager => Get.find();
+  PageGetxController get page => Get.find(tag: tag);
 
+  Future<void> navigateToPage(int target) async {
     if (target < 0) return;
     if (target >= files.length) return;
 
-    final shouldSwitch = await callback();
-    if (!shouldSwitch) return;
+    if (!await callback()) return;
 
     page.navigateToPage(target);
     manager.init(files[page.i]);

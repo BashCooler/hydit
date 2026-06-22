@@ -5,16 +5,21 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 
 
 class PageGetxController extends GetxController {
-  final RxInt index;
-  final _pinch = false.obs;
-  final _pointers = RxSet<int>();
-  late final Worker _pointersWorker;
-
-  final zoom = false.obs;
-  final _blockDismiss = false.obs;
-
   final GridObserverController? grid;
   final PreloadPageController controller;
+
+  final RxInt index;
+
+  final _pinch = false.obs;
+  final _pointers = RxSet<int>();
+
+  final zoom = false.obs;
+
+  bool get noScroll => _pinch.value || zoom.value;
+
+  final _blockDismiss = false.obs;
+  set blockDismiss(bool block) => _blockDismiss.value = block;
+  bool get blockDismiss => _blockDismiss.value || zoom.value;
 
   final sheetProgress = 0.0.obs;
 
@@ -22,40 +27,27 @@ class PageGetxController extends GetxController {
     : index = initial.obs,
       controller = PreloadPageController(initialPage: initial);
 
-  bool get noScroll => _pinch.value || zoom.value;
-  bool get blockDismiss => _blockDismiss.value || zoom.value;
-  set blockDismiss(bool block) => _blockDismiss.value = block;
-
-  PreloadPageController get $ => controller;
+  /// Current page index
   int get i => index.value;
 
+  /// [Hero] callback. Disable the animation for preloaded pages.
   bool enabled(int index) => index == i;
 
   @override
-  void onInit() {
-    super.onInit();
-    _pointersWorker = ever(_pointers, _everPointers);
-  }
-
-  @override
   void onClose() {
-    _pointersWorker.dispose();
     controller.dispose();
     super.onClose();
-  }
-
-  void _everPointers(Set<int> callback) {
-    _pinch.value = _pointers.length > 1;
   }
 
   void registerPointer(Object details) {
     if (details is PointerDownEvent) _pointers.add(details.pointer);
     if (details is PointerUpEvent) _pointers.remove(details.pointer);
+    _pinch.value = _pointers.length > 1;
   }
 
   void onPageChanged(int page) {
     index.value = page;
-    jumpToPageInBackground(page);
+    jumpToGridViewItem(page);
   }
 
   /// Navigates the visible [PageView] and keeps the background [GridView]
@@ -64,28 +56,19 @@ class PageGetxController extends GetxController {
     if (page == i) return;
 
     index.value = page;
-    jumpToPageInBackground(page);
+    jumpToGridViewItem(page);
 
     if (!controller.hasClients) return;
     controller.jumpToPage(page);
   }
 
   /// Jumps to corresponding item in [GridView].
-  ///
-  /// Example: you open item `0` in the [GridView], then scroll to file `40`
-  /// using [PageView]. [jumpToPageInBackground] scrolls to picture `40` in
-  /// the background to lazy load new thumbnails and so when you close
-  /// [PageView] you end up seeing item `40`, not `0`.
-  ///
-  /// TODO `-2` in `page - 2` is a tech debt!
-  /// If [SliverGridDelegateWithFixedCrossAxisCount.crossAxisCount] changed
-  /// in settings the `-2` offset becomes irrelevant
-  void jumpToPageInBackground(int page) {
-    switch (page) {
+  void jumpToGridViewItem(int item) {
+    switch (item) {
       case < 2:
         grid?.controller?.jumpTo(0);
       case _:
-        grid?.jumpTo(index: page - 2 > 0 ? page - 2 : 0);
+        grid?.jumpTo(index: item - 2 > 0 ? item - 2 : 0);
     }
   }
 }

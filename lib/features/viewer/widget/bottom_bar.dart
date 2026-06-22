@@ -34,7 +34,7 @@ class BottomActions extends StatelessWidget {
           IconButton(
             tooltip: 'Previous page',
             color: Colors.white,
-            onPressed: () => page.$.previousPage(
+            onPressed: () => page.controller.previousPage(
               duration: const Duration(milliseconds: 150),
               curve: Curves.decelerate,
             ),
@@ -66,7 +66,7 @@ class BottomActions extends StatelessWidget {
           IconButton(
             tooltip: 'Next page',
             color: Colors.white,
-            onPressed: () => page.$.nextPage(
+            onPressed: () => page.controller.nextPage(
               duration: const Duration(milliseconds: 150),
               curve: Curves.decelerate,
             ),
