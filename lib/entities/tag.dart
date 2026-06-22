@@ -49,11 +49,8 @@ class Tag extends Equatable {
   };
 
   static String _pretty(String raw) {
-    final idx = raw.indexOf(':');
-    if (idx == -1) return raw;
-    final namespace = raw.substring(0 , idx);
-    if (namespaces.contains(namespace)) return _value(raw);
-    return raw;
+    final pattern = RegExp('^(${namespaces.join('|')}):');
+    return raw.replaceFirst(pattern, '').trim();
   }
 
   @override
