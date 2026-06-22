@@ -20,6 +20,7 @@ class GradientAppBar extends StatelessWidget
     return AppBar(
       backgroundColor: Colors.transparent,
       flexibleSpace: FlexibleSpace(),
+      automaticallyImplyLeading: automaticallyImplyLeading,
       title: title,
       actions: actions,
     );
