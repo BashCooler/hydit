@@ -29,34 +29,33 @@ class TabBuilder extends StatelessWidget {
     }
   }
 
+  TagManager get manager => Get.find();
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: GetBuilder(
-        init: Get.find<TagManager>(),
-        builder: (manager) {
-          return DefaultTabController(
-            initialIndex: manager.index,
-            length: manager.services.length,
-            child: Column(
-              children: [
-                const Expanded(child: Up()),
-                const Divider(height: 1),
-                TabBar(
-                  isScrollable: true,
-                  tabAlignment: .center,
-                  onTap: manager.selectServiceByIndex,
-                  tabs: getTabs(manager),
-                ),
-                SizedBox(
-                  height: 55 * 3,
-                  child: Down(tag: tag),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+      child: Obx(() {
+        return DefaultTabController(
+          initialIndex: manager.index,
+          length: manager.services.length,
+          child: Column(
+            children: [
+              const Expanded(child: Up()),
+              const Divider(height: 1),
+              TabBar(
+                isScrollable: true,
+                tabAlignment: .center,
+                onTap: manager.selectServiceByIndex,
+                tabs: getTabs(manager),
+              ),
+              SizedBox(
+                height: 55 * 3,
+                child: Down(tag: tag),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
