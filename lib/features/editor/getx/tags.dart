@@ -23,8 +23,8 @@ class TagManager extends GetxController {
   final selectedService = ''.obs;
   final _ids = <int>{};
 
-  final Set<Tag> _original = {};
-  final Set<Tag> _current = {};
+  final _original = <Tag>{};
+  final _current = <Tag>{}.obs;
 
   final FileStore files;
 

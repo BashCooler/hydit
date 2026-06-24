@@ -28,43 +28,33 @@ class Up extends HookWidget {
     },
   };
 
+  TagManager get manager => Get.find();
+
   @override
   Widget build(BuildContext context) {
     final scroll = useScrollController();
 
-    return GetBuilder(
-      init: Get.find<TagManager>(),
-      builder: (manager) {
-        switch (manager.loading) {
-          case true:
-            return Skeletonizer(
-              child: ListView.builder(
-                reverse: true,
-                itemCount: 20,
-                controller: scroll,
-                itemBuilder: (context, index) {
-                  return ListTile(title: Text('X' * 16));
-                },
-              ),
-            );
-          case false:
-            return TagList(
-              tags: manager.tags().toList(),
-              scrollController: scroll,
-              reverse: true,
-              itemBuilder: (context, tag) {
-                final state = manager.stateOf(tag);
-                return TagTile(
-                  tag: tag,
-                  onTap: manager.editable ? manager.remove : null,
-                  background: background(state),
-                  trailing: Icon(icon(manager.editable, state)),
-                );
-              },
-            );
-        }
-      },
-    );
+    return Obx(() {
+
+      if (manager.loading) {
+        return FakeTagList(scroll: scroll);
+      }
+
+      return TagList(
+        tags: manager.tags().toList(),
+        scrollController: scroll,
+        reverse: true,
+        itemBuilder: (context, tag) {
+          final state = manager.stateOf(tag);
+          return TagTile(
+            tag: tag,
+            onTap: manager.editable ? manager.remove : null,
+            background: background(state),
+            trailing: Icon(icon(manager.editable, state)),
+          );
+        },
+      );
+    });
   }
 }
 
@@ -98,5 +88,29 @@ class Down extends HookWidget {
         ),
       );
     });
+  }
+}
+
+
+class FakeTagList extends StatelessWidget {
+  const FakeTagList({
+    super.key,
+    required this.scroll,
+  });
+
+  final ScrollController scroll;
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      child: ListView.builder(
+        reverse: true,
+        itemCount: 20,
+        controller: scroll,
+        itemBuilder: (context, index) {
+          return ListTile(title: Text('X' * 16));
+        },
+      ),
+    );
   }
 }
