@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:niku/extra/extra.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
 
+import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
@@ -119,7 +119,10 @@ extension Builders on Info
   }
 
   Widget buildAdditions(TagManager manager) {
-    final count = manager.additions.length;
+    final count = manager
+        .additions
+        .of(manager.service)
+        .length;
     switch (count) {
       case > 0:
         return n.Row([
@@ -134,7 +137,10 @@ extension Builders on Info
   }
 
   Widget buildDeletions(TagManager manager) {
-    final count = manager.deletions.length;
+    final count = manager
+        .deletions
+        .of(manager.service)
+        .length;
     switch (count) {
       case > 0:
         return '-$count'.n
