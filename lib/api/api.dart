@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:hydit/api/models.dart';
+import 'package:hydit/api/params.dart';
 
 import 'dio.dart';
 
