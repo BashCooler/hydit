@@ -103,8 +103,6 @@ class TagManager extends GetxController {
   /// Number of files in [TagManager]
   int get fileCount => _ids.length;
 
-  // TODO make it show only current service changes
-
   Set<Tag> get additions => _current.difference(_original);
 
   Set<Tag> get deletions => _original.difference(_current);
