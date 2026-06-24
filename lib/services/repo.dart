@@ -3,18 +3,18 @@ import 'dart:async';
 import 'package:hive_ce/hive.dart';
 
 import 'package:hydit/api/api.dart';
+import 'package:hydit/api/models/service.dart';
 import 'package:hydit/api/params.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/snack.dart';
 import 'package:hydit/utils/dictionaries.dart';
 
-import 'mapper.dart';
 import 'executor.dart';
 
 
 class Repo {
   final HydrusApi api;
-  final Map<String, String> services = {};
+  final List<TagService> services = [];
 
   Repo() : api = HydrusApi() {
     updateFromSettings();
@@ -50,7 +50,7 @@ class Repo {
       final params = AddTagsParamsBuilder()
         ..ids = ids
         ..action = action
-        ..key = services[name]!
+        ..key = services.whereName(name).key
         ..tags = tags.of(name);
 
       return api.postAddTags(params.build()).run();
@@ -63,7 +63,7 @@ class Repo {
     return await api
         .getServices()
         .run()
-        .tapSuccess((s) => services.assignAll(s.mapServices()))
+        .tapSuccess(services.fromJson)
         .tapFailure(Snack.error);
   }
 }

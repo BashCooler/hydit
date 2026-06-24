@@ -197,7 +197,7 @@ extension Init on TagManager {
   void clear() {
     services
       ..clear()
-      ..addAll(repo.services.keys);
+      ..addAll(repo.services.map((s) => s.name));
 
     _ids.clear();
     _current.clear();

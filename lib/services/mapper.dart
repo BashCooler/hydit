@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:deep_pick/deep_pick.dart';
+import 'package:hydit/api/models/service.dart';
 
 import 'package:hydit/entities/tag.dart';
 
@@ -34,29 +35,23 @@ class Mapper {
         Tag(e['value'], count: e['count'])).toList();
   }
 
-  static Map<String, String> mapServices(String response) {
-    final json = jsonDecode(response);
-    final map = <String, String>{};
+  static List<TagService> mapServices(String response) {
+    final json = jsonDecode(response) as Map<String, dynamic>;
 
-    pick(json['all_known_tags']).asListOrThrow((pick) {
-      final key = pick('service_key').required().asString();
-      final name = pick('name').required().asString();
-      map[name] = key;
-    });
+    final all = pick(json, 'all_known_tags', 0)
+        .asMapOrThrow<String, dynamic>();
 
-    pick(json['local_tags']).asListOrEmpty((pick) {
-      final key = pick('service_key').required().asString();
-      final name = pick('name').required().asString();
-      map[name] = key;
-    });
+    final local = pick(json, 'local_tags')
+        .asListOrEmpty((pick) => pick.asMapOrThrow<String, dynamic>());
 
-    pick(json['tag_repositories']).asListOrEmpty((pick) {
-      final key = pick('service_key').required().asString();
-      final name = pick('name').required().asString();
-      map[name] = key;
-    });
+    final repositories = pick(json, 'tag_repositories')
+        .asListOrEmpty((pick) => pick.asMapOrThrow<String, dynamic>());
 
-    return map;
+    return [
+      TagService.fromMap(all),
+      ...local.map((map) => .fromMap(map, editable: true)),
+      ...repositories.map((map) => .fromMap(map)),
+    ];
   }
 }
 
@@ -83,11 +78,6 @@ extension ParseTags on Map<String, dynamic> {
         .sort()
         .toSet();
   }
-}
-
-
-extension Mappers on String {
-  Map<String, String> mapServices() => Mapper.mapServices(this);
 }
 
 
