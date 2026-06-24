@@ -64,6 +64,10 @@ class Info extends StatelessWidget {
 
   const Info({super.key, required this.tag, required this.mode});
 
+  TagManager get manager => Get.find();
+  FileStore get files => Get.find(tag: tag);
+  PageGetxController get page => Get.find(tag: tag);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -71,32 +75,25 @@ class Info extends StatelessWidget {
         maxWidth: 200,
         maxHeight: 100,
       ),
-      child: GetBuilder(
-        init: Get.find<TagManager>(),
-        builder: (manager) {
-          final FileStore files = Get.find(tag: tag);
-          final PageGetxController page = Get.find(tag: tag);
-          final file = files[page.i];
-          return Obx(() {
-            return Skeletonizer(
-              enabled: manager.loading,
-              child: Column(
-                spacing: 5,
-                mainAxisAlignment: .center,
-                crossAxisAlignment: .start,
-                children: <Widget>[
-                  buildDiff(manager),
-                  buildService(context, manager),
-                  switch (mode) {
-                    Mode.paged => buildMeta(file),
-                    Mode.batch => buildFileCount(manager),
-                  },
-                ],
-              ),
-            );
-          });
-        },
-      ),
+      child: Obx(() {
+        final file = files[page.i];
+        return Skeletonizer(
+          enabled: manager.loading,
+          child: Column(
+            spacing: 5,
+            mainAxisAlignment: .center,
+            crossAxisAlignment: .start,
+            children: <Widget>[
+              buildDiff(manager),
+              buildService(context, manager),
+              switch (mode) {
+                Mode.paged => buildMeta(file),
+                Mode.batch => buildFileCount(manager),
+              },
+            ],
+          ),
+        );
+      }),
     );
   }
 }
