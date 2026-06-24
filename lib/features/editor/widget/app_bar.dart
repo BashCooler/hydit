@@ -83,7 +83,7 @@ class Info extends StatelessWidget {
             spacing: 5,
             mainAxisAlignment: .center,
             crossAxisAlignment: .start,
-            children: <Widget>[
+            children: [
               buildDiff(manager),
               buildService(context, manager),
               switch (mode) {
