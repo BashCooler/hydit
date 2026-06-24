@@ -74,30 +74,29 @@ class Down extends HookWidget {
 
   const Down({super.key, required this.tag});
 
+  TagManager get manager => Get.find();
+  TagSearchController get tagSearch => Get.find(tag: tag);
+
   @override
   Widget build(BuildContext context) {
     final scroll = useScrollController();
-    final TagSearchController tagSearch = Get.find(tag: tag);
 
-    return GetBuilder(
-      init: Get.find<TagManager>(),
-      builder: (manager) {
-        final icon = manager.editable
-            ? Icons.add
-            : Icons.lock_outline;
-        return Skeletonizer(
-          enabled: manager.loading,
-          child: Suggests(
-            scrollController: scroll,
-            tagSearchController: tagSearch,
-            itemBuilder: (context, tag) => TagTile(
-              tag: tag,
-              onTap: manager.editable ? manager.add : null,
-              trailing: Skeleton.ignore(child: Icon(icon)),
-            ),
+    return Obx(() {
+      final icon = manager.editable
+          ? Icons.add
+          : Icons.lock_outline;
+      return Skeletonizer(
+        enabled: manager.loading,
+        child: Suggests(
+          scrollController: scroll,
+          tagSearchController: tagSearch,
+          itemBuilder: (context, tag) => TagTile(
+            tag: tag,
+            onTap: manager.editable ? manager.add : null,
+            trailing: Skeleton.ignore(child: Icon(icon)),
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 }
