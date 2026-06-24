@@ -119,7 +119,6 @@ class TagManager extends GetxController {
     if (t.raw.isEmpty) return;
 
     _current.add(t);
-    update();
   }
 
   void addRaw(String raw) {
@@ -138,7 +137,6 @@ class TagManager extends GetxController {
       case _:
         _current.remove(t);
     }
-    update();
   }
 
   /// Take from 0 to [count] files from [TagManager]
@@ -158,7 +156,6 @@ extension Init on TagManager {
 
     _ids.assign(file.id);
     ready.value = false;
-    update();
 
     if (file.loading) await file.ensureMetadataLoaded();
     if (file.id != _ids.first) return;
@@ -172,7 +169,6 @@ extension Init on TagManager {
     selectCurrentService();
 
     ready.value = true;
-    update();
   }
 
   void initBatch(List<int> ids) {
@@ -191,7 +187,6 @@ extension Init on TagManager {
 
     selectCurrentService();
     ready.value = true;
-    update();
   }
 
   void clear() {
@@ -260,7 +255,6 @@ extension ServiceUtils on TagManager {
   void selectServiceByIndex(int index) {
     if (index < 0 || index >= services.length) return;
     selectedService.value = services[index];
-    update();
   }
 
   String pretty(String service) => switch (service) {
