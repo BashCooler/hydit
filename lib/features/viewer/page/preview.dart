@@ -34,7 +34,12 @@ class Preview extends StatelessWidget {
           interactionMode: .gesture,
           minScale: 0,
           builder: (context, scrollController) {
-            return ViewFile(tag: tag, index: index, file: file);
+            return ViewFile(
+              tag: tag,
+              index: index,
+              file: file,
+              heroTag: 'Preview ${file.id}',
+            );
           },
         );
       }),

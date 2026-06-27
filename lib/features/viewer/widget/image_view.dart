@@ -21,6 +21,7 @@ class ZoomableImageView extends StatefulWidget {
   final HydrusFile image;
   final String tag;
   final PageGetxController page;
+  final String? heroTag;
 
   const ZoomableImageView({
     super.key,
@@ -28,6 +29,7 @@ class ZoomableImageView extends StatefulWidget {
     required this.image,
     required this.tag,
     required this.page,
+    this.heroTag,
   });
 
   @override
@@ -370,7 +372,7 @@ class _ZoomableImageViewState extends State<ZoomableImageView>
                     height: _baseImageSize.height,
                     child: ObxHero(
                       index: widget.index,
-                      heroTag: image.id,
+                      heroTag: widget.heroTag ?? image.id,
                       getTag: widget.tag,
                       child: HighResImage(image: image),
                     ),

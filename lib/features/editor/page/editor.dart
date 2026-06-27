@@ -83,12 +83,9 @@ class Editor extends StatelessWidget {
 
     return Obx(() {
       final file = files[page.i];
-      return HeroMode(
-        enabled: page.enabled(page.i),
-        child: LinearHero(
-          tag: file.id,
-          child: Thumbnail(file),
-        ),
+      return LinearHero(
+        tag: 'Preview ${file.id}',
+        child: Thumbnail(file),
       );
     });
   }

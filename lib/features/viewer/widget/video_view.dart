@@ -17,12 +17,14 @@ class VideoView extends StatefulWidget {
   final int index;
   final String tag;
   final HydrusFile file;
+  final String? heroTag;
 
   const VideoView({
     super.key,
     required this.index,
     required this.tag,
     required this.file,
+    this.heroTag,
   });
 
   @override
@@ -97,7 +99,7 @@ class _VideoViewState extends State<VideoView> {
   Widget build(BuildContext context) {
     return ObxHero(
       index: widget.index,
-      heroTag: widget.file.id,
+      heroTag: widget.heroTag ?? widget.file.id,
       getTag: widget.tag,
       child: Stack(
         fit: .expand,

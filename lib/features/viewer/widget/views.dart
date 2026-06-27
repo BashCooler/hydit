@@ -14,13 +14,17 @@ class ViewFile extends StatelessWidget {
   final int index;
   final HydrusFile file;
   final String tag;
+  final String? heroTag;
 
   const ViewFile({
     super.key,
     required this.index,
     required this.tag,
     required this.file,
+    this.heroTag,
   });
+
+  PageGetxController get page => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +53,16 @@ class ViewFile extends StatelessWidget {
           tag: tag,
           index: index,
           image: file,
-          page: Get.find<PageGetxController>(tag: tag),
+          heroTag: heroTag,
+          page: page,
         );
       case 'video':
-        return VideoView(index: index, file: file, tag: tag);
+        return VideoView(
+          index: index,
+          file: file,
+          tag: tag,
+          heroTag: heroTag,
+        );
       case _:
         return NotSupported(file.meta!.type);
     }
