@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:niku/namespace.dart' as n;
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import 'package:hydit/widgets/acrylic.dart';
@@ -47,6 +46,7 @@ class BottomActions extends StatelessWidget {
             if (file.loading) return const SizedBox.shrink();
 
             return AcrylicPill(
+              padding: const .fromLTRB(5, 0, 0, 0),
               children: [
                 TextButton(
                   style: TextButton.styleFrom(
@@ -55,7 +55,7 @@ class BottomActions extends StatelessWidget {
                         .onPrimaryContainer,
                   ),
                   onPressed: openSheet,
-                  child: Obx(() => AcrylicText(count: file.meta!.length, padding: .zero)),
+                  child: Obx(() => AcrylicText(file.meta!.length, padding: .zero)),
                 ),
                 IconButton(
                   icon: const Icon(Icons.edit),

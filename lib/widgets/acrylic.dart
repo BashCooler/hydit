@@ -41,8 +41,13 @@ class AcrylicFAB extends StatelessWidget {
 
 class AcrylicPill extends StatelessWidget {
   final List<Widget> children;
+  final EdgeInsets padding;
 
-  const AcrylicPill({super.key, required this.children});
+  const AcrylicPill({
+    super.key,
+    required this.children,
+    this.padding = const .symmetric(horizontal: 4),
+  });
 
   BorderRadius get radius => BorderRadius.circular(20);
 
@@ -56,7 +61,7 @@ class AcrylicPill extends StatelessWidget {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
             child: Container(
-              padding: .symmetric(horizontal: 5),
+              padding: padding,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(108, 0, 0, 0),
                 borderRadius: radius,
@@ -91,18 +96,17 @@ class AcrylicPill extends StatelessWidget {
 
 
 class AcrylicText extends StatelessWidget {
-  final int count;
+  final dynamic text;
   final EdgeInsets padding;
 
-  const AcrylicText({
+  const AcrylicText(this.text, {
     super.key,
-    required this.count,
     this.padding = const .fromLTRB(10, 8, 10, 8),
   });
 
   @override
   Widget build(BuildContext context) {
-    return '$count'.n
+    return text.toString().n
       ..titleMedium
       ..color = Theme.of(context)
           .colorScheme

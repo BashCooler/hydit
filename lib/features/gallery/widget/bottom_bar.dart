@@ -39,7 +39,7 @@ class SelectionBottomBar extends StatelessWidget {
             children: [
               AcrylicPill(
                 children: [
-                  Obx(() => AcrylicText(count: selection.ids.length)),
+                  Obx(() => AcrylicText(selection.ids.length)),
                 ],
               ),
               AcrylicPill(
