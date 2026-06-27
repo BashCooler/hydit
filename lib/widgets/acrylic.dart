@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:niku/namespace.dart' as n;
 
 
 class AcrylicFAB extends StatelessWidget {
@@ -88,3 +89,24 @@ class AcrylicPill extends StatelessWidget {
   }
 }
 
+
+class AcrylicText extends StatelessWidget {
+  final int count;
+  final EdgeInsets padding;
+
+  const AcrylicText({
+    super.key,
+    required this.count,
+    this.padding = const .fromLTRB(10, 8, 10, 8),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return '$count'.n
+      ..titleMedium
+      ..color = Theme.of(context)
+          .colorScheme
+          .onPrimaryContainer
+      ..n.padding = padding;
+  }
+}

@@ -1,11 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/utils/utils.dart';
-import 'package:hydit/widgets/gradient.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:niku/namespace.dart' as n;
 
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/widgets/acrylic.dart';
+import 'package:hydit/widgets/gradient.dart';
 import 'package:hydit/reactive/file_store.dart';
 
 import '../getx/selection.dart';
@@ -40,7 +39,7 @@ class SelectionBottomBar extends StatelessWidget {
             children: [
               AcrylicPill(
                 children: [
-                  Counter(tag: tag),
+                  Obx(() => AcrylicText(count: selection.ids.length)),
                 ],
               ),
               AcrylicPill(
@@ -65,27 +64,6 @@ class SelectionBottomBar extends StatelessWidget {
       ),
     );
   }
-}
-
-
-class Counter extends StatelessWidget {
-  final String tag;
-
-  const Counter({super.key, required this.tag});
-
-  SelectionController get selection => Get.find(tag: tag);
-
-  @override
-  Widget build(BuildContext context) => Obx(() {
-    final colors = Theme.of(context).colorScheme;
-    return Container(
-      padding: const .all(8),
-      child: '${selection.ids.length}'.n
-        ..titleMedium
-        ..color = colors.onPrimaryContainer
-        ..n.padding = const .symmetric(horizontal: 2),
-    );
-  });
 }
 
 
@@ -138,4 +116,3 @@ class SelectRangeButton extends StatelessWidget {
     );
   });
 }
-

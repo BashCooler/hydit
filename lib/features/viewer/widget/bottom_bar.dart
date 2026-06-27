@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
+import 'package:hydit/widgets/acrylic.dart';
+import 'package:hydit/widgets/gradient.dart';
 import 'package:hydit/reactive/file_store.dart';
 
 import '../getx/page.dart';
@@ -25,8 +27,7 @@ class BottomActions extends StatelessWidget {
     final PageGetxController page = Get.find(tag: tag);
     final FileStore files = Get.find(tag: tag);
 
-    return BottomAppBar(
-      color: Get.theme.scaffoldBackgroundColor.withAlpha(90),
+    return GradientBottomAppBar(
       child: Row(
         mainAxisAlignment: .spaceBetween,
         spacing: 10.0,
@@ -40,29 +41,30 @@ class BottomActions extends StatelessWidget {
             ),
             icon: const Icon(Icons.keyboard_arrow_left),
           ),
+
           Obx(() {
             final file = files[page.i];
             if (file.loading) return const SizedBox.shrink();
 
-            final content = Column(
-              mainAxisAlignment: .center,
+            return AcrylicPill(
               children: [
-                '${file.meta!.length} tags'.n,
-                '${file.meta!.res}, ${file.meta!.size}'.n
-                  ..labelSmall,
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context)
+                        .colorScheme
+                        .onPrimaryContainer,
+                  ),
+                  onPressed: openSheet,
+                  child: Obx(() => AcrylicText(count: file.meta!.length, padding: .zero)),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {},
+                ),
               ],
             );
-            return n.Button(content)
-              ..tooltip = 'Show tags'
-              ..foregroundColor = Colors.white
-              ..overlayColor = Colors.white.withAlpha(32)
-              ..fontSize = 16
-              ..fontWeight = .w500
-              ..shadows = shadows
-              ..onPressed = openSheet
-              ..padding = .zero
-              ..expanded;
           }),
+
           IconButton(
             tooltip: 'Next page',
             color: Colors.white,
