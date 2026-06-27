@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/widgets/gradient.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -49,15 +50,7 @@ class Viewer extends StatelessWidget {
         Get.back();
       },
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          toolbarHeight: MediaQuery.of(context)
-              .viewInsets
-              .top,
-          backgroundColor: Theme.of(context)
-              .scaffoldBackgroundColor
-              .withAlpha(90),
-        ),
+        appBar: GradientAppBar(automaticallyImplyLeading: false),
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
