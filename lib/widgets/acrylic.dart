@@ -43,16 +43,19 @@ class AcrylicFAB extends StatelessWidget {
 class Pill extends StatelessWidget {
   final List<Widget> children;
   final EdgeInsets padding;
+  final EdgeInsets margin;
 
   const Pill({
     super.key,
     required this.children,
     this.padding = const .symmetric(horizontal: 4),
+    this.margin = const .symmetric(horizontal: 5),
   });
 
   const Pill.text({
     super.key,
     required this.children,
+    this.margin = const .symmetric(horizontal: 5),
   })
       : padding = const .symmetric(horizontal: 5.4);
 
@@ -61,7 +64,7 @@ class Pill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const .symmetric(horizontal: 5),
+      padding: margin,
       child: RepaintBoundary(
         child: ClipRRect(
           borderRadius: radius,
@@ -83,7 +86,7 @@ class Pill extends StatelessWidget {
               ),
               child: IconButtonTheme(
                 data: IconButtonThemeData(
-                  style: IconButton.styleFrom(
+                  style: m.IconButton.styleFrom(
                     foregroundColor: Theme.of(context)
                         .colorScheme
                         .onPrimaryContainer,
@@ -143,3 +146,35 @@ class TextButton extends StatelessWidget {
   }
 }
 
+
+class IconButton extends StatelessWidget {
+  final String? tooltip;
+  final Icon icon;
+  final void Function()? onPressed;
+
+  const IconButton({
+    super.key,
+    required this.icon,
+    this.tooltip,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Pill(
+      padding: .zero,
+      margin: .zero,
+      children: [
+        ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 40),
+          child: m.IconButton(
+            padding: .zero,
+            tooltip: tooltip,
+            icon: icon,
+            onPressed: onPressed,
+          ),
+        ),
+      ],
+    );
+  }
+}

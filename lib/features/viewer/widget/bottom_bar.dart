@@ -31,9 +31,8 @@ class BottomActions extends StatelessWidget {
         mainAxisAlignment: .spaceBetween,
         spacing: 10.0,
         children: [
-          IconButton(
+          a.IconButton(
             tooltip: 'Previous page',
-            color: Colors.white,
             onPressed: () => page.controller.previousPage(
               duration: const Duration(milliseconds: 150),
               curve: Curves.decelerate,
@@ -46,13 +45,13 @@ class BottomActions extends StatelessWidget {
             if (file.loading) return const SizedBox.shrink();
 
             return a.Pill(
-              padding: const .fromLTRB(5, 0, 0, 0),
               children: [
                 a.TextButton(
                   onPressed: openSheet,
                   child: Obx(() => a.Text(file.meta!.length, padding: .zero)),
                 ),
                 IconButton(
+                  tooltip: 'Edit tags',
                   icon: const Icon(Icons.edit),
                   onPressed: () {},
                 ),
@@ -60,14 +59,13 @@ class BottomActions extends StatelessWidget {
             );
           }),
 
-          IconButton(
+          a.IconButton(
             tooltip: 'Next page',
-            color: Colors.white,
+            icon: const Icon(Icons.keyboard_arrow_right),
             onPressed: () => page.controller.nextPage(
               duration: const Duration(milliseconds: 150),
               curve: Curves.decelerate,
             ),
-            icon: const Icon(Icons.keyboard_arrow_right),
           ),
         ],
       ),
