@@ -15,18 +15,17 @@ import '../getx/page.dart';
 
 class TagSheet extends HookWidget {
   final String tag;
-  final void Function()? onFloatingActionButtonTap;
   final Widget child;
 
   const TagSheet({
     super.key,
     required this.tag,
-    this.onFloatingActionButtonTap,
     required this.child,
   });
 
   FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
+  SnappingSheetController get sheet => Get.find(tag: tag);
 
   static const snaps = <SnappingPosition>[
     SnappingPosition.factor(positionFactor: 0.0),
@@ -50,15 +49,13 @@ class TagSheet extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scrollBelow = useScrollController();
-    final SnappingSheetController sheet = Get.find(tag: tag);
-    final PageGetxController page = Get.find(tag: tag);
+    final scroll = useScrollController();
 
     return SnappingSheet(
       controller: sheet,
       onSheetMoved: syncPageLock,
       lockOverflowDrag: true,
-      initialSnappingPosition: snaps[0],
+      initialSnappingPosition: snaps.first,
       snappingPositions: snaps,
       grabbingHeight: -1,
       sheetAbove: SnappingSheetContent(
@@ -67,40 +64,26 @@ class TagSheet extends HookWidget {
       ),
       sheetBelow: SnappingSheetContent(
         draggable: (_) => true,
-        childScrollController: scrollBelow,
+        childScrollController: scroll,
         child: n.Stack([
           background,
-          Scaffold(
-            body: Obx(() {
+          SafeArea(
+            top: false,
+            child: Obx(() {
               final tags = files[page.i].meta?.all;
               switch (tags) {
                 case null:
-                  return SkeletonListView(scrollBelow);
+                  return SkeletonListView(scroll);
                 case _:
                   return TagList(
                     tags: tags.toList(),
-                    scrollController: scrollBelow,
+                    scrollController: scroll,
                     itemBuilder: (context, tag) => TagTile(tag: tag),
                   );
               }
             }),
-            floatingActionButton: buildFloatingActionButton(),
-            floatingActionButtonLocation: .miniEndFloat,
-          ).niku
-            ..rect
-            ..safeBottom,
+          ),
         ]),
-      ),
-    );
-  }
-
-  Widget? buildFloatingActionButton() {
-    if (onFloatingActionButtonTap == null) return null;
-    return Padding(
-      padding: const .only(bottom: 18),
-      child: FloatingActionButton(
-        onPressed: onFloatingActionButtonTap,
-        child: const Icon(Icons.edit_note),
       ),
     );
   }
@@ -128,4 +111,3 @@ class SkeletonListView extends StatelessWidget {
     );
   }
 }
-

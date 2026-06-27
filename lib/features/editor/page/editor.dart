@@ -75,21 +75,22 @@ class Editor extends StatelessWidget {
   }
 
   // MARK: BUILDERS
+
   Widget buildPreview() {
-    switch (mode) {
-      case .paged:
-        return Obx(() {
-          return HeroMode(
-            enabled: page.enabled(page.i),
-            child: LinearHero(
-              tag: files[page.i].id,
-              child: Thumbnail(files[page.i]),
-            ),
-          );
-        });
-      case .batch:
-        return PreviewGrid(manager: manager);
+    if (mode == .batch) {
+      return PreviewGrid(manager: manager);
     }
+
+    return Obx(() {
+      final file = files[page.i];
+      return HeroMode(
+        enabled: page.enabled(page.i),
+        child: LinearHero(
+          tag: file.id,
+          child: Thumbnail(file),
+        ),
+      );
+    });
   }
 
   // MARK: NAV

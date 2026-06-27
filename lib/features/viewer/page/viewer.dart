@@ -56,14 +56,26 @@ class Viewer extends StatelessWidget {
         extendBody: true,
         body: TagSheet(
           tag: tag,
-          onFloatingActionButtonTap: EditorPage(files)
-              .paged(page.i, gallery)
-              .passTag(tag)
-              .push,
           child: Pages(tag: tag),
         ),
-        bottomNavigationBar: BottomActions(tag: tag),
+        bottomNavigationBar: BottomActions(
+          tag: tag,
+          editButton: editButton(),
+        ),
       ),
+    );
+  }
+
+  Widget? editButton() {
+    if (gallery == null) return null;
+
+    return IconButton(
+      tooltip: 'Edit tags',
+      icon: const Icon(Icons.edit),
+      onPressed: EditorPage(files)
+          .paged(page.i, gallery)
+          .passTag(tag)
+          .push,
     );
   }
 }

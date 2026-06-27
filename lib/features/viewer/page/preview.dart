@@ -20,10 +20,10 @@ class Preview extends StatelessWidget {
     required this.file,
   });
 
+  PageGetxController get page => Get.find(tag: tag);
+
   @override
   Widget build(BuildContext context) {
-    final PageGetxController page = Get.find(tag: tag);
-
     return PopScope(
       child: Obx(() {
         return DismissiblePage(

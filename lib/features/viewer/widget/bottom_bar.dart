@@ -11,8 +11,12 @@ import '../getx/page.dart';
 
 class BottomActions extends StatelessWidget {
   final String tag;
+  final Widget? editButton;
 
-  const BottomActions({super.key, required this.tag});
+  const BottomActions({super.key, required this.tag, this.editButton});
+
+  FileStore get files => Get.find(tag: tag);
+  PageGetxController get page => Get.find(tag: tag);
 
   void openSheet() {
     final SnappingSheetController sheet = Get.find(tag: tag);
@@ -23,9 +27,6 @@ class BottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PageGetxController page = Get.find(tag: tag);
-    final FileStore files = Get.find(tag: tag);
-
     return GradientBottomAppBar(
       child: Row(
         mainAxisAlignment: .spaceBetween,
@@ -50,11 +51,7 @@ class BottomActions extends StatelessWidget {
                   onPressed: openSheet,
                   child: Obx(() => a.Text(file.meta!.length, padding: .zero)),
                 ),
-                IconButton(
-                  tooltip: 'Edit tags',
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {},
-                ),
+                ?editButton,
               ],
             );
           }),
