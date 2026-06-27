@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as m;
 import 'package:niku/namespace.dart' as n;
 
 
@@ -39,15 +40,21 @@ class AcrylicFAB extends StatelessWidget {
 }
 
 
-class AcrylicPill extends StatelessWidget {
+class Pill extends StatelessWidget {
   final List<Widget> children;
   final EdgeInsets padding;
 
-  const AcrylicPill({
+  const Pill({
     super.key,
     required this.children,
     this.padding = const .symmetric(horizontal: 4),
   });
+
+  const Pill.text({
+    super.key,
+    required this.children,
+  })
+      : padding = const .symmetric(horizontal: 5.4);
 
   BorderRadius get radius => BorderRadius.circular(20);
 
@@ -95,11 +102,11 @@ class AcrylicPill extends StatelessWidget {
 }
 
 
-class AcrylicText extends StatelessWidget {
+class Text extends StatelessWidget {
   final dynamic text;
   final EdgeInsets padding;
 
-  const AcrylicText(this.text, {
+  const Text(this.text, {
     super.key,
     this.padding = const .fromLTRB(10, 8, 10, 8),
   });
@@ -114,3 +121,25 @@ class AcrylicText extends StatelessWidget {
       ..n.padding = padding;
   }
 }
+
+
+class TextButton extends StatelessWidget {
+  final void Function()? onPressed;
+  final Widget child;
+
+  const TextButton({super.key, this.onPressed, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return m.TextButton(
+      style: m.TextButton.styleFrom(
+        foregroundColor: Theme.of(context)
+            .colorScheme
+            .onPrimaryContainer,
+      ),
+      onPressed: onPressed,
+      child: child,
+    );
+  }
+}
+

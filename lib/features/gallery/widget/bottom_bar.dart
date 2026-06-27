@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/widgets/acrylic.dart';
+import 'package:hydit/widgets/acrylic.dart' as a;
 import 'package:hydit/widgets/gradient.dart';
 import 'package:hydit/reactive/file_store.dart';
 
@@ -37,12 +37,12 @@ class SelectionBottomBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: .spaceBetween,
             children: [
-              AcrylicPill(
+              a.Pill.text(
                 children: [
-                  Obx(() => AcrylicText(selection.ids.length)),
+                  Obx(() => a.Text(selection.ids.length)),
                 ],
               ),
-              AcrylicPill(
+              a.Pill(
                 children: [
                   SelectAllButton(tag: tag),
                   IconButton(

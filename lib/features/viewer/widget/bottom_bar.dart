@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
-import 'package:hydit/widgets/acrylic.dart';
+import 'package:hydit/widgets/acrylic.dart' as a;
 import 'package:hydit/widgets/gradient.dart';
 import 'package:hydit/reactive/file_store.dart';
 
@@ -45,17 +45,12 @@ class BottomActions extends StatelessWidget {
             final file = files[page.i];
             if (file.loading) return const SizedBox.shrink();
 
-            return AcrylicPill(
+            return a.Pill(
               padding: const .fromLTRB(5, 0, 0, 0),
               children: [
-                TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: Theme.of(context)
-                        .colorScheme
-                        .onPrimaryContainer,
-                  ),
+                a.TextButton(
                   onPressed: openSheet,
-                  child: Obx(() => AcrylicText(file.meta!.length, padding: .zero)),
+                  child: Obx(() => a.Text(file.meta!.length, padding: .zero)),
                 ),
                 IconButton(
                   icon: const Icon(Icons.edit),
