@@ -160,8 +160,7 @@ extension Init on TagManager {
 
     final tags = file
         .meta!
-        .combined
-        .where((e) => e.service != 'all known tags')
+        .all
         .toSet();
     addToServices(tags);
     selectCurrentService();
@@ -177,8 +176,7 @@ extension Init on TagManager {
       final file = files.byId(id);
       final tags = file
           .meta!
-          .combined
-          .where((e) => e.service != 'all known tags')
+          .all
           .toSet();
       addToServices(tags);
     }

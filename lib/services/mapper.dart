@@ -14,15 +14,15 @@ class Mapper {
 
   static void writeMetadata(String rawJson, HydrusFile image) {
     final json = jsonDecode(rawJson);
-    Pick getMeta(String property) => pick(json, 'metadata', 0, property);
+    Pick meta = pick(json, 'metadata', 0);
 
     final metadata = FileMetadata(
-      width: getMeta('width').asDoubleOrThrow(),
-      height: getMeta('height').asDoubleOrThrow(),
-      size: getMeta('size').asIntOrThrow(),
-      mime: getMeta('mime').asStringOrThrow(),
-      duration: getMeta('duration').asIntOrNull() ?? 0,
-      combined: getMeta('tags').asMapOrEmpty<String, dynamic>().toTagSet(),
+      width: meta('width').asDoubleOrNull() ?? 0,
+      height: meta('height').asDoubleOrNull() ?? 0,
+      size: meta('size').asIntOrThrow(),
+      mime: meta('mime').asStringOrThrow(),
+      duration: meta('duration').asIntOrNull() ?? 0,
+      combined: meta('tags').asMapOrThrow<String, dynamic>().parseTags(),
     );
 
     image.metadata.value = metadata;
@@ -57,26 +57,27 @@ class Mapper {
 
 
 extension ParseTags on Map<String, dynamic> {
-  Set<Tag> toTagSet() => _parseTags(this);
+  Map<String, Set<Tag>> parseTags() => _parseTags(this);
 
-  static Set<Tag> _parseTags(Map<String, dynamic> tags) {
-    final Set<Tag> result = {};
+  static Map<String, Set<Tag>> _parseTags(Map<String, dynamic> tags) {
+    final Map<String, Set<Tag>> result = {};
 
-    for (final entry in tags.entries) {
-      final service = entry.value;
-      final List<dynamic>? entries = service['storage_tags']['0'];
-      if (entries == null) continue;
-      final serviceTags = entries
-          .cast<String>()
-          .map((raw) => Tag(raw, service: service['name']));
-      result.addAll(serviceTags);
+    for (final entry in tags.values) {
+      final service = entry as Map<String, dynamic>;
+
+      final name = service['name'];
+      final storage = pick(service, 'storage_tags', '0')
+          .asListOrEmpty<String>((t) => t.asStringOrThrow())
+          .map((t) => Tag(t));
+
+      result[name] = TagSortBuilder(storage)
+          .namespace()
+          .alphabetical()
+          .sort()
+          .toSet();
     }
 
-    return TagSortBuilder(result)
-        .namespace()
-        .alphabetical()
-        .sort()
-        .toSet();
+    return result;
   }
 }
 

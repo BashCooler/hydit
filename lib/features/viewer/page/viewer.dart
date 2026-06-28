@@ -1,4 +1,3 @@
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/widgets/gradient.dart';
@@ -8,7 +7,6 @@ import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/features/editor/bindings.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import '../getx/page.dart';
