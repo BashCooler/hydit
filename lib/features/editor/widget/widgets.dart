@@ -5,4 +5,3 @@ export 'bottom_bar.dart';
 export 'preview_grid.dart';
 export 'search_bar.dart';
 export 'split_view.dart';
-export 'tab_builder.dart';

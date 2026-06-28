@@ -53,7 +53,14 @@ class Editor extends StatelessWidget {
           child: buildPreview(),
         ),
         body: n.Column([
-          TabBuilder(tag: tag),
+          const Expanded(
+            child: Up(),
+          ),
+          const Divider(height: 1),
+          SizedBox(
+            height: 55 * 3,
+            child: Down(tag: tag),
+          ),
           const Divider(height: 1),
           EditorBottomBar(
             tag: tag,

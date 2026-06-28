@@ -160,15 +160,16 @@ extension Init on TagManager {
 
     final tags = file
         .meta!
-        .all
-        .toSet();
+        .combined[service];
     addToServices(tags);
-    selectedService.value = service ?? this.service;
+    selectedService.value = services.first;
 
     ready.value = true;
   }
 
   void initBatch(List<int> ids) {
+    throw UnimplementedError();
+
     clear();
     _ids.assignAll(ids);
 
@@ -181,7 +182,7 @@ extension Init on TagManager {
       addToServices(tags);
     }
 
-    selectCurrentService();
+    // selectCurrentService();
     ready.value = true;
   }
 
@@ -199,12 +200,6 @@ extension Init on TagManager {
     if (tags == null) return;
     _original.addAll(tags);
     _current.addAll(tags);
-  }
-
-  void selectCurrentService() {
-    selectedService.value = selectedService.value != ''
-        ? selectedService.value
-        : services.first;
   }
 }
 
@@ -245,7 +240,8 @@ extension Save on TagManager {
 
 extension ServiceUtils on TagManager {
   bool isServiceEditable(String service) {
-    return !readOnlyServices.contains(service);
+    // TODO
+    return true;
   }
 
   void selectServiceByIndex(int index) {
