@@ -149,7 +149,7 @@ extension Builders on Info
   }
 
   Widget buildService(BuildContext context, TagManager manager) {
-    return 'service: TODO'.n
+    return 'service: ${manager.service}'.n
       ..labelMedium
       ..maxLines = 1
       ..overflow = .ellipsis;

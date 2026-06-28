@@ -19,8 +19,11 @@ enum TagState {
 class TagManager extends GetxController {
   final ready = false.obs;
 
-  final services = <String>[];
   final _ids = <int>{};
+
+  final service = 'all known tags'.obs;
+
+  final _combined = <String, Set<Tag>>{};
 
   final _original = <Tag>{};
   final _current = <Tag>{}.obs;
@@ -108,55 +111,30 @@ extension Init on TagManager {
   bool get loading => !ready.value;
 
   Future<void> init(HydrusFile file, [String? service]) async {
-    clear();
+    ready.value = false;
 
     _ids.assign(file.id);
-    ready.value = false;
 
     if (file.loading) await file.ensureMetadataLoaded();
     if (file.id != _ids.first) return;
 
-    final tags = file
-        .meta!
-        .combined[service];
-    addToServices(tags);
+    final combined = file.meta!.combined;
+    _combined.assignAll(combined);
+
+    final tags = combined[service]!;
+    if (service != null) {
+      this.service.value = service;
+    }
+
+    _original.assignAll(tags);
+    _current.assignAll(tags);
 
     ready.value = true;
   }
 
   void initBatch(List<int> ids) {
+    // TODO
     throw UnimplementedError();
-
-    clear();
-    _ids.assignAll(ids);
-
-    for (final id in ids) {
-      final file = files.byId(id);
-      final tags = file
-          .meta!
-          .all
-          .toSet();
-      addToServices(tags);
-    }
-
-    // selectCurrentService();
-    ready.value = true;
-  }
-
-  void clear() {
-    services
-      ..clear()
-      ..addAll(repo.services.map((s) => s.name));
-
-    _ids.clear();
-    _current.clear();
-    _original.clear();
-  }
-
-  void addToServices(Set<Tag>? tags) {
-    if (tags == null) return;
-    _original.addAll(tags);
-    _current.addAll(tags);
   }
 }
 
