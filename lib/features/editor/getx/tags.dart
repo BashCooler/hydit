@@ -21,7 +21,7 @@ class TagManager extends GetxController {
 
   final service = 'all known tags'.obs;
 
-  final _combined = <String, Set<Tag>>{};
+  final _combined = <String, Set<Tag>>{}.obs;
   Iterable<String> get services => _combined.keys;
 
   final _original = <Tag>{};

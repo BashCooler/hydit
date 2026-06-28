@@ -23,42 +23,42 @@ class ServiceDropdown extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useTextEditingController();
-    final current = useState(manager.service.value);
 
-    return DropdownMenu<String>(
-      controller: controller,
-      width: Get.width,
-      initialSelection: current.value,
-      expandedInsets: const .symmetric(horizontal: 7.5),
-      enableSearch: false,
-      inputDecorationTheme: InputDecorationTheme(
-        filled: false,
-        isCollapsed: true,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: .circular(12.0),
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.onInverseSurface,
+    return Obx(() {
+      return DropdownMenu<String>(
+        controller: controller,
+        width: Get.width,
+        initialSelection: manager.service.value,
+        expandedInsets: const .symmetric(horizontal: 7.5),
+        enableSearch: false,
+        inputDecorationTheme: InputDecorationTheme(
+          filled: false,
+          isCollapsed: true,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: .circular(12.0),
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.onInverseSurface,
+            ),
           ),
+          contentPadding: const .only(left: 12),
         ),
-        contentPadding: const .only(left: 12),
-      ),
-      dropdownMenuEntries: [
-        for (final s in manager.services)
-          DropdownMenuEntry<String>(
-            value: s,
-            label: s,
-            trailingIcon: buildBadge(s),
-          ),
-      ],
-      onSelected: (service) async {
-        controller.text = current.value;
-        if (service == null || !await callback()) {
-          return;
-        }
-        current.value = service;
-        manager.init(files[page.i], service);
-      },
-    );
+        dropdownMenuEntries: [
+          for (final s in manager.services)
+            DropdownMenuEntry<String>(
+              value: s,
+              label: s,
+              trailingIcon: buildBadge(s),
+            ),
+        ],
+        onSelected: (service) async {
+          controller.text = manager.service.value;
+          if (service == null || !await callback()) {
+            return;
+          }
+          manager.init(files[page.i], service);
+        },
+      );
+    });
   }
 
   Widget buildBadge(String service) {
