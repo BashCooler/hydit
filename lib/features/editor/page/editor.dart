@@ -64,6 +64,18 @@ class Editor extends StatelessWidget {
                 height: 55 * 3,
                 child: Down(tag: tag),
               ),
+            ],
+          ),
+        ),
+        floatingActionButtonLocation: .endFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: Navigator.of(context).maybePop,
+          child: const Icon(Icons.check),
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Column(
+            mainAxisSize: .min,
+            children: [
               const Divider(height: 1),
               EditorBottomBar(
                 tag: tag,
@@ -75,14 +87,6 @@ class Editor extends StatelessWidget {
                 callback: confirmPendingChanges,
               ),
             ],
-          ),
-        ),
-        floatingActionButtonLocation: .miniEndFloat,
-        floatingActionButton: Padding(
-          padding: const .only(bottom: 60),
-          child: FloatingActionButton(
-            onPressed: Navigator.of(context).maybePop,
-            child: const Icon(Icons.check),
           ),
         ),
       ),
