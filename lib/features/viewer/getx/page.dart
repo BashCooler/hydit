@@ -15,6 +15,8 @@ class PageGetxController extends GetxController {
 
   final zoom = false.obs;
 
+  final showServices = false.obs;
+
   bool get noScroll => _pinch.value || zoom.value;
 
   final _blockDismiss = false.obs;

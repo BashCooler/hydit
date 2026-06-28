@@ -1,3 +1,4 @@
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/widgets/gradient.dart';
@@ -60,22 +61,20 @@ class Viewer extends StatelessWidget {
         ),
         bottomNavigationBar: BottomActions(
           tag: tag,
-          editButton: editButton(),
+          editButton: Obx(() {
+            if (page.sheetProgress < 0.5) return SizedBox.shrink();
+            return IconButton(
+              tooltip: page.showServices.value
+                  ? 'All tags'
+                  : 'Edit tags',
+              icon: page.showServices.value
+                  ? const Icon(Icons.label_important_outline)
+                  : const Icon(Icons.edit),
+              onPressed: page.showServices.toggle,
+            );
+          }),
         ),
       ),
-    );
-  }
-
-  Widget? editButton() {
-    if (gallery == null) return null;
-
-    return IconButton(
-      tooltip: 'Edit tags',
-      icon: const Icon(Icons.edit),
-      onPressed: EditorPage(files)
-          .paged(page.i, gallery)
-          .passTag(tag)
-          .push,
     );
   }
 }
@@ -88,11 +87,11 @@ class Pages extends StatelessWidget {
   static const scroll = SnappyPageScrollPhysics();
   static const noScroll = NeverScrollableScrollPhysics();
 
+  FileStore get files => Get.find(tag: tag);
+  PageGetxController get page => Get.find(tag: tag);
+
   @override
   Widget build(BuildContext context) {
-    final FileStore files = Get.find(tag: tag);
-    final PageGetxController page = Get.find(tag: tag);
-
     return Listener(
       onPointerUp: page.registerPointer,
       onPointerDown: page.registerPointer,
@@ -143,6 +142,7 @@ class DismissibleFile extends StatelessWidget {
         direction: .vertical,
         interactionMode: .gesture,
         minScale: 0,
+        dragSensitivity: 1,
         builder: (context, scrollController) {
           return ViewFile(tag: tag, index: index, file: file);
         },

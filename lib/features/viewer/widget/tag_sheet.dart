@@ -71,16 +71,26 @@ class TagSheet extends HookWidget {
             top: false,
             child: Obx(() {
               final tags = files[page.i].meta?.all;
-              switch (tags) {
-                case null:
-                  return SkeletonListView(scroll);
-                case _:
-                  return TagList(
-                    tags: tags.toList(),
-                    scrollController: scroll,
-                    itemBuilder: (context, tag) => TagTile(tag: tag),
-                  );
+              if (tags == null) {
+                return SkeletonListView(scroll);
               }
+              if (page.showServices.value) {
+                return ListView.builder(
+                  padding: .zero,
+                  itemCount: 6,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text('Service $index'),
+                      trailing: const Icon(Icons.chevron_right),
+                    );
+                  },
+                );
+              }
+              return TagList(
+                tags: tags.toList(),
+                scrollController: scroll,
+                itemBuilder: (context, tag) => TagTile(tag: tag),
+              );
             }),
           ),
         ]),
@@ -102,7 +112,8 @@ class SkeletonListView extends StatelessWidget {
       removeTop: true,
       child: Skeletonizer(
         child: ListView.builder(
-          itemCount: 6,
+          itemCount: 8,
+          controller: scroll,
           itemBuilder: (context, index) {
             return ListTile(title: Text('X' * 16));
           },
