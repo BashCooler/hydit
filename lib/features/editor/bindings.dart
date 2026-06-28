@@ -27,6 +27,7 @@ import 'getx/tags.dart';
 /// create the controller again.
 class EditorPage {
   final FileStore files;
+  final String? service;
 
   String? tag;
   int? index;
@@ -35,7 +36,7 @@ class EditorPage {
   Mode mode = Mode.paged;
   VoidCallback? _onClose;
 
-  EditorPage(this.files);
+  EditorPage(this.files, [this.service]);
 
   EditorPage paged(int index, [GalleryController? gallery]) {
     this.index = index;
@@ -101,7 +102,7 @@ class EditorBindings extends Bindings {
         );
         Get.put(
           TagManager(page.files)
-            ..init(page.files[page.index!]),
+            ..init(page.files[page.index!], page.service),
         );
       case .batch:
         Get.put(

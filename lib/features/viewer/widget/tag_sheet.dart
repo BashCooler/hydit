@@ -82,7 +82,9 @@ class TagSheet extends HookWidget {
                 return ServiceList(
                   meta.combined,
                   controller: scroll,
-                  onTap: (name) {},
+                  onTap: (name) => EditorPage(files, name)
+                      .paged(page.i)
+                      .push(),
                 );
               }
 

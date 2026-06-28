@@ -30,7 +30,7 @@ class TagManager extends GetxController {
 
   TagManager(this.files);
 
-  Repo repo = Get.find();
+  Repo get repo => Get.find();
 
   /// Selected service
   String get service => selectedService.value;
@@ -149,7 +149,7 @@ class TagManager extends GetxController {
 extension Init on TagManager {
   bool get loading => !ready.value;
 
-  Future<void> init(HydrusFile file) async {
+  Future<void> init(HydrusFile file, [String? service]) async {
     clear();
 
     _ids.assign(file.id);
@@ -163,7 +163,7 @@ extension Init on TagManager {
         .all
         .toSet();
     addToServices(tags);
-    selectCurrentService();
+    selectedService.value = service ?? this.service;
 
     ready.value = true;
   }
