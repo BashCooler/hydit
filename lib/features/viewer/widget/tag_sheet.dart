@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/entities/tag.dart';
+import 'package:hydit/widgets/service_list.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -78,33 +78,7 @@ class TagSheet extends HookWidget {
               }
 
               if (page.showServices.value) {
-                final tags = Map<String, Set<Tag>>.from(meta.combined)
-                  ..remove('all known tags');
-
-                final keys = tags.keys.toList();
-                final vals = tags.values.toList();
-
-                return ListView.builder(
-                  padding: .zero,
-                  itemCount: tags.length,
-                  controller: scroll,
-                  itemBuilder: (context, index) {
-                    final name = keys[index];
-                    final count = vals[index].length;
-
-                    return ListTile(
-                      title: Text(name),
-                      trailing: Row(
-                        spacing: 5,
-                        mainAxisSize: .min,
-                        children: [
-                          ?count > 0 ? Badge(label: Text('$count')) : null,
-                          const Icon(Icons.chevron_right),
-                        ],
-                      ),
-                    );
-                  },
-                );
+                return ServiceList(meta.combined, controller: scroll);
               }
 
               return TagList(
