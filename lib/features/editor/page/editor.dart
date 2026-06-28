@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/editor/widget/dropdown.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/services/snack.dart';
 import 'package:hydit/utils/utils.dart';
@@ -52,23 +53,30 @@ class Editor extends StatelessWidget {
           },
           child: buildPreview(),
         ),
-        body: n.Column([
-          const Expanded(
-            child: Up(),
+        body: SafeArea(
+          child: Column(
+            children: [
+              const Expanded(
+                child: Up(),
+              ),
+              const Divider(height: 1),
+              SizedBox(
+                height: 55 * 3,
+                child: Down(tag: tag),
+              ),
+              const Divider(height: 1),
+              EditorBottomBar(
+                tag: tag,
+                mode: mode,
+                callback: confirmPendingChanges,
+              ),
+              ServiceDropdown(
+                tag: tag,
+                callback: confirmPendingChanges,
+              ),
+            ],
           ),
-          const Divider(height: 1),
-          SizedBox(
-            height: 55 * 3,
-            child: Down(tag: tag),
-          ),
-          const Divider(height: 1),
-          EditorBottomBar(
-            tag: tag,
-            mode: mode,
-            callback: confirmPendingChanges,
-          ),
-        ])
-          ..safe,
+        ),
         floatingActionButtonLocation: .miniEndFloat,
         floatingActionButton: Padding(
           padding: const .only(bottom: 60),

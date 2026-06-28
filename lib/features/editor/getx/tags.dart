@@ -22,6 +22,7 @@ class TagManager extends GetxController {
   final service = 'all known tags'.obs;
 
   final _combined = <String, Set<Tag>>{};
+  Iterable<String> get services => _combined.keys;
 
   final _original = <Tag>{};
   final _current = <Tag>{}.obs;
@@ -107,7 +108,7 @@ class TagManager extends GetxController {
     final combined = file.meta!.combined;
     _combined.assignAll(combined);
 
-    final tags = combined[service]!;
+    final tags = combined[service ?? this.service.value]!;
     if (service != null) {
       this.service.value = service;
     }
