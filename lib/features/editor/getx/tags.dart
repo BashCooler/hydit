@@ -32,25 +32,19 @@ class TagManager extends GetxController {
 
   Repo get repo => Get.find();
 
-  /// Allowed to safely pop the editor page
-  bool get unlocked => additions.isEmpty && deletions.isEmpty;
-
+  /// Union of original and added tags
   Set<Tag> current() => { ..._original, ..._current };
 
   /// Sorted tags to show in UI
-  List<Tag> tags() {
-    return current().sortBuilder()
-        .state(_original)
-        .namespace()
-        .alphabetical()
-        .sort();
-  }
+  List<Tag> tags() => current()
+      .sortBuilder()
+      .state(_original)
+      .namespace()
+      .alphabetical()
+      .sort();
 
-  /// Number of tags in specified service, if no service
-  /// is specified returns current service length
-  int length() {
-    return current().where((t) => stateOf(t) != .removed).length;
-  }
+  /// Number of tags in service with additions and deletions
+  int length() => current().difference(deletions).length;
 
   /// State of specified tag: unchanged, added or removed
   TagState stateOf(Tag tag) {
@@ -130,6 +124,9 @@ class TagManager extends GetxController {
   }
 
   // MARK: SAVE
+
+  /// Allowed to safely pop the editor page
+  bool get unlocked => additions.isEmpty && deletions.isEmpty;
 
   String? summarize() {
     assert(_ids.isNotEmpty);
