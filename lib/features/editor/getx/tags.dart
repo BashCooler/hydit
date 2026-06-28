@@ -39,38 +39,21 @@ class TagManager extends GetxController {
   bool get unlocked => additions.isEmpty && deletions.isEmpty;
 
   /// Sorted tags to show in UI
-  List<Tag> tags([String? service]) {
-    return _tags(service).sortBuilder()
+  List<Tag> tags() {
+    final tags = _current.union(_original);
+
+    return tags.sortBuilder()
         .state(_original)
         .namespace()
         .alphabetical()
         .sort();
   }
 
-  /// Returns tags of specified [service], if [service] is null
-  /// returns tags of currently selected service
-  Iterable<Tag> _tags([String? service]) {
-    switch (service) {
-      case null when this.service == 'all known tags':
-        return unique();
-      case null:
-        return _current
-            .of(this.service)
-            .union(_original.of(this.service));
-      case 'all known tags':
-        return unique();
-      case _:
-        return _current
-            .of(service)
-            .union(_original.of(service));
-    }
-  }
-
   /// Number of tags in specified service, if no service
   /// is specified returns current service length
-  int lengthOf([String? service]) {
-    if (service == null) return _tags().length;
-    return _tags(service).where((t) => stateOf(t) != .removed).length;
+  int lengthOf() {
+    // TODO можно не сортировать
+    return tags().where((t) => stateOf(t) != .removed).length;
   }
 
   /// State of specified tag: unchanged, added or removed
@@ -83,23 +66,6 @@ class TagManager extends GetxController {
     return .removed;
   }
 
-  /// Generates `all known tags` dynamically to
-  /// reflect changes in other services
-  Set<Tag> unique() {
-    final Map<String, Tag> map = {
-      for (var tag in _current) tag.raw : tag
-    };
-    return map.values.toSet();
-  }
-
-  /// Index of the selected service
-  int get index {
-    if (services.isEmpty) return 0;
-    final index = services.indexOf(service);
-    if (index < 0) return 0;
-    return index;
-  }
-
   /// Number of files in [TagManager]
   int get fileCount => _ids.length;
 
@@ -108,10 +74,10 @@ class TagManager extends GetxController {
   Set<Tag> get deletions => _original.difference(_current);
 
   /// Whether selected service is editable
-  bool get editable => isServiceEditable(service);
+  bool get editable => true; // TODO
 
   void add(Tag tag) {
-    if (!isServiceEditable(service)) return;
+    if (editable) return;
 
     final t = tag.copyWith(service: service);
     if (t.raw.isEmpty) return;
@@ -119,13 +85,10 @@ class TagManager extends GetxController {
     _current.add(t);
   }
 
-  void addRaw(String raw) {
-    final t = Tag(raw);
-    add(t);
-  }
+  void addRaw(String raw) => add(Tag(raw));
 
   void remove(Tag tag) {
-    if (!isServiceEditable(service)) return;
+    if (editable) return;
 
     final t = tag.copyWith(service: service);
     if (t.raw.isEmpty) return;
@@ -235,24 +198,4 @@ extension Save on TagManager {
         .queueAll(_ids.map(files.updateById))
         .run();
   }
-}
-
-
-extension ServiceUtils on TagManager {
-  bool isServiceEditable(String service) {
-    // TODO
-    return true;
-  }
-
-  void selectServiceByIndex(int index) {
-    if (index < 0 || index >= services.length) return;
-    selectedService.value = services[index];
-  }
-
-  String pretty(String service) => switch (service) {
-    'all known tags' => 'All',
-    'public tag repository' => 'PTR',
-    'downloader tags' => 'Downloader',
-    _ => service,
-  };
 }
