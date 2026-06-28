@@ -44,7 +44,11 @@ class ServiceDropdown extends HookWidget {
       ),
       dropdownMenuEntries: [
         for (final s in manager.services)
-          DropdownMenuEntry<String>(value: s, label: s),
+          DropdownMenuEntry<String>(
+            value: s,
+            label: s,
+            trailingIcon: buildBadge(s),
+          ),
       ],
       onSelected: (service) async {
         controller.text = current.value;
@@ -54,6 +58,14 @@ class ServiceDropdown extends HookWidget {
         current.value = service;
         manager.init(files[page.i], service);
       },
+    );
+  }
+
+  Widget buildBadge(String service) {
+    final count = manager.lengthOf(service);
+    if (count < 1) return const SizedBox.shrink();
+    return Badge(
+      label: Text('$count'),
     );
   }
 }

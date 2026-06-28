@@ -33,6 +33,8 @@ class TagManager extends GetxController {
 
   Repo get repo => Get.find();
 
+  int lengthOf(String service) => _combined[service]!.length;
+
   /// Union of original and added tags
   Set<Tag> current() => { ..._original, ..._current };
 
