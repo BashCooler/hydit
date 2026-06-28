@@ -6,8 +6,6 @@ import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
 
-const readOnlyServices = ['all known tags', 'public tag repository'];
-
 
 enum TagState {
   unchanged,
@@ -37,16 +35,11 @@ class TagManager extends GetxController {
   /// Allowed to safely pop the editor page
   bool get unlocked => additions.isEmpty && deletions.isEmpty;
 
-  Set<Tag> current() => {
-    ..._original,
-    ..._current,
-  };
+  Set<Tag> current() => { ..._original, ..._current };
 
   /// Sorted tags to show in UI
   List<Tag> tags() {
-    final tags = _current.union(_original);
-
-    return tags.sortBuilder()
+    return current().sortBuilder()
         .state(_original)
         .namespace()
         .alphabetical()
@@ -61,11 +54,11 @@ class TagManager extends GetxController {
 
   /// State of specified tag: unchanged, added or removed
   TagState stateOf(Tag tag) {
-    final original = _original.contains(tag);
-    final current = _current.contains(tag);
+    final inO = _original.contains(tag);
+    final inC = _current.contains(tag);
 
-    if (original && current) return .unchanged;
-    if (!original && current) return .added;
+    if (inO && inC) return .unchanged;
+    if (!inO && inC) return .added;
     return .removed;
   }
 
@@ -80,7 +73,7 @@ class TagManager extends GetxController {
   bool get editable => true; // TODO
 
   void add(Tag tag) {
-    if (editable) return;
+    if (!editable) return;
     if (tag.raw.isEmpty) return;
     _current.add(tag);
   }
@@ -88,7 +81,7 @@ class TagManager extends GetxController {
   void addRaw(String raw) => add(Tag(raw));
 
   void remove(Tag tag) {
-    if (editable) return;
+    if (!editable) return;
     if (tag.raw.isEmpty) return;
     switch (stateOf(tag)) {
       case .removed:
@@ -104,10 +97,9 @@ class TagManager extends GetxController {
       .map((id) => files.byId(id))
       .whereType<HydrusFile>()
       .toList();
-}
 
+  // MARK: INIT
 
-extension Init on TagManager {
   bool get loading => !ready.value;
 
   Future<void> init(HydrusFile file, [String? service]) async {
@@ -136,10 +128,8 @@ extension Init on TagManager {
     // TODO
     throw UnimplementedError();
   }
-}
 
-
-extension Save on TagManager {
+  // MARK: SAVE
 
   String? summarize() {
     assert(_ids.isNotEmpty);
