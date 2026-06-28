@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/editor/bindings.dart';
 import 'package:hydit/widgets/service_list.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
@@ -78,7 +79,11 @@ class TagSheet extends HookWidget {
               }
 
               if (page.showServices.value) {
-                return ServiceList(meta.combined, controller: scroll);
+                return ServiceList(
+                  meta.combined,
+                  controller: scroll,
+                  onTap: (name) {},
+                );
               }
 
               return TagList(
