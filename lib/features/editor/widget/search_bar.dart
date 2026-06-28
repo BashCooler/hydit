@@ -26,7 +26,7 @@ class EditorTagSearchBar extends StatelessWidget {
           enabled: manager.editable,
           hintText: manager.editable
               ? 'Add tags'
-              : 'Read-only service selected',
+              : 'Service is read-only',
           onSubmitted: null,
           tagSearchController: tagSearch,
           actions: Skeleton.shade(
