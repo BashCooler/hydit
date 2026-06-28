@@ -20,7 +20,6 @@ class TagManager extends GetxController {
   final ready = false.obs;
 
   final services = <String>[];
-  final selectedService = ''.obs;
   final _ids = <int>{};
 
   final _original = <Tag>{};
@@ -32,11 +31,13 @@ class TagManager extends GetxController {
 
   Repo get repo => Get.find();
 
-  /// Selected service
-  String get service => selectedService.value;
-
   /// Allowed to safely pop the editor page
   bool get unlocked => additions.isEmpty && deletions.isEmpty;
+
+  Set<Tag> current() => {
+    ..._original,
+    ..._current,
+  };
 
   /// Sorted tags to show in UI
   List<Tag> tags() {
@@ -51,9 +52,8 @@ class TagManager extends GetxController {
 
   /// Number of tags in specified service, if no service
   /// is specified returns current service length
-  int lengthOf() {
-    // TODO можно не сортировать
-    return tags().where((t) => stateOf(t) != .removed).length;
+  int length() {
+    return current().where((t) => stateOf(t) != .removed).length;
   }
 
   /// State of specified tag: unchanged, added or removed
@@ -78,25 +78,20 @@ class TagManager extends GetxController {
 
   void add(Tag tag) {
     if (editable) return;
-
-    final t = tag.copyWith(service: service);
-    if (t.raw.isEmpty) return;
-
-    _current.add(t);
+    if (tag.raw.isEmpty) return;
+    _current.add(tag);
   }
 
   void addRaw(String raw) => add(Tag(raw));
 
   void remove(Tag tag) {
     if (editable) return;
-
-    final t = tag.copyWith(service: service);
-    if (t.raw.isEmpty) return;
-    switch (stateOf(t)) {
+    if (tag.raw.isEmpty) return;
+    switch (stateOf(tag)) {
       case .removed:
-        _current.add(t);
+        _current.add(tag);
       case _:
-        _current.remove(t);
+        _current.remove(tag);
     }
   }
 
@@ -125,7 +120,6 @@ extension Init on TagManager {
         .meta!
         .combined[service];
     addToServices(tags);
-    selectedService.value = services.first;
 
     ready.value = true;
   }

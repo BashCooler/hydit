@@ -25,7 +25,7 @@ class EditorTagSearchBar extends StatelessWidget {
         child: TagSearchBar(
           enabled: manager.editable,
           hintText: manager.editable
-              ? 'Add tags to ${manager.service}'
+              ? 'Add tags'
               : 'Read-only service selected',
           onSubmitted: null,
           tagSearchController: tagSearch,

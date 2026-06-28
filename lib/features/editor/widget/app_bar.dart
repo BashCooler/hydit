@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
@@ -109,7 +108,7 @@ extension Builders on Info
     return Row(
       crossAxisAlignment: .center,
       children: [
-        '${manager.lengthOf()} tags'.n
+        '${manager.length()} tags'.n
           ..fontSize = 16,
         const VerticalDivider(width: 8),
         buildAdditions(manager),
@@ -121,7 +120,6 @@ extension Builders on Info
   Widget buildAdditions(TagManager manager) {
     final count = manager
         .additions
-        .of(manager.service)
         .length;
     switch (count) {
       case > 0:
@@ -139,7 +137,6 @@ extension Builders on Info
   Widget buildDeletions(TagManager manager) {
     final count = manager
         .deletions
-        .of(manager.service)
         .length;
     switch (count) {
       case > 0:
@@ -152,7 +149,7 @@ extension Builders on Info
   }
 
   Widget buildService(BuildContext context, TagManager manager) {
-    return 'service: ${manager.service}'.n
+    return 'service: TODO'.n
       ..labelMedium
       ..maxLines = 1
       ..overflow = .ellipsis;
