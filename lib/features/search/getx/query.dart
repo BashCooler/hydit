@@ -66,7 +66,6 @@ class QueryController extends GetxController {
         .getSearchFiles(params.build())
         .run()
         .loading(gallery.loading)
-        .tapSuccess((_) => repo.updateServices())
         .tapSuccess((ids) => files.assignFromIds(ids))
         .tapFailure(Snack.error);
   }

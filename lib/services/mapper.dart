@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:deep_pick/deep_pick.dart';
-import 'package:hydit/api/models/service.dart';
 
 import 'package:hydit/entities/tag.dart';
+import 'package:hydit/reactive/service.dart';
 
 import '../entities/metadata.dart';
 import '../reactive/file.dart';
@@ -22,7 +22,7 @@ class Mapper {
       size: meta('size').asIntOrThrow(),
       mime: meta('mime').asStringOrThrow(),
       duration: meta('duration').asIntOrNull() ?? 0,
-      combined: meta('tags').asMapOrThrow<String, dynamic>().parseTags(),
+      combined: {}, // TODO remove this field
     );
 
     image.metadata.value = metadata;
@@ -34,47 +34,37 @@ class Mapper {
     return tags.take(15).map((e) =>
         Tag(e['value'], count: e['count'])).toList();
   }
-
-  static List<TagService> mapServices(String response) {
-    final json = jsonDecode(response) as Map<String, dynamic>;
-
-    final all = pick(json, 'all_known_tags', 0)
-        .asMapOrThrow<String, dynamic>();
-
-    final local = pick(json, 'local_tags')
-        .asListOrEmpty((pick) => pick.asMapOrThrow<String, dynamic>());
-
-    final repositories = pick(json, 'tag_repositories')
-        .asListOrEmpty((pick) => pick.asMapOrThrow<String, dynamic>());
-
-    return [
-      TagService.fromMap(all),
-      ...local.map((map) => .fromMap(map, editable: true)),
-      ...repositories.map((map) => .fromMap(map)),
-    ];
-  }
 }
 
 
 extension ParseTags on Map<String, dynamic> {
-  Map<String, Set<Tag>> parseTags() => _parseTags(this);
+  Map<String, TagService> parseTags() => _parseTags(this);
 
-  static Map<String, Set<Tag>> _parseTags(Map<String, dynamic> tags) {
-    final Map<String, Set<Tag>> result = {};
+  static Map<String, TagService> _parseTags(Map<String, dynamic> tags) {
+    final Map<String, TagService> result = {};
 
-    for (final entry in tags.values) {
-      final service = entry as Map<String, dynamic>;
+    for (final MapEntry(:key, value: map) in tags.entries) {
 
-      final name = service['name'];
-      final storage = pick(service, 'storage_tags', '0')
+      final storage = pick(map, 'storage_tags', '0')
           .asListOrEmpty<String>((t) => t.asStringOrThrow())
-          .map((t) => Tag(t));
+          .map(Tag.parse);
 
-      result[name] = TagSortBuilder(storage)
+      final set = TagSortBuilder(storage)
           .namespace()
           .alphabetical()
           .sort()
           .toSet();
+
+      final name = map['name'];
+
+      final service = TagService(
+        name: name,
+        key: key,
+        type: map['type'],
+        initial: set,
+      );
+
+      result[name] = service;
     }
 
     return result;

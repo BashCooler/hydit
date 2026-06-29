@@ -3,10 +3,7 @@ import 'dart:async';
 import 'package:hive_ce/hive.dart';
 
 import 'package:hydit/api/api.dart';
-import 'package:hydit/api/models/service.dart';
-import 'package:hydit/api/params.dart';
 import 'package:hydit/entities/tag.dart';
-import 'package:hydit/services/snack.dart';
 import 'package:hydit/utils/dictionaries.dart';
 
 import 'executor.dart';
@@ -14,7 +11,6 @@ import 'executor.dart';
 
 class Repo {
   final HydrusApi api;
-  final List<TagService> services = [];
 
   Repo() : api = HydrusApi() {
     updateFromSettings();
@@ -62,13 +58,5 @@ class Repo {
 
     // TODO
     return Failure(title: 'Unimplemented', message: "Can't add or delete");
-  }
-
-  Future<Result<String>> updateServices() async {
-    return await api
-        .getServices()
-        .run()
-        .tapSuccess(services.fromJson)
-        .tapFailure(Snack.error);
   }
 }

@@ -18,6 +18,13 @@ class Tag extends Equatable {
         pretty = _pretty(raw),
         color = colorOf(_namespace(raw));
 
+  Tag.parse(this.raw)
+      : count = null,
+        namespace = _namespace(raw),
+        value = _value(raw),
+        pretty = _pretty(raw),
+        color = colorOf(_namespace(raw));
+
   String? get ns => namespace;
 
   static String? _namespace(String raw) {
