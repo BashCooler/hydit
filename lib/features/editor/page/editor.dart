@@ -78,10 +78,7 @@ class Editor extends StatelessWidget {
                 mode: mode,
                 callback: confirmPendingChanges,
               ),
-              ServiceDropdown(
-                tag: tag,
-                callback: confirmPendingChanges,
-              ),
+              const ServiceDropdown(),
             ],
           ),
         ),

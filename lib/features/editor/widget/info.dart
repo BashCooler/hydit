@@ -26,11 +26,13 @@ class Diff extends StatelessWidget {
         children: [
           if (diff.add > 0) '+${diff.add}'.n
             ..fontSize = 16
-            ..color = additions,
+            ..color = additions
+            ..fontFamily = 'monospace',
 
           if (diff.del > 0) '-${diff.del}'.n
             ..fontSize = 16
-            ..color = deletions,
+            ..color = deletions
+            ..fontFamily = 'monospace',
         ],
       ),
     );
