@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/mapper.dart';
+import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/tag.dart';
 
 
@@ -35,24 +36,21 @@ class TagSearchController extends GetxController {
   }
 
   int _requestId = 0;
-  final isLoading = false.obs;
 
   Future<void> fetch(String q) async {
-    isLoading.value = true;
-    {
-      final int id = ++_requestId;
-      String response;
-      try {
-        response = await repo.api.getSearchTags(q);
-      } catch (e) {
-        return;
-      }
-      if (id != _requestId) return;
-      _suggestVisible.value = true;
-      final List<Tag> parsed = Mapper.parseSearchResults(response);
-      suggests.assignAll(parsed);
-    }
-    isLoading.value = false;
+    final int id = ++_requestId;
+
+    final response = await repo.api
+        .getSearchTags(q)
+        .run()
+        .unwrap();
+    if (id != _requestId || response == null) return;
+
+    final List<Tag> parsed = Mapper.parseSearchResults(response);
+
+    suggests.assignAll(parsed);
+
+    _suggestVisible.value = true;
   }
 
   void clear() {
