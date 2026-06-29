@@ -119,14 +119,11 @@ class TagManager extends GetxController {
     if (file.loading) await file.ensureMetadataLoaded();
     if (file.id != _ids.first) return;
 
-    final tags = file.tags.value!.map((k, v) => MapEntry(k, v.initial));
+    final tags = file.tags.value!
+        .map((k, v) => MapEntry(k, v.initial));
+
     _initial.assignAll(tags);
-
-    final current = file.tags.value!.map(
-      (name, service) => MapEntry(name, service.initial.obs),
-    );
-
-    _current.assignAll(current);
+    _current.assignAll(tags.map((k, v) => MapEntry(k, v.obs)));
 
     if (service != null) {
       this.service.value = service;
@@ -141,7 +138,18 @@ class TagManager extends GetxController {
     _ids.assignAll(files.map((f) => f.id));
     _files.assignAll(files);
 
-    // TODO
+    final Map<String, Set<Tag>> tags = {};
+
+    for (final file in files) {
+      final original = file.tags.value!.entries;
+
+      for (final MapEntry(key: name, value: service) in original) {
+        tags.putIfAbsent(name, () => {}).addAll(service.initial);
+      }
+    }
+
+    _initial.assignAll(tags);
+    _current.assignAll(tags.map((k, v) => MapEntry(k, v.obs)));
 
     ready.value = true;
   }
