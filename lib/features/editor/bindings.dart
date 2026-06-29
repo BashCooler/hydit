@@ -88,7 +88,7 @@ class EditorBindings extends Bindings {
 
   @override
   void dependencies() {
-    Get.put(FileStore.copy(page.files), tag: page.tag);
+    final files = Get.put(FileStore.copy(page.files), tag: page.tag);
     Get.put(TagSearchController(), tag: page.tag);
 
     switch (page.mode) {
@@ -111,7 +111,7 @@ class EditorBindings extends Bindings {
         );
         Get.put(
           TagManager()
-            ..initBatch(page.ids!),
+            ..initBatch(files.byIds(page.ids!)),
         );
     }
   }

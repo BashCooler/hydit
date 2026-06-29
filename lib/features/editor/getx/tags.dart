@@ -14,6 +14,7 @@ class TagManager extends GetxController {
   final ready = false.obs;
 
   final _ids = <int>{};
+  final _files = <HydrusFile>[];
 
   final service = 'all known tags'.obs;
 
@@ -24,8 +25,6 @@ class TagManager extends GetxController {
 
   Set<Tag> get initial => _initial[service.value]!.initial;
   Set<Tag> get current => _current[service.value]!;
-
-  final files = <HydrusFile>[];
 
   Repo get repo => Get.find();
 
@@ -100,7 +99,7 @@ class TagManager extends GetxController {
   }
 
   /// Take from 0 to [count] files from [TagManager]
-  List<HydrusFile> take([int count = 4]) => files
+  List<HydrusFile> take([int count = 4]) => _files
       .take(count)
       .toList();
 
@@ -112,6 +111,7 @@ class TagManager extends GetxController {
     ready.value = false;
 
     _ids.assign(file.id);
+    _files.assign(file);
 
     if (file.loading) await file.ensureMetadataLoaded();
     if (file.id != _ids.first) return;
@@ -131,9 +131,15 @@ class TagManager extends GetxController {
     ready.value = true;
   }
 
-  void initBatch(List<int> ids) {
+  void initBatch(List<HydrusFile> files) {
+    ready.value = false;
+
+    _ids.assignAll(files.map((f) => f.id));
+    _files.assignAll(files);
+
     // TODO
-    throw UnimplementedError();
+
+    ready.value = true;
   }
 
   // MARK: SAVE
