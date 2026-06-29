@@ -20,10 +20,10 @@ class TagManager extends GetxController {
 
   Iterable<String> get services => _initial.keys;
 
-  final _initial = <String, TagService>{};
+  final _initial = <String, Set<Tag>>{};
   final _current = <String, RxSet<Tag>>{};
 
-  Set<Tag> get initial => _initial[service.value]!.initial;
+  Set<Tag> get initial => _initial[service.value]!;
   Set<Tag> get current => _current[service.value]!;
 
   Repo get repo => Get.find();
@@ -67,7 +67,7 @@ class TagManager extends GetxController {
       return (add: additions.length, del: deletions.length);
     }
 
-    final initial = _initial[service]!.initial;
+    final initial = _initial[service]!;
     final current = _current[service]!;
 
     final add = current.difference(initial).length;
@@ -76,8 +76,11 @@ class TagManager extends GetxController {
     return (add: add, del: del);
   }
 
+  /// Use this to access fields like key, editable etc.
+  Map<String, TagService> get original => _files.first.tags.value!;
+
   /// Whether selected service is editable
-  bool get editable => _initial[service.value]!.editable;
+  bool get editable => original[service.value]!.editable;
 
   void add(Tag tag) {
     if (!editable) return;
@@ -116,7 +119,8 @@ class TagManager extends GetxController {
     if (file.loading) await file.ensureMetadataLoaded();
     if (file.id != _ids.first) return;
 
-    _initial.assignAll(file.tags.value!);
+    final tags = file.tags.value!.map((k, v) => MapEntry(k, v.initial));
+    _initial.assignAll(tags);
 
     final current = file.tags.value!.map(
       (name, service) => MapEntry(name, service.initial.obs),
@@ -152,7 +156,7 @@ class TagManager extends GetxController {
   bool get unlocked {
 
     for (final name in services) {
-      final a = _initial[name]!.initial;
+      final a = _initial[name]!;
       final b = _current[name]!;
       if (!equal(a, b)) return false;
     }
@@ -170,13 +174,13 @@ class TagManager extends GetxController {
     for (final MapEntry(key: name, value: service) in _initial.entries) {
       final current = _current[name]!;
 
-      final add = current.difference(service.initial);
-      final del = service.initial.difference(current);
+      final add = current.difference(service);
+      final del = service.difference(current);
 
       if (add.isEmpty && del.isEmpty) continue;
 
       final diff = TagDiff(
-        key: service.key,
+        key: original[name]!.key,
         added: add,
         deleted: del,
       );
