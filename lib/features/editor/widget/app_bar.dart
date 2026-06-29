@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/editor/widget/info.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -76,6 +77,7 @@ class Info extends StatelessWidget {
       ),
       child: Obx(() {
         final file = files[page.i];
+
         return Skeletonizer(
           enabled: manager.loading,
           child: Column(
@@ -83,7 +85,13 @@ class Info extends StatelessWidget {
             mainAxisAlignment: .center,
             crossAxisAlignment: .start,
             children: [
-              buildDiff(manager),
+              Row(
+                children: [
+                  '${manager.current.length} tags'.n
+                    ..fontSize = 16,
+                  const Diff(),
+                ],
+              ),
               switch (mode) {
                 Mode.paged => buildMeta(file),
                 Mode.batch => buildFileCount(manager),
@@ -94,57 +102,9 @@ class Info extends StatelessWidget {
       }),
     );
   }
-}
 
-
-extension Builders on Info
-{
   Widget buildFileCount(TagManager manager) {
     return 'Editing ${manager.fileCount} files'.n..labelMedium;
-  }
-
-  Widget buildDiff(TagManager manager) {
-    return Row(
-      crossAxisAlignment: .center,
-      children: [
-        '${manager.current.length} tags'.n
-          ..fontSize = 16,
-        const VerticalDivider(width: 8),
-        buildAdditions(manager),
-        buildDeletions(manager),
-      ],
-    );
-  }
-
-  Widget buildAdditions(TagManager manager) {
-    final count = manager
-        .additions
-        .length;
-    switch (count) {
-      case > 0:
-        return n.Row([
-          '+$count'.n
-            ..fontSize = 16
-            ..color = additions,
-          const VerticalDivider(width: 6),
-        ]);
-      default:
-        return const SizedBox.shrink();
-    }
-  }
-
-  Widget buildDeletions(TagManager manager) {
-    final count = manager
-        .deletions
-        .length;
-    switch (count) {
-      case > 0:
-        return '-$count'.n
-          ..fontSize = 16
-          ..color = deletions;
-      default:
-        return const SizedBox.shrink();
-    }
   }
 
   Widget buildMeta(HydrusFile file) {

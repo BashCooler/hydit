@@ -17,10 +17,6 @@ import 'package:hydit/features/gallery/bindings.dart';
 import '../getx/tags.dart';
 import '../widget/widgets.dart';
 
-
-const additions = Color(0xFF3fb950);
-const deletions = Color(0xFFf85149);
-
 enum Action { save, discard, cancel }
 enum Mode { paged, batch }
 

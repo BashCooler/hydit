@@ -1,9 +1,8 @@
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/editor/getx/tags.dart';
-import 'package:hydit/features/viewer/getx/page.dart';
-import 'package:hydit/reactive/file_store.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+
+import '../getx/tags.dart';
 
 
 class ServiceDropdown extends HookWidget {
@@ -17,8 +16,6 @@ class ServiceDropdown extends HookWidget {
   });
 
   TagManager get manager => Get.find();
-  FileStore get files => Get.find(tag: tag);
-  PageGetxController get page => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +44,7 @@ class ServiceDropdown extends HookWidget {
             DropdownMenuEntry<String>(
               value: s,
               label: s,
-              trailingIcon: buildBadge(s),
+              trailingIcon: DropdownTrailing(s),
             ),
         ],
         onSelected: (service) async {
@@ -55,17 +52,32 @@ class ServiceDropdown extends HookWidget {
           if (service == null || !await callback()) {
             return;
           }
-          manager.init(files[page.i], service);
+          manager.select(service);
         },
       );
     });
   }
+}
 
-  Widget buildBadge(String service) {
+
+class DropdownTrailing extends StatelessWidget {
+  final String service;
+
+  const DropdownTrailing(this.service, {super.key});
+
+  TagManager get manager => Get.find();
+
+  @override
+  Widget build(BuildContext context) {
     final count = manager.length(service);
-    if (count < 1) return const SizedBox.shrink();
+
+    if (count < 1) {
+      return const SizedBox.shrink();
+    }
+
     return Badge(
       label: Text('$count'),
     );
   }
 }
+

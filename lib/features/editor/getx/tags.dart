@@ -39,6 +39,8 @@ class TagManager extends GetxController {
   /// Union of original and added tags
   Set<Tag> get union => { ...initial, ...current };
 
+  void select(String service) => this.service.value = service;
+
   /// Sorted tags to show in UI
   List<Tag> tags() => union
       .sortBuilder()
