@@ -138,6 +138,8 @@ class TagManager extends GetxController {
     _ids.assignAll(files.map((f) => f.id));
     _files.assignAll(files);
 
+    // TODO check for metadata
+
     final Map<String, Set<Tag>> tags = {};
 
     for (final file in files) {
