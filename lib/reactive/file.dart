@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hydit/entities/tag.dart';
 
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/mapper.dart';
@@ -18,6 +19,8 @@ class HydrusFile {
   HydrusFile(this.id);
 
   Future<Result<void>>? _loadingFuture;
+
+  Iterable<Tag> get all => tags.value?['all known tags']?.initial ?? [];
 
   bool get loaded => metadata.value != null;
   bool get loading => metadata.value == null;

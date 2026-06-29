@@ -72,15 +72,15 @@ class TagSheet extends HookWidget {
           SafeArea(
             top: false,
             child: Obx(() {
-              final meta = files[page.i].meta;
+              final tags = files[page.i].tags.value;
 
-              if (meta == null) {
+              if (tags == null) {
                 return SkeletonListView(scroll);
               }
 
               if (page.showServices.value) {
                 return ServiceList(
-                  meta.combined,
+                  tags,
                   controller: scroll,
                   onTap: (name) => EditorPage(files, name)
                       .paged(page.i)
@@ -90,7 +90,7 @@ class TagSheet extends HookWidget {
               }
 
               return TagList(
-                tags: meta.all.toList(),
+                tags: files[page.i].all.toList(),
                 scrollController: scroll,
                 itemBuilder: (context, tag) => TagTile(tag: tag),
               );

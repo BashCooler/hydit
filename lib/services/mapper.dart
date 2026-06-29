@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:deep_pick/deep_pick.dart';
 
@@ -26,6 +27,9 @@ class Mapper {
     );
 
     image.metadata.value = metadata;
+
+    final tags = meta('tags').asMapOrThrow<String, dynamic>();
+    image.tags.value = parseTags(tags);
   }
 
   static List<Tag> parseSearchResults(String query) {
@@ -34,13 +38,8 @@ class Mapper {
     return tags.take(15).map((e) =>
         Tag(e['value'], count: e['count'])).toList();
   }
-}
 
-
-extension ParseTags on Map<String, dynamic> {
-  Map<String, TagService> parseTags() => _parseTags(this);
-
-  static Map<String, TagService> _parseTags(Map<String, dynamic> tags) {
+  static Map<String, TagService> parseTags(Map<String, dynamic> tags) {
     final Map<String, TagService> result = {};
 
     for (final MapEntry(:key, value: map) in tags.entries) {
@@ -69,6 +68,11 @@ extension ParseTags on Map<String, dynamic> {
 
     return result;
   }
+}
+
+
+extension ParseTags on Map<String, dynamic> {
+  Map<String, TagService> parseTags() => Mapper.parseTags(this);
 }
 
 
