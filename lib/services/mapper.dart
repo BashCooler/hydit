@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/entities/tag.dart';
-import 'package:hydit/reactive/service.dart';
+import 'package:hydit/entities/service.dart';
 
 import '../entities/metadata.dart';
 import '../reactive/file.dart';

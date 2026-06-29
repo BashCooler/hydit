@@ -4,7 +4,7 @@ import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/mapper.dart';
 import 'package:hydit/services/executor.dart';
-import 'package:hydit/reactive/service.dart';
+import 'package:hydit/entities/service.dart';
 import 'package:hydit/entities/metadata.dart';
 
 import 'file_store.dart';

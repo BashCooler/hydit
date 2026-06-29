@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hydit/reactive/service.dart';
+import 'package:hydit/entities/service.dart';
 
 
 class ServiceList extends StatelessWidget {
