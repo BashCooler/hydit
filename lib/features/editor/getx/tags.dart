@@ -5,14 +5,9 @@ import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/reactive/file_store.dart';
 
 
-enum TagState {
-  unchanged,
-  added,
-  removed,
-}
+enum TagState { unchanged, added, removed }
 
 
 class TagManager extends GetxController {
@@ -30,9 +25,7 @@ class TagManager extends GetxController {
   Set<Tag> get initial => _initial[service.value]!.initial;
   Set<Tag> get current => _current[service.value]!;
 
-  final FileStore files;
-
-  TagManager(this.files);
+  final files = <HydrusFile>[];
 
   Repo get repo => Get.find();
 
@@ -107,10 +100,8 @@ class TagManager extends GetxController {
   }
 
   /// Take from 0 to [count] files from [TagManager]
-  List<HydrusFile> take([int count = 4]) => _ids
+  List<HydrusFile> take([int count = 4]) => files
       .take(count)
-      .map((id) => files.byId(id))
-      .whereType<HydrusFile>()
       .toList();
 
   // MARK: INIT

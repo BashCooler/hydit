@@ -101,7 +101,7 @@ class EditorBindings extends Bindings {
           tag: page.tag,
         );
         Get.put(
-          TagManager(page.files)
+          TagManager()
             ..init(page.files[page.index!], page.service),
         );
       case .batch:
@@ -110,7 +110,7 @@ class EditorBindings extends Bindings {
           tag: page.tag,
         );
         Get.put(
-          TagManager(page.files)
+          TagManager()
             ..initBatch(page.ids!),
         );
     }
