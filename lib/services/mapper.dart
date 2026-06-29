@@ -31,13 +31,6 @@ class Mapper {
     image.tags.value = parseTags(tags);
   }
 
-  static List<Tag> parseSearchResults(String query) {
-    final json = jsonDecode(query);
-    final List<dynamic> tags = json['tags'];
-    return tags.take(15).map((e) =>
-        Tag(e['value'], count: e['count'])).toList();
-  }
-
   static Map<String, TagService> parseTags(Map<String, dynamic> tags) {
     final Map<String, TagService> result = {};
 

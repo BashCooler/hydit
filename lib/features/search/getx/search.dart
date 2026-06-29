@@ -1,8 +1,9 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/services/repo.dart';
-import 'package:hydit/services/mapper.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/tag.dart';
 
@@ -46,9 +47,14 @@ class TagSearchController extends GetxController {
         .unwrap();
     if (id != _requestId || response == null) return;
 
-    final List<Tag> parsed = Mapper.parseSearchResults(response);
+    final json = jsonDecode(response);
+    final tags = json['tags'] as List<dynamic>;
 
-    suggests.assignAll(parsed);
+    final mapped = tags
+        .take(15)
+        .map((map) => Tag(map['value'], count: map['count']));
+
+    suggests.assignAll(mapped);
 
     _suggestVisible.value = true;
   }
