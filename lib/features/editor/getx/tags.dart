@@ -69,6 +69,21 @@ class TagManager extends GetxController {
 
   Set<Tag> get deletions => initial.difference(current);
 
+  /// Number of additions and deletions
+  ({int add, int del}) diff([String? service]) {
+    if (service == null) {
+      return (add: additions.length, del: deletions.length);
+    }
+
+    final initial = _initial[service]!.initial;
+    final current = _current[service]!;
+
+    final add = current.difference(initial).length;
+    final del = initial.difference(current).length;
+
+    return (add: add, del: del);
+  }
+
   /// Whether selected service is editable
   bool get editable => _initial[service.value]!.editable;
 

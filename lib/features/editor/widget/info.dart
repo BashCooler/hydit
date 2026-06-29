@@ -6,7 +6,9 @@ import '../getx/tags.dart';
 
 
 class Diff extends StatelessWidget {
-  const Diff({super.key});
+  final String? service;
+
+  const Diff({super.key, this.service});
 
   static const additions = Color(0xFF3fb950);
   static const deletions = Color(0xFFf85149);
@@ -15,19 +17,18 @@ class Diff extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Obx(() {
-    final add = manager.additions.length;
-    final del = manager.deletions.length;
+    final diff = manager.diff(service);
 
-    return Padding(
+    return Container(
       padding: const .symmetric(horizontal: 8),
       child: Row(
         spacing: 6,
         children: [
-          if (add > 0) '+$add'.n
+          if (diff.add > 0) '+${diff.add}'.n
             ..fontSize = 16
             ..color = additions,
 
-          if (del > 0) '-$del'.n
+          if (diff.del > 0) '-${diff.del}'.n
             ..fontSize = 16
             ..color = deletions,
         ],

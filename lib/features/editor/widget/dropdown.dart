@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hydit/features/editor/widget/info.dart';
 
 import '../getx/tags.dart';
 
@@ -71,12 +72,15 @@ class DropdownTrailing extends StatelessWidget {
   Widget build(BuildContext context) {
     final count = manager.length(service);
 
-    if (count < 1) {
-      return const SizedBox.shrink();
-    }
-
-    return Badge(
-      label: Text('$count'),
+    return SizedBox(
+      width: 100,
+      child: Row(
+        mainAxisAlignment: .spaceBetween,
+        children: [
+          Diff(service: service),
+          if (count > 0) Badge(label: Text('$count')),
+        ],
+      ),
     );
   }
 }
