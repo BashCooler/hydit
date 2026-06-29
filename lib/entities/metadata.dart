@@ -7,8 +7,7 @@ class FileMetadata {
   final double width;
   final double height;
   final int _size;
-  final String type;
-  final String ext;
+  final String mime;
   final Duration duration;
 
   /// This [Set] contains all tags from all services, which means
@@ -22,15 +21,15 @@ class FileMetadata {
     required this.width,
     required this.height,
     required this._size,
-    required String mime,
+    required this.mime,
     required int duration,
     required this.combined,
-  }) : type = mime.split('/').first,
-        ext = mime.split('/').last,
-        duration = Duration(milliseconds: duration) {
+  })
+      : duration = Duration(milliseconds: duration) {
     namespaces = buildNamespaceIndex();
   }
 
+  String get type => mime.split('/').first;
   String get size => filesize(_size);
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
 
