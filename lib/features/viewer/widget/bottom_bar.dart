@@ -49,7 +49,7 @@ class BottomActions extends StatelessWidget {
               children: [
                 a.TextButton(
                   onPressed: openSheet,
-                  child: Obx(() => a.Text(file.meta!.length, padding: .zero)),
+                  child: Obx(() => a.Text(file.all.length, padding: .zero)),
                 ),
                 ?editButton,
               ],
