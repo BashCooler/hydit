@@ -45,7 +45,7 @@ class Up extends HookWidget {
         scrollController: scroll,
         reverse: true,
         itemBuilder: (context, tag) {
-          final state = manager.stateOf(tag);
+          final state = manager.state(tag);
           return TagTile(
             tag: tag,
             onTap: manager.editable ? manager.remove : null,

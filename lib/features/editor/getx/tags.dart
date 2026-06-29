@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hydit/entities/service.dart';
 
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/executor.dart';
@@ -21,11 +22,13 @@ class TagManager extends GetxController {
 
   final service = 'all known tags'.obs;
 
-  final _combined = <String, Set<Tag>>{}.obs;
-  Iterable<String> get services => _combined.keys;
+  Iterable<String> get services => _initial.keys;
 
-  final _original = <Tag>{};
-  final _current = <Tag>{}.obs;
+  final _initial = <String, TagService>{};
+  final _current = <String, RxSet<Tag>>{};
+
+  Set<Tag> get initial => _initial[service.value]!.initial;
+  Set<Tag> get current => _current[service.value]!;
 
   final FileStore files;
 
@@ -33,26 +36,24 @@ class TagManager extends GetxController {
 
   Repo get repo => Get.find();
 
-  int lengthOf(String service) => _combined[service]!.length;
-
   /// Union of original and added tags
-  Set<Tag> current() => { ..._original, ..._current };
+  Set<Tag> get union => { ...initial, ...current };
 
   /// Sorted tags to show in UI
-  List<Tag> tags() => current()
+  List<Tag> tags() => union
       .sortBuilder()
-      .state(_original)
+      .state(initial)
       .namespace()
       .alphabetical()
       .sort();
 
-  /// Number of tags in service with additions and deletions
-  int length() => current().difference(deletions).length;
+  /// Number of tags in [service] with additions and deletions
+  int length(String service) => _current[service]!.length;
 
   /// State of specified tag: unchanged, added or removed
-  TagState stateOf(Tag tag) {
-    final inO = _original.contains(tag);
-    final inC = _current.contains(tag);
+  TagState state(Tag tag) {
+    final inO = initial.contains(tag);
+    final inC = current.contains(tag);
 
     if (inO && inC) return .unchanged;
     if (!inO && inC) return .added;
@@ -62,17 +63,17 @@ class TagManager extends GetxController {
   /// Number of files in [TagManager]
   int get fileCount => _ids.length;
 
-  Set<Tag> get additions => _current.difference(_original);
+  Set<Tag> get additions => current.difference(initial);
 
-  Set<Tag> get deletions => _original.difference(_current);
+  Set<Tag> get deletions => initial.difference(current);
 
   /// Whether selected service is editable
-  bool get editable => true; // TODO
+  bool get editable => _initial[service.value]!.editable;
 
   void add(Tag tag) {
     if (!editable) return;
     if (tag.raw.isEmpty) return;
-    _current.add(tag);
+    current.add(tag);
   }
 
   void addRaw(String raw) => add(Tag(raw));
@@ -80,11 +81,11 @@ class TagManager extends GetxController {
   void remove(Tag tag) {
     if (!editable) return;
     if (tag.raw.isEmpty) return;
-    switch (stateOf(tag)) {
+    switch (state(tag)) {
       case .removed:
-        _current.add(tag);
+        current.add(tag);
       case _:
-        _current.remove(tag);
+        current.remove(tag);
     }
   }
 
@@ -107,16 +108,17 @@ class TagManager extends GetxController {
     if (file.loading) await file.ensureMetadataLoaded();
     if (file.id != _ids.first) return;
 
-    final combined = file.meta!.combined;
-    _combined.assignAll(combined);
+    _initial.assignAll(file.tags.value!);
 
-    final tags = combined[service ?? this.service.value]!;
+    final current = file.tags.value!.map(
+      (name, service) => MapEntry(name, service.initial.obs),
+    );
+
+    _current.assignAll(current);
+
     if (service != null) {
       this.service.value = service;
     }
-
-    _original.assignAll(tags);
-    _current.assignAll(tags);
 
     ready.value = true;
   }

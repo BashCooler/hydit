@@ -62,7 +62,7 @@ class ServiceDropdown extends HookWidget {
   }
 
   Widget buildBadge(String service) {
-    final count = manager.lengthOf(service);
+    final count = manager.length(service);
     if (count < 1) return const SizedBox.shrink();
     return Badge(
       label: Text('$count'),

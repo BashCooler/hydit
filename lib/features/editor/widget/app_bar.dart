@@ -107,7 +107,7 @@ extension Builders on Info
     return Row(
       crossAxisAlignment: .center,
       children: [
-        '${manager.length()} tags'.n
+        '${manager.current.length} tags'.n
           ..fontSize = 16,
         const VerticalDivider(width: 8),
         buildAdditions(manager),
