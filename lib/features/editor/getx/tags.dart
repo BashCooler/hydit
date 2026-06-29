@@ -138,6 +138,8 @@ class TagManager extends GetxController {
 
     final sb = StringBuffer();
 
+    // TODO
+    /*
     if (additions.isNotEmpty) {
       final services = additions.services.length;
       final count = additions.length;
@@ -149,6 +151,7 @@ class TagManager extends GetxController {
       final count = deletions.length;
       sb.write('Remove $count tags from $services services');
     }
+     */
 
     return sb.toString();
   }

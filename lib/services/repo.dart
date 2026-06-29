@@ -46,6 +46,7 @@ class Repo {
   Future<Result<void>> _addOrRemove(Iterable<int> ids, Set<Tag> tags,
       AddTagsAction action) async {
 
+    /*
     final operations = tags.services.map((name) {
       final params = AddTagsParamsBuilder()
         ..ids = ids
@@ -57,6 +58,10 @@ class Repo {
     });
 
     return await ExecutorBatch().queueAll(operations).run();
+     */
+
+    // TODO
+    return Failure(title: 'Unimplemented', message: "Can't add or delete");
   }
 
   Future<Result<String>> updateServices() async {
