@@ -163,11 +163,30 @@ class TagManager extends GetxController {
     return true;
   }
 
-  Future<Result<void>> save() {
-    return ExecutorBatch()
-        .queue(repo.addTags(_ids, additions))
-        .queue(repo.removeTags(_ids, deletions))
-        .queueAll(_ids.map(files.updateById))
-        .run();
+  /// Send changes to Hydrus
+  Future<Result<void>> save() => repo.apply(_ids, summarize());
+
+  /// Generate [TagDiff]s for [save] method
+  List<TagDiff> summarize() {
+    final changes = <TagDiff>[];
+
+    for (final MapEntry(key: name, value: service) in _initial.entries) {
+      final current = _current[name]!;
+
+      final add = current.difference(service.initial);
+      final del = service.initial.difference(current);
+
+      if (add.isEmpty && del.isEmpty) continue;
+
+      final diff = TagDiff(
+        key: service.key,
+        added: add,
+        deleted: del,
+      );
+
+      changes.add(diff);
+    }
+
+    return changes;
   }
 }
