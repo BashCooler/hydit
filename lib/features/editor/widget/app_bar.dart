@@ -84,7 +84,6 @@ class Info extends StatelessWidget {
             crossAxisAlignment: .start,
             children: [
               buildDiff(manager),
-              buildService(context, manager),
               switch (mode) {
                 Mode.paged => buildMeta(file),
                 Mode.batch => buildFileCount(manager),
@@ -146,13 +145,6 @@ extension Builders on Info
       default:
         return const SizedBox.shrink();
     }
-  }
-
-  Widget buildService(BuildContext context, TagManager manager) {
-    return 'service: ${manager.service}'.n
-      ..labelMedium
-      ..maxLines = 1
-      ..overflow = .ellipsis;
   }
 
   Widget buildMeta(HydrusFile file) {
