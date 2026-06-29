@@ -46,7 +46,7 @@ class LoadingDialog extends HookWidget {
               TextButton(
                 onPressed: () async => await onApply()
                     .loading(loading),
-                child: const Text('Save'),
+                child: const Text('Apply'),
               ),
               if (discardButton) TextButton(
                 onPressed: () => Navigator.of(context).pop(true),

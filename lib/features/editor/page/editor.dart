@@ -131,8 +131,7 @@ class Editor extends StatelessWidget {
       transitionDuration: 150.ms,
       LoadingDialog(
         icon: const Icon(Icons.save),
-        title: 'Save changes'.n,
-        content: manager.summarize()!.n,
+        title: 'Apply changes?'.n,
         loadingTitle: 'Saving...'.n,
         discardButton: true,
         onApply: () {

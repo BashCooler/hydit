@@ -147,32 +147,20 @@ class TagManager extends GetxController {
 
   // MARK: SAVE
 
-  /// Allowed to safely pop the editor page
-  bool get unlocked => additions.isEmpty && deletions.isEmpty;
+  bool equal(Set<Tag> a, Set<Tag> b) {
+    return a.length == b.length && a.difference(b).isEmpty;
+  }
 
-  String? summarize() {
-    assert(_ids.isNotEmpty);
+  /// No changes, editor can be safely closed
+  bool get unlocked {
 
-    if (unlocked) return null;
-
-    final sb = StringBuffer();
-
-    // TODO
-    /*
-    if (additions.isNotEmpty) {
-      final services = additions.services.length;
-      final count = additions.length;
-      sb.write('Add $count tags to $services services\n');
+    for (final name in services) {
+      final a = _initial[name]!.initial;
+      final b = _current[name]!;
+      if (!equal(a, b)) return false;
     }
 
-    if (deletions.isNotEmpty) {
-      final services = deletions.services.length;
-      final count = deletions.length;
-      sb.write('Remove $count tags from $services services');
-    }
-     */
-
-    return sb.toString();
+    return true;
   }
 
   Future<Result<void>> save() {
