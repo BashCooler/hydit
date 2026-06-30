@@ -18,19 +18,28 @@ class FileMetadata {
   })
       : duration = Duration(milliseconds: duration);
 
-  factory FileMetadata.fromMap(Map<String, dynamic> metadataEntry) {
-
-    return FileMetadata(
-      width: pick(metadataEntry, 'width').asDoubleOrNull() ?? 0,
-      height: pick(metadataEntry, 'height').asDoubleOrNull() ?? 0,
-      size: pick(metadataEntry, 'size').asIntOrThrow(),
-      mime: pick(metadataEntry, 'mime').asStringOrThrow(),
-      duration: pick(metadataEntry, 'duration').asIntOrNull() ?? 0,
-    );
-  }
+  /// The [map] parameter should be extracted from `file_metadata`
+  /// response like so:
+  ///
+  /// `json -> metadata -> 0` (or other index)
+  factory FileMetadata.fromMap(Map<String, dynamic> map) => .new(
+    width: pick(map, 'width').asDoubleOr(0),
+    height: pick(map, 'height').asDoubleOr(0),
+    size: pick(map, 'size').asIntOrThrow(),
+    mime: pick(map, 'mime').asStringOrThrow(),
+    duration: pick(map, 'duration').asIntOr(0),
+  );
 
   String get type => mime.split('/').first;
   String get size => filesize(_size);
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
   double get aspectRatio => width/height;
+}
+
+
+extension AsTypeOr on Pick {
+
+  double asDoubleOr(double value) => asDoubleOrNull() ?? value;
+
+  int asIntOr(int value) => asIntOrNull() ?? value;
 }
