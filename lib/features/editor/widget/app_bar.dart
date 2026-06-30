@@ -8,7 +8,7 @@ import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
-import '../getx/tags.dart';
+import '../getx/manager.dart';
 import '../page/editor.dart';
 
 

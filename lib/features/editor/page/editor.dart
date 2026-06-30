@@ -14,7 +14,7 @@ import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/viewer/page/preview.dart';
 import 'package:hydit/features/gallery/bindings.dart';
 
-import '../getx/tags.dart';
+import '../getx/manager.dart';
 import '../widget/widgets.dart';
 
 enum Action { save, discard, cancel }

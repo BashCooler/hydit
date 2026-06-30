@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:niku/extra/primitive.dart';
 
 import 'package:hydit/widgets/images.dart';
-import 'package:hydit/features/editor/getx/tags.dart';
+import 'package:hydit/features/editor/getx/manager.dart';
 
 
 class PreviewGrid extends StatelessWidget {

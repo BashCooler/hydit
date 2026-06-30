@@ -6,7 +6,7 @@ import 'package:hydit/features/search/getx/tag_search.dart';
 import 'package:hydit/features/search/widget/search.dart';
 import 'package:hydit/features/search/widget/tag_actions.dart';
 
-import '../getx/tags.dart';
+import '../getx/manager.dart';
 
 
 class EditorTagSearchBar extends StatelessWidget {

@@ -5,7 +5,7 @@ import 'package:niku/namespace.dart' as n;
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
-import '../getx/tags.dart';
+import '../getx/manager.dart';
 import '../page/editor.dart';
 import 'search_bar.dart';
 

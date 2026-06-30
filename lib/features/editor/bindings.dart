@@ -8,7 +8,7 @@ import 'package:hydit/features/search/getx/tag_search.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import 'page/editor.dart';
-import 'getx/tags.dart';
+import 'getx/manager.dart';
 
 
 /// Builds an [Editor] page.

@@ -8,7 +8,7 @@ import 'package:hydit/widgets/tag_list.dart';
 import 'package:hydit/features/search/getx/tag_search.dart';
 import 'package:hydit/features/search/widget/suggests.dart';
 
-import '../getx/tags.dart';
+import '../getx/manager.dart';
 
 
 class Up extends HookWidget {

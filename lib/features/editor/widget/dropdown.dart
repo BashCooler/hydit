@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hydit/features/editor/widget/info.dart';
 
-import '../getx/tags.dart';
+import '../getx/manager.dart';
 
 
 class ServiceDropdown extends StatelessWidget {
