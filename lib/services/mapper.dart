@@ -20,7 +20,6 @@ class Mapper {
       size: meta('size').asIntOrThrow(),
       mime: meta('mime').asStringOrThrow(),
       duration: meta('duration').asIntOrNull() ?? 0,
-      combined: {}, // TODO remove this field
     );
 
     image.metadata.value = metadata;
