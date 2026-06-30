@@ -1,6 +1,12 @@
 import 'dart:collection';
+import 'dart:convert';
+import 'dart:developer';
 
+import 'package:deep_pick/deep_pick.dart';
 import 'package:get/get.dart';
+import 'package:hydit/entities/metadata.dart';
+import 'package:hydit/services/repo.dart';
+import 'package:hydit/services/snack.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/executor.dart';
@@ -12,6 +18,8 @@ class FileStore with IterableMixin<HydrusFile> {
   final ids = <int>[].obs;
 
   final RxList<HydrusFile> rx;
+
+  final Repo repo = Get.find();
 
   /// Create empty [FileStore]
   FileStore() : rx = <HydrusFile>[].obs;
@@ -44,6 +52,37 @@ class FileStore with IterableMixin<HydrusFile> {
   /// The copy and the original [FileStore] share the same list, so
   /// all the changes in the copy will affect the original.
   FileStore copy() => FileStore.copy(this);
+
+  /// Load all files with [ids].
+  void load() async {
+    rx.clear();
+
+    final watch = Stopwatch()..start();
+
+    for (final chunk in ids.chunked(5)) {
+
+      log(chunk.length.toString());
+
+      final json = await repo.api
+          .getFileMetadata(chunk)
+          .run()
+          .tapFailure(Snack.error)
+          .unwrap();
+
+      if (json == null) return;
+
+      final files = pick(jsonDecode(json), 'metadata')
+          .asListOrThrow((e) => e.asMapOrThrow<String, dynamic>())
+          .map(FileMetadata.fromMap)
+          .map((meta) => HydrusFile(meta.id, meta));
+
+      rx.addAll(files);
+
+      log('Length: ${rx.length}, time: ${watch.elapsedMilliseconds} ms');
+
+      await Future.delayed(5.s);
+    }
+  }
 
   /// The first index in the list that satisfies the provided test.
   /// Returns -1 if element is not found.

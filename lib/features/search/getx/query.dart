@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
@@ -64,7 +65,10 @@ class QueryController extends GetxController {
         .getSearchFiles(params.build())
         .run()
         .loading(gallery.loading)
-        .tapSuccess(files.ids.assignAll)
+        .tapSuccess((ids) {
+          files.ids.assignAll(ids);
+          files.load();
+        })
         .tapFailure(Snack.error);
   }
 

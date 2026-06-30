@@ -75,9 +75,14 @@ class GalleryGridView extends StatelessWidget {
               itemCount: files.length,
               gridDelegate: delegate,
               itemBuilder: (context, index) {
-                final file = files[index]
-                  ..ensureMetadataLoaded();
+
                 return Obx(() {
+                  final file = files.elementAtOrNull(index);
+
+                  if (file == null) {
+                    return const ColoredBox(color: Colors.white10);
+                  }
+
                   return AnimatedScale(
                     key: ValueKey(file.id),
                     duration: deletionDuration,
