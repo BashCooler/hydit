@@ -4,7 +4,7 @@ import 'package:flutter/animation.dart';
 import 'package:hydit/utils/theme.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
-import 'package:hydit/features/search/getx/search.dart';
+import 'package:hydit/features/search/getx/tag_search.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import 'page/editor.dart';

@@ -5,7 +5,7 @@ import 'package:hydit/widgets/tag_list.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../getx/query.dart';
-import '../getx/search.dart';
+import '../getx/tag_search.dart';
 import '../widget/search.dart';
 import '../widget/suggests.dart';
 import '../widget/tag_panel.dart';

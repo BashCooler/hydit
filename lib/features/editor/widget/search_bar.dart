@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'package:hydit/features/search/getx/search.dart';
+import 'package:hydit/features/search/getx/tag_search.dart';
 import 'package:hydit/features/search/widget/search.dart';
 import 'package:hydit/features/search/widget/tag_actions.dart';
 

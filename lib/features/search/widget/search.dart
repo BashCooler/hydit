@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../getx/search.dart';
+import '../getx/tag_search.dart';
 
 
 class TagSearchBar extends HookWidget {

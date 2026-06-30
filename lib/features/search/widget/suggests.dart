@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/widgets/tag_list.dart';
 
-import '../getx/search.dart';
+import '../getx/tag_search.dart';
 
 
 class Suggests extends StatelessWidget {
