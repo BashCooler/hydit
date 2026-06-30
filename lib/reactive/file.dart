@@ -12,26 +12,29 @@ import 'file_store.dart';
 
 class HydrusFile {
   final int id;
+
   final metadata = Rxn<FileMetadata>();
+
   final tags = Rxn<Tags>();
-  final _deleted = false.obs;
 
   HydrusFile(this.id);
 
-  Future<Result<void>>? _loadingFuture;
-
-  Iterable<Tag> get all => tags.value?['all known tags']?.entries ?? [];
-
-  bool get loaded => metadata.value != null;
-  bool get loading => metadata.value == null;
-  bool get deleted => _deleted.value;
+  Repo repo = Get.find();
 
   FileMetadata? get meta => metadata.value;
 
-  Repo get repo => Get.find();
+  Iterable<Tag> get all => tags.value?['all known tags']?.entries ?? [];
 
   String get url => repo.buildUrl(id);
+
   String get thumbnailUrl => repo.buildUrl(id, thumbnail: true);
+
+  // MARK: LOAD
+
+  bool get loaded => metadata.value != null;
+  bool get loading => metadata.value == null;
+
+  Future<Result<void>>? _loadingFuture;
 
   Future<void> ensureMetadataLoaded() {
     if (loaded) {
@@ -51,6 +54,12 @@ class HydrusFile {
         .tapSuccess((data) => Mapper.writeMetadata(data, this))
       ..then((_) => _loadingFuture = null);
   }
+
+  // MARK: DELETE
+
+  final _deleted = false.obs;
+
+  bool get deleted => _deleted.value;
 
   /// Mark file as [deleted].
   ///
