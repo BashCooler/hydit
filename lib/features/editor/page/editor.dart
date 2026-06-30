@@ -97,7 +97,7 @@ class Editor extends StatelessWidget {
       final file = files[page.i];
       return LinearHero(
         tag: 'Preview ${file.id}',
-        child: Thumbnail(file),
+        child: Thumbnail(file.thumbnailUrl),
       );
     });
   }

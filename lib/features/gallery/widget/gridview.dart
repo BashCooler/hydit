@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart' hide RefreshCallback;
 import 'package:expressive_refresh/expressive_refresh.dart';
+import 'package:hydit/services/repo.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydit/utils/utils.dart';
@@ -40,6 +41,7 @@ class GalleryGridView extends StatelessWidget {
     crossAxisSpacing: 5,
   );
 
+  Repo get repo => Get.find();
   FileStore get files => Get.find(tag: tag);
   GalleryController get gallery => Get.find(tag: tag);
 
@@ -77,10 +79,11 @@ class GalleryGridView extends StatelessWidget {
               itemBuilder: (context, index) {
 
                 return Obx(() {
+                  final id = files.ids[index];
                   final file = files.elementAtOrNull(index);
 
                   if (file == null) {
-                    return const ColoredBox(color: Colors.white10);
+                    return Thumbnail(repo.buildUrl(id, thumbnail: true));
                   }
 
                   return AnimatedScale(
@@ -95,7 +98,7 @@ class GalleryGridView extends StatelessWidget {
                       showBadges: gallery.badges && file.loaded,
                       onTap: onTap,
                       onLongPress: onLongPress,
-                      thumbnail: Thumbnail(file),
+                      thumbnail: Thumbnail(file.thumbnailUrl),
                     ),
                   );
                 });

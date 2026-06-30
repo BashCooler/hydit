@@ -32,9 +32,9 @@ class PreviewGrid extends StatelessWidget {
       crossAxisSpacing: 3,
       mainAxisSpacing: 3,
       children: [
-        files.isNotEmpty ? Thumbnail(files[0]) : placeholder,
-        files.length > 1 ? Thumbnail(files[1]) : placeholder,
-        files.length > 2 ? Thumbnail(files[2]) : placeholder,
+        files.isNotEmpty ? Thumbnail(files[0].thumbnailUrl) : placeholder,
+        files.length > 1 ? Thumbnail(files[1].thumbnailUrl) : placeholder,
+        files.length > 2 ? Thumbnail(files[2].thumbnailUrl) : placeholder,
         files.length > 3 ? count : placeholder,
       ],
     );

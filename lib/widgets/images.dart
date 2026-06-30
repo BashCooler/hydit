@@ -5,16 +5,16 @@ import 'package:hydit/reactive/file.dart';
 
 
 class Thumbnail extends StatelessWidget {
-  final HydrusFile image;
+  final String url;
 
-  const Thumbnail(this.image, {super.key});
+  const Thumbnail(this.url, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1.0,
       child: CachedNetworkImage(
-        imageUrl: image.thumbnailUrl,
+        imageUrl: url,
         placeholder: (context, url) {
           return const ColoredBox(color: Colors.white10);
         },

@@ -61,8 +61,6 @@ class FileStore with IterableMixin<HydrusFile> {
 
     for (final chunk in ids.chunked(5)) {
 
-      log(chunk.length.toString());
-
       final json = await repo.api
           .getFileMetadata(chunk)
           .run()
