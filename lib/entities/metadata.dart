@@ -3,6 +3,7 @@ import 'package:filesize/filesize.dart';
 
 
 class FileMetadata {
+  final int id;
   final double width;
   final double height;
   final int _size;
@@ -10,6 +11,7 @@ class FileMetadata {
   final Duration duration;
 
   FileMetadata({
+    required this.id,
     required this.width,
     required this.height,
     required this._size,
@@ -23,6 +25,7 @@ class FileMetadata {
   ///
   /// `json -> metadata -> 0` (or other index)
   factory FileMetadata.fromMap(Map<String, dynamic> map) => .new(
+    id: pick(map, 'file_id').asIntOrThrow(),
     width: pick(map, 'width').asDoubleOr(0),
     height: pick(map, 'height').asDoubleOr(0),
     size: pick(map, 'size').asIntOrThrow(),
