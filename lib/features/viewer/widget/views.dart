@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:expressive_loading_indicator/expressive_loading_indicator.dart';
 import 'package:hydit/features/viewer/widget/image_view.dart';
 
 import 'package:hydit/reactive/file.dart';
@@ -28,25 +27,7 @@ class ViewFile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (file.meta?.type != null) {
-      return buildContent(file.meta!.type);
-    }
-    return FutureBuilder(
-      future: file.ensureMetadataLoaded(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == .done) {
-          return buildContent(file.meta!.type);
-        } else {
-          return const Center(
-            child: ExpressiveLoadingIndicator(),
-          );
-        }
-      },
-    );
-  }
-
-  Widget buildContent(String type) {
-    switch (type) {
+    switch(file.meta.type) {
       case 'image':
         return ZoomableImageView(
           key: ValueKey(file.id),
@@ -64,7 +45,7 @@ class ViewFile extends StatelessWidget {
           heroTag: heroTag,
         );
       case _:
-        return NotSupported(file.meta!.type);
+        return NotSupported(file.meta.type);
     }
   }
 }

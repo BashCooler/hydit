@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
+import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/tags.dart';
 import 'package:hydit/services/repo.dart';
-import 'package:hydit/services/mapper.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/metadata.dart';
 
@@ -12,16 +12,13 @@ import 'file_store.dart';
 
 class HydrusFile {
   final int id;
-
-  final metadata = Rxn<FileMetadata>();
+  final FileMetadata meta;
 
   final tags = Rxn<Tags>();
 
-  HydrusFile(this.id);
+  HydrusFile(this.id, this.meta);
 
   Repo repo = Get.find();
-
-  FileMetadata? get meta => metadata.value;
 
   Iterable<Tag> get all => tags.value?['all known tags']?.entries ?? [];
 
@@ -31,8 +28,8 @@ class HydrusFile {
 
   // MARK: LOAD
 
-  bool get loaded => metadata.value != null;
-  bool get loading => metadata.value == null;
+  bool get loaded => tags.value != null;
+  bool get loading => tags.value == null;
 
   Future<Result<void>>? _loadingFuture;
 
@@ -47,12 +44,23 @@ class HydrusFile {
     return _loadingFuture ??= _loadMetadata();
   }
 
-  Future<Result<void>> _loadMetadata() {
-    return repo.api
+  Future<Result<void>> _loadMetadata() async {
+    final result = await repo.api
         .getFileMetadata([id])
-        .run()
-        .tapSuccess((data) => Mapper.writeMetadata(data, this))
-      ..then((_) => _loadingFuture = null);
+        .run();
+
+    final json = result.unwrap();
+
+    if (json != null) {
+      final meta = pick(json, 'metadata', 0)
+          .asMapOrThrow<String, dynamic>();
+
+      tags.value = Tags.fromMap(meta);
+    }
+
+    _loadingFuture = null;
+
+    return result;
   }
 
   // MARK: DELETE
@@ -67,9 +75,4 @@ class HydrusFile {
   /// is being deleted. Make sure to remove it from [FileStore]
   /// manually to clear the resources.
   void delete() => _deleted.value = true;
-}
-
-
-extension ToFile on int {
-  HydrusFile toFile() => HydrusFile(this);
 }

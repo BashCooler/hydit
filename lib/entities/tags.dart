@@ -12,10 +12,8 @@ class Tags extends MapBase<String, TagService> {
 
   Tags(this.tags, this.namespaces);
 
-  /// The [map] should be picked from metadata response like
-  /// this `json -> metadata -> tags`.
-  factory Tags.fromMap(Map<String, dynamic> map) {
-    final tags = parseTags(map);
+  factory Tags.fromMap(Map<String, dynamic> metadataEntry) {
+    final tags = parseTags(metadataEntry);
 
     final all = tags['all known tags'];
     final namespaces = buildNamespaceIndex(all!);
@@ -32,8 +30,10 @@ class Tags extends MapBase<String, TagService> {
 
   // MARK: FACTORY METHODS
 
-  static Map<String, TagService> parseTags(Map<String, dynamic> tags) {
+  static Map<String, TagService> parseTags(Map<String, dynamic> metadataEntry) {
     final Map<String, TagService> result = {};
+
+    final tags = metadataEntry['tags'] as Map<String, dynamic>;
 
     for (final MapEntry(:key, value: map) in tags.entries) {
 

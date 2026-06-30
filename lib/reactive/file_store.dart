@@ -9,6 +9,8 @@ import 'file.dart';
 
 
 class FileStore with IterableMixin<HydrusFile> {
+  final ids = <int>[].obs;
+
   final RxList<HydrusFile> rx;
 
   /// Create empty [FileStore]
@@ -33,18 +35,15 @@ class FileStore with IterableMixin<HydrusFile> {
   @override
   Iterator<HydrusFile> get iterator => rx.iterator;
 
+  /// The number of [ids] in this [FileStore].
+  @override
+  int get length => ids.length;
+
   /// Create file repo with the same files as given [fileRepo].
   ///
   /// The copy and the original [FileStore] share the same list, so
   /// all the changes in the copy will affect the original.
   FileStore copy() => FileStore.copy(this);
-
-  /// Replaces all existing items of this list with items
-  /// generated from [ids].
-  void assignFromIds(List<int> ids) {
-    final files = ids.map((id) => id.toFile());
-    rx.assignAll(files);
-  }
 
   /// The first index in the list that satisfies the provided test.
   /// Returns -1 if element is not found.
@@ -57,7 +56,6 @@ class FileStore with IterableMixin<HydrusFile> {
   int indexById(int id) {
     return indexWhere((e) => e.id == id);
   }
-
 
   /// The first element with provided [id].
   /// If no file is found throws [StateError].

@@ -32,10 +32,8 @@ class HighResImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final meta = image.meta;
-    final aspectRatio = meta!.width/meta.height;
     return ImageStack(
-      aspectRatio: aspectRatio,
+      aspectRatio: image.meta.aspectRatio,
       children: [
         CachedNetworkImage(
           imageUrl: image.thumbnailUrl,

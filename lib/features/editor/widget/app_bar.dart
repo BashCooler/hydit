@@ -108,7 +108,7 @@ class Info extends StatelessWidget {
   }
 
   Widget buildMeta(HydrusFile file) {
-    return 'id: ${file.id}, ${file.meta!.size},\n${file.meta!.res}'.n
+    return 'id: ${file.id}, ${file.meta.size},\n${file.meta.res}'.n
       ..labelMedium
       ..maxLines = 2;
   }

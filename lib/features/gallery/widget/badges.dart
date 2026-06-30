@@ -39,7 +39,7 @@ class BadgesBuilder {
   BadgesBuilder duration() {
     if (_file.loading) return this;
 
-    final duration = _file.meta!.duration;
+    final duration = _file.meta.duration;
     if (duration == .zero) return this;
 
     final time = _stripZeros('$duration');

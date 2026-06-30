@@ -21,8 +21,6 @@ class QueryController extends GetxController {
   final box = Hive.box('settings');
   final GalleryController gallery;
 
-  // Sorting options are global and we can't sort
-  // preview galleries for now
   FileSortType _sortType = .importTime;
   bool _sortAsc = false;
 
@@ -66,7 +64,7 @@ class QueryController extends GetxController {
         .getSearchFiles(params.build())
         .run()
         .loading(gallery.loading)
-        .tapSuccess((ids) => files.assignFromIds(ids))
+        .tapSuccess(files.ids.assignAll)
         .tapFailure(Snack.error);
   }
 

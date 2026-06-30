@@ -185,7 +185,7 @@ class _ZoomableImageViewState extends State<ZoomableImageView>
 
   void _updateLayoutBounds(Size viewport) {
     final nextBaseSize = _containedSize(
-      Size(widget.image.meta!.width.toDouble(), widget.image.meta!.height.toDouble()),
+      Size(widget.image.meta.width.toDouble(), widget.image.meta.height.toDouble()),
       viewport,
     );
     if (_viewportSize == viewport && _baseImageSize == nextBaseSize) return;
