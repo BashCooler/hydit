@@ -1,16 +1,13 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart' hide RefreshCallback;
 import 'package:expressive_refresh/expressive_refresh.dart';
-import 'package:hydit/services/repo.dart';
+import 'package:hydit/features/gallery/widget/widgets.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
-import 'package:hydit/utils/utils.dart';
+import 'package:hydit/services/repo.dart';
 import 'package:hydit/widgets/images.dart';
 import 'package:hydit/reactive/file_store.dart';
-
-import '../getx/gallery.dart';
-import 'badges.dart';
-import 'tile.dart';
+import 'package:hydit/features/gallery/getx/gallery.dart';
 
 
 class GalleryGridView extends StatelessWidget {
@@ -77,31 +74,34 @@ class GalleryGridView extends StatelessWidget {
               itemCount: files.length,
               gridDelegate: delegate,
               itemBuilder: (context, index) {
+                final id = files.ids[index];
 
-                return Obx(() {
-                  final id = files.ids[index];
-                  final file = files.elementAtOrNull(index);
-
-                  if (file == null) {
-                    return Thumbnail(repo.buildUrl(id, thumbnail: true));
-                  }
-
-                  return AnimatedScale(
-                    key: ValueKey(file.id),
-                    duration: deletionDuration,
-                    scale: file.deleted ? 0 : 1,
-                    child: Tile(
-                      index: index,
-                      file: file,
-                      selected: selected?.call(file.id) ?? false,
-                      badges: TileBadges(file),
-                      showBadges: gallery.badges && file.loaded,
-                      onTap: onTap,
-                      onLongPress: onLongPress,
-                      thumbnail: Thumbnail(file.thumbnailUrl),
+                return Stack(
+                  children: [
+                    LinearHero(
+                      tag: id,
+                      child: Thumbnail(repo.buildUrl(id, thumbnail: true)),
                     ),
-                  );
-                });
+                    Obx(() {
+                      final file = files.elementAtOrNull(index);
+
+                      if (file == null) {
+                        return const SizedBox.shrink();
+                      }
+
+                      return Tile(
+                        index: index,
+                        id: id,
+                        badges: TileBadges(file),
+                        selected: selected?.call(file.id) ?? false,
+                        showBadges: gallery.badges && file.loaded,
+                        deleted: file.deleted,
+                        onTap: onTap,
+                        onLongPress: onLongPress,
+                      );
+                    }),
+                  ],
+                );
               },
             ),
           );
