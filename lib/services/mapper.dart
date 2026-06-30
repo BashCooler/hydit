@@ -2,11 +2,9 @@ import 'dart:convert';
 
 import 'package:deep_pick/deep_pick.dart';
 
-import 'package:hydit/entities/tag.dart';
-import 'package:hydit/entities/service.dart';
-
-import '../entities/metadata.dart';
-import '../reactive/file.dart';
+import 'package:hydit/entities/tags.dart';
+import 'package:hydit/entities/metadata.dart';
+import 'package:hydit/reactive/file.dart';
 
 
 class Mapper {
@@ -28,43 +26,8 @@ class Mapper {
     image.metadata.value = metadata;
 
     final tags = meta('tags').asMapOrThrow<String, dynamic>();
-    image.tags.value = parseTags(tags);
+    image.tags.value = Tags.fromMap(tags);
   }
-
-  static Map<String, TagService> parseTags(Map<String, dynamic> tags) {
-    final Map<String, TagService> result = {};
-
-    for (final MapEntry(:key, value: map) in tags.entries) {
-
-      final storage = pick(map, 'storage_tags', '0')
-          .asListOrEmpty<String>((t) => t.asStringOrThrow())
-          .map(Tag.parse);
-
-      final set = TagSortBuilder(storage)
-          .namespace()
-          .alphabetical()
-          .sort()
-          .toSet();
-
-      final name = map['name'];
-
-      final service = TagService(
-        name: name,
-        key: key,
-        type: map['type'],
-        initial: set,
-      );
-
-      result[name] = service;
-    }
-
-    return result;
-  }
-}
-
-
-extension ParseTags on Map<String, dynamic> {
-  Map<String, TagService> parseTags() => Mapper.parseTags(this);
 }
 
 

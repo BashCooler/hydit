@@ -6,7 +6,7 @@ class TagService {
   final String key;
   final int type;
 
-  final Set<Tag> initial;
+  final Set<Tag> entries;
 
   bool get editable => type == 5;
 
@@ -16,7 +16,7 @@ class TagService {
     required this.type,
     required Set<Tag> initial,
   })
-      : initial = Set.unmodifiable(initial);
+      : entries = Set.unmodifiable(initial);
 }
 
 

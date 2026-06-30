@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:hydit/entities/tag.dart';
 
+import 'package:hydit/entities/tag.dart';
+import 'package:hydit/entities/tags.dart';
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/mapper.dart';
 import 'package:hydit/services/executor.dart';
-import 'package:hydit/entities/service.dart';
 import 'package:hydit/entities/metadata.dart';
 
 import 'file_store.dart';
@@ -13,14 +13,14 @@ import 'file_store.dart';
 class HydrusFile {
   final int id;
   final metadata = Rxn<FileMetadata>();
-  final tags = Rxn<Map<String, TagService>>();
+  final tags = Rxn<Tags>();
   final _deleted = false.obs;
 
   HydrusFile(this.id);
 
   Future<Result<void>>? _loadingFuture;
 
-  Iterable<Tag> get all => tags.value?['all known tags']?.initial ?? [];
+  Iterable<Tag> get all => tags.value?['all known tags']?.entries ?? [];
 
   bool get loaded => metadata.value != null;
   bool get loading => metadata.value == null;

@@ -120,7 +120,7 @@ class TagManager extends GetxController {
     if (file.id != _ids.first) return;
 
     final tags = file.tags.value!
-        .map((k, v) => MapEntry(k, v.initial));
+        .map((k, v) => MapEntry(k, v.entries));
 
     _initial.assignAll(tags);
     _current.assignAll(tags.map((k, v) => MapEntry(k, v.obs)));
@@ -146,7 +146,7 @@ class TagManager extends GetxController {
       final original = file.tags.value!.entries;
 
       for (final MapEntry(key: name, value: service) in original) {
-        tags.putIfAbsent(name, () => {}).addAll(service.initial);
+        tags.putIfAbsent(name, () => {}).addAll(service.entries);
       }
     }
 
