@@ -54,8 +54,6 @@ class FileStore with IterableMixin<HydrusFile> {
   static const chunkSize = 20;
 
   void load({bool clear = false}) async {
-    _loading = true;
-
     var first = true;
 
     final start = rx.length;
@@ -64,6 +62,8 @@ class FileStore with IterableMixin<HydrusFile> {
     final load = ids.sublist(start, end);
 
     if (load.isEmpty) return;
+
+    _loading = true;
 
     final watch = Stopwatch()..start();
 
