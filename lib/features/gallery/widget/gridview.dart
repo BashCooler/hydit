@@ -74,6 +74,8 @@ class GalleryGridView extends StatelessWidget {
               itemCount: files.length,
               gridDelegate: delegate,
               itemBuilder: (context, index) {
+                files.next(index);
+
                 final id = files.ids[index];
 
                 return Stack(

@@ -1,6 +1,7 @@
 import 'dart:convert' hide json;
 import 'dart:developer';
 import 'dart:collection';
+import 'dart:math' hide log;
 
 import 'package:get/get.dart';
 import 'package:deep_pick/deep_pick.dart';
@@ -48,21 +49,27 @@ class FileStore with IterableMixin<HydrusFile> {
   /// all the changes in the copy will affect the original.
   FileStore copy() => FileStore.copy(this);
 
+  var _loading = false;
+
   static const chunkSize = 20;
 
   void load({int chunks = 2, bool clear = false}) async {
+    _loading = true;
 
     var first = true;
 
-    final iterable = ids
-        .chunked(chunkSize)
-        .take(chunks);
-
-    for (final chunk in iterable) {
+    for (var i = 0; i < chunks; i++) {
       final watch = Stopwatch()..start();
 
+      final start = rx.length;
+      final end = min(start + chunkSize, ids.length);
+
+      final load = ids.sublist(start, end);
+
+      if (load.isEmpty) return;
+
       final json = await repo.api
-          .getFileMetadata(chunk)
+          .getFileMetadata(load)
           .run()
           .tapFailure(Snack.error)
           .unwrap();
@@ -81,7 +88,17 @@ class FileStore with IterableMixin<HydrusFile> {
       }
 
       log('Length: ${rx.length}, time: ${watch.elapsedMilliseconds} ms');
+
+      _loading = false;
     }
+  }
+
+  /// Load next chunk of files if needed.
+  void next(int index) {
+    if (_loading) return;
+    if (index < rx.length - chunkSize) return;
+
+    load(chunks: 1);
   }
 
   /// The first index in the list that satisfies the provided test.
