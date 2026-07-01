@@ -37,8 +37,6 @@ class BadgesBuilder {
   BadgesBuilder(this._file);
 
   BadgesBuilder duration() {
-    if (_file.loading) return this;
-
     final duration = _file.meta.duration;
     if (duration == .zero) return this;
 
@@ -59,7 +57,7 @@ class BadgesBuilder {
 
   BadgesBuilder addNumerical(String namespace, [String? prefix]) {
     final value = _file
-        .tags.value!.namespaces[namespace]?.first
+        .tags.value.namespaces[namespace]?.first
         .replaceAll(RegExp(r'^0+'), '');
     if (value != null) _badges.add(Badge(label: '${prefix ?? ''}$value'.n));
     return this;

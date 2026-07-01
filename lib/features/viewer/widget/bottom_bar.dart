@@ -43,7 +43,6 @@ class BottomActions extends StatelessWidget {
 
           Obx(() {
             final file = files[page.i];
-            if (file.loading) return const SizedBox.shrink();
 
             return a.Pill(
               children: [

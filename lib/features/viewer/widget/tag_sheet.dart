@@ -2,15 +2,14 @@ import 'dart:ui';
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/editor/bindings.dart';
-import 'package:hydit/widgets/service_list.dart';
 import 'package:niku/namespace.dart' as n;
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import 'package:hydit/widgets/tag_list.dart';
+import 'package:hydit/widgets/service_list.dart';
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/features/editor/bindings.dart';
 
 import '../getx/page.dart';
 
@@ -74,10 +73,6 @@ class TagSheet extends HookWidget {
             child: Obx(() {
               final tags = files[page.i].tags.value;
 
-              if (tags == null) {
-                return SkeletonListView(scroll);
-              }
-
               if (page.showServices.value) {
                 return ServiceList(
                   tags,
@@ -97,30 +92,6 @@ class TagSheet extends HookWidget {
             }),
           ),
         ]),
-      ),
-    );
-  }
-}
-
-
-class SkeletonListView extends StatelessWidget {
-  final ScrollController scroll;
-
-  const SkeletonListView(this.scroll, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MediaQuery.removePadding(
-      context: context,
-      removeTop: true,
-      child: Skeletonizer(
-        child: ListView.builder(
-          itemCount: 8,
-          controller: scroll,
-          itemBuilder: (context, index) {
-            return ListTile(title: Text('X' * 16));
-          },
-        ),
       ),
     );
   }

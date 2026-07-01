@@ -11,16 +11,29 @@ import 'file_store.dart';
 
 
 class HydrusFile {
-  final int id;
   final FileMetadata meta;
 
-  final tags = Rxn<Tags>();
+  final Rx<Tags> tags;
 
-  HydrusFile(this.id, this.meta);
+  HydrusFile(this.meta, this.tags);
 
-  Repo repo = Get.find();
+  /// The [map] parameter should be extracted from `file_metadata`
+  /// response like so:
+  ///
+  /// `json -> metadata -> 0` (or other index)
+  factory HydrusFile.fromMap(Map<String, dynamic> map) {
 
-  Iterable<Tag> get all => tags.value?['all known tags']?.entries ?? [];
+    final meta = FileMetadata.fromMap(map);
+    final tags = Tags.fromMap(map);
+
+    return HydrusFile(meta, tags.obs);
+  }
+
+  final Repo repo = Get.find();
+
+  Iterable<Tag> get all => tags.value['all known tags']?.entries ?? [];
+
+  int get id => meta.id;
 
   String get url => repo.buildUrl(id);
 
@@ -28,17 +41,7 @@ class HydrusFile {
 
   // MARK: LOAD
 
-  bool get loaded => tags.value != null;
-  bool get loading => tags.value == null;
-
   Future<Result<void>>? _loadingFuture;
-
-  Future<void> ensureMetadataLoaded() {
-    if (loaded) {
-      return Future.value();
-    }
-    return update();
-  }
 
   Future<Result<void>> update() async {
     return _loadingFuture ??= _loadMetadata();

@@ -100,7 +100,7 @@ class Pages extends StatelessWidget {
           controller: page.controller,
           itemCount: files.length,
           preloadPagesCount: 3,
-          itemBuilder: (_, index) {
+          itemBuilder: (context, index) {
             return DismissibleFile(
               tag: tag,
               index: index,

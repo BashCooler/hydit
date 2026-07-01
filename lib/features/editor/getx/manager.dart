@@ -77,7 +77,7 @@ class TagManager extends GetxController {
   }
 
   /// Use this to access fields like key, editable etc.
-  Map<String, TagService> get original => _files.first.tags.value!;
+  Map<String, TagService> get original => _files.first.tags.value;
 
   /// Whether selected service is editable
   bool get editable => original[service.value]!.editable;
@@ -116,10 +116,9 @@ class TagManager extends GetxController {
     _ids.assign(file.id);
     _files.assign(file);
 
-    if (file.loading) await file.ensureMetadataLoaded();
     if (file.id != _ids.first) return;
 
-    final tags = file.tags.value!
+    final tags = file.tags.value
         .map((k, v) => MapEntry(k, v.entries));
 
     _initial.assignAll(tags);
@@ -143,7 +142,7 @@ class TagManager extends GetxController {
     final Map<String, Set<Tag>> tags = {};
 
     for (final file in files) {
-      final original = file.tags.value!.entries;
+      final original = file.tags.value.entries;
 
       for (final MapEntry(key: name, value: service) in original) {
         tags.putIfAbsent(name, () => {}).addAll(service.entries);

@@ -9,7 +9,6 @@ import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/snack.dart';
 import 'package:hydit/services/executor.dart';
-import 'package:hydit/entities/metadata.dart';
 
 import 'file.dart';
 
@@ -66,8 +65,7 @@ class FileStore with IterableMixin<HydrusFile> {
 
       final files = pick(jsonDecode(json), 'metadata')
           .asListOrThrow((e) => e.asMapOrThrow<String, dynamic>())
-          .map(FileMetadata.fromMap)
-          .map((meta) => HydrusFile(meta.id, meta));
+          .map(HydrusFile.fromMap);
 
       rx.addAll(files);
 
