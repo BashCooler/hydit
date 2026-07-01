@@ -53,44 +53,42 @@ class FileStore with IterableMixin<HydrusFile> {
 
   static const chunkSize = 20;
 
-  void load({int chunks = 2, bool clear = false}) async {
+  void load({bool clear = false}) async {
     _loading = true;
 
     var first = true;
 
-    for (var i = 0; i < chunks; i++) {
-      final watch = Stopwatch()..start();
+    final start = rx.length;
+    final end = min(start + chunkSize, ids.length);
 
-      final start = rx.length;
-      final end = min(start + chunkSize, ids.length);
+    final load = ids.sublist(start, end);
 
-      final load = ids.sublist(start, end);
+    if (load.isEmpty) return;
 
-      if (load.isEmpty) return;
+    final watch = Stopwatch()..start();
 
-      final json = await repo.api
-          .getFileMetadata(load)
-          .run()
-          .tapFailure(Snack.error)
-          .unwrap();
+    final json = await repo.api
+        .getFileMetadata(load)
+        .run()
+        .tapFailure(Snack.error)
+        .unwrap();
 
-      if (json == null) return;
+    if (json == null) return;
 
-      final files = pick(jsonDecode(json), 'metadata')
-          .asListOrThrow((e) => e.asMapOrThrow<String, dynamic>())
-          .map(HydrusFile.fromMap);
+    final files = pick(jsonDecode(json), 'metadata')
+        .asListOrThrow((e) => e.asMapOrThrow<String, dynamic>())
+        .map(HydrusFile.fromMap);
 
-      if (clear && first) {
-        rx.assignAll(files);
-        first = false;
-      } else {
-        rx.addAll(files);
-      }
-
-      log('Length: ${rx.length}, time: ${watch.elapsedMilliseconds} ms');
-
-      _loading = false;
+    if (clear && first) {
+      rx.assignAll(files);
+      first = false;
+    } else {
+      rx.addAll(files);
     }
+
+    log('Length: ${rx.length}, time: ${watch.elapsedMilliseconds} ms');
+
+    _loading = false;
   }
 
   /// Load next chunk of files if needed.
@@ -98,7 +96,7 @@ class FileStore with IterableMixin<HydrusFile> {
     if (_loading) return;
     if (index < rx.length - chunkSize) return;
 
-    load(chunks: 1);
+    load();
   }
 
   /// The first index in the list that satisfies the provided test.
