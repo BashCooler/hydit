@@ -15,6 +15,7 @@ class GalleryGridView extends StatelessWidget {
   final RefreshCallback? onRefresh;
   final void Function(int id, int index)? onTap;
   final void Function(int id, int index)? onLongPress;
+  final void Function(int index)? onBuild;
   final bool Function(ScrollNotification) allowRefresh;
   final bool Function(int id)? selected;
 
@@ -24,6 +25,7 @@ class GalleryGridView extends StatelessWidget {
     this.onRefresh,
     this.onTap,
     this.onLongPress,
+    this.onBuild,
     this.allowRefresh = defaultScrollNotificationPredicate,
     this.selected,
   });
@@ -74,7 +76,7 @@ class GalleryGridView extends StatelessWidget {
               itemCount: files.length,
               gridDelegate: delegate,
               itemBuilder: (context, index) {
-                files.next(index);
+                onBuild?.call(index);
 
                 final id = files.ids[index];
 

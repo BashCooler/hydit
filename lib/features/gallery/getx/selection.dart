@@ -21,7 +21,7 @@ class SelectionController extends GetxController {
 
   SelectionController(this.files, this.gallery);
 
-  Repo get repo => Get.find();
+  Repo repo = Get.find();
 
   bool get selectedAll => ids.length == files.length;
 

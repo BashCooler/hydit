@@ -47,7 +47,9 @@ class Editor extends StatelessWidget {
                 .withFiles(files)
                 .push(),
           },
-          child: buildPreview(),
+          child: mode == .batch
+              ? const PreviewGrid()
+              : buildPreview(),
         ),
         body: SafeArea(
           child: Column(
@@ -89,10 +91,6 @@ class Editor extends StatelessWidget {
   // MARK: BUILDERS
 
   Widget buildPreview() {
-    if (mode == .batch) {
-      return PreviewGrid(manager: manager);
-    }
-
     return Obx(() {
       final file = files[page.i];
       return LinearHero(

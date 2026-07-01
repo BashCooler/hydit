@@ -15,14 +15,16 @@ import 'file.dart';
 
 
 class FileStore with IterableMixin<HydrusFile> {
-  final ids = <int>[].obs;
+  final RxList<int> ids;
 
   final RxList<HydrusFile> rx;
 
   final Repo repo = Get.find();
 
   /// Create empty [FileStore]
-  FileStore() : rx = <HydrusFile>[].obs;
+  FileStore()
+      : ids = <int>[].obs,
+        rx = <HydrusFile>[].obs;
 
   /// Takes files from [store] with specified [ids] and
   /// created a new [FileStore].
@@ -30,13 +32,16 @@ class FileStore with IterableMixin<HydrusFile> {
   /// New [FileStore] will have the same [HydrusFile] objects as
   /// the original and will impact the original [FileStore].
   FileStore.pickFrom(FileStore store, List<int> ids)
-    : rx = store.byIds(ids).obs;
+      : ids = ids.obs,
+        rx = store.byIds(ids).obs;
 
   /// Create file repo with the same files as given [fileRepo].
   ///
   /// The copy and the original [FileStore] share the same list, so
   /// all the changes in the copy will affect the original.
-  FileStore.copy(FileStore fileRepo) : rx = fileRepo.rx;
+  FileStore.copy(FileStore fileRepo)
+      : ids = fileRepo.ids,
+        rx = fileRepo.rx;
 
   HydrusFile operator [](int index) => rx[index];
 

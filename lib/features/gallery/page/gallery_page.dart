@@ -70,6 +70,7 @@ class Gallery extends StatelessWidget {
             selected: selection.isSelected,
             onTap: onTileTap,
             onLongPress: editor ? selection.selectTile : null,
+            onBuild: search ? files.next : null,
           ),
         ],
       ),

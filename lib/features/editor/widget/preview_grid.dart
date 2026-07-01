@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/extra/primitive.dart';
 
@@ -6,11 +7,11 @@ import 'package:hydit/features/editor/getx/manager.dart';
 
 
 class PreviewGrid extends StatelessWidget {
-  final TagManager manager;
-
-  const PreviewGrid({super.key, required this.manager});
+  const PreviewGrid({super.key});
 
   static const placeholder = ColoredBox(color: Colors.black12);
+
+  TagManager get manager => Get.find();
 
   Widget buildCount(int count) {
     return ColoredBox(
