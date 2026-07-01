@@ -1,15 +1,15 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:collection';
 
-import 'package:deep_pick/deep_pick.dart';
 import 'package:get/get.dart';
-import 'package:hydit/entities/metadata.dart';
-import 'package:hydit/services/repo.dart';
-import 'package:hydit/services/snack.dart';
+import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/utils/utils.dart';
+import 'package:hydit/services/repo.dart';
+import 'package:hydit/services/snack.dart';
 import 'package:hydit/services/executor.dart';
+import 'package:hydit/entities/metadata.dart';
 
 import 'file.dart';
 
@@ -43,10 +43,6 @@ class FileStore with IterableMixin<HydrusFile> {
   @override
   Iterator<HydrusFile> get iterator => rx.iterator;
 
-  /// The number of [ids] in this [FileStore].
-  @override
-  int get length => ids.length;
-
   /// Create file repo with the same files as given [fileRepo].
   ///
   /// The copy and the original [FileStore] share the same list, so
@@ -57,9 +53,8 @@ class FileStore with IterableMixin<HydrusFile> {
   void load() async {
     rx.clear();
 
-    final watch = Stopwatch()..start();
-
-    for (final chunk in ids.chunked(5)) {
+    for (final chunk in ids.chunked(20)) {
+      final watch = Stopwatch()..start();
 
       final json = await repo.api
           .getFileMetadata(chunk)
@@ -77,8 +72,6 @@ class FileStore with IterableMixin<HydrusFile> {
       rx.addAll(files);
 
       log('Length: ${rx.length}, time: ${watch.elapsedMilliseconds} ms');
-
-      await Future.delayed(5.s);
     }
   }
 
