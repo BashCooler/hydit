@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:convert' hide json;
 import 'dart:developer';
 import 'dart:collection';
 
@@ -48,11 +48,17 @@ class FileStore with IterableMixin<HydrusFile> {
   /// all the changes in the copy will affect the original.
   FileStore copy() => FileStore.copy(this);
 
-  /// Load all files with [ids].
-  void load() async {
-    rx.clear();
+  static const chunkSize = 20;
 
-    for (final chunk in ids.chunked(20)) {
+  void load({int chunks = 2, bool clear = false}) async {
+
+    var first = true;
+
+    final iterable = ids
+        .chunked(chunkSize)
+        .take(chunks);
+
+    for (final chunk in iterable) {
       final watch = Stopwatch()..start();
 
       final json = await repo.api
@@ -67,7 +73,12 @@ class FileStore with IterableMixin<HydrusFile> {
           .asListOrThrow((e) => e.asMapOrThrow<String, dynamic>())
           .map(HydrusFile.fromMap);
 
-      rx.addAll(files);
+      if (clear && first) {
+        rx.assignAll(files);
+        first = false;
+      } else {
+        rx.addAll(files);
+      }
 
       log('Length: ${rx.length}, time: ${watch.elapsedMilliseconds} ms');
     }

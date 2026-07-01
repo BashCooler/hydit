@@ -66,7 +66,7 @@ class QueryController extends GetxController {
         .loading(gallery.loading)
         .tapSuccess((ids) {
           files.ids.assignAll(ids);
-          files.load();
+          files.load(chunks: 2, clear: true);
         })
         .tapFailure(Snack.error);
   }
