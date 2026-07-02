@@ -6,6 +6,7 @@ import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/search/getx/tag_search.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
+import 'package:hydit/widgets/swipeable.dart';
 
 import 'page/editor.dart';
 import 'getx/manager.dart';
@@ -69,10 +70,11 @@ class EditorPage {
   void push() {
     tag ??= 'Editor-${DateTime.now().microsecondsSinceEpoch}';
 
-    Get.to(() => Editor(tag: tag!, mode: mode),
-      transition: .leftToRight,
+    Get.to(() => SwipeablePage(child: Editor(tag: tag!, mode: mode)),
+      transition: .rightToLeft,
       duration: transition,
       curve: Curves.easeInOutCubic,
+      opaque: false,
       binding: EditorBindings(this),
     )?.then((result) {
       _onClose?.call();

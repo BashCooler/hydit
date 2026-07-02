@@ -16,63 +16,65 @@ import '../widget/text_field.dart';
 class Settings extends HookWidget {
   const Settings({super.key});
 
-  static const decoration = BoxDecoration(
-    boxShadow: [
-      BoxShadow(
-        color: Color.fromARGB(128, 0, 0, 0),
-        blurRadius: 5,
-      )
-    ],
-  );
-
   @override
   Widget build(BuildContext context) {
     final settings = useMemoized(() => SettingsController());
 
-    return Container(
-      decoration: decoration,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Settings'),
-          elevation: 2,
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            spacing: 15,
-            mainAxisSize: .min,
-            children: [
-              Divider(color: Colors.transparent),
-              Obx(() {
-                return SettingsTextField(
-                  label: 'Url',
-                  onChanged: settings.updateUrl,
-                  enabled: settings.ready,
-                  initial: settings.$.url,
-                );
-              }),
-              Obx(() {
-                return SettingsTextField(
-                  label: 'API Key',
-                  onChanged: settings.updateKey,
-                  enabled: settings.ready,
-                  initial: settings.$.key,
-                );
-              }),
-              Obx(() {
-                return SettingActionTile(
-                  title: const Text('Verify and save'),
-                  icon: const SettingTileIcon(Icons.save),
-                  enabled: settings.ready,
-                  onTap: settings.verify,
-                );
-              }),
-              SettingActionTile(
-                icon: const Padding(
-                  padding: .all(8),
-                  child: FaIcon(FontAwesomeIcons.github, size: 32),
-                ),
-                title: FutureBuilder(
-                  future: Version.current(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Settings'),
+        elevation: 2,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          spacing: 15,
+          mainAxisSize: .min,
+          children: [
+            Divider(color: Colors.transparent),
+            Obx(() {
+              return SettingsTextField(
+                label: 'Url',
+                onChanged: settings.updateUrl,
+                enabled: settings.ready,
+                initial: settings.$.url,
+              );
+            }),
+            Obx(() {
+              return SettingsTextField(
+                label: 'API Key',
+                onChanged: settings.updateKey,
+                enabled: settings.ready,
+                initial: settings.$.key,
+              );
+            }),
+            Obx(() {
+              return SettingActionTile(
+                title: const Text('Verify and save'),
+                icon: const SettingTileIcon(Icons.save),
+                enabled: settings.ready,
+                onTap: settings.verify,
+              );
+            }),
+            SettingActionTile(
+              icon: const Padding(
+                padding: .all(8),
+                child: FaIcon(FontAwesomeIcons.github, size: 32),
+              ),
+              title: FutureBuilder(
+                future: Version.current(),
+                builder: (context, snapshot) {
+                  switch (snapshot.hasData) {
+                    case true:
+                      return 'v${snapshot.data!}'.n;
+                    case false:
+                      return Skeletonizer(child: 'v0.0.0'.n);
+                  }
+                },
+              ),
+              description: n.Row([
+                'Latest version: '.n,
+                FutureBuilder(
+                  future: Version.latest(),
                   builder: (context, snapshot) {
                     switch (snapshot.hasData) {
                       case true:
@@ -81,34 +83,20 @@ class Settings extends HookWidget {
                         return Skeletonizer(child: 'v0.0.0'.n);
                     }
                   },
-                ),
-                description: n.Row([
-                  'Latest version: '.n,
-                  FutureBuilder(
-                    future: Version.latest(),
-                    builder: (context, snapshot) {
-                      switch (snapshot.hasData) {
-                        case true:
-                          return 'v${snapshot.data!}'.n;
-                        case false:
-                          return Skeletonizer(child: 'v0.0.0'.n);
-                      }
-                    },
-                  )
-                ]),
-                onTap: () async {
-                  try {
-                    await launchUrl(
-                      Version.updateUrl,
-                      customTabsOptions: CustomTabsOptions(),
-                    );
-                  } catch (e) {
-                    return;
-                  }
-                },
-              ),
-            ],
-          ),
+                )
+              ]),
+              onTap: () async {
+                try {
+                  await launchUrl(
+                    Version.updateUrl,
+                    customTabsOptions: CustomTabsOptions(),
+                  );
+                } catch (e) {
+                  return;
+                }
+              },
+            ),
+          ],
         ),
       ),
     );

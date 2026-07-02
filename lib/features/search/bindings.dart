@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:full_swipe_back_gesture/full_swipe_back_gesture.dart';
-import 'package:hydit/features/search/getx/query.dart';
 
-import 'page/search.dart';
+import 'package:hydit/widgets/swipeable.dart';
+import 'package:hydit/features/search/getx/query.dart';
+import 'package:hydit/features/search/page/search.dart';
 
 
 class SearchPage {
