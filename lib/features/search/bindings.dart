@@ -7,9 +7,11 @@ import 'page/search.dart';
 
 
 class SearchPage {
-  final QueryController query;
+  final String tag;
 
-  SearchPage({required this.query});
+  SearchPage({required this.tag});
+
+  QueryController get query => Get.find(tag: tag);
 
   Widget build() {
     return SwipeablePage(

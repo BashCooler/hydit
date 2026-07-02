@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:collection';
 import 'dart:math' hide log;
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:deep_pick/deep_pick.dart';
 
@@ -56,6 +57,8 @@ class FileStore with IterableMixin<HydrusFile> {
 
   var _loading = false;
 
+  final failed = false.obs;
+
   static const chunkSize = 20;
 
   void load({bool clear = false}) async {
@@ -76,6 +79,10 @@ class FileStore with IterableMixin<HydrusFile> {
         .getFileMetadata(load)
         .run()
         .tapFailure(Snack.error)
+        .tapFailure((_, _) {
+          WidgetsBinding.instance
+              .addPostFrameCallback((_) => failed.value = true);
+        })
         .unwrap();
 
     if (json == null) return;
@@ -98,10 +105,14 @@ class FileStore with IterableMixin<HydrusFile> {
 
   /// Load next chunk of files if needed.
   void next(int index) {
-    if (_loading) return;
+    if (_loading || failed.value == true) return;
     if (index < rx.length - chunkSize) return;
 
     load();
+  }
+
+  void retry() {
+    // TODO
   }
 
   /// The first index in the list that satisfies the provided test.

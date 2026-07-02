@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/widgets/acrylic.dart';
+import 'package:hydit/widgets/acrylic.dart' as a;
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/bindings.dart';
 import 'package:hydit/features/search/getx/query.dart';
@@ -75,9 +75,32 @@ class Gallery extends StatelessWidget {
         ],
       ),
       floatingActionButton: selection.off && search
-          ? AcrylicFAB(onTap: SearchPage(query: query).push)
+          ? GalleryFAB(tag: tag)
           : null,
       bottomNavigationBar: SelectionBottomBar(tag: tag),
     );
   });
 }
+
+
+class GalleryFAB extends StatelessWidget {
+  final String tag;
+
+  const GalleryFAB({super.key, required this.tag});
+
+  FileStore get files => Get.find(tag: tag);
+
+  @override
+  Widget build(BuildContext context) => Obx(() {
+    if (files.failed.value == true) {
+      return FloatingActionButton.extended(
+        label: Text('Retry'),
+        icon: Icon(Icons.refresh),
+        onPressed: () {},
+      );
+    }
+
+    return a.AcrylicFAB(onTap: SearchPage(tag: tag).push);
+  });
+}
+
