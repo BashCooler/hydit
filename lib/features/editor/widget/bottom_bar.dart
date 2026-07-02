@@ -44,18 +44,21 @@ class EditorBottomBar extends StatelessWidget {
       return child;
     }
 
-    return n.Row([
-      IconButton(
-        tooltip: 'Previous page',
-        icon: const Icon(Icons.keyboard_arrow_left),
-        onPressed: () => navigateToPage(page.i - 1),
-      ),
-      Expanded(child: child),
-      IconButton(
-        tooltip: 'Next page',
-        icon: const Icon(Icons.keyboard_arrow_right),
-        onPressed: () => navigateToPage(page.i + 1),
-      ),
-    ]);
+    return Padding(
+      padding: .symmetric(horizontal: 5),
+      child: n.Row([
+        IconButton(
+          tooltip: 'Previous page',
+          icon: const Icon(Icons.keyboard_arrow_left),
+          onPressed: () => navigateToPage(page.i - 1),
+        ),
+        Expanded(child: child),
+        IconButton(
+          tooltip: 'Next page',
+          icon: const Icon(Icons.keyboard_arrow_right),
+          onPressed: () => navigateToPage(page.i + 1),
+        ),
+      ]),
+    );
   }
 }
