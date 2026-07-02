@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/features/viewer/widget/image_view.dart';
-import 'package:hydit/features/viewer/widget/video_view_x.dart';
+import 'package:hydit/features/viewer/widget/video_view.dart';
 
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/widgets/images.dart';
