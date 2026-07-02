@@ -18,6 +18,9 @@ class Thumbnail extends StatelessWidget {
         placeholder: (context, url) {
           return const ColoredBox(color: Colors.white10);
         },
+        errorBuilder: (context, error, stackTrace) {
+          return const ColoredBox(color: Colors.white10);
+        },
         fit: .cover,
       ),
     );

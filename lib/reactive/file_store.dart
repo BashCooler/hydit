@@ -1,31 +1,22 @@
-import 'dart:convert' hide json;
-import 'dart:developer';
 import 'dart:collection';
-import 'dart:math' hide log;
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/repo.dart';
-import 'package:hydit/services/snack.dart';
 import 'package:hydit/services/executor.dart';
 
 import 'file.dart';
 
 
 class FileStore with IterableMixin<HydrusFile> {
-  final RxList<int> ids;
-
   final RxList<HydrusFile> rx;
 
   final Repo repo = Get.find();
 
   /// Create empty [FileStore]
   FileStore()
-      : ids = <int>[].obs,
-        rx = <HydrusFile>[].obs;
+      : rx = <HydrusFile>[].obs;
 
   /// Takes files from [store] with specified [ids] and
   /// created a new [FileStore].
@@ -33,16 +24,14 @@ class FileStore with IterableMixin<HydrusFile> {
   /// New [FileStore] will have the same [HydrusFile] objects as
   /// the original and will impact the original [FileStore].
   FileStore.pickFrom(FileStore store, List<int> ids)
-      : ids = ids.obs,
-        rx = store.byIds(ids).obs;
+      : rx = store.byIds(ids).obs;
 
   /// Create file repo with the same files as given [fileRepo].
   ///
   /// The copy and the original [FileStore] share the same list, so
   /// all the changes in the copy will affect the original.
   FileStore.copy(FileStore fileRepo)
-      : ids = fileRepo.ids,
-        rx = fileRepo.rx;
+      : rx = fileRepo.rx;
 
   HydrusFile operator [](int index) => rx[index];
 
@@ -54,66 +43,6 @@ class FileStore with IterableMixin<HydrusFile> {
   /// The copy and the original [FileStore] share the same list, so
   /// all the changes in the copy will affect the original.
   FileStore copy() => FileStore.copy(this);
-
-  var _loading = false;
-
-  final failed = false.obs;
-
-  static const chunkSize = 20;
-
-  void load({bool clear = false}) async {
-    var first = true;
-
-    final start = rx.length;
-    final end = min(start + chunkSize, ids.length);
-
-    final load = ids.sublist(start, end);
-
-    if (load.isEmpty) return;
-
-    _loading = true;
-
-    final watch = Stopwatch()..start();
-
-    final json = await repo.api
-        .getFileMetadata(load)
-        .run()
-        .tapFailure(Snack.error)
-        .tapFailure((_, _) {
-          WidgetsBinding.instance
-              .addPostFrameCallback((_) => failed.value = true);
-        })
-        .unwrap();
-
-    if (json == null) return;
-
-    final files = pick(jsonDecode(json), 'metadata')
-        .asListOrThrow((e) => e.asMapOrThrow<String, dynamic>())
-        .map(HydrusFile.fromMap);
-
-    if (clear && first) {
-      rx.assignAll(files);
-      first = false;
-    } else {
-      rx.addAll(files);
-    }
-
-    log('Length: ${rx.length}, time: ${watch.elapsedMilliseconds} ms');
-
-    _loading = false;
-  }
-
-  /// Load next chunk of files if needed.
-  void next(int index) {
-    if (_loading || failed.value == true) return;
-    if (index < rx.length - chunkSize) return;
-
-    load();
-  }
-
-  void retry() {
-    // TODO
-  }
 
   /// The first index in the list that satisfies the provided test.
   /// Returns -1 if element is not found.

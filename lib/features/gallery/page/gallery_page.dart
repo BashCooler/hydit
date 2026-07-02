@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
+import 'package:hydit/services/loader.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/widgets/acrylic.dart' as a;
@@ -28,6 +29,7 @@ class Gallery extends StatelessWidget {
     this.state,
   });
 
+  Loader get loader => Get.find(tag: tag);
   FileStore get files => Get.find(tag: tag);
   QueryController get query => Get.find(tag: tag);
   GalleryController get gallery => Get.find(tag: tag);
@@ -70,7 +72,7 @@ class Gallery extends StatelessWidget {
             selected: selection.isSelected,
             onTap: onTileTap,
             onLongPress: editor ? selection.selectTile : null,
-            onBuild: search ? files.next : null,
+            onBuild: search ? loader.next : null,
           ),
         ],
       ),
@@ -88,11 +90,11 @@ class GalleryFAB extends StatelessWidget {
 
   const GalleryFAB({super.key, required this.tag});
 
-  FileStore get files => Get.find(tag: tag);
+  Loader get loader => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) => Obx(() {
-    if (files.failed.value == true) {
+    if (loader.failed == true) {
       return FloatingActionButton.extended(
         label: Text('Retry'),
         icon: Icon(Icons.refresh),

@@ -78,24 +78,18 @@ class GalleryGridView extends StatelessWidget {
               itemBuilder: (context, index) {
                 onBuild?.call(index);
 
-                final id = files.ids[index];
+                final file = files[index];
 
                 return Stack(
                   children: [
                     LinearHero(
-                      tag: id,
-                      child: Thumbnail(repo.buildUrl(id, thumbnail: true)),
+                      tag: file.id,
+                      child: Thumbnail(repo.buildUrl(file.id, thumbnail: true)),
                     ),
                     Obx(() {
-                      final file = files.elementAtOrNull(index);
-
-                      if (file == null) {
-                        return const SizedBox.shrink();
-                      }
-
                       return Tile(
                         index: index,
-                        id: id,
+                        id: file.id,
                         badges: TileBadges(file),
                         selected: selected?.call(file.id) ?? false,
                         showBadges: gallery.badges,

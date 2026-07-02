@@ -3,20 +3,20 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:hydit/api/params.dart';
+import 'package:hydit/services/loader.dart';
 
 import 'package:hydit/utils/dictionaries.dart';
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/snack.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/tag.dart';
-import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 
 class QueryController extends GetxController {
   final _tags = <Tag>[].obs;
 
-  final FileStore files;
+  final Loader loader;
   final Repo repo = Get.find();
   final box = Hive.box('settings');
   final GalleryController gallery;
@@ -24,7 +24,7 @@ class QueryController extends GetxController {
   FileSortType _sortType = .importTime;
   bool _sortAsc = false;
 
-  QueryController({required this.files, required this.gallery}) {
+  QueryController({required this.loader, required this.gallery}) {
     loadSearchOptions();
     load();
   }
@@ -65,8 +65,8 @@ class QueryController extends GetxController {
         .run()
         .loading(gallery.loading)
         .tapSuccess((ids) {
-          files.ids.assignAll(ids);
-          files.load(clear: true);
+          loader.ids.assignAll(ids);
+          loader.load(clear: true);
         })
         .tapFailure(Snack.error);
   }
