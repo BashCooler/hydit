@@ -1,13 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/editor/widget/info.dart';
 import 'package:niku/namespace.dart' as n;
-import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
+import 'info.dart';
 import '../getx/manager.dart';
 import '../page/editor.dart';
 
@@ -78,26 +77,23 @@ class Info extends StatelessWidget {
       child: Obx(() {
         final file = files[page.i];
 
-        return Skeletonizer(
-          enabled: manager.loading,
-          child: Column(
-            spacing: 5,
-            mainAxisAlignment: .center,
-            crossAxisAlignment: .start,
-            children: [
-              Row(
-                children: [
-                  '${manager.current.length} tags'.n
-                    ..fontSize = 16,
-                  const Diff(),
-                ],
-              ),
-              switch (mode) {
-                Mode.paged => buildMeta(file),
-                Mode.batch => buildFileCount(manager),
-              },
-            ],
-          ),
+        return Column(
+          spacing: 5,
+          mainAxisAlignment: .center,
+          crossAxisAlignment: .start,
+          children: [
+            Row(
+              children: [
+                '${manager.current.length} tags'.n
+                  ..fontSize = 16,
+                const Diff(),
+              ],
+            ),
+            switch (mode) {
+              Mode.paged => buildMeta(file),
+              Mode.batch => buildFileCount(manager),
+            },
+          ],
         );
       }),
     );

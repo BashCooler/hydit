@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:hydit/features/search/getx/tag_search.dart';
 import 'package:hydit/features/search/widget/search.dart';
@@ -14,32 +13,25 @@ class EditorTagSearchBar extends StatelessWidget {
 
   const EditorTagSearchBar({super.key, required this.tag});
 
-  @override
-  Widget build(BuildContext context) {
-    final TagManager manager = Get.find();
-    final TagSearchController tagSearch = Get.find(tag: tag);
+  TagManager get manager => Get.find();
+  TagSearchController get tagSearch => Get.find(tag: tag);
 
-    return Obx(() {
-      return Skeletonizer(
-        enabled: manager.loading,
-        child: TagSearchBar(
-          enabled: manager.editable,
-          hintText: manager.editable
-              ? 'Add tags'
-              : 'Service is read-only',
-          onSubmitted: null,
-          tagSearchController: tagSearch,
-          actions: Skeleton.shade(
-            child: TagActions(
-              onClear: tagSearch.clear,
-              onInsert: () {
-                manager.addRaw(tagSearch.text);
-                tagSearch.clear();
-              },
-            ),
-          ),
-        ),
-      );
-    });
-  }
+  @override
+  Widget build(BuildContext context) => Obx(() {
+    return TagSearchBar(
+      enabled: manager.editable,
+      hintText: manager.editable
+          ? 'Add tags'
+          : 'Service is read-only',
+      onSubmitted: null,
+      tagSearchController: tagSearch,
+      actions: TagActions(
+        onClear: tagSearch.clear,
+        onInsert: () {
+          manager.addRaw(tagSearch.text);
+          tagSearch.clear();
+        },
+      ),
+    );
+  });
 }

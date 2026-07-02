@@ -11,8 +11,6 @@ enum TagState { unchanged, added, removed }
 
 
 class TagManager extends GetxController {
-  final ready = false.obs;
-
   final _ids = <int>{};
   final _files = <HydrusFile>[];
 
@@ -108,11 +106,7 @@ class TagManager extends GetxController {
 
   // MARK: INIT
 
-  bool get loading => !ready.value;
-
-  Future<void> init(HydrusFile file, [String? service]) async {
-    ready.value = false;
-
+  void init(HydrusFile file, [String? service]) {
     _ids.assign(file.id);
     _files.assign(file);
 
@@ -127,13 +121,9 @@ class TagManager extends GetxController {
     if (service != null) {
       this.service.value = service;
     }
-
-    ready.value = true;
   }
 
   void initBatch(List<HydrusFile> files) {
-    ready.value = false;
-
     _ids.assignAll(files.map((f) => f.id));
     _files.assignAll(files);
 
@@ -151,8 +141,6 @@ class TagManager extends GetxController {
 
     _initial.assignAll(tags);
     _current.assignAll(tags.map((k, v) => MapEntry(k, v.obs)));
-
-    ready.value = true;
   }
 
   // MARK: SAVE

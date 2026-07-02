@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:hydit/utils/theme.dart';
@@ -35,10 +34,6 @@ class Up extends HookWidget {
     final scroll = useScrollController();
 
     return Obx(() {
-
-      if (manager.loading) {
-        return FakeTagList(scroll: scroll);
-      }
 
       return TagList(
         tags: manager.tags().toList(),
@@ -75,42 +70,15 @@ class Down extends HookWidget {
       final icon = manager.editable
           ? Icons.add
           : Icons.lock_outline;
-      return Skeletonizer(
-        enabled: manager.loading,
-        child: Suggests(
-          scrollController: scroll,
-          tagSearchController: tagSearch,
-          itemBuilder: (context, tag) => TagTile(
-            tag: tag,
-            onTap: manager.editable ? manager.add : null,
-            trailing: Skeleton.ignore(child: Icon(icon)),
-          ),
+      return Suggests(
+        scrollController: scroll,
+        tagSearchController: tagSearch,
+        itemBuilder: (context, tag) => TagTile(
+          tag: tag,
+          onTap: manager.editable ? manager.add : null,
+          trailing: Icon(icon),
         ),
       );
     });
-  }
-}
-
-
-class FakeTagList extends StatelessWidget {
-  const FakeTagList({
-    super.key,
-    required this.scroll,
-  });
-
-  final ScrollController scroll;
-
-  @override
-  Widget build(BuildContext context) {
-    return Skeletonizer(
-      child: ListView.builder(
-        reverse: true,
-        itemCount: 20,
-        controller: scroll,
-        itemBuilder: (context, index) {
-          return ListTile(title: Text('X' * 16));
-        },
-      ),
-    );
   }
 }
