@@ -98,7 +98,7 @@ class GalleryFAB extends StatelessWidget {
       return FloatingActionButton.extended(
         label: Text('Retry'),
         icon: Icon(Icons.refresh),
-        onPressed: () {},
+        onPressed: loader.retry,
       );
     }
 

@@ -17,12 +17,12 @@ class QueryController extends GetxController {
   final _tags = <Tag>[].obs;
 
   final Loader loader;
-  final Repo repo = Get.find();
-  final box = Hive.box('settings');
   final GalleryController gallery;
 
   FileSortType _sortType = .importTime;
   bool _sortAsc = false;
+
+  final Repo repo = Get.find();
 
   QueryController({required this.loader, required this.gallery}) {
     loadSearchOptions();
@@ -31,6 +31,8 @@ class QueryController extends GetxController {
 
   List<Tag> get tags => _tags;
   List<String> get values => _tags.rawList();
+
+  Box get box => Hive.box('settings');
 
   @override
   String toString() => values.toString().replaceAll(RegExp(r'[\[\]]'), '');
@@ -48,9 +50,7 @@ class QueryController extends GetxController {
 
   void clear() => _tags.clear();
 
-  void saveQuery() {
-    box.put('query', _tags.rawList());
-  }
+  void saveQuery() => box.put('query', _tags.rawList());
 
   Future<Result<List<int>>> search() {
     saveQuery();

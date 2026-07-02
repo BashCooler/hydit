@@ -78,4 +78,9 @@ class HydrusFile {
   /// is being deleted. Make sure to remove it from [FileStore]
   /// manually to clear the resources.
   void delete() => _deleted.value = true;
+
+  @override
+  String toString() {
+    return '"HydrusFile": { "id": ${meta.id} }';
+  }
 }

@@ -10,6 +10,7 @@ import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/services/snack.dart';
 
 
 class Loader {
@@ -46,7 +47,7 @@ class Loader {
   void load({bool clear = false}) async {
     var first = true;
 
-    final start = store.rx.length;
+    final start = clear ? 0 : store.rx.length;
     final end = min(start + chunkSize, ids.length);
 
     final load = ids.sublist(start, end);
@@ -86,7 +87,28 @@ class Loader {
         .addPostFrameCallback((_) => _failed.value = true);
   }
 
-  void retry() {
+  bool _retrying = false;
 
+  void retry() async {
+    if (_retrying) return;
+
+    _retrying = true;
+
+    final ping = await repo.api
+        .getApiVersion()
+        .run()
+        .tapFailure(Snack.error)
+        .unwrap();
+
+    _retrying = false;
+
+    if (ping == null) return;
+
+    _failed.value = false;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      load();
+      _loading = false;
+    });
   }
 }
