@@ -111,7 +111,6 @@ class SelectRangeButton extends StatelessWidget {
     return IconButton(
       tooltip: 'Select range',
       icon: const Icon(Symbols.fit_width),
-      color: Colors.white,
       onPressed: selection.selectRange,
     );
   });

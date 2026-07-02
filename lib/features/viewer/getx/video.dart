@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:hydit/features/viewer/getx/page.dart';
-import 'package:hydit/reactive/file.dart';
-import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/utils/utils.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+
+import 'page.dart';
+import 'package:hydit/utils/utils.dart';
+import 'package:hydit/reactive/file.dart';
+import 'package:hydit/reactive/file_store.dart';
 
 
 class VideoGetxController extends GetxController {
