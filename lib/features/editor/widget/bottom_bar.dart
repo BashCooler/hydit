@@ -14,12 +14,14 @@ class EditorBottomBar extends StatelessWidget {
   final String tag;
   final Future<bool> Function() callback;
   final Mode mode;
+  final Widget child;
 
   const EditorBottomBar({
     super.key,
     required this.tag,
     required this.callback,
     required this.mode,
+    required this.child,
   });
 
   FileStore get files => Get.find(tag: tag);
@@ -38,24 +40,23 @@ class EditorBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (mode) {
-      case .paged:
-        final PageGetxController page = Get.find(tag: tag);
-        return n.Row([
-          IconButton(
-            tooltip: 'Previous page',
-            icon: const Icon(Icons.keyboard_arrow_left),
-            onPressed: () => navigateToPage(page.i - 1),
-          ),
-          EditorTagSearchBar(tag: tag).niku..expanded,
-          IconButton(
-            tooltip: 'Next page',
-            icon: const Icon(Icons.keyboard_arrow_right),
-            onPressed: () => navigateToPage(page.i + 1),
-          ),
-        ]);
-      case .batch:
-        return EditorTagSearchBar(tag: tag);
+
+    if (mode == .batch) {
+      return child;
     }
+
+    return n.Row([
+      IconButton(
+        tooltip: 'Previous page',
+        icon: const Icon(Icons.keyboard_arrow_left),
+        onPressed: () => navigateToPage(page.i - 1),
+      ),
+      Expanded(child: child),
+      IconButton(
+        tooltip: 'Next page',
+        icon: const Icon(Icons.keyboard_arrow_right),
+        onPressed: () => navigateToPage(page.i + 1),
+      ),
+    ]);
   }
 }

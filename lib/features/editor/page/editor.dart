@@ -73,12 +73,18 @@ class Editor extends StatelessWidget {
             mainAxisSize: .min,
             children: [
               const Divider(height: 1),
+              EditorTagSearchBar(tag: tag),
+              // EditorBottomBar(
+              //   tag: tag,
+              //   mode: mode,
+              //   callback: confirmPendingChanges,
+              // ),
               EditorBottomBar(
                 tag: tag,
                 mode: mode,
                 callback: confirmPendingChanges,
+                child: const ServiceDropdown(),
               ),
-              const ServiceDropdown(),
             ],
           ),
         ),
