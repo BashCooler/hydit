@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/services/loader.dart';
+import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/widgets/gradient.dart';
 import 'package:niku/extra/primitive.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -75,11 +75,11 @@ class TagCount extends StatelessWidget {
 
   const TagCount({super.key, required this.tag});
 
-  Loader get loader => Get.find(tag: tag);
+  FileStore get files => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) => Obx(() {
-    return '${loader.ids.length} files'.n
+    return '${files.length} files'.n
       ..color = Colors.white
       ..bodyLarge
       ..shadows = shadows;

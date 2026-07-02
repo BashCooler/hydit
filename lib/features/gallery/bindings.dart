@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:full_swipe_back_gesture/full_swipe_back_gesture.dart';
-import 'package:hydit/services/loader.dart';
 
 import 'package:hydit/utils/theme.dart';
 import 'package:hydit/features/search/getx/query.dart';
@@ -97,21 +96,24 @@ class GalleryBindings extends Bindings {
 
   @override
   void dependencies() {
-    final files = page.files?.copy() ?? FileStore();
     final gallery = GalleryController();
     final selection = SelectionController(tag: page.tag);
 
     Get.put(gallery, tag: page.tag);
-    Get.put(files, tag: page.tag);
     Get.put(selection, tag: page.tag);
 
     if (page._search) {
-      final loader = Get.put(
-        Loader(store: files),
+      Get.put(
+        FileStore.search(),
         tag: page.tag,
       );
       Get.put(
-        QueryController(loader: loader, gallery: gallery),
+        QueryController(tag: page.tag),
+        tag: page.tag,
+      );
+    } else {
+      Get.put(
+        page.files?.copy() ?? FileStore(),
         tag: page.tag,
       );
     }

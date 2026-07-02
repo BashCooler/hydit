@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/repo.dart';
+import 'package:hydit/services/loader.dart';
 import 'package:hydit/services/executor.dart';
 
 import 'file.dart';
@@ -11,12 +12,19 @@ import 'file.dart';
 
 class FileStore with IterableMixin<HydrusFile> {
   final RxList<HydrusFile> rx;
+  late final Loader? loader;
 
   final Repo repo = Get.find();
 
   /// Create empty [FileStore]
   FileStore()
-      : rx = <HydrusFile>[].obs;
+      : loader = null,
+        rx = <HydrusFile>[].obs;
+
+  /// For gallery with search feature.
+  FileStore.search() : rx = <HydrusFile>[].obs {
+    loader = Loader(store: this);
+  }
 
   /// Takes files from [store] with specified [ids] and
   /// created a new [FileStore].
@@ -24,19 +32,26 @@ class FileStore with IterableMixin<HydrusFile> {
   /// New [FileStore] will have the same [HydrusFile] objects as
   /// the original and will impact the original [FileStore].
   FileStore.pickFrom(FileStore store, List<int> ids)
-      : rx = store.byIds(ids).obs;
+      : loader = null,
+        rx = store.byIds(ids).obs;
 
   /// Create file repo with the same files as given [fileRepo].
   ///
   /// The copy and the original [FileStore] share the same list, so
   /// all the changes in the copy will affect the original.
   FileStore.copy(FileStore fileRepo)
-      : rx = fileRepo.rx;
+      : loader = null,
+        rx = fileRepo.rx;
 
   HydrusFile operator [](int index) => rx[index];
 
   @override
   Iterator<HydrusFile> get iterator => rx.iterator;
+
+  @override
+  int get length => loader?.ids.length ?? rx.length;
+
+  Iterable<int> get ids => loader?.ids ?? rx.map((f) => f.id);
 
   /// Create file repo with the same files as given [fileRepo].
   ///

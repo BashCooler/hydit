@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/services/loader.dart';
 import 'package:hydit/widgets/switcher.dart';
 import 'package:hydit/widgets/acrylic.dart' as a;
 import 'package:hydit/reactive/file_store.dart';
@@ -32,7 +31,6 @@ class Gallery extends StatelessWidget {
     this.state,
   });
 
-  Loader get loader => Get.find(tag: tag);
   FileStore get files => Get.find(tag: tag);
   QueryController get query => Get.find(tag: tag);
   GalleryController get gallery => Get.find(tag: tag);
@@ -75,25 +73,41 @@ class Gallery extends StatelessWidget {
             selected: selection.isSelected,
             onTap: onTileTap,
             onLongPress: editor ? selection.selectTile : null,
-            onBuild: search ? loader.next : null,
+            onBuild: search ? files.loader?.next : null,
           ),
         ],
       ),
-      floatingActionButton: Obx(() {
-        return SequencedSwitcher(
-          visible: selection.off && search,
-          showFirst: loader.failed,
-          first: FAB(
-            onPressed: loader.retry,
-            child: const Icon(Icons.refresh),
-          ),
-          second: a.FAB(
-            icon: const Icon(Icons.search),
-            onTap: SearchPage(tag: tag).push,
-          ),
-        );
-      }),
+      floatingActionButton: search ? GalleryFAB(tag: tag) : null,
       bottomNavigationBar: SelectionBottomBar(tag: tag),
     );
   }
 }
+
+
+class GalleryFAB extends StatelessWidget {
+  final String tag;
+
+  const GalleryFAB({super.key, required this.tag});
+
+  FileStore get files => Get.find(tag: tag);
+  SelectionController get selection => Get.find(tag: tag);
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      return SequencedSwitcher(
+        visible: selection.off,
+        showFirst: files.loader!.failed,
+        first: FAB(
+          onPressed: files.loader!.retry,
+          child: const Icon(Icons.refresh),
+        ),
+        second: a.FAB(
+          icon: const Icon(Icons.search),
+          onTap: SearchPage(tag: tag).push,
+        ),
+      );
+    });
+  }
+}
+
