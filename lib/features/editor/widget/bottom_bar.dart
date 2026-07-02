@@ -7,7 +7,6 @@ import 'package:hydit/features/viewer/getx/page.dart';
 
 import '../getx/manager.dart';
 import '../page/editor.dart';
-import 'search_bar.dart';
 
 
 class EditorBottomBar extends StatelessWidget {

@@ -74,11 +74,6 @@ class Editor extends StatelessWidget {
             children: [
               const Divider(height: 1),
               EditorTagSearchBar(tag: tag),
-              // EditorBottomBar(
-              //   tag: tag,
-              //   mode: mode,
-              //   callback: confirmPendingChanges,
-              // ),
               EditorBottomBar(
                 tag: tag,
                 mode: mode,
