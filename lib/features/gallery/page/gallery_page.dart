@@ -1,9 +1,11 @@
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart' hide NumDurationExtensions;
 import 'package:flutter_inner_drawer/inner_drawer.dart';
-import 'package:hydit/services/loader.dart';
 
 import 'package:hydit/utils/utils.dart';
+import 'package:hydit/services/loader.dart';
 import 'package:hydit/widgets/acrylic.dart' as a;
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/bindings.dart';
@@ -88,21 +90,25 @@ class Gallery extends StatelessWidget {
 class GalleryFAB extends StatelessWidget {
   final String tag;
 
-  const GalleryFAB({super.key, required this.tag});
+  GalleryFAB({super.key, required this.tag});
 
   Loader get loader => Get.find(tag: tag);
 
+  final failed = false.obs;
+
   @override
   Widget build(BuildContext context) => Obx(() {
-    if (loader.failed == true) {
-      return FloatingActionButton.extended(
-        label: Text('Retry'),
-        icon: Icon(Icons.refresh),
-        onPressed: loader.retry,
-      );
-    }
 
-    return a.AcrylicFAB(onTap: SearchPage(tag: tag).push);
+    final acrylic = a.AcrylicFAB(onTap: failed.toggle);
+    final error = FloatingActionButton(onPressed: failed.toggle);
+
+    final current = failed.value ? error : acrylic;
+    final next = failed.value ? acrylic : error;
+
+    return current
+        .animate(key: ValueKey(failed.value))
+        .scaleXY(begin: 1, end: 0)
+        .swap(builder: (context, child) => next.animate().scaleXY());
   });
 }
 
