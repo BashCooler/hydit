@@ -2,6 +2,7 @@ import 'dart:math' hide log;
 import 'dart:convert' hide json;
 import 'dart:developer';
 
+import 'package:dartx/dartx.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:deep_pick/deep_pick.dart';
@@ -48,10 +49,10 @@ class Loader {
   /// Forcefully load next batch of files.
   ///
   /// If [clear] is true clears [FileStore] without flicker.
-  void load({bool clear = false}) async {
+  Future<Result<void>> load({bool clear = false}) async {
     if (failed) {
       retry();
-      return;
+      return Success(data: null);
     }
 
     var first = true;
@@ -61,20 +62,21 @@ class Loader {
 
     final load = ids.sublist(start, end);
 
-    if (load.isEmpty) return;
+    if (load.isEmpty) return Success(data: null);
 
     _loading = true;
 
     final watch = Stopwatch()..start();
 
-    final json = await repo.api
+    final result = await repo.api
         .getFileMetadata(load)
         .run()
         .tapFailure(Snack.error)
-        .tapFailure(_fail)
-        .unwrap();
+        .tapFailure(_fail);
 
-    if (json == null) return;
+    final json = result.unwrap();
+
+    if (json == null) return result;
 
     final files = pick(jsonDecode(json), 'metadata')
         .asListOrThrow((e) => e.asMapOrThrow<String, dynamic>())
@@ -90,6 +92,22 @@ class Loader {
     log('Length: ${store.rx.length}, time: ${watch.elapsedMilliseconds} ms');
 
     _loading = false;
+
+    return Success(data: null);
+  }
+
+  Future<Result<void>> ensureLoaded(Iterable<int> indices,
+      CancellationToken token) async {
+
+    final max = indices.max();
+
+    while (store.rx.length < max!) {
+      final result = await load();
+      if (token.cancelled) return Success(data: null);
+      if (result.isFailure) return result;
+    }
+
+    return Success(data: null);
   }
 
   void _fail(String title, String message) {

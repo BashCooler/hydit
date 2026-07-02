@@ -15,6 +15,7 @@ import 'gallery.dart';
 
 class SelectionController extends GetxController {
   final ids = <int>{}.obs;
+  final indices = <int>{};
 
   final String tag;
 
@@ -45,11 +46,14 @@ class SelectionController extends GetxController {
 
   void selectTile(int id, int index) {
     if (gallery.loading.value) return;
+
     switch (ids.contains(id)) {
       case true:
         ids.remove(id);
+        indices.remove(index);
       case false:
         ids.add(id);
+        indices.add(index);
     }
   }
 
@@ -62,12 +66,18 @@ class SelectionController extends GetxController {
 
     for (int i = r.$1; i < r.$2; i++) {
       ids.add(files[i].id);
+      indices.add(i);
     }
 
     ids.add(lastId);
   }
 
-  void selectAll() => ids.addAll(files.ids);
+  void selectAll() {
+    ids.addAll(files.ids);
+    for (var i = 0; i < files.length; i++) {
+      indices.add(i);
+    }
+  }
 
   (int, int)? range() {
     if (ids.length != 2) return null;
@@ -84,7 +94,7 @@ class SelectionController extends GetxController {
     return (indices.first, indices.last);
   }
 
-  void edit() {
+  void edit() async {
     switch (ids.length) {
       case 1:
         final index = files.indexById(ids.first);
@@ -94,7 +104,23 @@ class SelectionController extends GetxController {
             .push();
       case _:
         final ids = this.ids.toList();
+
+        final token = CancellationToken();
+
+        loading(ids.length, token);
+
+        final result = await this.files.loader!
+            .ensureLoaded(indices, token)
+            .tapFailure(Snack.error);
+
+        Get.back();
+
+        if (result.isFailure || token.cancelled) {
+          return;
+        }
+
         final files = FileStore.pickFrom(this.files, ids);
+
         EditorPage(files)
             .batch(gallery, ids)
             .onClose(clear)
@@ -123,6 +149,20 @@ class SelectionController extends GetxController {
               .tapFailure(Snack.error);
         },
       ),
+    );
+  }
+
+  Future<void> loading(int full, CancellationToken token) {
+    return Get.dialog(
+      barrierDismissible: true,
+      transitionDuration: 150.ms,
+      Obx(() {
+        return FileLoadingDialog(
+          progress: files.rx.length,
+          full: full,
+          token: token,
+        );
+      }),
     );
   }
 }

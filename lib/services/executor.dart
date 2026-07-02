@@ -8,7 +8,33 @@ import 'package:deep_pick/deep_pick.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 
-sealed class Result<T> {}
+class CancellationToken {
+  bool _cancelled = false;
+
+  bool get cancelled => _cancelled;
+
+  void cancel() {
+    _cancelled = true;
+  }
+}
+
+
+sealed class Result<T> {
+
+  bool get isSuccess {
+    if (this case Success(data: final _)) {
+      return true;
+    }
+    return false;
+  }
+
+  bool get isFailure {
+    if (this case Failure(title: final _, message: final _)) {
+      return true;
+    }
+    return false;
+  }
+}
 
 class Success<T> extends Result<T> {
   final T data;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
+
 import 'package:hydit/services/executor.dart';
 
 
@@ -59,6 +61,51 @@ class LoadingDialog extends HookWidget {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+
+class FileLoadingDialog extends HookWidget {
+  final int progress;
+  final int full;
+  final CancellationToken token;
+
+  const FileLoadingDialog({
+    super.key,
+    required this.progress,
+    required this.full,
+    required this.token,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        token.cancel();
+      },
+      child: AlertDialog(
+        actionsAlignment: .center,
+        title: 'Loading metadata'.n,
+        content: Column(
+          mainAxisSize: .min,
+          spacing: 15,
+          children: [
+            LinearProgressIndicator(value: (progress / full).clamp(0, 1)),
+            '$progress/$full'.n,
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              token.cancel();
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
       ),
     );
   }
