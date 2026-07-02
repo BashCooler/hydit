@@ -54,9 +54,7 @@ class Editor extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: [
-              const Expanded(
-                child: Up(),
-              ),
+              const Up(),
               const Divider(height: 1),
               SizedBox(
                 height: 55 * 3,

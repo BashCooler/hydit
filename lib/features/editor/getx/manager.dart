@@ -19,7 +19,7 @@ class TagManager extends GetxController {
   Iterable<String> get services => _initial.keys;
 
   final _initial = <String, Set<Tag>>{};
-  final _current = <String, RxSet<Tag>>{};
+  final _current = <String, RxSet<Tag>>{}.obs;
 
   Set<Tag> get initial => _initial[service.value]!;
   Set<Tag> get current => _current[service.value]!;

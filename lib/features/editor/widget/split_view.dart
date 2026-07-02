@@ -33,23 +33,25 @@ class Up extends HookWidget {
   Widget build(BuildContext context) {
     final scroll = useScrollController();
 
-    return Obx(() {
+    return Expanded(
+      child: Obx(() {
 
-      return TagList(
-        tags: manager.tags().toList(),
-        scrollController: scroll,
-        reverse: true,
-        itemBuilder: (context, tag) {
-          final state = manager.state(tag);
-          return TagTile(
-            tag: tag,
-            onTap: manager.editable ? manager.remove : null,
-            background: background(state),
-            trailing: Icon(icon(manager.editable, state)),
-          );
-        },
-      );
-    });
+        return TagList(
+          tags: manager.tags(),
+          scrollController: scroll,
+          reverse: true,
+          itemBuilder: (context, tag) {
+            final state = manager.state(tag);
+            return TagTile(
+              tag: tag,
+              onTap: manager.editable ? manager.remove : null,
+              background: background(state),
+              trailing: Icon(icon(manager.editable, state)),
+            );
+          },
+        );
+      }),
+    );
   }
 }
 
