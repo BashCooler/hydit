@@ -5,10 +5,11 @@ import 'package:flutter/material.dart' as m;
 import 'package:niku/namespace.dart' as n;
 
 
-class AcrylicFAB extends StatelessWidget {
+class FAB extends StatelessWidget {
+  final Widget? icon;
   final void Function()? onTap;
 
-  const AcrylicFAB({super.key, this.onTap});
+  const FAB({super.key, this.icon, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +30,7 @@ class AcrylicFAB extends StatelessWidget {
           borderRadius: .circular(16),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
-            child: Center(
-              child: const Icon(Icons.search),
-            ),
+            child: Center(child: icon),
           ),
         ),
       ),

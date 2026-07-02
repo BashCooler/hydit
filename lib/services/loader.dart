@@ -36,6 +36,7 @@ class Loader {
   /// [retry].
   bool get failed => _failed.value;
 
+  /// Load next batch of files if needed.
   void next(int index) {
     if (_loading) return;
     if (_failed.value == true) return;
@@ -44,7 +45,15 @@ class Loader {
     load();
   }
 
+  /// Forcefully load next batch of files.
+  ///
+  /// If [clear] is true clears [FileStore] without flicker.
   void load({bool clear = false}) async {
+    if (failed) {
+      retry();
+      return;
+    }
+
     var first = true;
 
     final start = clear ? 0 : store.rx.length;
@@ -61,7 +70,8 @@ class Loader {
     final json = await repo.api
         .getFileMetadata(load)
         .run()
-        .tapFailure(onFailure)
+        .tapFailure(Snack.error)
+        .tapFailure(_fail)
         .unwrap();
 
     if (json == null) return;
@@ -82,7 +92,8 @@ class Loader {
     _loading = false;
   }
 
-  void onFailure(String title, String message) {
+  void _fail(String title, String message) {
+    // Add for the grid to rebuild then update state
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _failed.value = true);
   }
@@ -90,7 +101,7 @@ class Loader {
   bool _retrying = false;
 
   void retry() async {
-    if (_retrying) return;
+    if (_retrying || !_failed.value) return;
 
     _retrying = true;
 
@@ -106,6 +117,7 @@ class Loader {
 
     _failed.value = false;
 
+    // Turn off failed state, then update the grid
     WidgetsBinding.instance.addPostFrameCallback((_) {
       load();
       _loading = false;
