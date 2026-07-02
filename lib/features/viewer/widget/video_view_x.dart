@@ -1,21 +1,29 @@
-import 'package:cached_network_image_ce/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hydit/features/viewer/getx/page.dart';
-import 'package:hydit/features/viewer/getx/video.dart';
-import 'package:hydit/features/viewer/widget/video_view.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:media_kit_video/media_kit_video.dart';
+import 'package:cached_network_image_ce/cached_network_image.dart';
+
 import 'package:hydit/reactive/file.dart';
+import 'package:hydit/features/viewer/widget/seekbar.dart';
+
+import '../getx/page.dart';
+import '../getx/video.dart';
 
 
-class VideoViewX extends StatelessWidget {
+class VideoView extends StatelessWidget {
   final String tag;
+  final int index;
   final HydrusFile file;
 
-  const VideoViewX({
+  const VideoView({
     super.key,
+    required this.index,
     required this.tag,
     required this.file,
   });
+
+  static const placeholder = SizedBox.shrink();
 
   PageGetxController get page => Get.find(tag: tag);
   VideoGetxController get video => Get.find(tag: tag);
@@ -23,12 +31,94 @@ class VideoViewX extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      alignment: .center,
       children: [
-        VideoPlayer(
-          controller: video.controller,
-          tag: tag,
+        CachedNetworkImage(
+          imageUrl: file.thumbnailUrl,
+          placeholder: (context, url) => placeholder,
+          fit: .contain,
         ),
+        Obx(() {
+          if (page.i != index) {
+            return placeholder;
+          }
+
+          return AnimatedOpacity(
+            duration: 150.ms,
+            opacity: video.ready ? 1 : 0,
+            child: VideoPlayer(
+              controller: video.controller,
+              tag: tag,
+            ),
+          );
+        }),
       ],
     );
+  }
+}
+
+
+class VideoPlayer extends StatelessWidget {
+  final String tag;
+  final VideoController controller;
+
+  const VideoPlayer({super.key, required this.controller, required this.tag});
+
+  @override
+  Widget build(BuildContext context) {
+    return Video(
+      fit: .contain,
+      controller: controller,
+      fill: Colors.transparent,
+      controls: (state) {
+        return AnimatedControlsPadding(
+          tag: tag,
+          child: const Column(
+            mainAxisAlignment: .end,
+            children: [
+              MaterialPositionIndicator(),
+              Row(
+                crossAxisAlignment: .center,
+                children: [
+                  Padding(
+                    padding: .only(left: 12),
+                    child: MaterialPlayOrPauseButton(),
+                  ),
+                  CustomMaterialSeekBar(),
+                  // MaterialFullscreenButton(),
+                  MaterialDesktopVolumeButton(),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+
+class AnimatedControlsPadding extends StatelessWidget {
+  final String tag;
+  final Widget child;
+
+  const AnimatedControlsPadding({super.key, required this.tag, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final PageGetxController page = Get.find(tag: tag);
+    final viewPadding = Get.mediaQuery.viewPadding.bottom;
+    final padding = Get.mediaQuery.padding.bottom;
+
+    return Obx(() {
+      final inverseProgress = (1 - page.sheetProgress.value);
+      return Padding(
+        padding: .only(bottom: inverseProgress * (viewPadding + padding)),
+        child: Material(
+          color: Colors.transparent,
+          child: child,
+        ),
+      );
+    });
   }
 }

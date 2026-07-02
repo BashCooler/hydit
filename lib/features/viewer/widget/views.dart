@@ -7,7 +7,6 @@ import 'package:hydit/reactive/file.dart';
 import 'package:hydit/widgets/images.dart';
 
 import '../getx/page.dart';
-import 'video_view.dart';
 
 
 class ViewFile extends StatelessWidget {
@@ -39,10 +38,7 @@ class ViewFile extends StatelessWidget {
           page: page,
         );
       case 'video':
-        return VideoViewX(
-          file: file,
-          tag: tag,
-        );
+        return VideoView(index: index, file: file, tag: tag);
       case _:
         return NotSupported(file.meta.type);
     }

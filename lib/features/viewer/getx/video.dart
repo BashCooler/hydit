@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/reactive/file.dart';
@@ -19,30 +21,40 @@ class VideoGetxController extends GetxController {
 
   HydrusFile? _current;
 
+  StreamSubscription<Duration>? _buffer;
+
+  final _ready = false.obs;
+  bool get ready => _ready.value;
+
   FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
-
-  Future<void> load(String url) async => await player.open(
-    Media(url),
-    play: false,
-  );
-
-  Future<void> reset() async {
-    await player.pause();
-    await player.seek(Duration.zero);
-  }
 
   @override
   void onInit() {
     super.onInit();
+
     ever(page.index, _onPageChanged);
     _onPageChanged(page.i);
+
+    _buffer = player.stream.buffer
+        .listen(_onBufferUpdate);
   }
 
   @override
   void onClose() {
     player.dispose();
+    _buffer?.cancel();
     super.onClose();
+  }
+
+  Future<void> load(String url) async {
+    _ready.value = false;
+    await player.open(Media(url), play: false);
+  }
+
+  Future<void> reset() async {
+    await player.pause();
+    await player.seek(Duration.zero);
   }
 
   Future<void> _onPageChanged(int index) async {
@@ -61,5 +73,12 @@ class VideoGetxController extends GetxController {
 
     await player.seek(0.s);
     await player.play();
+  }
+
+  void _onBufferUpdate(Duration buffer) {
+    if (_ready.value) return;
+    if (buffer < 500.ms) return;
+
+    _ready.value = true;
   }
 }
