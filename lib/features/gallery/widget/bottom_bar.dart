@@ -26,7 +26,7 @@ class SelectionBottomBar extends StatelessWidget {
   SelectionController get selection => Get.find(tag: tag);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Obx(() {
     return IgnorePointer(
       ignoring: selection.off,
       child: GradientBottomAppBar(
@@ -39,7 +39,7 @@ class SelectionBottomBar extends StatelessWidget {
             children: [
               a.Pill.text(
                 children: [
-                  Obx(() => a.Text(selection.ids.length)),
+                  a.Text(selection.ids.length),
                 ],
               ),
               a.Pill(
@@ -63,7 +63,7 @@ class SelectionBottomBar extends StatelessWidget {
         ),
       ),
     );
-  }
+  });
 }
 
 

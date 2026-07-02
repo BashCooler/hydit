@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/services/loader.dart';
 import 'package:niku/extra/primitive.dart';
 import 'package:hydit/features/editor/bindings.dart';
 
@@ -16,14 +17,17 @@ import 'gallery.dart';
 class SelectionController extends GetxController {
   final ids = <int>{}.obs;
 
-  final GalleryController gallery;
-  final FileStore files;
+  final String tag;
 
-  SelectionController(this.files, this.gallery);
+  Loader get loader => Get.find(tag: tag);
+  FileStore get files => Get.find(tag: tag);
+  GalleryController get gallery => Get.find(tag: tag);
+
+  SelectionController({required this.tag});
 
   Repo repo = Get.find();
 
-  bool get selectedAll => ids.length == files.length;
+  bool get selectedAll => ids.length == loader.ids.length;
 
   bool get selectedRange {
     if (ids.length != 2) return false;  // important
@@ -65,11 +69,7 @@ class SelectionController extends GetxController {
     ids.add(lastId);
   }
 
-  void selectAll() {
-    for (int i = 0; i < files.length; i++) {
-      ids.add(files[i].id);
-    }
-  }
+  void selectAll() => ids.addAll(loader.ids);
 
   (int, int)? range() {
     if (ids.length != 2) return null;

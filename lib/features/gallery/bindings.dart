@@ -99,7 +99,7 @@ class GalleryBindings extends Bindings {
   void dependencies() {
     final files = page.files?.copy() ?? FileStore();
     final gallery = GalleryController();
-    final selection = SelectionController(files, gallery);
+    final selection = SelectionController(tag: page.tag);
 
     Get.put(gallery, tag: page.tag);
     Get.put(files, tag: page.tag);
