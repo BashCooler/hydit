@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hydit/features/viewer/widget/views.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 
@@ -33,10 +34,15 @@ class VideoView extends StatelessWidget {
     return Stack(
       alignment: .center,
       children: [
-        CachedNetworkImage(
-          imageUrl: file.thumbnailUrl,
-          placeholder: (context, url) => placeholder,
-          fit: .contain,
+        ObxHero(
+          index: index,
+          tag: file.id,
+          page: page,
+          child: CachedNetworkImage(
+            imageUrl: file.thumbnailUrl,
+            placeholder: (context, url) => placeholder,
+            fit: .contain,
+          ),
         ),
         Obx(() {
           if (page.i != index) {
@@ -102,18 +108,27 @@ class AnimatedControlsPadding extends StatelessWidget {
   final String tag;
   final Widget child;
 
-  const AnimatedControlsPadding({super.key, required this.tag, required this.child});
+  const AnimatedControlsPadding({
+    super.key,
+    required this.tag,
+    required this.child,
+  });
+
+  PageGetxController get page => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {
-    final PageGetxController page = Get.find(tag: tag);
-    final viewPadding = Get.mediaQuery.viewPadding.bottom;
-    final padding = Get.mediaQuery.padding.bottom;
+    final mq = MediaQuery.of(context);
+
+    final viewPadding = mq.viewPadding.bottom;
+    final padding = mq.padding.bottom;
 
     return Obx(() {
       final inverseProgress = (1 - page.sheetProgress.value);
+      final bottom = inverseProgress * (viewPadding + padding);
+
       return Padding(
-        padding: .only(bottom: inverseProgress * (viewPadding + padding)),
+        padding: .only(bottom: bottom),
         child: Material(
           color: Colors.transparent,
           child: child,

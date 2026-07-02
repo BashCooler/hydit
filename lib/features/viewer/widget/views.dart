@@ -47,25 +47,27 @@ class ViewFile extends StatelessWidget {
 
 
 class ObxHero extends StatelessWidget {
+
+  /// The identifier for this particular hero.
+  final Object tag;
+
   final int index;
-  final Object heroTag;
-  final String getTag;
+  final PageGetxController page;
   final Widget child;
 
   const ObxHero({
     super.key,
+    required this.tag,
     required this.index,
-    required this.heroTag,
-    required this.getTag,
+    required this.page,
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
-    final PageGetxController controller = Get.find(tag: getTag);
     return Obx(() => HeroMode(
-      enabled: controller.enabled(index),
-      child: LinearHero(tag: heroTag, child: child),
+      enabled: page.enabled(index),
+      child: LinearHero(tag: tag, child: child),
     ));
   }
 }

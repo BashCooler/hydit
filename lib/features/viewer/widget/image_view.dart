@@ -372,8 +372,8 @@ class _ZoomableImageViewState extends State<ZoomableImageView>
                     height: _baseImageSize.height,
                     child: ObxHero(
                       index: widget.index,
-                      heroTag: widget.heroTag ?? image.id,
-                      getTag: widget.tag,
+                      tag: widget.heroTag ?? image.id,
+                      page: widget.page,
                       child: HighResImage(image: image),
                     ),
                   ),
