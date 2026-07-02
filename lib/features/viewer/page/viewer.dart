@@ -20,14 +20,14 @@ class Viewer extends StatelessWidget {
   final int index;
   final String tag;
   final GalleryController? gallery;
-  final bool showFloatingActionButton;
+  final bool editor;
 
   const Viewer({
     super.key,
     required this.index,
     required this.tag,
     required this.gallery,
-    this.showFloatingActionButton = true,
+    this.editor = true,
   });
 
   FileStore get files => Get.find(tag: tag);
@@ -59,18 +59,7 @@ class Viewer extends StatelessWidget {
         ),
         bottomNavigationBar: BottomActions(
           tag: tag,
-          editButton: Obx(() {
-            if (page.sheetProgress < 0.5) return SizedBox.shrink();
-            return IconButton(
-              tooltip: page.showServices.value
-                  ? 'All tags'
-                  : 'Edit tags',
-              icon: page.showServices.value
-                  ? const Icon(Icons.label_important_outline)
-                  : const Icon(Icons.edit),
-              onPressed: page.showServices.toggle,
-            );
-          }),
+          editButton: editor ? EditButton(tag: tag) : null,
         ),
       ),
     );
@@ -148,3 +137,33 @@ class DismissibleFile extends StatelessWidget {
     });
   }
 }
+
+
+class EditButton extends StatelessWidget {
+  final String tag;
+
+  const EditButton({super.key, required this.tag});
+
+  PageGetxController get page => Get.find(tag: tag);
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+
+      if (page.sheetProgress < 0.5) {
+        return SizedBox.shrink();
+      }
+
+      return IconButton(
+        tooltip: page.showServices.value
+            ? 'All tags'
+            : 'Edit tags',
+        icon: page.showServices.value
+            ? const Icon(Icons.label_important_outline)
+            : const Icon(Icons.edit),
+        onPressed: page.showServices.toggle,
+      );
+    });
+  }
+}
+

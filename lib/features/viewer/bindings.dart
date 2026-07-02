@@ -15,14 +15,14 @@ class ViewerPage {
   final GalleryController gallery;
 
   String? tag;
-  bool showFloatingActionButton = true;
+  bool _editor = true;
   VoidCallback? _beforePush;
   VoidCallback? _onClose;
 
   ViewerPage(this.files, this.index, this.gallery);
 
   ViewerPage editor(bool editor) {
-    showFloatingActionButton = editor;
+    _editor = editor;
     return this;
   }
 
@@ -46,7 +46,7 @@ class ViewerPage {
         tag: tag!,
         index: index,
         gallery: gallery,
-        showFloatingActionButton: showFloatingActionButton,
+        editor: _editor,
       ),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
