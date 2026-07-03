@@ -2,51 +2,59 @@ import 'package:dio/dio.dart';
 import 'package:pub_semver/pub_semver.dart' as sv;
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'package:hydit/services/executor.dart';
+
 
 class Version {
-  Version._();
-
-  static const _releases =
-      'https://github.com/BashCooler/hydit/releases/latest';
+  const Version._();
 
   static const _apiUrl =
       'https://api.github.com/repos/OwlCarousel2/OwlCarousel2/releases/latest';
 
-  static Uri get updateUrl => Uri.parse(_releases);
+  /// Current version of Hydit.
+  static Future<String> current() =>
+      PackageInfo.fromPlatform().then((i) => i.version);
 
-  /// Latest version of Hydit available.
-  ///
-  /// Returns null if current version matches latest
-  static Future<String?> update() async {
-    final c = await current();
-    final l = await latest();
-
-    if (l == null) return null;
-
-    final update = sv.Version.parse(l) > sv.Version.parse(c);
-    if (!update) return null;
-
-    return l;
-  }
-
-  static Future<String> current() async {
-    final info = await PackageInfo.fromPlatform();
-    return info.version;
-  }
-
-  static Future<String?> latest() async {
+  static Future<Result<Release>> checkForUpdates() async {
     final dio = Dio();
 
-    final Response<Map<String, dynamic>> response;
-    try {
-      response = await dio.get<Map<String, dynamic>>(_apiUrl);
-    } catch (e) {
-      return null;
+    final map = await dio.get<Map<String, dynamic>>(_apiUrl)
+        .run()
+        .unwrap()
+        .then((r) => r?.data);
+
+    if (map == null) {
+
+      return Failure(
+        title: 'Connection error',
+        message: 'Failed to get update info',
+      );
     }
 
-    final Map<String, dynamic>? result = response.data;
-    final String? version = result?['tag_name']?.replaceFirst('v', '');
+    final cur = await current();
+    final ver = map['tag_name'].replaceFirst('v', '');
 
-    return version;
+    final update = sv.Version.parse(cur) > sv.Version.parse(ver);
+
+    final release = Release(
+      tag: ver,
+      url: map['html_url'],
+      update: update,
+    );
+
+    return Success(data: release);
   }
+}
+
+
+class Release {
+  final String tag;
+  final String url;
+  final bool update;
+
+  Release({
+    required this.tag,
+    required this.url,
+    required this.update,
+  });
 }

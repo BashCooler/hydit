@@ -54,7 +54,7 @@ dependencies:
   flutter_inner_drawer:
     git: https://github.com/NANI-SORE/flutter_inner_drawer  # thx
   scrollview_observer: ^1.26.3
-  flutter_custom_tabs: ^2.5.0
+  url_launcher: ^6.3.2
   # Video player
   media_kit: ^1.2.6
   media_kit_video: ^2.0.1

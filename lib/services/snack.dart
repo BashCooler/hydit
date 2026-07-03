@@ -11,7 +11,9 @@ class Snack {
   static void error(String title, String message) =>
       snackBar(const Icon(Icons.clear), title, message);
 
-  static void snackBar(Icon icon, String title, String message) {
+  static void snackBar(Icon icon, String title, String message, [
+    TextButton? button,
+  ]) {
     Get.snackbar(
       title,
       message,
@@ -26,6 +28,7 @@ class Snack {
           .surfaceContainerHigh,
       icon: icon,
       margin: const .all(10),
+      mainButton: button,
     );
   }
 }

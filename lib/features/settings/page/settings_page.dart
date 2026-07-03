@@ -4,10 +4,12 @@ import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:settings_tiles/settings_tiles.dart';
-import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:hydit/services/snack.dart';
 import 'package:hydit/services/version.dart';
+import 'package:hydit/services/executor.dart';
 
 import '../getx/settings.dart';
 import '../widget/text_field.dart';
@@ -71,29 +73,29 @@ class Settings extends HookWidget {
                   }
                 },
               ),
-              description: n.Row([
-                'Latest version: '.n,
-                FutureBuilder(
-                  future: Version.latest(),
-                  builder: (context, snapshot) {
-                    switch (snapshot.hasData) {
-                      case true:
-                        return 'v${snapshot.data!}'.n;
-                      case false:
-                        return Skeletonizer(child: 'v0.0.0'.n);
-                    }
-                  },
-                )
-              ]),
+              description: 'Check for updates'.n,
               onTap: () async {
-                try {
-                  await launchUrl(
-                    Version.updateUrl,
-                    customTabsOptions: CustomTabsOptions(),
-                  );
-                } catch (e) {
-                  return;
-                }
+                final release = await Version
+                    .checkForUpdates()
+                    .tapFailure(Snack.error)
+                    .unwrap();
+
+                if (release == null) return;
+
+                final update = release.update;
+
+                Snack.snackBar(
+                  update
+                      ? const Icon(Icons.system_update_alt)
+                      : const Icon(Icons.check),
+                  update ? 'Update available' : 'Up to date',
+                  'You have the latest version',
+                  TextButton.icon(
+                    onPressed: () => launchUrlString(release.url),
+                    label: 'Release'.n,
+                    icon: const FaIcon(FontAwesomeIcons.github),
+                  ),
+                );
               },
             ),
           ],
