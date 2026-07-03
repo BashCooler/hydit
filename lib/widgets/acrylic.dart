@@ -165,7 +165,7 @@ class IconButton extends StatelessWidget {
       margin: .zero,
       children: [
         ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 40),
+          constraints: const BoxConstraints(maxWidth: 40),
           child: m.IconButton(
             padding: .zero,
             tooltip: tooltip,

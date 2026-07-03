@@ -150,10 +150,6 @@ class EditButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
 
-      if (page.sheetProgress < 0.5) {
-        return SizedBox.shrink();
-      }
-
       return IconButton(
         tooltip: page.showServices.value
             ? 'All tags'

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/viewer/widget/popup.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import 'package:hydit/widgets/acrylic.dart' as a;
@@ -50,7 +51,9 @@ class BottomActions extends StatelessWidget {
                   onPressed: openSheet,
                   child: Obx(() => a.Text(file.all.length, padding: .zero)),
                 ),
-                ?editButton,
+                page.sheetProgress > 0.5
+                    ? editButton ?? const ViewerPopup()
+                    : const ViewerPopup(),
               ],
             );
           }),
