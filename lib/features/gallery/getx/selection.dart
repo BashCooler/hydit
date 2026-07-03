@@ -130,7 +130,7 @@ class SelectionController extends GetxController {
 
   Future<void> delete() {
     return Get.dialog(
-      barrierDismissible: true,
+      barrierDismissible: false,
       transitionDuration: 150.ms,
       LoadingDialog(
         icon: const Icon(Icons.delete_forever),

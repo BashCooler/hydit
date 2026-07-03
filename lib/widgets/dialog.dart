@@ -34,33 +34,28 @@ class LoadingDialog extends HookWidget {
         if (loading.value) return;
         Navigator.of(context).pop(false);
       },
-      child: ValueListenableBuilder(
-        valueListenable: loading,
-        builder: (context, value, child) {
-          return AlertDialog(
-            icon: icon,
-            actionsAlignment: .center,
-            title: loading.value ? loadingTitle : title,
-            content: loading.value
-                ? const LinearProgressIndicator()
-                : content,
-            actions: loading.value ? [] : [
-              TextButton(
-                onPressed: () async => await onApply()
-                    .loading(loading),
-                child: const Text('Apply'),
-              ),
-              if (discardButton) TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Discard'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
-              ),
-            ],
-          );
-        },
+      child: AlertDialog(
+        icon: icon,
+        actionsAlignment: .center,
+        title: loading.value ? loadingTitle : title,
+        content: loading.value
+            ? const LinearProgressIndicator()
+            : content,
+        actions: loading.value ? [] : [
+          TextButton(
+            onPressed: () async => await onApply()
+                .loading(loading),
+            child: const Text('Apply'),
+          ),
+          if (discardButton) TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Discard'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+        ],
       ),
     );
   }

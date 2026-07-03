@@ -103,6 +103,7 @@ class FileStore with IterableMixin<HydrusFile> {
 
     for (final file in toRemove) {
       rx.remove(file);
+      loader?.ids.remove(file.id);
     }
   }
 }

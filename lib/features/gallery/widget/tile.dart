@@ -27,39 +27,34 @@ class Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedScale(
-      key: ValueKey(id),
-      duration: deletionDuration,
-      scale: deleted ? 0 : 1,
-      child: GestureDetector(
-        onTap: () => onTap?.call(id, index),
-        onLongPress: () => onLongPress?.call(id, index),
-        child: Stack(
-          alignment: .bottomRight,
-          children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 120),
-              switchInCurve: Curves.easeInQuint,
-              switchOutCurve: Curves.easeInQuint,
-              child: showBadges && badges != null
-                  ? badges
-                  : const SizedBox.shrink(),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: .all(
-                  color: selected
-                      ? Colors.pink
-                      : Colors.transparent,
-                  width: 3,
-                ),
+    return GestureDetector(
+      onTap: () => onTap?.call(id, index),
+      onLongPress: () => onLongPress?.call(id, index),
+      child: Stack(
+        alignment: .bottomRight,
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 120),
+            switchInCurve: Curves.easeInQuint,
+            switchOutCurve: Curves.easeInQuint,
+            child: showBadges && badges != null
+                ? badges
+                : const SizedBox.shrink(),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: .all(
                 color: selected
-                    ? Colors.black.withAlpha(32)
+                    ? Colors.pink
                     : Colors.transparent,
+                width: 3,
               ),
+              color: selected
+                  ? Colors.black.withAlpha(32)
+                  : Colors.transparent,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

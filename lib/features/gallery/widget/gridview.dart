@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart' hide RefreshCallback;
 import 'package:expressive_refresh/expressive_refresh.dart';
 import 'package:hydit/features/gallery/widget/widgets.dart';
+import 'package:hydit/utils/theme.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydit/services/repo.dart';
@@ -80,26 +81,32 @@ class GalleryGridView extends StatelessWidget {
 
                 final file = files[index];
 
-                return Stack(
-                  children: [
-                    LinearHero(
-                      tag: file.id,
-                      child: Thumbnail(repo.buildUrl(file.id, thumbnail: true)),
+                return Obx(() {
+
+                  return AnimatedScale(
+                    key: ValueKey(file.id),
+                    duration: deletionDuration,
+                    scale: file.deleted ? 0 : 1,
+                    child: Stack(
+                      children: [
+                        LinearHero(
+                          tag: file.id,
+                          child: Thumbnail(file.thumbnailUrl),
+                        ),
+                        Tile(
+                          index: index,
+                          id: file.id,
+                          badges: TileBadges(file),
+                          selected: selected?.call(file.id) ?? false,
+                          showBadges: gallery.badges,
+                          deleted: file.deleted,
+                          onTap: onTap,
+                          onLongPress: onLongPress,
+                        ),
+                      ],
                     ),
-                    Obx(() {
-                      return Tile(
-                        index: index,
-                        id: file.id,
-                        badges: TileBadges(file),
-                        selected: selected?.call(file.id) ?? false,
-                        showBadges: gallery.badges,
-                        deleted: file.deleted,
-                        onTap: onTap,
-                        onLongPress: onLongPress,
-                      );
-                    }),
-                  ],
-                );
+                  );
+                });
               },
             ),
           );
