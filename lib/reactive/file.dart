@@ -85,18 +85,14 @@ class HydrusFile {
 
     final result = await repo.api
         .getFile(id)
-        .run()
-        .tapFailure(Snack.error);
+        .run();
 
-    final bytes = result.unwrap();
+    if (result is Failure) return result;
 
-    if (bytes == null) return result;
+    final bytes = result.unwrapOrThrow();
 
-    await Native
-        .saveFile(bytes, meta.fileName, meta.mime)
-        .tapFailure(Snack.error);
-
-    return result;
+    return Native
+        .saveFile(bytes, meta.fileName, meta.mime);
   }
 
   @override

@@ -27,6 +27,13 @@ sealed class Result<T> {
     }
     return null;
   }
+
+  T unwrapOrThrow() {
+    if (this case Success(data: final data)) {
+      return data;
+    }
+    throw StateError('Registered an attempt to unwrap a Failure');
+  }
 }
 
 class Success<T> extends Result<T> {
