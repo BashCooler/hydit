@@ -19,17 +19,7 @@ class ViewerPopup extends StatelessWidget {
       ),
       itemBuilder: (context) {
         return [
-
-          PopupMenuItem<String>(
-            onTap: () {},
-            child: 'copy'.n,
-          ),
-
-          PopupMenuItem<String>(
-            onTap: file.download,
-            child: 'download'.n,
-          ),
-
+          PopupMenuItem(onTap: file.download, child: 'download'.n),
         ];
       },
     );

@@ -100,7 +100,5 @@ class HydrusFile {
   }
 
   @override
-  String toString() {
-    return '"HydrusFile": { "id": ${meta.id} }';
-  }
+  String toString() => 'HydrusFile ${meta.id}';
 }
