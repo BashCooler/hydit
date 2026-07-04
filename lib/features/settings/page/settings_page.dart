@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:settings_tiles/settings_tiles.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -20,6 +19,7 @@ class Settings extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final settings = useMemoized(() => SettingsController());
 
     return Scaffold(
@@ -32,7 +32,9 @@ class Settings extends HookWidget {
           spacing: 15,
           mainAxisSize: .min,
           children: [
-            Divider(color: Colors.transparent),
+
+            const Divider(color: Colors.transparent),
+
             Obx(() {
               return SettingsTextField(
                 label: 'Url',
@@ -41,6 +43,7 @@ class Settings extends HookWidget {
                 initial: settings.$.url,
               );
             }),
+
             Obx(() {
               return SettingsTextField(
                 label: 'API Key',
@@ -49,16 +52,21 @@ class Settings extends HookWidget {
                 initial: settings.$.key,
               );
             }),
+
             Obx(() {
-              return SettingActionTile(
-                title: const Text('Verify and save'),
-                icon: const SettingTileIcon(Icons.save),
+              return ListTile(
+                title: 'Verify and save'.n,
+                leading: Padding(
+                  padding: const .all(8),
+                  child: const Icon(Icons.save, size: 32),
+                ),
                 enabled: settings.ready,
                 onTap: settings.verify,
               );
             }),
-            SettingActionTile(
-              icon: const Padding(
+
+            ListTile(
+              leading: const Padding(
                 padding: .all(8),
                 child: FaIcon(FontAwesomeIcons.github, size: 32),
               ),
@@ -73,7 +81,7 @@ class Settings extends HookWidget {
                   }
                 },
               ),
-              description: 'Check for updates'.n,
+              subtitle: 'Check for updates'.n,
               onTap: () async {
                 final release = await Version
                     .checkForUpdates()

@@ -44,7 +44,6 @@ dependencies:
     git: https://github.com/itsezlife/Flutter_dismissible_page/
   preload_page_view: ^0.2.0
   cached_network_image_ce: ^4.8.0
-  settings_tiles: ^6.0.1
   expressive_refresh: ^0.1.2
   expressive_loading_indicator: ^0.0.1
   skeletonizer: ^2.1.3

@@ -7,7 +7,6 @@ import 'package:hydit/services/native.dart';
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/metadata.dart';
-import 'package:hydit/services/snack.dart';
 
 import 'file_store.dart';
 
