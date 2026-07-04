@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:convert' hide json;
 
 import 'package:dio/dio.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart' hide GetStringUtils;
 import 'package:dartx/dartx.dart';
+import 'package:flutter/services.dart';
 import 'package:deep_pick/deep_pick.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -50,54 +49,58 @@ class Executor {
 
   static Future<Result<T>> run<T>(Future<T> Function() action) async {
     try {
-      final data = await action();
-      return Success(data);
+      return Success(await action());
 
     } on DioException catch (e) {
-      final String title;
-      final String message;
 
       switch (e.type) {
+
         case .badResponse when e.response?.data == null:
-          title = 'Bad response';
-          message = 'Unknown error';
+          return Failure('Bad response', 'Empty response', e);
 
         case .badResponse:
-          final String data = e.response!.data;
-          final json = jsonDecode(data);
-          final String? exception = pick(json, 'exception_type')
+
+          final data = e.response?.data as String?;
+
+          final json = data != null ? jsonDecode(data) : null;
+
+          final error = pick(json, 'exception_type')
               .asStringOrNull()
               ?.format();
-          final String? description = pick(json, 'error')
+
+          final message = pick(json, 'error')
               .asStringOrNull()
               ?.replaceAll('!', '');
-          title = exception ?? 'Bad response';
-          message = description ?? 'Unknown error';
+
+          return Failure(error ?? 'Bad response', message ?? 'Unknown error');
 
         case .connectionError:
-          title = 'Connection refused';
-          message = await _connectionReport(
-            defaultMessage: 'No running Hydrus client found',
+
+          return Failure(
+            'Connection refused',
+            await _connectionReport() ?? 'No running Hydrus client found',
           );
 
         case .sendTimeout:
         case .receiveTimeout:
         case .connectionTimeout:
-          title = 'Connection timeout';
-          message = await _connectionReport(
-            defaultMessage: 'No response from Hydrus',
+
+          return Failure(
+            'Connection timeout',
+              await _connectionReport() ?? 'No response from Hydrus'
           );
 
         case .unknown when e.error.runtimeType == ArgumentError:
-          title = 'Client error';
-          message = 'No host provided';
+
+          return Failure('Client error', 'No host provided');
 
         case _:
-          title = e.error.runtimeType.toString().format();
-          message = e.toString();
-      }
 
-      return Failure(title, message, e);
+          return Failure(
+            e.error.runtimeType.toString().format(),
+            e.toString(),
+          );
+      }
 
     } on PlatformException catch (e) {
 
@@ -105,7 +108,7 @@ class Executor {
     }
   }
 
-  static Future<String> _connectionReport({String? defaultMessage}) async {
+  static Future<String?> _connectionReport() async {
     final results = await (Connectivity().checkConnectivity());
 
     final connected = results.contains(ConnectivityResult.mobile)
@@ -120,19 +123,7 @@ class Executor {
       return 'This issue may be caused by an active VPN connection';
     }
 
-    return defaultMessage ?? 'Unknown error';
-  }
-
-  /// Set [loading] = true, then [action], then [loading]= false.
-  static Future<void> refresh(RxBool loading,
-      Future<void> Function() action) async {
-
-    loading.value = true;
-    try {
-      await action();
-    } finally {
-      loading.value = false;
-    }
+    return null;
   }
 }
 
@@ -152,7 +143,8 @@ extension Format on String {
 
 
 extension SafeExecute<T> on Future<T> {
-  /// Safely runs an [action], handles [DioException]s.
+  /// Safely runs an [action], handles [DioException] and
+  /// [PlatformException].
   Future<Result<T>> run() => Executor.run(() => this);
 }
 
@@ -197,21 +189,19 @@ extension FutureOperations<T> on Future<Result<T>> {
     return result;
   }
 
-  Future<T?> unwrap() async {
-    return (await this).unwrap();
-  }
+  Future<T?> unwrap() async => (await this).unwrap();
 }
 
 
-class ExecutorBatch {
+class ExecutorQueue {
   final List<Future<Result>> _operations = [];
 
-  ExecutorBatch queue(Future<Result> operation) {
+  ExecutorQueue queue(Future<Result> operation) {
     _operations.add(operation);
     return this;
   }
 
-  ExecutorBatch queueAll(Iterable<Future<Result>> operations) {
+  ExecutorQueue queueAll(Iterable<Future<Result>> operations) {
     _operations.addAll(operations);
     return this;
   }
