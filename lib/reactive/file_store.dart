@@ -3,9 +3,7 @@ import 'dart:collection';
 import 'package:get/get.dart';
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/services/repo.dart';
-import 'package:hydit/services/loader.dart';
-import 'package:hydit/services/executor.dart';
+import 'package:hydit/services/services.dart';
 
 import 'file.dart';
 

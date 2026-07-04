@@ -1,21 +1,21 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/editor/widget/dropdown.dart';
-import 'package:hydit/services/executor.dart';
-import 'package:hydit/services/snack.dart';
-import 'package:hydit/utils/utils.dart';
-import 'package:hydit/widgets/dialog.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/reactive/file.dart';
+import 'package:hydit/utils/utils.dart';
+import 'package:hydit/widgets/dialog.dart';
 import 'package:hydit/widgets/images.dart';
+import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/services/services.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/viewer/page/preview.dart';
 import 'package:hydit/features/gallery/bindings.dart';
 
 import '../getx/manager.dart';
 import '../widget/widgets.dart';
+import '../widget/dropdown.dart';
+
 
 enum Action { save, discard, cancel }
 enum Mode { paged, batch }

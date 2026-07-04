@@ -3,10 +3,8 @@ import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/tags.dart';
-import 'package:hydit/services/native.dart';
-import 'package:hydit/services/repo.dart';
-import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/metadata.dart';
+import 'package:hydit/services/services.dart';
 
 import 'file_store.dart';
 

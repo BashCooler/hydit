@@ -3,10 +3,7 @@ import 'package:hive_ce/hive.dart';
 import 'package:hydit/api/api.dart';
 import 'package:string_validator/string_validator.dart';
 
-import 'package:hydit/services/repo.dart';
-import 'package:hydit/services/snack.dart';
-import 'package:hydit/services/native.dart';
-import 'package:hydit/services/executor.dart';
+import 'package:hydit/services/services.dart';
 
 
 class SettingsController extends GetxController {

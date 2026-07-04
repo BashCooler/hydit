@@ -7,11 +7,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:deep_pick/deep_pick.dart';
 
-import 'package:hydit/services/repo.dart';
-import 'package:hydit/services/executor.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/services/snack.dart';
+import 'package:hydit/services/services.dart';
 
 
 class Loader {

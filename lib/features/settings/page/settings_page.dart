@@ -6,9 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:hydit/services/snack.dart';
-import 'package:hydit/services/version.dart';
-import 'package:hydit/services/executor.dart';
+import 'package:hydit/services/services.dart';
 
 import '../getx/settings.dart';
 import '../widget/text_field.dart';
