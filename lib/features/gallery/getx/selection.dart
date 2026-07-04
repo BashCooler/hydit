@@ -115,7 +115,7 @@ class SelectionController extends GetxController {
 
         Get.back();
 
-        if (result.isFailure || token.cancelled) {
+        if (result is Failure || token.cancelled) {
           return;
         }
 

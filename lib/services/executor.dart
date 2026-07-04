@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert' hide json;
 
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart' hide GetStringUtils;
 import 'package:dartx/dartx.dart';
 import 'package:deep_pick/deep_pick.dart';
@@ -21,32 +22,26 @@ class CancellationToken {
 
 sealed class Result<T> {
 
-  bool get isSuccess {
-    if (this case Success(data: final _)) {
-      return true;
+  T? unwrap() {
+    if (this case Success(data: final data)) {
+      return data;
     }
-    return false;
-  }
-
-  bool get isFailure {
-    if (this case Failure(title: final _, message: final _)) {
-      return true;
-    }
-    return false;
+    return null;
   }
 }
 
 class Success<T> extends Result<T> {
   final T data;
 
-  Success({required this.data});
+  Success(this.data);
 }
 
 class Failure<T> extends Result<T> {
   final String title;
   final String message;
+  final Object? details;
 
-  Failure({required this.title, required this.message});
+  Failure(this.title, this.message, [this.details]);
 }
 
 
@@ -56,7 +51,7 @@ class Executor {
   static Future<Result<T>> run<T>(Future<T> Function() action) async {
     try {
       final data = await action();
-      return Success(data: data);
+      return Success(data);
 
     } on DioException catch (e) {
       final String title;
@@ -102,7 +97,11 @@ class Executor {
           message = e.toString();
       }
 
-      return Failure(title: title, message: message);
+      return Failure(title, message, e);
+
+    } on PlatformException catch (e) {
+
+      return Failure('Platform error', e.toString(), e);
     }
   }
 
@@ -204,20 +203,6 @@ extension FutureOperations<T> on Future<Result<T>> {
 }
 
 
-extension Unwrap<T> on Result<T> {
-
-  T? unwrap({void Function(String title, String message)? onFailure}) {
-    switch (this) {
-      case Success(data: final data):
-        return data;
-      case Failure(title: final title, message: final message):
-        onFailure?.call(title, message);
-        return null;
-    }
-  }
-}
-
-
 class ExecutorBatch {
   final List<Future<Result>> _operations = [];
 
@@ -239,7 +224,7 @@ class ExecutorBatch {
       if (result is Failure) return result;
     }
 
-    return Success(data: null);
+    return Success(null);
   }
 }
 

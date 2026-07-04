@@ -52,7 +52,7 @@ class Loader {
   Future<Result<void>> load({bool clear = false}) async {
     if (failed) {
       retry();
-      return Success(data: null);
+      return Success(null);
     }
 
     var first = true;
@@ -62,7 +62,7 @@ class Loader {
 
     final load = ids.sublist(start, end);
 
-    if (load.isEmpty) return Success(data: null);
+    if (load.isEmpty) return Success(null);
 
     _loading = true;
 
@@ -93,7 +93,7 @@ class Loader {
 
     _loading = false;
 
-    return Success(data: null);
+    return Success(null);
   }
 
   Future<Result<void>> ensureLoaded(Iterable<int> indices,
@@ -103,11 +103,11 @@ class Loader {
 
     while (store.rx.length < max!) {
       final result = await load();
-      if (token.cancelled) return Success(data: null);
-      if (result.isFailure) return result;
+      if (token.cancelled) return Success(null);
+      if (result is Failure) return result;
     }
 
-    return Success(data: null);
+    return Success(null);
   }
 
   void _fail(String title, String message) {

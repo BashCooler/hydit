@@ -24,11 +24,7 @@ class Version {
         .then((r) => r?.data);
 
     if (map == null) {
-
-      return Failure(
-        title: 'Connection error',
-        message: 'Failed to get update info',
-      );
+      return Failure('Connection error', 'Failed to get update info');
     }
 
     final cur = await current();
@@ -42,7 +38,7 @@ class Version {
       update: update,
     );
 
-    return Success(data: release);
+    return Success(release);
   }
 }
 
