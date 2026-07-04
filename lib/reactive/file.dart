@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:deep_pick/deep_pick.dart';
 
@@ -54,7 +56,7 @@ class HydrusFile {
     final json = result.unwrap();
 
     if (json != null) {
-      final meta = pick(json, 'metadata', 0)
+      final meta = pick(jsonDecode(json), 'metadata', 0)
           .asMapOrThrow<String, dynamic>();
 
       tags.value = Tags.fromMap(meta);
