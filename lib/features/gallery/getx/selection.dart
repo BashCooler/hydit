@@ -169,7 +169,7 @@ class SelectionController extends GetxController {
     );
   }
 
-  void download() async {
+  void download({double delay = 0}) async {
     final files = this.files.byIds(ids);
 
     final progress = 0.obs;
@@ -191,12 +191,17 @@ class SelectionController extends GetxController {
 
       if (token.cancelled) return;
 
-      final result = await file
+      final download = file
           .download()
           .tapSuccess((_) => progress.value++)
           .tapFailure(Snack.error);
 
-      if (result is Failure) return;
+      final result = Future.wait([
+        download,
+        sleep(delay.s),
+      ]);
+
+      if (await result is Failure) return;
     }
 
     Get.back();

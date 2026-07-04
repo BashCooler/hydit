@@ -58,8 +58,21 @@ class SelectionBottomBar extends StatelessWidget {
                       child: 'delete'.n,
                     ),
                     PopupMenuItem(
+                      padding: const .only(left: 12),
                       onTap: selection.download,
-                      child: 'download'.n,
+                      child: Row(
+                        mainAxisAlignment: .spaceBetween,
+                        children: [
+                          'download'.n,
+                          IconButton(
+                            tooltip: 'Download 1 file per second',
+                            icon: Icon(Symbols.chronic),
+                            onPressed: () {
+                              selection.download(delay: 1);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ]),
                 ],

@@ -187,6 +187,7 @@ class More extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
+      tooltip: 'More',
       icon: Icon(
         Icons.more_vert,
         color: Theme.of(context)

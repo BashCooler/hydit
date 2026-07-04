@@ -15,14 +15,11 @@ class SettingsController extends GetxController {
     key: '',
   ).obs;
 
-  final _processing = false.obs;
-
   SettingsController() {
     load();
   }
 
   AppSettings get $ => _settings.value;
-  bool get ready => !_processing.value;
 
   Repo get repo => Get.find();
 
@@ -64,7 +61,6 @@ class SettingsController extends GetxController {
     await HydrusApi(uri: uri, key: $.key)
         .getVerifyAccessKey()
         .run()
-        .loading(_processing)
         .tapSuccess(_onSuccess)
         .tapFailure(Snack.error);
   }
