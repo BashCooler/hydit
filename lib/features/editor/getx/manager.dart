@@ -161,17 +161,15 @@ class TagManager extends GetxController {
     return true;
   }
 
-  /// Send changes to Hydrus
+  /// Send changes to Hydrus and update local files
+  /// metadata.
   Future<Result<void>> save() async {
-    final result = await repo.apply(_ids, summarize());
+    final result = await repo
+        .apply(_ids, summarize());
 
     if (result is Failure) return result;
 
-    for (final file in _files) {
-      file.update();
-    }
-
-    return result;
+    return await repo.update(_files);
   }
 
   /// Generate [TagDiff]s for [save] method
