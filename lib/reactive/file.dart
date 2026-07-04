@@ -92,7 +92,9 @@ class HydrusFile {
 
     if (bytes == null) return result;
 
-    await Native.saveFile(bytes, meta.fileName, meta.mime);
+    await Native
+        .saveFile(bytes, meta.fileName, meta.mime)
+        .tapFailure(Snack.error);
 
     return result;
   }

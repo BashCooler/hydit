@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:hydit/services/executor.dart';
 
 
 class Native {
@@ -7,18 +8,20 @@ class Native {
   static const _channel = MethodChannel("com.bashcooler.hydit/native");
 
   /// Save a string to a local SharedPreferences.
-  static Future<void> savePreference(String url, String key) {
+  static Future<Result<void>> savePreferences(String url, String key) {
     final arguments = {
       "url": url,
       "key": key,
     };
-    return _channel.invokeMethod("saveSettings", arguments);
+    return _channel
+        .invokeMethod("saveSettings", arguments)
+        .run();
   }
 
   /// Save file to local downloads folder.
   ///
   /// Will only work on Android 10+.
-  static Future<void> saveFile(
+  static Future<Result<void>> saveFile(
       Uint8List bytes,
       String fileName,
       String mimeType,
@@ -28,6 +31,8 @@ class Native {
       "fileName": fileName,
       "mimeType": mimeType,
     };
-    return _channel.invokeListMethod("saveFile", arguments);
+    return _channel
+        .invokeListMethod("saveFile", arguments)
+        .run();
   }
 }
