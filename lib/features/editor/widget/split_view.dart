@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:hydit/utils/theme.dart';
@@ -46,7 +47,17 @@ class Up extends HookWidget {
               tag: tag,
               onTap: manager.editable ? manager.remove : null,
               background: background(state),
-              trailing: Icon(icon(manager.editable, state)),
+              trailing: Row(
+                mainAxisSize: .min,
+                spacing: 20,
+                children: [
+                  if (manager.batchMode)
+                    '${manager.count(tag)}'.n
+                      ..color = tag.color
+                      ..fontSize = 14,
+                  Icon(icon(manager.editable, state)),
+                ],
+              ),
             );
           },
         );

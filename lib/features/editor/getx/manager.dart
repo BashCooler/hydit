@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:hydit/entities/service.dart';
 
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/tag.dart';
+import 'package:hydit/entities/service.dart';
 import 'package:hydit/reactive/file.dart';
 
 
@@ -20,6 +20,15 @@ class TagManager extends GetxController {
 
   final _initial = <String, Set<Tag>>{};
   final _current = <String, RxSet<Tag>>{}.obs;
+
+  /// Service name -> tag -> count
+  final _counts = <String, Map<Tag, int>>{};
+
+  bool get batchMode => _files.length > 1;
+
+  int count(Tag tag) {
+    return _counts[service.value]?[tag] ?? 0;
+  }
 
   Set<Tag> get initial => _initial[service.value]!;
   Set<Tag> get current => _current[service.value]!;
@@ -129,11 +138,19 @@ class TagManager extends GetxController {
 
     final Map<String, Set<Tag>> tags = {};
 
+    _counts.clear();
+
     for (final file in files) {
       final original = file.tags.value.entries;
 
       for (final MapEntry(key: name, value: service) in original) {
         tags.putIfAbsent(name, () => {}).addAll(service.entries);
+
+        final serviceCounts = _counts.putIfAbsent(name, () => {});
+
+        for (final tag in service.entries) {
+          serviceCounts[tag] = (serviceCounts[tag] ?? 0) + 1;
+        }
       }
     }
 
