@@ -39,6 +39,7 @@ class FileMetadata {
     ext: pick(map, 'ext').asStringOrThrow(),
   );
 
+  String get fileName => '$hash$ext';
   String get type => mime.split('/').first;
   String get size => filesize(_size);
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';

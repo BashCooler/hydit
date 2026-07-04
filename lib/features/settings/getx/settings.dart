@@ -31,7 +31,7 @@ class SettingsController extends GetxController {
     box.put('url', $.url);
     box.put('key', $.key);
 
-    Native.saveSettings($.url, $.key);
+    Native.savePreference($.url, $.key);
   }
 
   void load() {

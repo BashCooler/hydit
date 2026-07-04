@@ -6,16 +6,28 @@ class Native {
 
   static const _channel = MethodChannel("com.bashcooler.hydit/native");
 
-  static Future<void> saveSettings(String url, String key) async {
+  /// Save a string to a local SharedPreferences.
+  static Future<void> savePreference(String url, String key) {
     final arguments = {
       "url": url,
       "key": key,
     };
+    return _channel.invokeMethod("saveSettings", arguments);
+  }
 
-    try {
-      await _channel.invokeMethod("saveSettings", arguments);
-    } on PlatformException catch (_) {
-      rethrow;
-    }
+  /// Save file to local downloads folder.
+  ///
+  /// Will only work on Android 10+.
+  static Future<void> saveFile(
+      Uint8List bytes,
+      String fileName,
+      String mimeType,
+  ) {
+    final arguments = {
+      "bytes": bytes,
+      "fileName": fileName,
+      "mimeType": mimeType,
+    };
+    return _channel.invokeListMethod("saveFile", arguments);
   }
 }
