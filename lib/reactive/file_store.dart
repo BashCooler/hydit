@@ -84,8 +84,8 @@ class FileStore with IterableMixin<HydrusFile> {
   Future<Result<void>> updateById(int id) => byId(id).update();
 
   /// Find all files with provided [ids].
-  List<HydrusFile> byIds(List<int> ids) => ids
-      .map((id) => byId(id))
+  List<HydrusFile> byIds(Iterable<int> ids) => ids
+      .map(byId)
       .whereType<HydrusFile>()
       .toList();
 

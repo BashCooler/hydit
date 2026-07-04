@@ -128,8 +128,15 @@ class SelectionController extends GetxController {
     }
   }
 
-  Future<void> delete() {
-    return Get.dialog(
+  Future<void> delete() async {
+
+    void onSuccess(void value) {
+      Get.back();
+      files.removeWithIds(ids);
+      clear();
+    }
+
+    await Get.dialog(
       barrierDismissible: false,
       transitionDuration: 150.ms,
       LoadingDialog(
@@ -141,11 +148,7 @@ class SelectionController extends GetxController {
           return repo.api
               .deleteFiles(ids.toList())
               .run()
-              .tapSuccess((_) {
-                Get.back();
-                files.removeWithIds(ids);
-                clear();
-              })
+              .tapSuccess(onSuccess)
               .tapFailure(Snack.error);
         },
       ),
@@ -154,15 +157,49 @@ class SelectionController extends GetxController {
 
   Future<void> loading(int full, CancellationToken token) {
     return Get.dialog(
-      barrierDismissible: true,
       transitionDuration: 150.ms,
       Obx(() {
-        return FileLoadingDialog(
+        return ProgressDialog(
           progress: files.rx.length,
           full: full,
+          title: 'Loading metadata...'.n,
           token: token,
         );
       }),
     );
+  }
+
+  void download() async {
+    final files = this.files.byIds(ids);
+
+    final progress = 0.obs;
+    final token = CancellationToken();
+
+    Get.dialog(
+      transitionDuration: 150.ms,
+      Obx(() {
+        return ProgressDialog(
+          progress: progress.value,
+          full: files.length,
+          title: 'Downloading files...'.n,
+          token: token,
+        );
+      }),
+    );
+
+    for (final file in files) {
+
+      if (token.cancelled) return;
+
+      final result = await file
+          .download()
+          .tapSuccess((_) => progress.value++)
+          .tapFailure(Snack.error);
+
+      if (result is Failure) return;
+    }
+
+    Get.back();
+    Snack.success('Success', 'Files saved to downloads');
   }
 }

@@ -2,6 +2,7 @@ package com.bashcooler.hydit
 
 import android.content.ContentValues
 import android.os.Build
+import android.util.Log
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import io.flutter.embedding.android.FlutterActivity
@@ -86,6 +87,8 @@ class MainActivity : FlutterActivity() {
         values.clear()
         values.put(MediaStore.Downloads.IS_PENDING, 0)
         contentResolver.update(uri, values, null, null)
+
+        Log.d("Method channel", "Saved file $filename")
 
         result.success(null)
     }

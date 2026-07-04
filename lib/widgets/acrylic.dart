@@ -177,3 +177,24 @@ class IconButton extends StatelessWidget {
     );
   }
 }
+
+
+class More extends StatelessWidget {
+  final List<PopupMenuItem<dynamic>> items;
+
+  const More(this.items, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton(
+      icon: Icon(
+        Icons.more_vert,
+        color: Theme.of(context)
+            .colorScheme
+            .onPrimaryContainer,
+      ),
+      itemBuilder: (context) => items,
+    );
+  }
+}
+

@@ -62,15 +62,17 @@ class LoadingDialog extends HookWidget {
 }
 
 
-class FileLoadingDialog extends HookWidget {
+class ProgressDialog extends HookWidget {
   final int progress;
   final int full;
+  final Widget? title;
   final CancellationToken token;
 
-  const FileLoadingDialog({
+  const ProgressDialog({
     super.key,
     required this.progress,
     required this.full,
+    this.title,
     required this.token,
   });
 
@@ -83,7 +85,7 @@ class FileLoadingDialog extends HookWidget {
       },
       child: AlertDialog(
         actionsAlignment: .center,
-        title: 'Loading metadata'.n,
+        title: title,
         content: Column(
           mainAxisSize: .min,
           spacing: 15,

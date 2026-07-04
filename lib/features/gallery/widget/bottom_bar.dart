@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:niku/namespace.dart' as n;
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import 'package:hydit/utils/utils.dart';
@@ -46,16 +47,21 @@ class SelectionBottomBar extends StatelessWidget {
                 children: [
                   SelectAllButton(tag: tag),
                   IconButton(
-                    tooltip: 'Delete',
-                    icon: const Icon(Icons.delete_forever),
-                    onPressed: () async => await selection.delete(),
-                  ),
-                  IconButton(
                     tooltip: 'Edit tags',
                     icon: const Icon(Icons.edit),
                     onPressed: selection.edit,
                   ),
                   SelectRangeButton(tag: tag),
+                  a.More([
+                    PopupMenuItem(
+                      onTap: selection.delete,
+                      child: 'delete'.n,
+                    ),
+                    PopupMenuItem(
+                      onTap: selection.download,
+                      child: 'download'.n,
+                    ),
+                  ]),
                 ],
               ),
             ],
