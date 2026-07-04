@@ -17,14 +17,20 @@ import '../widget/text_field.dart';
 class Settings extends HookWidget {
   const Settings({super.key});
 
+  SettingsController get settings => Get.find();
+
   @override
   Widget build(BuildContext context) {
 
-    final settings = useMemoized(() => SettingsController());
+    final version = useFuture(Version.current());
+
+    final saving = useState(false);
+
+    final checking = useState(false);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
+        title: const Text('Settings'),
         elevation: 2,
       ),
       body: SingleChildScrollView(
@@ -35,79 +41,71 @@ class Settings extends HookWidget {
 
             const Divider(color: Colors.transparent),
 
-            Obx(() {
-              return SettingsTextField(
-                label: 'Url',
-                onChanged: settings.updateUrl,
-                enabled: settings.ready,
-                initial: settings.$.url,
-              );
-            }),
+            SettingsTextField(
+              label: 'Url',
+              onChanged: settings.updateUrl,
+              enabled: !saving.value,
+              initial: settings.$.url,
+            ),
 
-            Obx(() {
-              return SettingsTextField(
-                label: 'API Key',
-                onChanged: settings.updateKey,
-                enabled: settings.ready,
-                initial: settings.$.key,
-              );
-            }),
-
-            Obx(() {
-              return ListTile(
-                title: 'Verify and save'.n,
-                leading: Padding(
-                  padding: const .all(8),
-                  child: const Icon(Icons.save, size: 32),
-                ),
-                enabled: settings.ready,
-                onTap: settings.verify,
-              );
-            }),
+            SettingsTextField(
+              label: 'API Key',
+              onChanged: settings.updateKey,
+              enabled: !saving.value,
+              initial: settings.$.key,
+            ),
 
             ListTile(
+              title: 'Verify and save'.n,
+              leading: const Padding(
+                padding: .all(8),
+                child: Icon(Icons.save, size: 32),
+              ),
+              enabled: !saving.value,
+              onTap: () => settings.verify().loading(saving),
+            ),
+
+            ListTile(
+              enabled: !checking.value,
               leading: const Padding(
                 padding: .all(8),
                 child: FaIcon(FontAwesomeIcons.github, size: 32),
               ),
-              title: FutureBuilder(
-                future: Version.current(),
-                builder: (context, snapshot) {
-                  switch (snapshot.hasData) {
-                    case true:
-                      return 'v${snapshot.data!}'.n;
-                    case false:
-                      return Skeletonizer(child: 'v0.0.0'.n);
-                  }
-                },
-              ),
+              title: version.hasData
+                  ? 'v${version.data}'.n
+                  : Skeletonizer(child: 'v.0.0.0'.n),
               subtitle: 'Check for updates'.n,
-              onTap: () async {
-                final release = await Version
-                    .checkForUpdates()
-                    .tapFailure(Snack.error)
-                    .unwrap();
-
-                if (release == null) return;
-
-                final update = release.update;
-
-                Snack.snackBar(
-                  update
-                      ? const Icon(Icons.system_update_alt)
-                      : const Icon(Icons.check),
-                  update ? 'Update available' : 'Up to date',
-                  'You have the latest version',
-                  TextButton.icon(
-                    onPressed: () => launchUrlString(release.url),
-                    label: 'Release'.n,
-                    icon: const FaIcon(FontAwesomeIcons.github),
-                  ),
-                );
-              },
+              onTap: () => checkForUpdates().loading(checking),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<void> checkForUpdates() async {
+
+    final release = await Version
+        .checkForUpdates()
+        .tapFailure(Snack.error)
+        .unwrap();
+
+    if (release == null) return;
+
+    final update = release.update;
+
+    Snack.snackBar(
+      update
+          ? const Icon(Icons.system_update_alt)
+          : const Icon(Icons.check),
+      update
+          ? 'Update available'
+          : 'Up to date',
+      'You have the latest version',
+      TextButton.icon(
+        onPressed: () => launchUrlString(release.url),
+        label: 'Release'.n,
+        icon: const FaIcon(FontAwesomeIcons.github),
       ),
     );
   }

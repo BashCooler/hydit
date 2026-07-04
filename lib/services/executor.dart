@@ -156,14 +156,15 @@ extension SafeExecute<T> on Future<T> {
 }
 
 
-extension FutureOperations<T> on Future<Result<T>> {
+extension Loading<T> on Future<T> {
+
   /// Toggles [loading] on, then awaits for a composable
   /// function to complete, then toggles [loading] off.
   ///
   /// Parameter [loading] must have `ValueNotifier<bool>`
   /// signature, this means it should have a `bool value`
   /// property
-  Future<Result<T>> loading(dynamic loading) async {
+  Future<T> loading(dynamic loading) async {
     loading.value = true;
     try {
       return await this;
@@ -171,6 +172,10 @@ extension FutureOperations<T> on Future<Result<T>> {
       loading.value = false;
     }
   }
+}
+
+
+extension FutureOperations<T> on Future<Result<T>> {
 
   Future<Result<T>> tapSuccess(
       FutureOr<void> Function(T data) callback) async {
