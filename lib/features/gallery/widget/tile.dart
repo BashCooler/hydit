@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:hydit/utils/theme.dart';
-
 
 class Tile extends StatelessWidget {
   final int index;

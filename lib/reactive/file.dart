@@ -6,6 +6,7 @@ import 'package:hydit/entities/tags.dart';
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/metadata.dart';
+import 'package:hydit/services/snack.dart';
 
 import 'file_store.dart';
 
@@ -78,6 +79,22 @@ class HydrusFile {
   /// is being deleted. Make sure to remove it from [FileStore]
   /// manually to clear the resources.
   void delete() => _deleted.value = true;
+
+  Future<Result<void>> download() async {
+
+    final result = await repo.api
+        .getFile(id)
+        .run()
+        .tapFailure(Snack.error);
+
+    final bytes = result.unwrap();
+
+    if (bytes == null) return result;
+
+    // TODO
+
+    return result;
+  }
 
   @override
   String toString() {

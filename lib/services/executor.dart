@@ -99,8 +99,7 @@ class Executor {
 
         case _:
           title = e.error.runtimeType.toString().format();
-          message =
-              'Unknown error occurred with the type "${e.error.runtimeType}"';
+          message = e.toString();
       }
 
       return Failure(title: title, message: message);

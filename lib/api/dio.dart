@@ -14,10 +14,16 @@ mixin class DioClient {
     if (key != null) dio.options.headers['Hydrus-Client-API-Access-Key'] = key;
   }
 
-  Future<T> get<T>(String path,
-      {Map<String, dynamic>? params, T Function(Response r)? parser}) {
-    return dio.get<T>(path, queryParameters: params?.prepared)
-        .then((r) => parser?.call(r) ?? r.data!);
+  Future<T> get<T>(String path, {
+    Map<String, dynamic>? params,
+    bool file = false,
+  }) {
+    return dio.get<T>(
+      path,
+      queryParameters: params?.prepared,
+      options: file ? Options(responseType: .bytes) : null,
+    )
+        .then((r) => r.data!);
   }
 
   Future<T> post<T>(String path, {

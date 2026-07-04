@@ -85,24 +85,15 @@ class HydrusApi with DioClient {
     return get('/get_files/file_metadata', params: params);
   }
 
-  // MARK: GET FILES
-
-  Future<Uint8List> getThumbnail(int fileId) {
-    final params = {
-      'file_id': fileId,
-    };
-    return get<Uint8List>('/get_files/thumbnail', params: params);
-  }
+  // MARK: FILES
 
   Future<Uint8List> getFile(dynamic fileId, {bool download = false}) {
     final params = {
       'file_id': fileId,
       'download': download,
     };
-    return get<Uint8List>('/get_files/file', params: params);
+    return get<Uint8List>('/get_files/file', params: params, file: true);
   }
-
-  // MARK: ADD FILES
 
   Future<void> deleteFiles(List<int> ids) =>
       post<void>(

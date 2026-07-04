@@ -51,9 +51,9 @@ class BottomActions extends StatelessWidget {
                   onPressed: openSheet,
                   child: Obx(() => a.Text(file.all.length, padding: .zero)),
                 ),
-                page.sheetProgress > 0.5
-                    ? editButton ?? const ViewerPopup()
-                    : const ViewerPopup(),
+                page.sheetProgress > 0.5 && editButton != null
+                    ? editButton!
+                    : ViewerPopup(file: file),
               ],
             );
           }),

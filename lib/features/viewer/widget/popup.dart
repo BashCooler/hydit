@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hydit/reactive/file.dart';
 import 'package:niku/namespace.dart' as n;
 
 
 class ViewerPopup extends StatelessWidget {
-  const ViewerPopup({super.key});
+  final HydrusFile file;
+
+  const ViewerPopup({super.key, required this.file});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class ViewerPopup extends StatelessWidget {
           ),
 
           PopupMenuItem<String>(
-            onTap: () {},
+            onTap: file.download,
             child: 'download'.n,
           ),
 
