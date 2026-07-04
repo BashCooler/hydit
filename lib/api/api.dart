@@ -15,9 +15,7 @@ class HydrusApi with DioClient {
 
   // MARK: ACCESS MANAGEMENT
 
-  Future<String> getApiVersion() {
-    return get('/api_version');
-  }
+  Future<String> getApiVersion() => get('/api_version');
 
   Future<String> getRequestNewPermission(String name, {
     bool? permitsEverything,
@@ -31,13 +29,7 @@ class HydrusApi with DioClient {
     return get('/request_new_permissions', params: params);
   }
 
-  Future<String> getVerifyAccessKey() {
-    return get('/verify_access_key');
-  }
-
-  Future<String> getServices() {
-    return get('/get_services');
-  }
+  Future<String> getVerifyAccessKey() => get('/verify_access_key');
 
   Future<String> getService({String? name, String? key}) {
     final Map<String, dynamic> params = {};
@@ -80,20 +72,22 @@ class HydrusApi with DioClient {
       'include_notes': includeNotes,
       'include_services_object': includeServicesObject,
     };
-    params.removeWhere((k, v) => (v == null));
+    params.removeWhere((k, v) => v == null);
 
     return get('/get_files/file_metadata', params: params);
   }
 
   // MARK: FILES
 
-  Future<Uint8List> getFile(dynamic fileId, {bool download = false}) {
-    final params = {
-      'file_id': fileId,
-      'download': download,
-    };
-    return get<Uint8List>('/get_files/file', params: params, file: true);
-  }
+  Future<Uint8List> getFile(int fileId, {bool download = false}) =>
+      get<Uint8List>(
+        '/get_files/file',
+        file: true,
+        params: {
+          'file_id': fileId,
+          'download': download,
+        },
+      );
 
   Future<void> deleteFiles(List<int> ids) =>
       post<void>(
