@@ -90,7 +90,12 @@ class EditorBindings extends Bindings {
 
   @override
   void dependencies() {
-    final files = Get.put(FileStore.copy(page.files), tag: page.tag);
+
+    final files = Get.put(
+      FileStore.copy(page.files),
+      tag: page.tag,
+    );
+
     Get.put(TagSearchController(), tag: page.tag);
 
     switch (page.mode) {
@@ -107,10 +112,6 @@ class EditorBindings extends Bindings {
             ..init(page.files[page.index!], page.service),
         );
       case .batch:
-        Get.put(
-          PageGetxController(initial: 0, grid: page.gallery?.grid),
-          tag: page.tag,
-        );
         Get.put(
           TagManager()
             ..initBatch(files.byIds(page.ids!)),

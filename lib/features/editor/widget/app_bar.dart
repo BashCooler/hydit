@@ -64,7 +64,6 @@ class Info extends StatelessWidget {
         maxHeight: 100,
       ),
       child: Obx(() {
-        final file = files[page.i];
 
         return Column(
           spacing: 5,
@@ -79,7 +78,7 @@ class Info extends StatelessWidget {
               ],
             ),
             switch (manager.fileCount) {
-              1 => buildMeta(file),
+              1 => buildMeta(files[page.i]),
               _ => buildFileCount(manager),
             },
           ],
