@@ -12,6 +12,9 @@ import 'page/editor.dart';
 import 'getx/manager.dart';
 
 
+enum Mode { paged, batch }
+
+
 /// Builds an [Editor] page.
 ///
 /// First initialize the [EditorPage], then call [paged] or [batch] to

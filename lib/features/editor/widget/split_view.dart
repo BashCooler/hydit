@@ -51,7 +51,7 @@ class Up extends HookWidget {
                 mainAxisSize: .min,
                 spacing: 20,
                 children: [
-                  if (manager.batchMode)
+                  if (manager.fileCount > 1)
                     '${manager.count(tag)}'.n
                       ..color = tag.color
                       ..fontSize = 14,

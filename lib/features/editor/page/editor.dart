@@ -12,7 +12,6 @@ import '../widget/dropdown.dart';
 
 
 enum Action { save, discard, cancel }
-enum Mode { paged, batch }
 
 
 class Editor extends StatelessWidget {

@@ -24,8 +24,6 @@ class TagManager extends GetxController {
   /// Service name -> tag -> count
   final _counts = <String, Map<Tag, int>>{};
 
-  bool get batchMode => _files.length > 1;
-
   int count(Tag tag) {
     return _counts[service.value]?[tag] ?? 0;
   }
