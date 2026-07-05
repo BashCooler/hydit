@@ -6,20 +6,19 @@ import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
 import '../getx/manager.dart';
-import '../page/editor.dart';
 
 
 class EditorBottomBar extends StatelessWidget {
   final String tag;
   final Future<bool> Function() callback;
-  final Mode mode;
+  final bool navigation;
   final Widget child;
 
   const EditorBottomBar({
     super.key,
     required this.tag,
     required this.callback,
-    required this.mode,
+    required this.navigation,
     required this.child,
   });
 
@@ -40,7 +39,7 @@ class EditorBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    if (mode == .batch) {
+    if (!navigation) {
       return child;
     }
 

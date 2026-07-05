@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/editor/widget/preview_grid.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/reactive/file.dart';
@@ -14,17 +15,13 @@ import '../page/editor.dart';
 class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String tag;
   final double toolbarHeight;
-  final GestureTapCallback? onTap;
   final Mode mode;
-  final Widget? child;
 
   const EditorAppBar({
     super.key,
     required this.tag,
     this.toolbarHeight = 100,
     required this.mode,
-    this.onTap,
-    this.child,
   });
 
   @override
@@ -39,13 +36,9 @@ class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
         mainAxisAlignment: .spaceBetween,
         children: [
           Info(tag: tag, mode: mode),
-          GestureDetector(
-            onTap: onTap,
-            child: SizedBox(
-              width: 100,
-              height: 100,
-              child: child,
-            ),
+          SizedBox.square(
+            dimension: 100,
+            child: PreviewGrid(tag: tag),
           ),
         ],
       ),

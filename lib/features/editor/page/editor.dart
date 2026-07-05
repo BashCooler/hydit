@@ -4,13 +4,9 @@ import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/widgets/dialog.dart';
-import 'package:hydit/widgets/images.dart';
-import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
-import 'package:hydit/features/viewer/page/preview.dart';
-import 'package:hydit/features/gallery/bindings.dart';
 
 import '../getx/manager.dart';
 import '../widget/widgets.dart';
@@ -40,16 +36,6 @@ class Editor extends StatelessWidget {
         appBar: EditorAppBar(
           tag: tag,
           mode: mode,
-          onTap: () => switch (mode) {
-            .paged => openPreview(page.i, files[page.i]),
-            .batch => GalleryPage()
-                .predictive()
-                .withFiles(files)
-                .push(),
-          },
-          child: mode == .batch
-              ? const PreviewGrid()
-              : buildPreview(),
         ),
         body: SafeArea(
           child: Column(
@@ -76,7 +62,7 @@ class Editor extends StatelessWidget {
               EditorTagSearchBar(tag: tag),
               EditorBottomBar(
                 tag: tag,
-                mode: mode,
+                navigation: manager.fileCount == 1,
                 callback: confirmPendingChanges,
                 child: const ServiceDropdown(),
               ),
@@ -87,30 +73,7 @@ class Editor extends StatelessWidget {
     );
   }
 
-  // MARK: BUILDERS
-
-  Widget buildPreview() {
-    return Obx(() {
-      final file = files[page.i];
-      return LinearHero(
-        tag: 'Preview ${file.id}',
-        child: Thumbnail(file.thumbnailUrl),
-      );
-    });
-  }
-
   // MARK: NAV
-
-  void openPreview(int index, HydrusFile file) {
-    final tag = 'Preview-${DateTime.now().microsecondsSinceEpoch}';
-    Get.to(() => Preview(tag: tag, index: index, file: file),
-      transition: .fadeIn,
-      curve: Curves.easeInCubic,
-      opaque: false,
-      binding: BindingsBuilder.put(() =>
-          PageGetxController(initial: index), tag: tag),
-    );
-  }
 
   Future<void> onLeave(bool didPop, Object? result) async {
     if (didPop) return;

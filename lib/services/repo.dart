@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:dartx/dartx.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:deep_pick/deep_pick.dart';
 
