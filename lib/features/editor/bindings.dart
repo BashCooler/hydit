@@ -70,7 +70,7 @@ class EditorPage {
   void push() {
     tag ??= 'Editor-${DateTime.now().microsecondsSinceEpoch}';
 
-    Get.to(() => SwipeablePage(child: Editor(tag: tag!, mode: mode)),
+    Get.to(() => SwipeablePage(child: Editor(tag: tag!)),
       transition: .rightToLeft,
       duration: transition,
       curve: Curves.easeInOutCubic,

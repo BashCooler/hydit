@@ -4,9 +4,7 @@ import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/widgets/dialog.dart';
-import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/services/services.dart';
-import 'package:hydit/features/viewer/getx/page.dart';
 
 import '../getx/manager.dart';
 import '../widget/widgets.dart';
@@ -19,13 +17,10 @@ enum Mode { paged, batch }
 
 class Editor extends StatelessWidget {
   final String tag;
-  final Mode mode;
 
-  const Editor({super.key, required this.tag, required this.mode});
+  const Editor({super.key, required this.tag});
 
   TagManager get manager => Get.find();
-  FileStore get files => Get.find(tag: tag);
-  PageGetxController get page => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +28,7 @@ class Editor extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: onLeave,
       child: Scaffold(
-        appBar: EditorAppBar(
-          tag: tag,
-          mode: mode,
-        ),
+        appBar: EditorAppBar(tag: tag),
         body: SafeArea(
           child: Column(
             children: [

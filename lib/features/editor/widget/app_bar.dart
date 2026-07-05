@@ -9,19 +9,16 @@ import 'package:hydit/features/viewer/getx/page.dart';
 
 import 'info.dart';
 import '../getx/manager.dart';
-import '../page/editor.dart';
 
 
 class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String tag;
   final double toolbarHeight;
-  final Mode mode;
 
   const EditorAppBar({
     super.key,
     required this.tag,
     this.toolbarHeight = 100,
-    required this.mode,
   });
 
   @override
@@ -35,9 +32,9 @@ class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
         crossAxisAlignment: .center,
         mainAxisAlignment: .spaceBetween,
         children: [
-          Info(tag: tag, mode: mode),
+          Info(tag: tag),
           SizedBox.square(
-            dimension: 100,
+            dimension: toolbarHeight,
             child: PreviewGrid(tag: tag),
           ),
         ],
@@ -52,9 +49,8 @@ class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 class Info extends StatelessWidget {
   final String tag;
-  final Mode mode;
 
-  const Info({super.key, required this.tag, required this.mode});
+  const Info({super.key, required this.tag});
 
   TagManager get manager => Get.find();
   FileStore get files => Get.find(tag: tag);
@@ -82,9 +78,9 @@ class Info extends StatelessWidget {
                 const Diff(),
               ],
             ),
-            switch (mode) {
-              Mode.paged => buildMeta(file),
-              Mode.batch => buildFileCount(manager),
+            switch (manager.fileCount) {
+              1 => buildMeta(file),
+              _ => buildFileCount(manager),
             },
           ],
         );
