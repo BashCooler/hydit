@@ -8,7 +8,7 @@ import 'package:hydit/features/editor/getx/base.dart';
 import 'package:hydit/features/gallery/bindings.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/viewer/page/preview.dart';
-import 'package:hydit/features/editor/getx/manager.dart';
+import 'package:hydit/features/editor/getx/single.dart';
 
 import 'package:hydit/widgets/images.dart';
 
@@ -40,7 +40,7 @@ class PreviewGrid extends StatelessWidget {
     if (length == 1) {
 
       return Obx(() {
-        final manager = this.manager as TagManager;
+        final manager = this.manager as SingleTagManager;
         final file = manager.file.value;
 
         return GestureDetector(

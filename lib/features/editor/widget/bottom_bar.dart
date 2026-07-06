@@ -6,7 +6,7 @@ import 'package:niku/namespace.dart' as n;
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
-import '../getx/manager.dart';
+import '../getx/single.dart';
 
 
 class EditorBottomBar extends StatelessWidget {
@@ -35,7 +35,7 @@ class EditorBottomBar extends StatelessWidget {
 
     page.navigateToPage(target);
 
-    final manager = this.manager as TagManager;
+    final manager = this.manager as SingleTagManager;
     manager.init(files[page.i]);
   }
 

@@ -11,7 +11,7 @@ import 'package:hydit/widgets/swipeable.dart';
 
 import 'getx/batch.dart';
 import 'page/editor.dart';
-import 'getx/manager.dart';
+import 'getx/single.dart';
 
 
 enum Mode { paged, batch }
@@ -109,7 +109,7 @@ class EditorBindings extends Bindings {
           tag: page.tag,
         );
         Get.put<TagManagerBase>(
-          TagManager(
+          SingleTagManager(
             page.files[page.index!],
             service: page.service,
           ),
