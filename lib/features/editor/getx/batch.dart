@@ -138,8 +138,22 @@ class BatchTagManager extends TagManagerBase {
 
   @override
   Future<Result<void>> save() async {
+    final changes = summarize();
+
+    for (final MapEntry(key: name, value: tagsToAdd) in _added.entries) {
+      if (tagsToAdd.isEmpty) continue;
+
+      final change = TagDiff(
+        key: original[name]!.key,
+        added: tagsToAdd,
+        deleted: {},
+      );
+
+      changes.add(change);
+    }
+
     final result = await repo
-        .apply(files.map((f) => f.id), summarize());
+        .apply(files.map((f) => f.id), changes);
 
     if (result is Failure) return result;
 
