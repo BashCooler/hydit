@@ -1,5 +1,3 @@
-import 'package:get/get.dart';
-
 import 'package:hydit/entities/service.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
@@ -10,7 +8,9 @@ import 'package:hydit/services/executor.dart';
 class BatchTagManager extends TagManagerBase {
   final List<HydrusFile> files;
 
-  BatchTagManager(this.files);
+  BatchTagManager(this.files) {
+    init();
+  }
 
   @override
   int get fileCount => files.length;
@@ -55,12 +55,8 @@ class BatchTagManager extends TagManagerBase {
     return _counts[service.value]?[tag] ?? 0;
   }
 
-  void init(Iterable<HydrusFile> files) {
-    this.files.assignAll(files);
-
+  void init() {
     final Map<String, Set<Tag>> tags = {};
-
-    _counts.clear();
 
     for (final file in files) {
       final original = file.tags.value.entries;
@@ -68,15 +64,19 @@ class BatchTagManager extends TagManagerBase {
       for (final MapEntry(key: name, value: service) in original) {
         tags.putIfAbsent(name, () => {}).addAll(service.entries);
 
-        final serviceCounts = _counts.putIfAbsent(name, () => {});
-
-        for (final tag in service.entries) {
-          serviceCounts[tag] = (serviceCounts[tag] ?? 0) + 1;
-        }
+        countService(name, service);
       }
     }
 
     assign(tags);
+  }
+
+  void countService(String name, TagService service) {
+    final serviceCounts = _counts.putIfAbsent(name, () => {});
+
+    for (final tag in service.entries) {
+      serviceCounts[tag] = (serviceCounts[tag] ?? 0) + 1;
+    }
   }
 
   @override
@@ -85,8 +85,12 @@ class BatchTagManager extends TagManagerBase {
   }
 
   @override
-  Future<Result<void>> save() {
-    // TODO
-    throw UnimplementedError();
+  Future<Result<void>> save() async {
+    final result = await repo
+        .apply(files.map((f) => f.id), summarize());
+
+    if (result is Failure) return result;
+
+    return repo.update(files);
   }
 }

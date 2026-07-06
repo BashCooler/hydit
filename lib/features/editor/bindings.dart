@@ -96,7 +96,7 @@ class EditorBindings extends Bindings {
   @override
   void dependencies() {
 
-    final files = Get.put(page.files.copy(), tag: page.tag);
+    Get.put(page.files.copy(), tag: page.tag);
     Get.put(TagSearchController(), tag: page.tag);
 
     switch (page.mode) {
@@ -115,7 +115,7 @@ class EditorBindings extends Bindings {
           ),
         );
       case .batch:
-        Get.put<TagManagerBase>(BatchTagManager(files.rx));
+        Get.put<TagManagerBase>(BatchTagManager(page.files.rx));
     }
   }
 }
