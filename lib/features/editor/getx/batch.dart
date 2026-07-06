@@ -137,6 +137,10 @@ class BatchTagManager extends TagManagerBase {
   }
 
   @override
+  bool get unlocked =>
+      super.unlocked && _added.values.expand((s) => s).isEmpty;
+
+  @override
   Future<Result<void>> save() async {
     final changes = summarize();
 
