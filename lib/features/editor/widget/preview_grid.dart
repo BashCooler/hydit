@@ -2,12 +2,13 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/extra/primitive.dart';
 
+import 'package:hydit/reactive/file.dart';
+import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/editor/getx/base.dart';
 import 'package:hydit/features/gallery/bindings.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/viewer/page/preview.dart';
-import 'package:hydit/reactive/file.dart';
-import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/features/editor/getx/manager.dart';
 
 import 'package:hydit/widgets/images.dart';
 
@@ -37,15 +38,19 @@ class PreviewGrid extends StatelessWidget {
     final length = files.length;
 
     if (length == 1) {
-      final file = files.first;
 
-      return GestureDetector(
-        onTap: () => openPreview(file),
-        child: LinearHero(
-          tag: 'Preview ${file.id}',
-          child: Thumbnail(files.first.thumbnailUrl),
-        ),
-      );
+      return Obx(() {
+        final manager = this.manager as TagManager;
+        final file = manager.file.value;
+
+        return GestureDetector(
+          onTap: () => openPreview(file),
+          child: LinearHero(
+            tag: 'Preview ${file.id}',
+            child: Thumbnail(file.thumbnailUrl),
+          ),
+        );
+      });
     }
 
     return GestureDetector(

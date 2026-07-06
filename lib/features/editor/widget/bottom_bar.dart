@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/editor/getx/base.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/reactive/file_store.dart';
@@ -22,6 +23,7 @@ class EditorBottomBar extends StatelessWidget {
     required this.child,
   });
 
+  TagManagerBase get manager => Get.find();
   FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
 
@@ -32,7 +34,9 @@ class EditorBottomBar extends StatelessWidget {
     if (!await callback()) return;
 
     page.navigateToPage(target);
-    Get.find<TagManager>().init(files[page.i]);
+
+    final manager = this.manager as TagManager;
+    manager.init(files[page.i]);
   }
 
   @override

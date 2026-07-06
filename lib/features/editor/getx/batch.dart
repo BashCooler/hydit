@@ -1,8 +1,13 @@
+import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
+
 import 'package:hydit/entities/service.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/features/editor/getx/base.dart';
 import 'package:hydit/services/executor.dart';
+import 'package:hydit/utils/utils.dart';
 
 
 class BatchTagManager extends TagManagerBase {
@@ -11,6 +16,9 @@ class BatchTagManager extends TagManagerBase {
   BatchTagManager(this.files) {
     init();
   }
+
+  final _added = <String, RxSet<Tag>>{};
+  Set<Tag> get added => _added[service.value]!;
 
   @override
   int get fileCount => files.length;
@@ -32,10 +40,47 @@ class BatchTagManager extends TagManagerBase {
   void remove(Tag tag) {
     if (!editable) return;
     if (tag.raw.isEmpty) return;
-    switch (state(tag)) {
+
+    final state = this.state(tag);
+    final count = this.count(tag);
+
+    if (count == files.length) {
+
+      switch (state) {
+        case .removed:
+          current.add(tag);
+        case _:
+          current.remove(tag);
+      }
+
+      return;
+    }
+
+    switch (state) {
       case .removed:
         current.add(tag);
-      case _:
+      case .unchanged:
+        Get.dialog(
+          transitionDuration: 150.ms,
+          AlertDialog(
+            icon: const Icon(Symbols.arrow_split),
+            actionsAlignment: .center,
+            title: const Text('Add or delete tag?'),
+            actions: [
+              TextButton(
+                onPressed: () => added.add(tag),
+                child: const Text('Add'),
+              ),
+              TextButton(
+                onPressed: () => current.remove(tag),
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        );
+      case .added when initial.contains(tag):
+        added.remove(tag);
+      case .added:
         current.remove(tag);
     }
   }
@@ -45,7 +90,13 @@ class BatchTagManager extends TagManagerBase {
     final inO = initial.contains(tag);
     final inC = current.contains(tag);
 
-    if (inO && inC) return .unchanged;
+    if (inO && inC) {
+      if (added.contains(tag)) {
+        return .added;
+      }
+
+      return .unchanged;
+    }
     if (!inO && inC) return .added;
     return .removed;
   }
@@ -63,6 +114,7 @@ class BatchTagManager extends TagManagerBase {
 
       for (final MapEntry(key: name, value: service) in original) {
         tags.putIfAbsent(name, () => {}).addAll(service.entries);
+        _added.putIfAbsent(name, () => <Tag>{}.obs);
 
         countService(name, service);
       }

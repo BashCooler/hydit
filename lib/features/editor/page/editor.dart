@@ -31,7 +31,7 @@ class Editor extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: [
-              const Up(),
+              Obx(() => Up(tags: manager.tags)),
               const Divider(height: 1),
               SizedBox(
                 height: 55 * 3,

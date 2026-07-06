@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/service.dart';
@@ -7,9 +9,9 @@ import 'base.dart';
 
 
 class TagManager extends TagManagerBase {
-  HydrusFile file;
+  final Rx<HydrusFile> file;
 
-  TagManager(this.file, {String? service}) {
+  TagManager(HydrusFile file, {String? service}) : file = file.obs {
     init(file, service);
   }
 
@@ -17,7 +19,7 @@ class TagManager extends TagManagerBase {
   int get fileCount => 1;
 
   @override
-  Map<String, TagService> get original => file.tags.value;
+  Map<String, TagService> get original => file.value.tags.value;
 
   @override
   void add(Tag tag) {
@@ -52,7 +54,7 @@ class TagManager extends TagManagerBase {
   int count(Tag tag) => 1;
 
   void init(HydrusFile file, [String? service]) {
-    this.file = file;
+    this.file.value = file;
 
     final tags = file.tags.value
         .map((k, v) => MapEntry(k, v.entries));
@@ -67,13 +69,13 @@ class TagManager extends TagManagerBase {
   @override
   Future<Result<void>> save() async {
     final result = await repo
-        .apply([file.id], summarize());
+        .apply([file.value.id], summarize());
 
     if (result is Failure) return result;
 
-    return await file.update();
+    return await file.value.update();
   }
 
   @override
-  List<HydrusFile> take([int count = 4]) => [file];
+  List<HydrusFile> take([int count = 4]) => [file.value];
 }

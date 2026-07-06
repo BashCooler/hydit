@@ -4,6 +4,7 @@ import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:hydit/utils/theme.dart';
+import 'package:hydit/entities/tag.dart';
 import 'package:hydit/widgets/tag_list.dart';
 import 'package:hydit/features/search/getx/tag_search.dart';
 import 'package:hydit/features/search/widget/suggests.dart';
@@ -12,7 +13,9 @@ import '../getx/base.dart';
 
 
 class Up extends HookWidget {
-  const Up({super.key});
+  final List<Tag> tags;
+
+  const Up({super.key, required this.tags});
 
   Color? background(TagState state) => switch (state) {
     .added => addition,
@@ -35,13 +38,13 @@ class Up extends HookWidget {
     final scroll = useScrollController();
 
     return Expanded(
-      child: Obx(() {
+      child: TagList(
+        tags: tags,
+        scrollController: scroll,
+        reverse: true,
+        itemBuilder: (context, tag) {
+          return Obx(() {
 
-        return TagList(
-          tags: manager.tags(),
-          scrollController: scroll,
-          reverse: true,
-          itemBuilder: (context, tag) {
             final state = manager.state(tag);
             return TagTile(
               tag: tag,
@@ -59,9 +62,9 @@ class Up extends HookWidget {
                 ],
               ),
             );
-          },
-        );
-      }),
+          });
+        },
+      ),
     );
   }
 }

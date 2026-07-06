@@ -57,7 +57,7 @@ abstract class TagManagerBase {
   int length(String service) => _current[service]!.length;
 
   /// Sorted tags to show in UI
-  List<Tag> tags() => union
+  List<Tag> get tags => union
       .sortBuilder()
       .state(initial)
       .namespace()
