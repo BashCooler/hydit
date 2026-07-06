@@ -111,14 +111,16 @@ class EditorBindings extends Bindings {
           tag: page.tag,
         );
         Get.put(
-          TagManager()
-            ..init(page.files[page.index!], page.service),
+          TagManager(
+            page.files[page.index!],
+            service: page.service,
+          ),
         );
       case .batch:
-        Get.put(
-          TagManager()
-            ..initBatch(files.byIds(page.ids!)),
-        );
+        // Get.put(
+        //   TagManager()
+        //     ..initBatch(files.byIds(page.ids!)),
+        // );
     }
   }
 }
