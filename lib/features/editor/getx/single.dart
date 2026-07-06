@@ -22,13 +22,6 @@ class SingleTagManager extends TagManager {
   Map<String, TagService> get original => file.value.tags.value;
 
   @override
-  void add(Tag tag) {
-    if (!editable) return;
-    if (tag.raw.isEmpty) return;
-    current.add(tag);
-  }
-
-  @override
   void remove(Tag tag) {
     if (!editable) return;
     if (tag.raw.isEmpty) return;
@@ -38,16 +31,6 @@ class SingleTagManager extends TagManager {
       case _:
         current.remove(tag);
     }
-  }
-
-  @override
-  TagState state(Tag tag) {
-    final inO = initial.contains(tag);
-    final inC = current.contains(tag);
-
-    if (inO && inC) return .unchanged;
-    if (!inO && inC) return .added;
-    return .removed;
   }
 
   @override

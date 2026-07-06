@@ -45,7 +45,11 @@ abstract class TagManager {
 
   void select(String service) => this.service.value = service;
 
-  void add(Tag tag);
+  void add(Tag tag) {
+    if (!editable) return;
+    if (tag.raw.isEmpty) return;
+    current.add(tag);
+  }
 
   void addRaw(String raw) => add(Tag(raw));
 
@@ -65,7 +69,14 @@ abstract class TagManager {
       .sort();
 
   /// State of specified tag: unchanged, added or removed.
-  TagState state(Tag tag);
+  TagState state(Tag tag) {
+    final inO = initial.contains(tag);
+    final inC = current.contains(tag);
+
+    if (inO && inC) return .unchanged;
+    if (!inO && inC) return .added;
+    return .removed;
+  }
 
   bool equal(Set<Tag> a, Set<Tag> b) {
     return a.length == b.length && a.difference(b).isEmpty;

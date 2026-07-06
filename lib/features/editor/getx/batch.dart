@@ -30,13 +30,6 @@ class BatchTagManager extends TagManager {
   Map<String, TagService> get original => files.first.tags.value;
 
   @override
-  void add(Tag tag) {
-    if (!editable) return;
-    if (tag.raw.isEmpty) return;
-    current.add(tag);
-  }
-
-  @override
   void remove(Tag tag) {
     if (!editable) return;
     if (tag.raw.isEmpty) return;
@@ -87,18 +80,13 @@ class BatchTagManager extends TagManager {
 
   @override
   TagState state(Tag tag) {
-    final inO = initial.contains(tag);
-    final inC = current.contains(tag);
+    final state = super.state(tag);
 
-    if (inO && inC) {
-      if (added.contains(tag)) {
-        return .added;
-      }
-
-      return .unchanged;
+    if (state == .unchanged && added.contains(tag)) {
+      return .added;
     }
-    if (!inO && inC) return .added;
-    return .removed;
+
+    return state;
   }
 
   @override
@@ -132,9 +120,9 @@ class BatchTagManager extends TagManager {
   }
 
   @override
-  List<HydrusFile> take([int count = 4]) {
-    return files.take(count).toList();
-  }
+  List<HydrusFile> take([int count = 4]) => files
+      .take(count)
+      .toList();
 
   @override
   bool get unlocked =>
