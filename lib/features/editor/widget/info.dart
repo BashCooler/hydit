@@ -13,7 +13,7 @@ class Diff extends StatelessWidget {
   static const additions = Color(0xFF3fb950);
   static const deletions = Color(0xFFf85149);
 
-  TagManagerBase get manager => Get.find();
+  TagManager get manager => Get.find();
 
   @override
   Widget build(BuildContext context) => Obx(() {

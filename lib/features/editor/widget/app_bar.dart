@@ -52,7 +52,7 @@ class Info extends StatelessWidget {
 
   const Info({super.key, required this.tag});
 
-  TagManagerBase get manager => Get.find();
+  TagManager get manager => Get.find();
   FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
 
@@ -87,7 +87,7 @@ class Info extends StatelessWidget {
     );
   }
 
-  Widget buildFileCount(TagManagerBase manager) {
+  Widget buildFileCount(TagManager manager) {
     return 'Editing ${manager.fileCount} files'.n..labelMedium;
   }
 

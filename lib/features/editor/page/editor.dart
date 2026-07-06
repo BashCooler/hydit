@@ -19,7 +19,7 @@ class Editor extends StatelessWidget {
 
   const Editor({super.key, required this.tag});
 
-  TagManagerBase get manager => Get.find();
+  TagManager get manager => Get.find();
 
   @override
   Widget build(BuildContext context) {

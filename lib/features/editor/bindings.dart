@@ -108,14 +108,14 @@ class EditorBindings extends Bindings {
           ),
           tag: page.tag,
         );
-        Get.put<TagManagerBase>(
+        Get.put<TagManager>(
           SingleTagManager(
             page.files[page.index!],
             service: page.service,
           ),
         );
       case .batch:
-        Get.put<TagManagerBase>(BatchTagManager(page.files.rx));
+        Get.put<TagManager>(BatchTagManager(page.files.rx));
     }
   }
 }

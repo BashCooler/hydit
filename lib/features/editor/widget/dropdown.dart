@@ -9,7 +9,7 @@ import '../getx/base.dart';
 class ServiceDropdown extends StatelessWidget {
   const ServiceDropdown({super.key});
 
-  TagManagerBase get manager => Get.find();
+  TagManager get manager => Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class DropdownTrailing extends StatelessWidget {
 
   const DropdownTrailing(this.service, {super.key});
 
-  TagManagerBase get manager => Get.find();
+  TagManager get manager => Get.find();
 
   @override
   Widget build(BuildContext context) {

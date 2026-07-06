@@ -23,7 +23,7 @@ class EditorBottomBar extends StatelessWidget {
     required this.child,
   });
 
-  TagManagerBase get manager => Get.find();
+  TagManager get manager => Get.find();
   FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
 

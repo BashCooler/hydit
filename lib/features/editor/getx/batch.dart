@@ -10,7 +10,7 @@ import 'package:hydit/services/executor.dart';
 import 'package:hydit/utils/utils.dart';
 
 
-class BatchTagManager extends TagManagerBase {
+class BatchTagManager extends TagManager {
   final List<HydrusFile> files;
 
   BatchTagManager(this.files) {

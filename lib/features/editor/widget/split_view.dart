@@ -31,7 +31,7 @@ class Up extends HookWidget {
     },
   };
 
-  TagManagerBase get manager => Get.find();
+  TagManager get manager => Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class Down extends HookWidget {
 
   const Down({super.key, required this.tag});
 
-  TagManagerBase get manager => Get.find();
+  TagManager get manager => Get.find();
   TagSearchController get tagSearch => Get.find(tag: tag);
 
   @override

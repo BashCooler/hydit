@@ -13,7 +13,7 @@ class EditorTagSearchBar extends StatelessWidget {
 
   const EditorTagSearchBar({super.key, required this.tag});
 
-  TagManagerBase get manager => Get.find();
+  TagManager get manager => Get.find();
   TagSearchController get tagSearch => Get.find(tag: tag);
 
   @override

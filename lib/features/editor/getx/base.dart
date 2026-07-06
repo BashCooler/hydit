@@ -10,7 +10,7 @@ import 'package:hydit/services/repo.dart';
 enum TagState { unchanged, added, removed }
 
 
-abstract class TagManagerBase {
+abstract class TagManager {
   Repo get repo => Get.find();
 
   final _initial = <String, Set<Tag>>{};

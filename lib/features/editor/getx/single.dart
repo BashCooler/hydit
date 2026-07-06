@@ -8,7 +8,7 @@ import 'package:hydit/reactive/file.dart';
 import 'base.dart';
 
 
-class SingleTagManager extends TagManagerBase {
+class SingleTagManager extends TagManager {
   final Rx<HydrusFile> file;
 
   SingleTagManager(HydrusFile file, {String? service}) : file = file.obs {
