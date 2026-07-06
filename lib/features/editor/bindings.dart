@@ -115,7 +115,9 @@ class EditorBindings extends Bindings {
           ),
         );
       case .batch:
-        Get.put<TagManager>(BatchTagManager(page.files.rx));
+        Get.put<TagManager>(
+          BatchTagManager(page.files.rx),
+        );
     }
   }
 }

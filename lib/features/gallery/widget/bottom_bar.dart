@@ -48,7 +48,7 @@ class SelectionBottomBar extends StatelessWidget {
                   SelectAllButton(tag: tag),
                   IconButton(
                     tooltip: 'Edit tags',
-                    icon: const Icon(Icons.edit),
+                    icon: const Icon(Symbols.edit_square),
                     onPressed: selection.edit,
                   ),
                   SelectRangeButton(tag: tag),
