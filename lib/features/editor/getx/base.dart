@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/service.dart';
 import 'package:hydit/reactive/file.dart';
+import 'package:hydit/services/executor.dart';
 import 'package:hydit/services/repo.dart';
 
 
@@ -84,6 +85,10 @@ abstract class TagManagerBase {
 
     return true;
   }
+
+  /// Send changes to Hydrus and update local files
+  /// metadata.
+  Future<Result<void>> save();
 
   /// Generate [TagDiff]s.
   List<TagDiff> summarize() {

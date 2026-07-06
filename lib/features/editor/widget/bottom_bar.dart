@@ -23,7 +23,6 @@ class EditorBottomBar extends StatelessWidget {
   });
 
   FileStore get files => Get.find(tag: tag);
-  TagManager get manager => Get.find();
   PageGetxController get page => Get.find(tag: tag);
 
   Future<void> navigateToPage(int target) async {
@@ -33,7 +32,7 @@ class EditorBottomBar extends StatelessWidget {
     if (!await callback()) return;
 
     page.navigateToPage(target);
-    manager.init(files[page.i]);
+    Get.find<TagManager>().init(files[page.i]);
   }
 
   @override

@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import '../getx/manager.dart';
+import '../getx/base.dart';
 
 
 class Diff extends StatelessWidget {
@@ -13,7 +13,7 @@ class Diff extends StatelessWidget {
   static const additions = Color(0xFF3fb950);
   static const deletions = Color(0xFFf85149);
 
-  TagManager get manager => Get.find();
+  TagManagerBase get manager => Get.find();
 
   @override
   Widget build(BuildContext context) => Obx(() {

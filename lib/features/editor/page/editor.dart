@@ -6,7 +6,7 @@ import 'package:hydit/utils/utils.dart';
 import 'package:hydit/widgets/dialog.dart';
 import 'package:hydit/services/services.dart';
 
-import '../getx/manager.dart';
+import '../getx/base.dart';
 import '../widget/widgets.dart';
 import '../widget/dropdown.dart';
 
@@ -19,7 +19,7 @@ class Editor extends StatelessWidget {
 
   const Editor({super.key, required this.tag});
 
-  TagManager get manager => Get.find();
+  TagManagerBase get manager => Get.find();
 
   @override
   Widget build(BuildContext context) {

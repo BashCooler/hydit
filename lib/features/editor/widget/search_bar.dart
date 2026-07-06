@@ -5,7 +5,7 @@ import 'package:hydit/features/search/getx/tag_search.dart';
 import 'package:hydit/features/search/widget/search.dart';
 import 'package:hydit/features/search/widget/tag_actions.dart';
 
-import '../getx/manager.dart';
+import '../getx/base.dart';
 
 
 class EditorTagSearchBar extends StatelessWidget {
@@ -13,7 +13,7 @@ class EditorTagSearchBar extends StatelessWidget {
 
   const EditorTagSearchBar({super.key, required this.tag});
 
-  TagManager get manager => Get.find();
+  TagManagerBase get manager => Get.find();
   TagSearchController get tagSearch => Get.find(tag: tag);
 
   @override

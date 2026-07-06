@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
+import 'package:hydit/features/editor/getx/base.dart';
 
 import 'package:hydit/utils/theme.dart';
 import 'package:hydit/reactive/file_store.dart';
@@ -8,6 +9,7 @@ import 'package:hydit/features/search/getx/tag_search.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 import 'package:hydit/widgets/swipeable.dart';
 
+import 'getx/batch.dart';
 import 'page/editor.dart';
 import 'getx/manager.dart';
 
@@ -94,11 +96,7 @@ class EditorBindings extends Bindings {
   @override
   void dependencies() {
 
-    final files = Get.put(
-      FileStore.copy(page.files),
-      tag: page.tag,
-    );
-
+    final files = Get.put(page.files.copy(), tag: page.tag);
     Get.put(TagSearchController(), tag: page.tag);
 
     switch (page.mode) {
@@ -110,17 +108,14 @@ class EditorBindings extends Bindings {
           ),
           tag: page.tag,
         );
-        Get.put(
+        Get.put<TagManagerBase>(
           TagManager(
             page.files[page.index!],
             service: page.service,
           ),
         );
       case .batch:
-        // Get.put(
-        //   TagManager()
-        //     ..initBatch(files.byIds(page.ids!)),
-        // );
+        Get.put<TagManagerBase>(BatchTagManager(files.rx));
     }
   }
 }

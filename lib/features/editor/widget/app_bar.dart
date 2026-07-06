@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/editor/widget/preview_grid.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/reactive/file.dart';
@@ -8,7 +7,8 @@ import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
 import 'info.dart';
-import '../getx/manager.dart';
+import 'preview_grid.dart';
+import '../getx/base.dart';
 
 
 class EditorAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -52,7 +52,7 @@ class Info extends StatelessWidget {
 
   const Info({super.key, required this.tag});
 
-  TagManager get manager => Get.find();
+  TagManagerBase get manager => Get.find();
   FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
 
@@ -87,7 +87,7 @@ class Info extends StatelessWidget {
     );
   }
 
-  Widget buildFileCount(TagManager manager) {
+  Widget buildFileCount(TagManagerBase manager) {
     return 'Editing ${manager.fileCount} files'.n..labelMedium;
   }
 

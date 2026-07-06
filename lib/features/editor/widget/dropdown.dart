@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 import 'package:hydit/features/editor/widget/info.dart';
 
-import '../getx/manager.dart';
+import '../getx/base.dart';
 
 
 class ServiceDropdown extends StatelessWidget {
   const ServiceDropdown({super.key});
 
-  TagManager get manager => Get.find();
+  TagManagerBase get manager => Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class DropdownTrailing extends StatelessWidget {
 
   const DropdownTrailing(this.service, {super.key});
 
-  TagManager get manager => Get.find();
+  TagManagerBase get manager => Get.find();
 
   @override
   Widget build(BuildContext context) {

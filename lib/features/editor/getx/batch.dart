@@ -4,35 +4,50 @@ import 'package:hydit/entities/service.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/features/editor/getx/base.dart';
+import 'package:hydit/services/executor.dart';
 
 
 class BatchTagManager extends TagManagerBase {
-  final _ids = <int>{};
-  final _files = <HydrusFile>[];
+  final List<HydrusFile> files;
+
+  BatchTagManager(this.files);
 
   @override
-  int get fileCount => _ids.length;
+  int get fileCount => files.length;
 
   /// Service name -> tag -> count.
   final _counts = <String, Map<Tag, int>>{};
 
   @override
-  Map<String, TagService> get original => _files.first.tags.value;
+  Map<String, TagService> get original => files.first.tags.value;
 
   @override
   void add(Tag tag) {
-    // TODO: implement add
+    if (!editable) return;
+    if (tag.raw.isEmpty) return;
+    current.add(tag);
   }
 
   @override
   void remove(Tag tag) {
-    // TODO: implement remove
+    if (!editable) return;
+    if (tag.raw.isEmpty) return;
+    switch (state(tag)) {
+      case .removed:
+        current.add(tag);
+      case _:
+        current.remove(tag);
+    }
   }
 
   @override
   TagState state(Tag tag) {
-    // TODO: implement state
-    throw UnimplementedError();
+    final inO = initial.contains(tag);
+    final inC = current.contains(tag);
+
+    if (inO && inC) return .unchanged;
+    if (!inO && inC) return .added;
+    return .removed;
   }
 
   @override
@@ -41,8 +56,7 @@ class BatchTagManager extends TagManagerBase {
   }
 
   void init(Iterable<HydrusFile> files) {
-    _ids.assignAll(files.map((f) => f.id));
-    _files.assignAll(files);
+    this.files.assignAll(files);
 
     final Map<String, Set<Tag>> tags = {};
 
@@ -67,6 +81,12 @@ class BatchTagManager extends TagManagerBase {
 
   @override
   List<HydrusFile> take([int count = 4]) {
-    return _files.take(count).toList();
+    return files.take(count).toList();
+  }
+
+  @override
+  Future<Result<void>> save() {
+    // TODO
+    throw UnimplementedError();
   }
 }

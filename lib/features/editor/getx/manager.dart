@@ -51,8 +51,6 @@ class TagManager extends TagManagerBase {
   @override
   int count(Tag tag) => 1;
 
-  // MARK: INIT
-
   void init(HydrusFile file, [String? service]) {
     this.file = file;
 
@@ -66,10 +64,7 @@ class TagManager extends TagManagerBase {
     }
   }
 
-  // MARK: SAVE
-
-  /// Send changes to Hydrus and update local files
-  /// metadata.
+  @override
   Future<Result<void>> save() async {
     final result = await repo
         .apply([file.id], summarize());
