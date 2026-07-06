@@ -142,7 +142,17 @@ class BatchTagManager extends TagManagerBase {
 
   @override
   Future<Result<void>> save() async {
-    final changes = summarize();
+    final result = await repo
+        .apply(files.map((f) => f.id), summarize());
+
+    if (result is Failure) return result;
+
+    return repo.update(files);
+  }
+
+  @override
+  List<TagDiff> summarize() {
+    final changes = super.summarize();
 
     for (final MapEntry(key: name, value: tagsToAdd) in _added.entries) {
       if (tagsToAdd.isEmpty) continue;
@@ -156,11 +166,15 @@ class BatchTagManager extends TagManagerBase {
       changes.add(change);
     }
 
-    final result = await repo
-        .apply(files.map((f) => f.id), changes);
+    return changes;
+  }
 
-    if (result is Failure) return result;
+  @override
+  ({int add, int del}) diff([String? service]) {
+    final diff = super.diff(service);
 
-    return repo.update(files);
+    final add = _added[service ?? this.service.value]!;
+
+    return (add: diff.add + add.length, del: diff.del);
   }
 }
