@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/features/viewer/widget/popup.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import 'package:hydit/widgets/acrylic.dart' as a;
@@ -39,7 +40,7 @@ class BottomActions extends StatelessWidget {
               duration: const Duration(milliseconds: 150),
               curve: Curves.decelerate,
             ),
-            icon: const Icon(Icons.keyboard_arrow_left),
+            icon: const Icon(Symbols.keyboard_arrow_left),
           ),
 
           Obx(() {
@@ -60,7 +61,7 @@ class BottomActions extends StatelessWidget {
 
           a.IconButton(
             tooltip: 'Next page',
-            icon: const Icon(Icons.keyboard_arrow_right),
+            icon: const Icon(Symbols.keyboard_arrow_right),
             onPressed: () => page.controller.nextPage(
               duration: const Duration(milliseconds: 150),
               curve: Curves.decelerate,

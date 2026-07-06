@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as m;
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:niku/namespace.dart' as n;
 
 
@@ -189,7 +190,7 @@ class More extends StatelessWidget {
     return PopupMenuButton(
       tooltip: 'More',
       icon: Icon(
-        Icons.more_vert,
+        Symbols.more_vert,
         color: Theme.of(context)
             .colorScheme
             .onPrimaryContainer,
