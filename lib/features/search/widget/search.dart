@@ -30,22 +30,25 @@ class TagSearchBar extends HookWidget {
   Widget build(BuildContext context) {
     final node = useFocusNode();
 
-    return TextField(
-      enabled: enabled,
-      textAlignVertical: .center,
-      autofocus: autofocus,
-      focusNode: node,
-      controller: tagSearchController.controller,
-      decoration: InputDecoration(
-        hintText: hintText,
-        filled: true,
-        fillColor: Colors.transparent,
-        suffixIcon: actions,
-        border: .none,
+    return Padding(
+      padding: const .symmetric(horizontal: 5),
+      child: TextField(
+        enabled: enabled,
+        textAlignVertical: .center,
+        autofocus: autofocus,
+        focusNode: node,
+        controller: tagSearchController.controller,
+        decoration: InputDecoration(
+          hintText: hintText,
+          filled: true,
+          fillColor: Colors.transparent,
+          suffixIcon: actions,
+          border: .none,
+        ),
+        onChanged: tagSearchController.query,
+        onSubmitted: (_) => onSubmitted?.call(),
+        onTapOutside: (_) => keepFocus(node),
       ),
-      onChanged: tagSearchController.query,
-      onSubmitted: (_) => onSubmitted?.call(),
-      onTapOutside: (_) => keepFocus(node),
     );
   }
 }

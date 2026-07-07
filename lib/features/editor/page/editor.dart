@@ -29,22 +29,24 @@ class Editor extends StatelessWidget {
       child: Scaffold(
         appBar: EditorAppBar(tag: tag),
         body: SafeArea(
-          child: Column(
-            children: [
-              Obx(() => Up(tags: manager.tags)),
-              const Divider(height: 1),
-              SizedBox(
-                height: 55 * 3,
-                child: Down(tag: tag),
-              ),
-            ],
-          ),
+          child: Obx(() {
+            return Column(
+              children: [
+                Up(tags: manager.tags),
+
+                if (manager.editable)
+                  const Divider(height: 1),
+
+                if (manager.editable)
+                  SizedBox(
+                    height: 55 * 3,
+                    child: Down(tag: tag),
+                  ),
+              ],
+            );
+          }),
         ),
         floatingActionButtonLocation: .endFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: Navigator.of(context).maybePop,
-          child: const Icon(Icons.check),
-        ),
         bottomNavigationBar: SafeArea(
           child: Column(
             mainAxisSize: .min,

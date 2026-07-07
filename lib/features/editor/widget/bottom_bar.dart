@@ -54,7 +54,15 @@ class EditorBottomBar extends StatelessWidget {
           icon: const Icon(Icons.keyboard_arrow_left),
           onPressed: () => navigateToPage(page.i - 1),
         ),
+
         Expanded(child: child),
+
+        IconButton(
+          tooltip: 'Save',
+          icon: const Icon(Icons.save),
+          onPressed: Navigator.of(context).maybePop,
+        ),
+
         IconButton(
           tooltip: 'Next page',
           icon: const Icon(Icons.keyboard_arrow_right),

@@ -19,14 +19,15 @@ class TagPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: .expand,
-      children: [
-        PlaceholderText(query: query),
-        InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const .only(left: 6),
+    return Container(
+      height: 48,
+      padding: const .fromLTRB(10, 0, 5, 0),
+      child: Stack(
+        fit: .expand,
+        children: [
+          PlaceholderText(query: query),
+          InkWell(
+            onTap: onTap,
             child: Row(
               spacing: 5,
               children: [
@@ -34,7 +35,8 @@ class TagPanel extends StatelessWidget {
                   child: SingleChildScrollView(
                     scrollDirection: .horizontal,
                     child: Obx(() {
-                      return n.Wrap(buildChips())..spacing = 5;
+                      return n.Wrap(buildChips())
+                        ..spacing = 5;
                     }),
                   ),
                 ),
@@ -42,9 +44,9 @@ class TagPanel extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ],
-    ).niku..height = 48;
+        ],
+      ),
+    );
   }
 
   List<InputChip> buildChips() {

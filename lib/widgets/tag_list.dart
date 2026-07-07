@@ -80,3 +80,28 @@ class TagTile extends StatelessWidget {
   }
 }
 
+
+class TagCount extends StatelessWidget {
+  final Tag tag;
+  final int count;
+
+  const TagCount({
+    super.key,
+    required this.tag,
+    required this.count,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.square(
+      dimension: 24,
+      child: Center(
+        child: '$count'.n
+          ..color = tag.color
+          ..fontSize = 14,
+      ),
+    );
+  }
+}
+
+
