@@ -113,10 +113,12 @@ class EditorBindings extends Bindings {
             page.files[page.index!],
             service: page.service,
           ),
+          tag: page.tag,
         );
       case .batch:
         Get.put<TagManager>(
           BatchTagManager(page.files.rx),
+          tag: page.tag,
         );
     }
   }

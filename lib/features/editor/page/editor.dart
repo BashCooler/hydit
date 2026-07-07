@@ -19,7 +19,7 @@ class Editor extends StatelessWidget {
 
   const Editor({super.key, required this.tag});
 
-  TagManager get manager => Get.find();
+  TagManager get manager => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class Editor extends StatelessWidget {
           child: Obx(() {
             return Column(
               children: [
-                Up(tags: manager.tags),
+                Up(tag: tag, tags: manager.tags),
 
                 if (manager.editable)
                   const Divider(height: 1),
@@ -55,7 +55,7 @@ class Editor extends StatelessWidget {
             tag: tag,
             navigation: manager.fileCount == 1,
             callback: confirmPendingChanges,
-            child: const ServiceDropdown(),
+            child: ServiceDropdown(tag: tag),
           ),
         ),
       ),

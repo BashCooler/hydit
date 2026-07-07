@@ -52,8 +52,8 @@ class Info extends StatelessWidget {
 
   const Info({super.key, required this.tag});
 
-  TagManager get manager => Get.find();
   FileStore get files => Get.find(tag: tag);
+  TagManager get manager => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
 
   @override
@@ -74,7 +74,7 @@ class Info extends StatelessWidget {
               children: [
                 '${manager.current.length} tags'.n
                   ..fontSize = 16,
-                const Diff(),
+                Diff(tag: tag),
               ],
             ),
             switch (manager.fileCount) {

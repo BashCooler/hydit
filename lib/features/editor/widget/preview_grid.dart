@@ -20,8 +20,8 @@ class PreviewGrid extends StatelessWidget {
 
   static const placeholder = ColoredBox(color: Colors.black12);
 
-  TagManager get manager => Get.find();
   FileStore get files => Get.find(tag: tag);
+  TagManager get manager => Get.find(tag: tag);
 
   Widget count(int count) {
     return ColoredBox(

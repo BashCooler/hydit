@@ -12,9 +12,10 @@ import '../getx/base.dart';
 
 
 class Up extends HookWidget {
+  final String tag;
   final List<Tag> tags;
 
-  const Up({super.key, required this.tags});
+  const Up({super.key, required this.tag, required this.tags});
 
   Color? background(TagState state) => switch (state) {
     .added => addition,
@@ -29,7 +30,7 @@ class Up extends HookWidget {
     };
   }
 
-  TagManager get manager => Get.find();
+  TagManager get manager => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,7 @@ class Down extends HookWidget {
 
   const Down({super.key, required this.tag});
 
-  TagManager get manager => Get.find();
+  TagManager get manager => Get.find(tag: tag);
   TagSearchController get tagSearch => Get.find(tag: tag);
 
   @override

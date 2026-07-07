@@ -7,9 +7,11 @@ import '../getx/base.dart';
 
 
 class ServiceDropdown extends StatelessWidget {
-  const ServiceDropdown({super.key});
+  final String tag;
 
-  TagManager get manager => Get.find();
+  const ServiceDropdown({super.key, required this.tag});
+
+  TagManager get manager => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,11 @@ class ServiceDropdown extends StatelessWidget {
           DropdownMenuEntry<String>(
             value: s,
             label: s,
-            trailingIcon: DropdownTrailing(s),
+            trailingIcon: DropdownTrailing(
+              tag: tag,
+              service: s,
+              count: manager.length(s),
+            ),
           ),
       ],
       onSelected: (service) {
@@ -46,21 +52,24 @@ class ServiceDropdown extends StatelessWidget {
 
 
 class DropdownTrailing extends StatelessWidget {
+  final String tag;
+  final int count;
   final String service;
 
-  const DropdownTrailing(this.service, {super.key});
-
-  TagManager get manager => Get.find();
+  const DropdownTrailing({
+    super.key,
+    required this.tag,
+    required this.count,
+    required this.service,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final count = manager.length(service);
-
     return Row(
       mainAxisSize: .min,
       mainAxisAlignment: .spaceBetween,
       children: [
-        Diff(service: service),
+        Diff(tag: tag, service: service),
         if (count > 0) Badge(label: Text('$count')),
       ],
     );

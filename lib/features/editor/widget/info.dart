@@ -6,14 +6,15 @@ import '../getx/base.dart';
 
 
 class Diff extends StatelessWidget {
+  final String tag;
   final String? service;
 
-  const Diff({super.key, this.service});
+  const Diff({super.key, required this.tag, this.service});
 
   static const additions = Color(0xFF3fb950);
   static const deletions = Color(0xFFf85149);
 
-  TagManager get manager => Get.find();
+  TagManager get manager => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) => Obx(() {
