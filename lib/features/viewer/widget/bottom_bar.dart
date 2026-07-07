@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/features/viewer/widget/popup.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import 'package:hydit/widgets/acrylic.dart' as a;
 import 'package:hydit/widgets/gradient.dart';
@@ -19,11 +18,6 @@ class BottomActions extends StatelessWidget {
 
   FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
-
-  void openSheet() {
-    final SnappingSheetController sheet = Get.find(tag: tag);
-    sheet.snapToPosition(.factor(positionFactor: 0.5));
-  }
 
   static const shadows = [Shadow(blurRadius: 24)];
 
@@ -49,7 +43,7 @@ class BottomActions extends StatelessWidget {
             return a.Pill(
               children: [
                 a.TextButton(
-                  onPressed: openSheet,
+                  onPressed: page.openSheet,
                   child: Obx(() => a.Text(file.all.length, padding: .zero)),
                 ),
                 page.sheetProgress > 0.5 && editButton != null

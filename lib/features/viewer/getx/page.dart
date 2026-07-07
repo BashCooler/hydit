@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
@@ -22,6 +23,8 @@ class PageGetxController extends GetxController {
   final _blockDismiss = false.obs;
   set blockDismiss(bool block) => _blockDismiss.value = block;
   bool get blockDismiss => _blockDismiss.value || zoom.value;
+
+  final sheet = SnappingSheetController();
 
   final sheetProgress = 0.0.obs;
 
@@ -72,5 +75,13 @@ class PageGetxController extends GetxController {
       case _:
         grid?.jumpTo(index: item - 2 > 0 ? item - 2 : 0);
     }
+  }
+
+  void openSheet() {
+    sheet.snapToPosition(.factor(positionFactor: 0.5));
+  }
+
+  void closeSheet() {
+    sheet.snapToPosition(.factor(positionFactor: 0.0));
   }
 }

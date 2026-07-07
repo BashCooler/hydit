@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
 import 'package:hydit/features/viewer/getx/video.dart';
-import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
@@ -73,10 +72,6 @@ class ViewerBindings implements Bindings {
     );
     Get.put(
       PageGetxController(initial: page.index, grid: page.gallery.grid),
-      tag: page.tag,
-    );
-    Get.put(
-      SnappingSheetController(),
       tag: page.tag,
     );
     Get.put(

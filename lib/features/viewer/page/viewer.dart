@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/widgets/gradient.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
@@ -41,9 +40,8 @@ class Viewer extends StatelessWidget {
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
 
-        final SnappingSheetController sheet = Get.find(tag: tag);
         if (page.sheetProgress.value > 0.5) {
-          sheet.snapToPosition(SnappingPosition.factor(positionFactor: 0));
+          page.closeSheet();
           return;
         }
 

@@ -27,7 +27,6 @@ class TagSheet extends HookWidget {
 
   FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
-  SnappingSheetController get sheet => Get.find(tag: tag);
 
   static const snaps = <SnappingPosition>[
     SnappingPosition.factor(positionFactor: 0.0),
@@ -54,7 +53,7 @@ class TagSheet extends HookWidget {
     final scroll = useScrollController();
 
     return SnappingSheet(
-      controller: sheet,
+      controller: page.sheet,
       onSheetMoved: syncPageLock,
       lockOverflowDrag: true,
       initialSnappingPosition: snaps.first,
