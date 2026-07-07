@@ -7,7 +7,7 @@ import 'dio.dart';
 
 
 class HydrusApi with DioClient {
-  static const int version = 81;
+  static const int version = 94;
 
   HydrusApi({Uri? uri, String? key}) {
     update(uri, key);
