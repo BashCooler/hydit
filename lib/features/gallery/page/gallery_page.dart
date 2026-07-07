@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 
-import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/viewer/bindings.dart';
@@ -42,7 +41,7 @@ class Gallery extends StatelessWidget {
     ViewerPage(files, index, gallery)
         .editor(editor)
         .beforePush(gallery.hide)
-        .onClose(gallery.show.delayed(transition))
+        .onClose(gallery.show)
         .push();
   }
 

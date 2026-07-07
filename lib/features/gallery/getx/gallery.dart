@@ -22,7 +22,10 @@ class GalleryController extends GetxController {
     scroll.animateTo(0, duration: 500.ms, curve: Curves.easeInCubic);
   }
 
-  void show() => _visible.value = true;
+  void show() async {
+    await sleep(transition);
+    _visible.value = true;
+  }
 
   void hide() => _visible.value = false;
 }

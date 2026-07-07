@@ -125,7 +125,10 @@ class SelectRangeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Obx(() {
-    if (!selection.selectedRange) return const Nothing();
+
+    if (!selection.selectedRange) {
+      return const SizedBox.shrink();
+    }
 
     return IconButton(
       tooltip: 'Select range',
