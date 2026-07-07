@@ -54,7 +54,6 @@ class Info extends StatelessWidget {
 
   FileStore get files => Get.find(tag: tag);
   TagManager get manager => Get.find(tag: tag);
-  PageGetxController get page => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {
@@ -77,10 +76,7 @@ class Info extends StatelessWidget {
                 Diff(tag: tag),
               ],
             ),
-            switch (manager.fileCount) {
-              1 => buildMeta(files[page.i]),
-              _ => buildFileCount(manager),
-            },
+            buildFileCount(manager),
           ],
         );
       }),
