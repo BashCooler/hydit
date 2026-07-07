@@ -65,6 +65,7 @@ class QueryController extends GetxController {
         .run()
         .loading(gallery.loading)
         .tapSuccess((ids) {
+          if (ids.isEmpty) files.rx.clear();
           files.loader!.ids.assignAll(ids);
           files.loader!.load(clear: true);
         })
