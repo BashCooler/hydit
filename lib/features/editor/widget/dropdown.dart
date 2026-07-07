@@ -56,15 +56,13 @@ class DropdownTrailing extends StatelessWidget {
   Widget build(BuildContext context) {
     final count = manager.length(service);
 
-    return SizedBox(
-      width: 150,
-      child: Row(
-        mainAxisAlignment: .spaceBetween,
-        children: [
-          Diff(service: service),
-          if (count > 0) Badge(label: Text('$count')),
-        ],
-      ),
+    return Row(
+      mainAxisSize: .min,
+      mainAxisAlignment: .spaceBetween,
+      children: [
+        Diff(service: service),
+        if (count > 0) Badge(label: Text('$count')),
+      ],
     );
   }
 }
