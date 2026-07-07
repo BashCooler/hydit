@@ -42,24 +42,20 @@ class Editor extends StatelessWidget {
                     height: 55 * 3,
                     child: Down(tag: tag),
                   ),
+
+                const Divider(height: 1),
+                EditorTagSearchBar(tag: tag),
               ],
             );
           }),
         ),
         floatingActionButtonLocation: .endFloat,
         bottomNavigationBar: SafeArea(
-          child: Column(
-            mainAxisSize: .min,
-            children: [
-              const Divider(height: 1),
-              EditorTagSearchBar(tag: tag),
-              EditorBottomBar(
-                tag: tag,
-                navigation: manager.fileCount == 1,
-                callback: confirmPendingChanges,
-                child: const ServiceDropdown(),
-              ),
-            ],
+          child: EditorBottomBar(
+            tag: tag,
+            navigation: manager.fileCount == 1,
+            callback: confirmPendingChanges,
+            child: const ServiceDropdown(),
           ),
         ),
       ),
