@@ -16,14 +16,14 @@ abstract class TagManager {
   final _initial = <String, Set<Tag>>{};
   final _current = <String, RxSet<Tag>>{}.obs;
 
-  Set<Tag> get initial => _initial[service.value]!;
-  Set<Tag> get current => _current[service.value]!;
+  Set<Tag> get initial => _initial[_service.value]!;
+  Set<Tag> get current => _current[_service.value]!;
 
   /// Use this to access fields like key, editable etc.
   Map<String, TagService> get original;
 
   /// Whether selected service is editable
-  bool get editable => original[service.value]!.editable;
+  bool get editable => original[_service.value]!.editable;
 
   /// Union of original and added tags.
   Set<Tag> get union => { ...initial, ...current };
@@ -37,13 +37,17 @@ abstract class TagManager {
     _current.assignAll(tags.map((k, v) => MapEntry(k, v.obs)));
   }
 
-  final service = 'all known tags'.obs;
+  final _service = 'all known tags'.obs;
+
+  String get service => _service.value;
+
+  set service(String service) {
+    if (services.contains(service)) _service.value = service;
+  }
 
   Iterable<String> get services => _initial.keys;
 
   int get fileCount;
-
-  void select(String service) => this.service.value = service;
 
   void add(Tag tag) {
     if (!editable) return;

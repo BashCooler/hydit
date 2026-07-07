@@ -15,7 +15,7 @@ class ServiceDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownMenu<String>(
       width: Get.width,
-      initialSelection: manager.service.value,
+      initialSelection: manager.service,
       expandedInsets: const .symmetric(horizontal: 7.5),
       enableSearch: false,
       inputDecorationTheme: InputDecorationTheme(
@@ -38,7 +38,7 @@ class ServiceDropdown extends StatelessWidget {
           ),
       ],
       onSelected: (service) {
-        if (service != null) manager.select(service);
+        if (service != null) manager.service = service;
       },
     );
   }

@@ -18,7 +18,7 @@ class BatchTagManager extends TagManager {
   }
 
   final _added = <String, RxSet<Tag>>{};
-  Set<Tag> get added => _added[service.value]!;
+  Set<Tag> get added => _added[service]!;
 
   @override
   int get fileCount => files.length;
@@ -91,7 +91,7 @@ class BatchTagManager extends TagManager {
 
   @override
   int count(Tag tag) {
-    return _counts[service.value]?[tag] ?? 0;
+    return _counts[service]?[tag] ?? 0;
   }
 
   void init() {
@@ -109,6 +109,8 @@ class BatchTagManager extends TagManager {
     }
 
     assign(tags);
+
+    service = 'my tags';
   }
 
   void countService(String name, TagService service) {
@@ -161,7 +163,7 @@ class BatchTagManager extends TagManager {
   ({int add, int del}) diff([String? service]) {
     final diff = super.diff(service);
 
-    final add = _added[service ?? this.service.value]!;
+    final add = _added[service ?? this.service]!;
 
     return (add: diff.add + add.length, del: diff.del);
   }

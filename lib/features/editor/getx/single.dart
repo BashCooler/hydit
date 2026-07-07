@@ -44,9 +44,7 @@ class SingleTagManager extends TagManager {
 
     assign(tags);
 
-    if (service != null) {
-      this.service.value = service;
-    }
+    if (service != null) this.service = service;
   }
 
   @override
