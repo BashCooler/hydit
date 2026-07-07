@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:hydit/widgets/tag_list.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -45,6 +46,9 @@ class Search extends HookWidget {
               onTap: (tag) {
                 search.clear();
                 query.add(tag.raw);
+              },
+              onLongPress: (tag) {
+                Clipboard.setData(ClipboardData(text: tag.raw));
               },
             ),
           ),

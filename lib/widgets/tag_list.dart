@@ -48,24 +48,29 @@ class TagList extends StatelessWidget {
 
 
 class TagTile extends StatelessWidget {
+  final bool enabled;
   final Tag tag;
   final Color? background;
   final Widget? trailing;
   final void Function(Tag tag)? onTap;
+  final void Function(Tag tag)? onLongPress;
 
   const TagTile({
     super.key,
+    this.enabled = true,
     required this.tag,
     this.background,
     this.trailing,
     this.onTap,
+    this.onLongPress,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      enabled: onTap != null,
+      enabled: enabled,
       onTap: () => onTap?.call(tag),
+      onLongPress: () => onLongPress?.call(tag),
       tileColor: background,
       minTileHeight: 55,
       title: tag.pretty.n

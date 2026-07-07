@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -47,8 +48,12 @@ class Up extends HookWidget {
 
             final state = manager.state(tag);
             return TagTile(
+              enabled: manager.editable,
               tag: tag,
               onTap: manager.editable ? manager.remove : null,
+              onLongPress: (tag) {
+                Clipboard.setData(ClipboardData(text: tag.raw));
+              },
               background: background(state),
               trailing: Row(
                 mainAxisSize: .min,
@@ -92,6 +97,9 @@ class Down extends HookWidget {
         itemBuilder: (context, tag) => TagTile(
           tag: tag,
           onTap: manager.editable ? manager.add : null,
+          onLongPress: (tag) {
+            Clipboard.setData(ClipboardData(text: tag.raw));
+          },
           trailing: Icon(icon),
         ),
       );
