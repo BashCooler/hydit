@@ -21,7 +21,7 @@ class TagPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 48,
-      padding: const .fromLTRB(10, 0, 5, 0),
+      padding: const .fromLTRB(5, 0, 5, 0),
       child: Stack(
         fit: .expand,
         children: [
@@ -34,10 +34,15 @@ class TagPanel extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     scrollDirection: .horizontal,
-                    child: Obx(() {
-                      return n.Wrap(buildChips())
-                        ..spacing = 5;
-                    }),
+                    child: Padding(
+                      padding: const .only(left: 5),
+                      child: Obx(() {
+                        return Wrap(
+                          spacing: 5,
+                          children: buildChips(),
+                        );
+                      }),
+                    ),
                   ),
                 ),
                 ?actions,
