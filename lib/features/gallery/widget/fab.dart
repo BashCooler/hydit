@@ -26,14 +26,14 @@ class GalleryFAB extends StatelessWidget {
     return Obx(() {
       return SequencedSwitcher(
         visible: selection.off && gallery.badges,
-        showFirst: files.loader!.failed,
-        first: FAB(
-          onPressed: files.loader!.retry,
-          child: const Icon(Icons.refresh),
-        ),
-        second: a.FAB(
+        showFirst: !files.loader!.failed,
+        first: a.FAB(
           icon: const Icon(Icons.search),
           onTap: SearchPage(tag: tag).push,
+        ),
+        second: FAB(
+          onPressed: files.loader!.retry,
+          child: const Icon(Icons.refresh),
         ),
       );
     });
