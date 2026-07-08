@@ -5,7 +5,6 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import 'package:hydit/widgets/acrylic.dart' as a;
 import 'package:hydit/widgets/gradient.dart';
-import 'package:hydit/reactive/file_store.dart';
 
 import '../getx/page.dart';
 
@@ -16,7 +15,6 @@ class BottomActions extends StatelessWidget {
 
   const BottomActions({super.key, required this.tag, this.editButton});
 
-  FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
 
   static const shadows = [Shadow(blurRadius: 24)];
@@ -38,7 +36,7 @@ class BottomActions extends StatelessWidget {
           ),
 
           Obx(() {
-            final file = files[page.i];
+            final file = page.current;
 
             return a.Pill(
               children: [

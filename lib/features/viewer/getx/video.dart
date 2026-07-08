@@ -7,7 +7,6 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'page.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/reactive/file_store.dart';
 
 
 class VideoGetxController extends GetxController {
@@ -27,7 +26,6 @@ class VideoGetxController extends GetxController {
   final _ready = false.obs;
   bool get ready => _ready.value;
 
-  FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
 
   @override
@@ -59,7 +57,7 @@ class VideoGetxController extends GetxController {
   }
 
   Future<void> _onPageChanged(int index) async {
-    final file = files[index];
+    final file = page.files[index];
 
     if (file.meta.type != 'video') {
       reset();

@@ -6,7 +6,6 @@ import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import '../getx/page.dart';
@@ -30,7 +29,6 @@ class Viewer extends StatelessWidget {
     this.editor = true,
   });
 
-  FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
 
   @override
@@ -73,7 +71,6 @@ class Pages extends StatelessWidget {
   static const scroll = SnappyPageScrollPhysics();
   static const noScroll = NeverScrollableScrollPhysics();
 
-  FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
 
   @override
@@ -86,13 +83,13 @@ class Pages extends StatelessWidget {
           onPageChanged: page.onPageChanged,
           physics: page.noScroll ? noScroll : scroll,
           controller: page.controller,
-          itemCount: files.length,
+          itemCount: page.files.length,
           preloadPagesCount: 3,
           itemBuilder: (context, index) {
             return DismissibleFile(
               tag: tag,
               index: index,
-              file: files[index],
+              file: page.files[index],
             );
           },
         );

@@ -9,7 +9,6 @@ import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/widgets/tag_list.dart';
 import 'package:hydit/widgets/service_list.dart';
-import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/editor/bindings.dart';
 
 import '../getx/page.dart';
@@ -25,7 +24,6 @@ class TagSheet extends HookWidget {
     required this.child,
   });
 
-  FileStore get files => Get.find(tag: tag);
   PageGetxController get page => Get.find(tag: tag);
 
   static const snaps = <SnappingPosition>[
@@ -71,13 +69,13 @@ class TagSheet extends HookWidget {
           SafeArea(
             top: false,
             child: Obx(() {
-              final tags = files[page.i].tags.value;
+              final tags = page.current.tags.value;
 
               if (page.showServices.value) {
                 return ServiceList(
                   tags,
                   controller: scroll,
-                  onTap: (name) => EditorPage(files, name)
+                  onTap: (name) => EditorPage(page.files, name)
                       .paged(page.i)
                       .passTag(tag)
                       .push(),
@@ -85,7 +83,7 @@ class TagSheet extends HookWidget {
               }
 
               return TagList(
-                tags: files[page.i].all.toList(),
+                tags: page.current.all.toList(),
                 scrollController: scroll,
                 itemBuilder: (context, tag) {
                   return TagTile(

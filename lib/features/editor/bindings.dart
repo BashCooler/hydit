@@ -101,13 +101,6 @@ class EditorBindings extends Bindings {
 
     switch (page.mode) {
       case .paged:
-        Get.put(
-          PageGetxController(
-            initial: page.index!,
-            grid: page.gallery?.grid,
-          ),
-          tag: page.tag,
-        );
         Get.put<TagManager>(
           SingleTagManager(
             page.files[page.index!],

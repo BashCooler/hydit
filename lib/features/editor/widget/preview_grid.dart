@@ -6,7 +6,6 @@ import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/editor/getx/base.dart';
 import 'package:hydit/features/gallery/bindings.dart';
-import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/viewer/page/preview.dart';
 import 'package:hydit/features/editor/getx/single.dart';
 
@@ -75,12 +74,13 @@ class PreviewGrid extends StatelessWidget {
 
   void openPreview(HydrusFile file) {
     final tag = 'Preview-${DateTime.now().microsecondsSinceEpoch}';
+
     Get.to(() => Preview(tag: tag, index: 0, file: file),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
       opaque: false,
-      binding: BindingsBuilder.put(() =>
-          PageGetxController(initial: 0), tag: tag),
+      // binding: BindingsBuilder.put(() =>
+      //     PageGetxController(initial: 0), tag: tag),
     );
   }
 }

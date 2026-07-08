@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/reactive/file.dart';
+import 'package:hydit/reactive/file_store.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
@@ -8,8 +10,13 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 class PageGetxController extends GetxController {
   final GridObserverController? grid;
   final PreloadPageController controller;
+  final FileStore files;
 
   final RxInt index;
+
+  PageGetxController({required this.files, required int initial, this.grid})
+      : index = initial.obs,
+        controller = PreloadPageController(initialPage: initial);
 
   final _pinch = false.obs;
   final _pointers = RxSet<int>();
@@ -28,12 +35,10 @@ class PageGetxController extends GetxController {
 
   final sheetProgress = 0.0.obs;
 
-  PageGetxController({required int initial, this.grid})
-    : index = initial.obs,
-      controller = PreloadPageController(initialPage: initial);
-
   /// Current page index
   int get i => index.value;
+
+  HydrusFile get current => files[i];
 
   /// [Hero] callback. Disable the animation for preloaded pages.
   bool enabled(int index) => index == i;

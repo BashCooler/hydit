@@ -67,11 +67,11 @@ class ViewerBindings implements Bindings {
   @override
   void dependencies() {
     Get.put(
-      FileStore.copy(page.files),
-      tag: page.tag,
-    );
-    Get.put(
-      PageGetxController(initial: page.index, grid: page.gallery.grid),
+      PageGetxController(
+        files: page.files,
+        initial: page.index,
+        grid: page.gallery.grid,
+      ),
       tag: page.tag,
     );
     Get.put(

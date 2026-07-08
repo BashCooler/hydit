@@ -4,7 +4,6 @@ import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/features/viewer/getx/page.dart';
 
 import 'info.dart';
 import 'preview_grid.dart';
