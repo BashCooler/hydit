@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:full_swipe_back_gesture/full_swipe_back_gesture.dart';
 
-import 'package:hydit/utils/theme.dart';
-import 'package:hydit/features/search/getx/query.dart';
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/features/search/getx/query.dart';
 
 import 'getx/gallery.dart';
 import 'getx/selection.dart';
 import 'page/gallery_page.dart';
-
-enum Mode { full, preview }
 
 
 class GalleryPage {
@@ -24,7 +22,7 @@ class GalleryPage {
   bool _swipe = false;
 
   GalleryPage({this.state})
-      : tag = 'Gallery-${DateTime.now().microsecondsSinceEpoch}';
+      : tag = 'Gallery'.unique();
 
   GalleryPage withSearch() {
     _search = true;

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
 import 'package:hydit/features/viewer/getx/video.dart';
 
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
@@ -10,16 +11,18 @@ import 'getx/page.dart';
 
 
 class ViewerPage {
+  final String tag;
+
   final int index;
   final FileStore files;
   final GalleryController gallery;
 
-  String? tag;
+  ViewerPage(this.files, this.index, this.gallery)
+      : tag = 'Viewer'.unique();
+
   bool _editor = true;
   VoidCallback? _beforePush;
   VoidCallback? _onClose;
-
-  ViewerPage(this.files, this.index, this.gallery);
 
   ViewerPage editor(bool editor) {
     _editor = editor;
@@ -37,13 +40,11 @@ class ViewerPage {
   }
 
   void push() {
-    tag ??= 'Viewer-${DateTime.now().microsecondsSinceEpoch}';
-
     _beforePush?.call();
 
     Get.to(
       () => Viewer(
-        tag: tag!,
+        tag: tag,
         index: index,
         gallery: gallery,
         editor: _editor,
@@ -75,7 +76,7 @@ class ViewerBindings implements Bindings {
       tag: page.tag,
     );
     Get.put(
-      VideoGetxController(tag: page.tag!),
+      VideoGetxController(tag: page.tag),
       tag: page.tag,
     );
   }

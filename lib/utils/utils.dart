@@ -14,3 +14,10 @@ Future<void> sleep(Duration duration) => Future.delayed(duration);
 void copyTag(Tag tag) {
   Clipboard.setData(ClipboardData(text: tag.raw));
 }
+
+
+extension Unique on String {
+  String unique() {
+    return '$this-${DateTime.now().microsecondsSinceEpoch}';
+  }
+}
