@@ -9,7 +9,7 @@ class Version {
   const Version._();
 
   static const _apiUrl =
-      'https://api.github.com/repos/OwlCarousel2/OwlCarousel2/releases/latest';
+      'https://api.github.com/repos/BashCooler/hydit/releases/latest';
 
   /// Current version of Hydit.
   static Future<String> current() =>
