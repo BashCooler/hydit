@@ -21,11 +21,17 @@ class ViewerPage {
       : tag = 'Viewer'.unique();
 
   bool _editor = true;
+  String? _heroPrefix;
   VoidCallback? _beforePush;
   VoidCallback? _onClose;
 
   ViewerPage editor(bool editor) {
     _editor = editor;
+    return this;
+  }
+
+  ViewerPage hero({required String prefix}) {
+    _heroPrefix = prefix;
     return this;
   }
 
@@ -47,6 +53,7 @@ class ViewerPage {
         tag: tag,
         index: index,
         editor: _editor,
+        heroPrefix: _heroPrefix,
       ),
       transition: .fadeIn,
       curve: Curves.easeInCubic,

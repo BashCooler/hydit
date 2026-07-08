@@ -13,7 +13,7 @@ class ViewFile extends StatelessWidget {
   final int index;
   final HydrusFile file;
   final String tag;
-  final String? heroTag;
+  final Object? heroTag;
 
   const ViewFile({
     super.key,

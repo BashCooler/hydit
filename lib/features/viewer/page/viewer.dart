@@ -18,12 +18,14 @@ class Viewer extends StatelessWidget {
   final int index;
   final String tag;
   final bool editor;
+  final String? heroPrefix;
 
   const Viewer({
     super.key,
     required this.index,
     required this.tag,
     this.editor = true,
+    this.heroPrefix,
   });
 
   PageGetxController get page => Get.find(tag: tag);
@@ -49,7 +51,7 @@ class Viewer extends StatelessWidget {
         extendBody: true,
         body: TagSheet(
           tag: tag,
-          child: Pages(tag: tag),
+          child: Pages(tag: tag, heroPrefix: heroPrefix),
         ),
         bottomNavigationBar: ViewerBottomBar(
           tag: tag,
@@ -62,8 +64,9 @@ class Viewer extends StatelessWidget {
 
 class Pages extends StatelessWidget {
   final String tag;
+  final String? heroPrefix;
 
-  const Pages({super.key, required this.tag});
+  const Pages({super.key, required this.tag, this.heroPrefix});
 
   static const scroll = SnappyPageScrollPhysics();
   static const noScroll = NeverScrollableScrollPhysics();
@@ -87,6 +90,7 @@ class Pages extends StatelessWidget {
               tag: tag,
               index: index,
               file: page.files[index],
+              heroPrefix: heroPrefix,
             );
           },
         );
@@ -100,12 +104,14 @@ class DismissibleFile extends StatelessWidget {
   final int index;
   final HydrusFile file;
   final String tag;
+  final String? heroPrefix;
 
   const DismissibleFile({
     super.key,
     required this.index,
     required this.tag,
     required this.file,
+    this.heroPrefix,
   });
 
   @override
@@ -124,7 +130,14 @@ class DismissibleFile extends StatelessWidget {
         minScale: 0,
         dragSensitivity: 1,
         builder: (context, scrollController) {
-          return ViewFile(tag: tag, index: index, file: file);
+          return ViewFile(
+            tag: tag,
+            index: index,
+            file: file,
+            heroTag: heroPrefix != null
+                ? '$heroPrefix${file.id}'
+                : file.id,
+          );
         },
       );
     });

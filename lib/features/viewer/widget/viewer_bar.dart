@@ -23,17 +23,21 @@ class ViewerBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GradientBottomAppBar(
       child: Row(
+        mainAxisSize: .max,
         mainAxisAlignment: .spaceBetween,
         spacing: 10.0,
         children: [
-          a.IconButton(
-            tooltip: 'Previous page',
-            onPressed: () => page.controller.previousPage(
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.decelerate,
-            ),
-            icon: const Icon(Symbols.keyboard_arrow_left),
-          ),
+          if (page.files.length > 1)
+            a.IconButton(
+              tooltip: 'Previous page',
+              onPressed: () => page.controller.previousPage(
+                duration: const Duration(milliseconds: 150),
+                curve: Curves.decelerate,
+              ),
+              icon: const Icon(Symbols.keyboard_arrow_left),
+            )
+          else
+            const SizedBox.shrink(),
 
           Obx(() {
             final file = page.current;
@@ -42,7 +46,7 @@ class ViewerBottomBar extends StatelessWidget {
               children: [
                 a.TextButton(
                   onPressed: page.openSheet,
-                  child: Obx(() => a.Text(file.all.length, padding: .zero)),
+                  child: a.Text(file.all.length, padding: .zero),
                 ),
                 page.sheetProgress > 0.5 && editButton != null
                     ? editButton!
@@ -51,14 +55,17 @@ class ViewerBottomBar extends StatelessWidget {
             );
           }),
 
-          a.IconButton(
-            tooltip: 'Next page',
-            icon: const Icon(Symbols.keyboard_arrow_right),
-            onPressed: () => page.controller.nextPage(
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.decelerate,
-            ),
-          ),
+          if (page.files.length > 1)
+            a.IconButton(
+              tooltip: 'Next page',
+              icon: const Icon(Symbols.keyboard_arrow_right),
+              onPressed: () => page.controller.nextPage(
+                duration: const Duration(milliseconds: 150),
+                curve: Curves.decelerate,
+              ),
+            )
+          else
+            const SizedBox.shrink(),
         ],
       ),
     );
