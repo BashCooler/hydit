@@ -81,8 +81,8 @@ class ViewerBindings implements Bindings {
       ),
       tag: page.tag,
     );
-    Get.put(
-      VideoGetxController(tag: page.tag),
+    Get.lazyPut(
+      () => VideoGetxController(tag: page.tag),
       tag: page.tag,
     );
   }

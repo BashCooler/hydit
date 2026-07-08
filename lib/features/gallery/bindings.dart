@@ -94,11 +94,15 @@ class GalleryBindings extends Bindings {
 
   @override
   void dependencies() {
-    final gallery = GalleryController();
-    final selection = SelectionController(tag: page.tag);
+    Get.put(
+      GalleryController(),
+      tag: page.tag,
+    );
 
-    Get.put(gallery, tag: page.tag);
-    Get.put(selection, tag: page.tag);
+    Get.lazyPut(
+      () => SelectionController(tag: page.tag),
+      tag: page.tag,
+    );
 
     if (page._search) {
       Get.put(

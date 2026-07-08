@@ -28,11 +28,13 @@ class VideoGetxController extends GetxController {
 
   PageGetxController get page => Get.find(tag: tag);
 
+  late final Worker _worker;
+
   @override
   void onInit() {
     super.onInit();
 
-    ever(page.index, _onPageChanged);
+    _worker = ever(page.index, _onPageChanged);
     _onPageChanged(page.i);
 
     _buffer = player.stream.buffer
@@ -43,6 +45,7 @@ class VideoGetxController extends GetxController {
   void onClose() {
     player.dispose();
     _buffer?.cancel();
+    _worker.dispose();
     super.onClose();
   }
 
@@ -70,7 +73,7 @@ class VideoGetxController extends GetxController {
 
     await load(file.url);
 
-    await player.seek(0.s);
+    await player.seek(.zero);
     await player.play();
   }
 
