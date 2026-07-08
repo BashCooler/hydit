@@ -55,7 +55,11 @@ class Up extends HookWidget {
                 spacing: 20,
                 children: [
                   if (manager.fileCount > 1)
-                    TagCount(tag: tag, count: manager.count(tag)),
+                    TagCount(
+                      tag: tag,
+                      count: manager.count(tag),
+                      padding: .zero,
+                    ),
 
                   if (manager.editable)
                     Icon(icon(manager.editable, state)),
