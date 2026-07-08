@@ -76,8 +76,7 @@ class TagSheet extends HookWidget {
                   tags,
                   controller: scroll,
                   onTap: (name) => EditorPage(page.files, name)
-                      .paged(page.i)
-                      .passTag(tag)
+                      .paged(page)
                       .push(),
                 );
               }

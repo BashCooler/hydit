@@ -1,10 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/reactive/file.dart';
-import 'package:hydit/reactive/file_store.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
+
+import 'package:hydit/reactive/file.dart';
+import 'package:hydit/reactive/file_store.dart';
 
 
 class PageGetxController extends GetxController {
@@ -35,10 +36,21 @@ class PageGetxController extends GetxController {
 
   final sheetProgress = 0.0.obs;
 
-  /// Current page index
+  /// Current page index.
   int get i => index.value;
 
+  /// Currently selected file.
   HydrusFile get current => files[i];
+
+  HydrusFile next() {
+    navigateToPage(i + 1);
+    return current;
+  }
+
+  HydrusFile previous() {
+    navigateToPage(i - 1);
+    return current;
+  }
 
   /// [Hero] callback. Disable the animation for preloaded pages.
   bool enabled(int index) => index == i;
@@ -63,7 +75,7 @@ class PageGetxController extends GetxController {
   /// Navigates the visible [PageView] and keeps the background [GridView]
   /// centered on the same image.
   void navigateToPage(int page) {
-    if (page == i) return;
+    if (page == i || page < 0 || page >= files.length) return;
 
     index.value = page;
     jumpToGridViewItem(page);

@@ -53,7 +53,6 @@ class Editor extends StatelessWidget {
         bottomNavigationBar: SafeArea(
           child: EditorBottomBar(
             tag: tag,
-            navigation: manager.fileCount == 1,
             callback: confirmPendingChanges,
             child: ServiceDropdown(tag: tag),
           ),

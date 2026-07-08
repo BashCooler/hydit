@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:niku/extra/primitive.dart';
 
 import 'package:hydit/utils/utils.dart';
@@ -96,8 +97,10 @@ class SelectionController extends GetxController {
     switch (ids.length) {
       case 1:
         final index = files.indexById(ids.first);
+        final page = PageGetxController(files: files, initial: index);
+
         EditorPage(files)
-            .paged(index, gallery)
+            .paged(page)
             .onClose(clear)
             .push();
       case _:

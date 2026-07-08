@@ -24,25 +24,24 @@ class Preview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      child: Obx(() {
-        return DismissiblePage(
-          disabled: page.zoom.value,
-          backgroundColor: Get.theme.scaffoldBackgroundColor,
-          onDismissed: Get.back,
-          direction: .vertical,
-          interactionMode: .gesture,
-          minScale: 0,
-          builder: (context, scrollController) {
-            return ViewFile(
-              tag: tag,
-              index: index,
-              file: file,
-              heroTag: 'Preview ${file.id}',
-            );
-          },
-        );
-      }),
-    );
+    return Obx(() {
+
+      return DismissiblePage(
+        disabled: page.zoom.value,
+        backgroundColor: Get.theme.scaffoldBackgroundColor,
+        onDismissed: Get.back,
+        direction: .vertical,
+        interactionMode: .gesture,
+        minScale: 0,
+        builder: (context, scrollController) {
+          return ViewFile(
+            tag: tag,
+            index: index,
+            file: file,
+            heroTag: 'Preview ${file.id}',
+          );
+        },
+      );
+    });
   }
 }

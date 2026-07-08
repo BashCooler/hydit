@@ -1,59 +1,56 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/editor/getx/base.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/features/viewer/getx/page.dart';
-
+import '../getx/base.dart';
 import '../getx/single.dart';
 
 
 class EditorBottomBar extends StatelessWidget {
   final String tag;
   final Future<bool> Function() callback;
-  final bool navigation;
   final Widget child;
 
   const EditorBottomBar({
     super.key,
     required this.tag,
     required this.callback,
-    required this.navigation,
     required this.child,
   });
 
-  FileStore get files => Get.find(tag: tag);
   TagManager get manager => Get.find(tag: tag);
-  PageGetxController get page => Get.find(tag: tag);
 
-  Future<void> navigateToPage(int target) async {
-    if (target < 0) return;
-    if (target >= files.length) return;
-
+  /// Select next file.
+  Future<void> next() async {
     if (!await callback()) return;
 
-    page.navigateToPage(target);
+    final manager = this.manager as PagedTagManager;
+    manager.page.next();
+    manager.init();
+  }
 
-    final manager = this.manager as SingleTagManager;
-    manager.init(files[page.i]);
+  /// Select previous file.
+  Future<void> previous() async {
+    if (!await callback()) return;
+
+    final manager = this.manager as PagedTagManager;
+    manager.page.previous();
+    manager.init();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    if (!navigation) {
-      return child;
-    }
+    final paged = manager is PagedTagManager;
 
     return Padding(
-      padding: .symmetric(horizontal: 5),
+      padding: const .symmetric(horizontal: 5),
       child: n.Row([
-        IconButton(
-          tooltip: 'Previous page',
-          icon: const Icon(Icons.keyboard_arrow_left),
-          onPressed: () => navigateToPage(page.i - 1),
-        ),
+        if (paged)
+          IconButton(
+            tooltip: 'Previous page',
+            icon: const Icon(Icons.keyboard_arrow_left),
+            onPressed: previous,
+          ),
 
         Expanded(child: child),
 
@@ -63,11 +60,12 @@ class EditorBottomBar extends StatelessWidget {
           onPressed: Navigator.of(context).maybePop,
         ),
 
-        IconButton(
-          tooltip: 'Next page',
-          icon: const Icon(Icons.keyboard_arrow_right),
-          onPressed: () => navigateToPage(page.i + 1),
-        ),
+        if (paged)
+          IconButton(
+            tooltip: 'Next page',
+            icon: const Icon(Icons.keyboard_arrow_right),
+            onPressed: next,
+          ),
       ]),
     );
   }

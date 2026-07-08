@@ -39,8 +39,8 @@ class PreviewGrid extends StatelessWidget {
     if (length == 1) {
 
       return Obx(() {
-        final manager = this.manager as SingleTagManager;
-        final file = manager.file.value;
+        final manager = this.manager as PagedTagManager;
+        final file = manager.file;
 
         return GestureDetector(
           onTap: () => openPreview(file),

@@ -2,12 +2,12 @@ import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
 import 'package:hydit/features/editor/getx/base.dart';
 
-import 'package:hydit/utils/theme.dart';
+import 'package:hydit/utils/utils.dart';
+import 'package:hydit/widgets/swipeable.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/search/getx/tag_search.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
-import 'package:hydit/widgets/swipeable.dart';
 
 import 'getx/batch.dart';
 import 'page/editor.dart';
@@ -32,28 +32,26 @@ enum Mode { paged, batch }
 /// because it was already instantiated in `Viewer` and [Get] will not
 /// create the controller again.
 class EditorPage {
+  final String tag;
   final FileStore files;
   final String? service;
 
-  String? tag;
-  int? index;
-  GalleryController? gallery;
   List<int>? ids;
+  PageGetxController? page;
   Mode mode = Mode.paged;
   VoidCallback? _onClose;
 
-  EditorPage(this.files, [this.service]);
+  EditorPage(this.files, [this.service])
+      : tag = 'Editor'.unique();
 
-  EditorPage paged(int index, [GalleryController? gallery]) {
-    this.index = index;
-    this.gallery = gallery;
+  EditorPage paged(PageGetxController page) {
+    this.page = page;
     mode = .paged;
 
     return this;
   }
 
   EditorPage batch(GalleryController gallery, List<int> ids) {
-    this.gallery = gallery;
     this.ids = ids;
     mode = .batch;
 
@@ -66,16 +64,9 @@ class EditorPage {
     return this;
   }
 
-  EditorPage passTag(String tag) {
-    this.tag = tag;
-
-    return this;
-  }
-
   void push() {
-    tag ??= 'Editor-${DateTime.now().microsecondsSinceEpoch}';
-
-    Get.to(() => SwipeablePage(child: Editor(tag: tag!)),
+    Get.to(
+      () => SwipeablePage(child: Editor(tag: tag)),
       transition: .rightToLeft,
       duration: transition,
       curve: Curves.easeInOutCubic,
@@ -102,8 +93,8 @@ class EditorBindings extends Bindings {
     switch (page.mode) {
       case .paged:
         Get.put<TagManager>(
-          SingleTagManager(
-            page.files[page.index!],
+          PagedTagManager(
+            page: page.page!,
             service: page.service,
           ),
           tag: page.tag,
