@@ -114,6 +114,8 @@ class DismissibleFile extends StatelessWidget {
     this.heroPrefix,
   });
 
+  static const threshold = 0.035;
+
   @override
   Widget build(BuildContext context) {
     final PageGetxController page = Get.find(tag: tag);
@@ -129,6 +131,10 @@ class DismissibleFile extends StatelessWidget {
         interactionMode: .gesture,
         minScale: 0,
         dragSensitivity: 1,
+        dismissThresholds: {
+          DismissiblePageDismissDirection.down: threshold,
+          DismissiblePageDismissDirection.up: threshold,
+        },
         builder: (context, scrollController) {
           return ViewFile(
             tag: tag,
