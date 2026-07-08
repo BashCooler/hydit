@@ -26,6 +26,7 @@ ThemeData darkTheme() => ThemeData(
     thumbVisibility: .all(true),
     thickness: .all(6),
     radius: .circular(3),
+    interactive: true,
   ),
 );
 

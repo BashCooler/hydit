@@ -1,14 +1,16 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart' hide RefreshCallback;
 import 'package:expressive_refresh/expressive_refresh.dart';
-import 'package:hydit/features/gallery/widget/widgets.dart';
-import 'package:hydit/utils/theme.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
+import 'package:hydit/utils/theme.dart';
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/widgets/images.dart';
+import 'package:hydit/widgets/scrollbar.dart';
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/features/gallery/getx/gallery.dart';
+
+import 'widgets.dart';
+import '../getx/gallery.dart';
 
 
 class GalleryGridView extends StatelessWidget {
@@ -63,7 +65,7 @@ class GalleryGridView extends StatelessWidget {
           }
         },
         child: Obx(() {
-          return Scrollbar(
+          return ColoredScrollbar(
             controller: gallery.scroll,
             child: GridView.builder(
               padding: .fromLTRB(

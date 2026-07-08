@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/entities/tag.dart';
+import 'package:hydit/widgets/scrollbar.dart';
 
 
 /// Parameters [trailing] and [onTap] apply to each [ListTile] in
@@ -30,7 +31,7 @@ class TagList extends StatelessWidget {
       child: MediaQuery.removePadding(
         context: context,
         removeTop: true,
-        child: Scrollbar(
+        child: ColoredScrollbar(
           controller: scrollController,
           child: ListView.builder(
             reverse: reverse,
