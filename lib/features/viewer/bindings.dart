@@ -15,9 +15,9 @@ class ViewerPage {
 
   final int index;
   final FileStore files;
-  final GalleryController gallery;
+  final GalleryController? gallery;
 
-  ViewerPage(this.files, this.index, this.gallery)
+  ViewerPage(this.files, this.index, [this.gallery])
       : tag = 'Viewer'.unique();
 
   bool _editor = true;
@@ -70,7 +70,7 @@ class ViewerBindings implements Bindings {
       PageGetxController(
         files: page.files,
         initial: page.index,
-        grid: page.gallery.grid,
+        grid: page.gallery?.grid,
       ),
       tag: page.tag,
     );

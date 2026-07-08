@@ -2,14 +2,15 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/extra/primitive.dart';
 
+import 'package:hydit/utils/utils.dart';
+import 'package:hydit/widgets/images.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/editor/getx/base.dart';
 import 'package:hydit/features/gallery/bindings.dart';
-import 'package:hydit/features/viewer/page/preview.dart';
 import 'package:hydit/features/editor/getx/single.dart';
-
-import 'package:hydit/widgets/images.dart';
+import 'package:hydit/features/viewer/page/preview.dart';
 
 
 class PreviewGrid extends StatelessWidget {
@@ -73,14 +74,16 @@ class PreviewGrid extends StatelessWidget {
   }
 
   void openPreview(HydrusFile file) {
-    final tag = 'Preview-${DateTime.now().microsecondsSinceEpoch}';
+    final tag = 'Preview'.unique();
 
     Get.to(() => Preview(tag: tag, index: 0, file: file),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
       opaque: false,
-      // binding: BindingsBuilder.put(() =>
-      //     PageGetxController(initial: 0), tag: tag),
+      binding: BindingsBuilder.put(
+        () => PageGetxController(initial: 0, files: FileStore()),
+        tag: tag,
+      ),
     );
   }
 }
