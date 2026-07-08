@@ -29,7 +29,7 @@
 
 ## Features
 
-> *Note on URL import*: The import is considered successful when the link reaches Hydrus. To my knowledge, there's no consistent way to verify if the content was actually loaded afterward. If you know how to do it, let me know!
+> *Note on URL import:* The import is considered successful when the link reaches Hydrus. To my knowledge, there's no consistent way to verify if the content was actually loaded afterward. If you know how to do it, let me know!
 
 - **File and URL import** - via Android share menu
 - **Tag search** - suggests, multiple tags, sorting options
@@ -44,13 +44,8 @@ ___
 
 1. Install the latest version from [Releases](https://github.com/BashCooler/hydit/releases)
 2. Enable API in your Hydrus client, follow these [instructions](https://hydrusnetwork.github.io/hydrus/client_api.html)
-3. In your Hydrus client navigate to `services -> review services -> local -> client api`, add a new key with "permits everything" checked, copy the newly created access key
+3. In your Hydrus client navigate to `services -> review services -> local -> client api`, add a new key with `permits everything` checked, copy the newly created access key
 4. Open Hydit, navigate to settings, paste the key in `API Key` field, specify the Hydrus `URL`, press `Verify and save`. If everything is done properly you will see the success notification
-
-## Roadmap
-
-Planned features:
-- ~~namespace sorting~~ I tried. It's like impossible to do with a lot of search results, too damn network heavy. So... we should do something like *comics view*? Simply make a quick way to navigate through chapters, pages and stuff. I'll try to think of something
 
 ## Contributing
 
@@ -58,7 +53,7 @@ Contributions are welcome! Just try to keep the codebase simple.
 
 Feel free to ask any questions and share your ideas.
 
-if you encountered a bug report in in [Issues](https://github.com/BashCooler/hydit/issues). 
+if you encounter a bug, report it in [Issues](https://github.com/BashCooler/hydit/issues). 
 
 ## See also
 
