@@ -79,5 +79,6 @@ class VideoGetxController extends GetxController {
     if (buffer < 500.ms) return;
 
     _ready.value = true;
+    player.play();
   }
 }
