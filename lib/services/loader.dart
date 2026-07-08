@@ -1,6 +1,5 @@
 import 'dart:math' hide log;
 import 'dart:convert' hide json;
-import 'dart:developer';
 
 import 'package:dartx/dartx.dart';
 import 'package:get/get.dart';
@@ -64,8 +63,6 @@ class Loader {
 
     _loading = true;
 
-    final watch = Stopwatch()..start();
-
     final result = await repo.api
         .getFileMetadata(load)
         .run()
@@ -86,8 +83,6 @@ class Loader {
     } else {
       store.rx.addAll(files);
     }
-
-    log('Length: ${store.rx.length}, time: ${watch.elapsedMilliseconds} ms');
 
     _loading = false;
 
