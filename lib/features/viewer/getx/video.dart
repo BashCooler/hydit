@@ -7,6 +7,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'page.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
+import 'package:hydit/services/video.dart';
 
 
 class VideoGetxController extends GetxController {
@@ -14,10 +15,11 @@ class VideoGetxController extends GetxController {
 
   VideoGetxController({required this.tag});
 
-  final Player player = Player()
-    ..setVolume(0);
+  VideoService get service => Get.find();
 
-  late final controller = VideoController(player);
+  Player get player => service.player;
+
+  VideoController get controller => service.controller;
 
   HydrusFile? _current;
 
@@ -43,7 +45,7 @@ class VideoGetxController extends GetxController {
 
   @override
   void onClose() {
-    player.dispose();
+    player.stop();
     _buffer?.cancel();
     _worker.dispose();
     super.onClose();

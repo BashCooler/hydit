@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hydit/services/video.dart';
 
 import 'package:media_kit/media_kit.dart';
 import 'package:hive_ce_flutter/adapters.dart';
@@ -30,6 +31,7 @@ void main() async {
   await Permission.notification.request();
 
   Get.put(Repo());
+  Get.put(VideoService());
 
   timeDilation = 1.0;
   runApp(const App());
