@@ -99,7 +99,9 @@ class Settings extends HookWidget {
       update
           ? 'Update available'
           : 'Up to date',
-      'You have the latest version',
+      update
+          ? 'Version ${release.tag}'
+          : 'You have the latest version',
       TextButton.icon(
         onPressed: () => launchUrlString(release.url),
         label: 'Release'.n,

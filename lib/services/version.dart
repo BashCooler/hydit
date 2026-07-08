@@ -27,13 +27,15 @@ class Version {
       return Failure('Connection error', 'Failed to get update info');
     }
 
-    final cur = await current();
-    final ver = map['tag_name'].replaceFirst('v', '');
+    final cur = sv.Version.parse(await current());
 
-    final update = sv.Version.parse(cur) > sv.Version.parse(ver);
+    final versionString = map['tag_name'].replaceFirst('v', '');
+    final available = sv.Version.parse(versionString);
+
+    final update = cur < available;
 
     final release = Release(
-      tag: ver,
+      tag: available.canonicalizedVersion,
       url: map['html_url'],
       update: update,
     );
