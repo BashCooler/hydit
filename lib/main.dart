@@ -30,9 +30,6 @@ void main() async {
   await enableEdgeToEdge();
   await Permission.notification.request();
 
-  Get.put(Repo());
-  Get.put(VideoService());
-
   timeDilation = 1.0;
   runApp(const App());
 }
@@ -47,6 +44,16 @@ Future<void> enableEdgeToEdge() async {
       systemNavigationBarContrastEnforced: false,
     ),
   );
+}
+
+
+class GlobalBindings extends Bindings {
+  @override
+  void dependencies() {
+    Get
+      ..put(Repo(), permanent: true)
+      ..put(VideoService(), permanent: true);
+  }
 }
 
 
@@ -66,6 +73,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: darkTheme(),
       initialRoute: '/',
+      initialBinding: GlobalBindings(),
       getPages: [
         GetPage(
           name: '/',
