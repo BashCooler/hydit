@@ -29,13 +29,17 @@ class ViewFile extends StatelessWidget {
   Widget build(BuildContext context) {
     switch(file.meta.type) {
       case 'image':
-        return ZoomableImageView(
+        return ImageView(
           key: ValueKey(file.id),
-          tag: tag,
-          index: index,
-          image: file,
-          heroTag: heroTag,
-          page: page,
+          width: file.meta.width,
+          height: file.meta.height,
+          onZoomChanged: (zoom) => page.zoom.value = zoom,
+          child: ObxHero(
+            index: index,
+            tag: heroTag ?? file.id,
+            page: page,
+            child: HighResImage(image: file),
+          ),
         );
       case 'video':
         return VideoView(index: index, file: file, tag: tag);

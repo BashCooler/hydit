@@ -9,34 +9,26 @@ import 'dart:math' hide log;
 
 import 'package:flutter/material.dart';
 
-import 'package:hydit/reactive/file.dart';
-import 'package:hydit/widgets/images.dart';
 
-import '../getx/page.dart';
-import 'views.dart';
+class ImageView extends StatefulWidget {
+  final double width;
+  final double height;
+  final void Function(bool zoom)? onZoomChanged;
+  final Widget child;
 
-
-class ZoomableImageView extends StatefulWidget {
-  final int index;
-  final HydrusFile image;
-  final String tag;
-  final PageGetxController page;
-  final String? heroTag;
-
-  const ZoomableImageView({
+  const ImageView({
     super.key,
-    required this.index,
-    required this.image,
-    required this.tag,
-    required this.page,
-    this.heroTag,
+    required this.width,
+    required this.height,
+    this.onZoomChanged,
+    required this.child,
   });
 
   @override
-  State<ZoomableImageView> createState() => _ZoomableImageViewState();
+  State<ImageView> createState() => _ImageViewState();
 }
 
-class _ZoomableImageViewState extends State<ZoomableImageView>
+class _ImageViewState extends State<ImageView>
     with SingleTickerProviderStateMixin {
 
   static const double _minScale = 1.0;
@@ -106,7 +98,7 @@ class _ZoomableImageViewState extends State<ZoomableImageView>
   }
 
   void _syncPageSwipeLock() {
-    widget.page.zoom.value = _isZoomed;
+    widget.onZoomChanged?.call(_isZoomed);
   }
 
   void _stopAnimation() {
@@ -185,7 +177,7 @@ class _ZoomableImageViewState extends State<ZoomableImageView>
 
   void _updateLayoutBounds(Size viewport) {
     final nextBaseSize = _containedSize(
-      Size(widget.image.meta.width.toDouble(), widget.image.meta.height.toDouble()),
+      Size(widget.width, widget.height),
       viewport,
     );
     if (_viewportSize == viewport && _baseImageSize == nextBaseSize) return;
@@ -346,7 +338,6 @@ class _ZoomableImageViewState extends State<ZoomableImageView>
 
   @override
   Widget build(BuildContext context) {
-    final image = widget.image;
     return LayoutBuilder(
       builder: (_, constraints) {
         final viewport = constraints.biggest;
@@ -370,12 +361,7 @@ class _ZoomableImageViewState extends State<ZoomableImageView>
                   child: SizedBox(
                     width: _baseImageSize.width,
                     height: _baseImageSize.height,
-                    child: ObxHero(
-                      index: widget.index,
-                      tag: widget.heroTag ?? image.id,
-                      page: widget.page,
-                      child: HighResImage(image: image),
-                    ),
+                    child: widget.child,
                   ),
                 ),
               ),
