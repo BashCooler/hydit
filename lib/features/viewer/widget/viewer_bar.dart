@@ -9,11 +9,11 @@ import 'package:hydit/widgets/gradient.dart';
 import '../getx/page.dart';
 
 
-class BottomActions extends StatelessWidget {
+class ViewerBottomBar extends StatelessWidget {
   final String tag;
   final Widget? editButton;
 
-  const BottomActions({super.key, required this.tag, this.editButton});
+  const ViewerBottomBar({super.key, required this.tag, this.editButton});
 
   PageGetxController get page => Get.find(tag: tag);
 

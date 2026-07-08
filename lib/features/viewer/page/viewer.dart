@@ -8,7 +8,7 @@ import 'package:hydit/reactive/file.dart';
 import 'package:hydit/widgets/gradient.dart';
 
 import '../getx/page.dart';
-import '../widget/bottom_bar.dart';
+import '../widget/viewer_bar.dart';
 import '../widget/physics.dart';
 import '../widget/views.dart';
 import '../widget/tag_sheet.dart';
@@ -51,7 +51,7 @@ class Viewer extends StatelessWidget {
           tag: tag,
           child: Pages(tag: tag),
         ),
-        bottomNavigationBar: BottomActions(
+        bottomNavigationBar: ViewerBottomBar(
           tag: tag,
           editButton: editor ? EditButton(tag: tag) : null,
         ),
