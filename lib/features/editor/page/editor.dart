@@ -30,6 +30,7 @@ class Editor extends StatelessWidget {
         appBar: EditorAppBar(tag: tag),
         body: SafeArea(
           child: Obx(() {
+
             return Column(
               children: [
                 Up(tag: tag, tags: manager.tags),

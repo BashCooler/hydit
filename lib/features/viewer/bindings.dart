@@ -46,7 +46,6 @@ class ViewerPage {
       () => Viewer(
         tag: tag,
         index: index,
-        gallery: gallery,
         editor: _editor,
       ),
       transition: .fadeIn,

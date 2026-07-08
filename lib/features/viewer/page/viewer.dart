@@ -4,9 +4,8 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
-import 'package:hydit/widgets/gradient.dart';
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/features/gallery/getx/gallery.dart';
+import 'package:hydit/widgets/gradient.dart';
 
 import '../getx/page.dart';
 import '../widget/bottom_bar.dart';
@@ -18,14 +17,12 @@ import '../widget/tag_sheet.dart';
 class Viewer extends StatelessWidget {
   final int index;
   final String tag;
-  final GalleryController? gallery;
   final bool editor;
 
   const Viewer({
     super.key,
     required this.index,
     required this.tag,
-    required this.gallery,
     this.editor = true,
   });
 
