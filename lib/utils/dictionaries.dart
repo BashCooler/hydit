@@ -35,7 +35,7 @@ class BasicPermission {
 
 enum FileSortType {
   fileSize(0, 'size'),
-  duration(1, 'duration'),  // should work, but haven't been tested really
+  duration(1, 'duration'),
   importTime(2, 'import time'),
   // filetype(3, 'type'),
   random(4, 'random'),
@@ -43,17 +43,17 @@ enum FileSortType {
   height(6, 'height'),
   ratio(7, 'ratio'),
   numberOfPixels(8, 'number of pixels'),
-  // numberOfTags(9, 'number of tags'),  // doesn't work
+  // numberOfTags(9, 'number of tags'),
   // numberOfMediaViews(10, 'number of views'),
   // totalMediaViewTime(11, 'view time'),
   // approximateBitrate(12, 'bitrate'),
-  hasAudio(13, 'has audio'),
+  // hasAudio(13, 'has audio'),
   modifiedTime(14, 'modified time'),
   // frameRate(15, 'fps'),
   // numberOfFrames(16, 'number of frames'),
   // 17 doesn't exist
   // lastViewedTime(18, 'last viewed time'),
-  // archiveTimestamp(19, 'archived time'),  // doesn't work
+  // archiveTimestamp(19, 'archived time'),
   // hashHex(20, 'has hex'),
   // pixelHashHex(21, 'pixel hash hex'),
   // blurHash(22, 'blur hash'),
