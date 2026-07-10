@@ -18,6 +18,7 @@ class SelectionController extends GetxController {
 
   final String tag;
 
+  Loader get loader => Get.find(tag: tag);
   FileStore get files => Get.find(tag: tag);
   GalleryController get gallery => Get.find(tag: tag);
 
@@ -110,7 +111,7 @@ class SelectionController extends GetxController {
 
         loading(ids.length, token);
 
-        final result = await this.files.loader!
+        final result = await loader
             .ensureLoaded(indices, token)
             .tapFailure(Snack.error);
 

@@ -2,9 +2,10 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 
+import 'package:hydit/services/loader.dart';
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/viewer/bindings.dart';
+import 'package:hydit/features/search/getx/query.dart';
 
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
@@ -25,6 +26,7 @@ class Gallery extends StatelessWidget {
     this.state,
   });
 
+  Loader get loader => Get.find(tag: tag);
   FileStore get files => Get.find(tag: tag);
   QueryController get query => Get.find(tag: tag);
   GalleryController get gallery => Get.find(tag: tag);
@@ -67,7 +69,7 @@ class Gallery extends StatelessWidget {
             selected: selection.isSelected,
             onTap: onTileTap,
             onLongPress: editor ? selection.selectTile : null,
-            onBuild: search ? files.loader?.next : null,
+            onBuild: search ? loader.next : null,
           ),
         ],
       ),

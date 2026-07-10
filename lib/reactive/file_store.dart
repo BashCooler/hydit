@@ -9,20 +9,13 @@ import 'file.dart';
 
 
 class FileStore with IterableMixin<HydrusFile> {
+  final RxList<int> ids;
   final RxList<HydrusFile> rx;
-  late final Loader? loader;
 
   final Repo repo = Get.find();
 
   /// Create empty [FileStore]
-  FileStore()
-      : loader = null,
-        rx = <HydrusFile>[].obs;
-
-  /// For gallery with search feature.
-  FileStore.search() : rx = <HydrusFile>[].obs {
-    loader = Loader(store: this);
-  }
+  FileStore(): ids = .new(), rx = .new();
 
   /// Takes files from [store] with specified [ids] and
   /// created a new [FileStore].
@@ -30,16 +23,18 @@ class FileStore with IterableMixin<HydrusFile> {
   /// New [FileStore] will have the same [HydrusFile] objects as
   /// the original and will impact the original [FileStore].
   FileStore.pickFrom(FileStore store, List<int> ids)
-      : loader = null,
-        rx = store.byIds(ids).obs;
+      : ids = .new(),
+        rx = store.byIds(ids).obs {
+    this.ids.assignAll(rx.map((f) => f.id));
+  }
 
-  /// Create file repo with the same files as given [fileRepo].
+  /// Create file repo with the same files as given [store].
   ///
   /// The copy and the original [FileStore] share the same list, so
   /// all the changes in the copy will affect the original.
-  FileStore.copy(FileStore fileRepo)
-      : loader = null,
-        rx = fileRepo.rx;
+  FileStore.copy(FileStore store)
+      : ids = store.ids,
+        rx = store.rx;
 
   HydrusFile operator [](int index) => rx[index];
 
@@ -47,9 +42,7 @@ class FileStore with IterableMixin<HydrusFile> {
   Iterator<HydrusFile> get iterator => rx.iterator;
 
   @override
-  int get length => loader?.ids.length ?? rx.length;
-
-  Iterable<int> get ids => loader?.ids ?? rx.map((f) => f.id);
+  int get length => rx.length;
 
   /// Create file repo with the same files as given [fileRepo].
   ///
@@ -101,7 +94,7 @@ class FileStore with IterableMixin<HydrusFile> {
 
     for (final file in toRemove) {
       rx.remove(file);
-      loader?.ids.remove(file.id);
+      this.ids.remove(file.id);
     }
   }
 }

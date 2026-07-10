@@ -7,7 +7,6 @@ import 'package:hydit/api/params.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/utils/dictionaries.dart';
-import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 
@@ -26,7 +25,7 @@ class QueryController extends GetxController {
 
   final Repo repo = Get.find();
 
-  FileStore get files => Get.find(tag: tag);
+  Loader get loader => Get.find(tag: tag);
   GalleryController get gallery => Get.find(tag: tag);
 
   List<Tag> get tags => _tags;
@@ -64,11 +63,7 @@ class QueryController extends GetxController {
         .getSearchFiles(params.build())
         .run()
         .loading(gallery.loading)
-        .tapSuccess((ids) {
-          if (ids.isEmpty) files.rx.clear();
-          files.loader!.ids.assignAll(ids);
-          files.loader!.load(clear: true);
-        })
+        .tapSuccess(loader.init)
         .tapFailure(Snack.error);
   }
 

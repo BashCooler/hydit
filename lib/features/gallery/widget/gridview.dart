@@ -76,7 +76,7 @@ class GalleryGridView extends StatelessWidget {
               ),
               physics: physics,
               controller: gallery.scroll,
-              itemCount: files.rx.length,
+              itemCount: files.length,
               gridDelegate: delegate,
               itemBuilder: (context, index) {
                 onBuild?.call(index);

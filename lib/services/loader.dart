@@ -1,8 +1,8 @@
 import 'dart:math' hide log;
 import 'dart:convert' hide json;
 
-import 'package:dartx/dartx.dart';
 import 'package:get/get.dart';
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:deep_pick/deep_pick.dart';
 
@@ -12,15 +12,13 @@ import 'package:hydit/services/services.dart';
 
 
 class Loader {
-  final ids = <int>[].obs;
-  final FileStore store;
+  final String tag;
 
-  final int chunkSize;
+  FileStore get store => Get.find(tag: tag);
 
-  Loader({
-    required this.store,
-    this.chunkSize = 20,
-  });
+  static const int chunkSize = 20;
+
+  Loader({required this.tag});
 
   final Repo repo = Get.find();
 
@@ -33,6 +31,12 @@ class Loader {
   /// Load failed and this [Loader] is locked until successful
   /// [retry].
   bool get failed => _failed.value;
+
+  void init(Iterable<int> ids) {
+    if (store.ids.isEmpty) store.rx.clear();
+    store.ids.assignAll(ids);
+    load(clear: true);
+  }
 
   /// Load next batch of files if needed.
   void next(int index) {
@@ -55,9 +59,9 @@ class Loader {
     var first = true;
 
     final start = clear ? 0 : store.rx.length;
-    final end = min(start + chunkSize, ids.length);
+    final end = min(start + chunkSize, store.ids.length);
 
-    final load = ids.sublist(start, end);
+    final load = store.ids.sublist(start, end);
 
     if (load.isEmpty) return Success(null);
 

@@ -79,7 +79,7 @@ class TagCount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Obx(() {
-    return '${files.length} files'.n
+    return '${files.ids.length} files'.n
       ..color = Colors.white
       ..bodyLarge
       ..shadows = shadows;
