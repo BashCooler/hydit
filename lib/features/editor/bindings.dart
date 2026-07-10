@@ -101,7 +101,7 @@ class EditorBindings extends Bindings {
         );
       case .batch:
         Get.put<TagManager>(
-          BatchTagManager(page.files.cache.values.toList()),
+          BatchTagManager(page.files),
           tag: page.tag,
         );
     }

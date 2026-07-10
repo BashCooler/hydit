@@ -36,6 +36,11 @@ class FileStore {
     return ids.indexWhere((e) => e == id);
   }
 
+  /// Files with provided [ids].
+  Iterable<HydrusFile> withIds(Iterable<int> ids) {
+    return cache.withIds(ids).values;
+  }
+
   /// Remove files with provided [ids].
   Future<void> removeWithIds(Iterable<int> ids) async {
     final toRemove = cache.withIds(ids).values;

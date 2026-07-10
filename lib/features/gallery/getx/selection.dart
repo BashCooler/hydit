@@ -160,7 +160,7 @@ class SelectionController extends GetxController {
       transitionDuration: 150.ms,
       Obx(() {
         return ProgressDialog(
-          progress: files.cache.length,
+          progress: files.length,
           full: full,
           title: 'Loading metadata...'.n,
           token: token,
@@ -170,7 +170,7 @@ class SelectionController extends GetxController {
   }
 
   void download({double delay = 0}) async {
-    final files = this.files.cache.withIds(ids).values;
+    final files = this.files.withIds(ids);
 
     final progress = 0.obs;
     final token = CancellationToken();
