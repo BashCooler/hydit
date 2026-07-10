@@ -56,8 +56,6 @@ class Loader {
       return Success(null);
     }
 
-    var first = true;
-
     final start = clear ? 0 : store.rx.length;
     final end = min(start + chunkSize, store.ids.length);
 
@@ -81,9 +79,8 @@ class Loader {
         .asListOrThrow((e) => e.asMapOrThrow<String, dynamic>())
         .map(HydrusFile.fromMap);
 
-    if (clear && first) {
+    if (clear) {
       store.rx.assignAll(files);
-      first = false;
     } else {
       store.rx.addAll(files);
     }
