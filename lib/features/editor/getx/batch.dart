@@ -62,11 +62,17 @@ class BatchTagManager extends TagManager {
             title: const Text('Add or delete tag?'),
             actions: [
               TextButton(
-                onPressed: () => added.add(tag),
+                onPressed: () {
+                  added.add(tag);
+                  Get.back();
+                },
                 child: const Text('Add'),
               ),
               TextButton(
-                onPressed: () => current.remove(tag),
+                onPressed: () {
+                  current.remove(tag);
+                  Get.back();
+                },
                 child: const Text('Delete'),
               ),
             ],
