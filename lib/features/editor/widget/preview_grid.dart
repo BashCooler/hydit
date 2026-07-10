@@ -72,8 +72,7 @@ class PreviewGrid extends StatelessWidget {
   }
 
   void openPreview(HydrusFile file) {
-    final files = FileStore()
-      ..rx.assign(file);
+    final files = FileStore.single(file);
 
     ViewerPage(files, 0)
         .editor(false)

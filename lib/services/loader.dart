@@ -33,7 +33,7 @@ class Loader {
   bool get failed => _failed.value;
 
   void init(Iterable<int> ids) {
-    if (store.ids.isEmpty) store.rx.clear();
+    if (store.ids.isEmpty) store.cache.clear();
     store.ids.assignAll(ids);
     load(clear: true);
   }
@@ -42,7 +42,7 @@ class Loader {
   void next(int index) {
     if (_loading) return;
     if (_failed.value == true) return;
-    if (index < store.rx.length - chunkSize) return;
+    if (index < store.cache.length - chunkSize) return;
 
     load();
   }
@@ -56,7 +56,7 @@ class Loader {
       return Success(null);
     }
 
-    final start = clear ? 0 : store.rx.length;
+    final start = clear ? 0 : store.cache.length;
     final end = min(start + chunkSize, store.ids.length);
 
     final load = store.ids.sublist(start, end);
@@ -79,10 +79,15 @@ class Loader {
         .asListOrThrow((e) => e.asMapOrThrow<String, dynamic>())
         .map(HydrusFile.fromMap);
 
+    final map = Map<int, HydrusFile>.fromIterable(
+      files,
+      key: (file) => file.id,
+    );
+
     if (clear) {
-      store.rx.assignAll(files);
+      store.cache.assignAll(map);
     } else {
-      store.rx.addAll(files);
+      store.cache.addAll(map);
     }
 
     _loading = false;
@@ -95,7 +100,7 @@ class Loader {
 
     final max = indices.max();
 
-    while (store.rx.length < max!) {
+    while (store.cache.length < max!) {
       final result = await load();
       if (token.cancelled) return Success(null);
       if (result is Failure) return result;

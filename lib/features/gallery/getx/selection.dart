@@ -121,9 +121,7 @@ class SelectionController extends GetxController {
           return;
         }
 
-        final files = FileStore.pickFrom(this.files, ids);
-
-        EditorPage(files)
+        EditorPage(files.copyWithIds(ids))
             .batch(gallery, ids)
             .onClose(clear)
             .push();
@@ -162,7 +160,7 @@ class SelectionController extends GetxController {
       transitionDuration: 150.ms,
       Obx(() {
         return ProgressDialog(
-          progress: files.rx.length,
+          progress: files.cache.length,
           full: full,
           title: 'Loading metadata...'.n,
           token: token,
@@ -172,7 +170,7 @@ class SelectionController extends GetxController {
   }
 
   void download({double delay = 0}) async {
-    final files = this.files.byIds(ids);
+    final files = this.files.cache.withIds(ids).values;
 
     final progress = 0.obs;
     final token = CancellationToken();
