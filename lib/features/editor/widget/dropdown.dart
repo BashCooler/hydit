@@ -36,11 +36,11 @@ class ServiceDropdown extends StatelessWidget {
           DropdownMenuEntry<String>(
             value: s,
             label: s,
-            trailingIcon: DropdownTrailing(
+            trailingIcon: Obx(() => DropdownTrailing(
               tag: tag,
               service: s,
               count: manager.length(s),
-            ),
+            )),
           ),
       ],
       onSelected: (service) {
