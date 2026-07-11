@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
@@ -15,10 +14,10 @@ import '../widget/text_field.dart';
 class Settings extends HookWidget {
   const Settings({super.key});
 
-  SettingsController get settings => Get.find();
-
   @override
   Widget build(BuildContext context) {
+
+    final settings = useMemoized(() => SettingsController());
 
     final version = useFuture(Version.current());
 
