@@ -14,7 +14,6 @@ import 'gallery.dart';
 
 class SelectionController extends GetxController {
   final ids = <int>{}.obs;
-  final indices = <int>{};
 
   final String tag;
 
@@ -40,10 +39,7 @@ class SelectionController extends GetxController {
   bool get on => ids.isNotEmpty;
   bool get off => ids.isEmpty;
 
-  void clear() {
-    ids.clear();
-    indices.clear();
-  }
+  void clear() => ids.clear();
 
   bool isSelected(int id) => ids.contains(id);
 
@@ -53,10 +49,8 @@ class SelectionController extends GetxController {
     switch (ids.contains(id)) {
       case true:
         ids.remove(id);
-        indices.remove(index);
       case false:
         ids.add(id);
-        indices.add(index);
     }
   }
 
@@ -69,18 +63,12 @@ class SelectionController extends GetxController {
 
     for (int i = r.$1; i < r.$2; i++) {
       ids.add(files[i].id);
-      indices.add(i);
     }
 
     ids.add(lastId);
   }
 
-  void selectAll() {
-    ids.addAll(files.ids);
-    for (var i = 0; i < files.ids.length; i++) {
-      indices.add(i);
-    }
-  }
+  void selectAll() => ids.addAll(files.ids);
 
   (int, int)? _range() {
     if (ids.length != 2) return null;
@@ -122,7 +110,7 @@ class SelectionController extends GetxController {
     _loading(ids.length, token);
 
     final result = await loader
-        .ensureLoaded(indices, token)
+        .ensureLoaded(ids, token)
         .tapFailure(Snack.error);
 
     Get.back();

@@ -2,7 +2,6 @@ import 'dart:math' hide log;
 import 'dart:convert' hide json;
 
 import 'package:get/get.dart';
-import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:deep_pick/deep_pick.dart';
 
@@ -50,7 +49,7 @@ class Loader {
   /// Forcefully load next batch of files.
   ///
   /// If [clear] is true clears [FileStore] without flicker.
-  Future<Result<void>> load({bool clear = false}) async {
+  Future<Result<void>> load({bool clear = false, List<int>? ids}) async {
     if (failed) {
       retry();
       return Success(null);
@@ -59,7 +58,7 @@ class Loader {
     final start = clear ? 0 : store.length;
     final end = min(start + chunkSize, store.ids.length);
 
-    final load = store.ids.sublist(start, end);
+    final load = ids ?? store.ids.sublist(start, end);
 
     if (load.isEmpty) return Success(null);
 
@@ -95,15 +94,20 @@ class Loader {
     return Success(null);
   }
 
-  Future<Result<void>> ensureLoaded(Iterable<int> indices,
+  Future<Result<void>> ensureLoaded(Iterable<int> ids,
       CancellationToken token) async {
 
-    final max = indices.max();
+    final toLoad = <int>[];
 
-    while (store.length < max!) {
-      final result = await load();
+    for (final id in ids) {
+      if (store.cache[id] == null) toLoad.add(id);
+    }
+
+    final chunks = toLoad.chunked(chunkSize);
+
+    for (final chunk in chunks) {
+      await load(ids: chunk);
       if (token.cancelled) return Success(null);
-      if (result is Failure) return result;
     }
 
     return Success(null);
