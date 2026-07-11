@@ -26,11 +26,11 @@ class SelectionController extends GetxController {
 
   Repo repo = Get.find();
 
-  bool get selectedAll => ids.length == files.length;
+  bool get selectedAll => ids.length == files.ids.length;
 
   bool get selectedRange {
     if (ids.length != 2) return false;  // important
-    final r = range();
+    final r = _range();
     return switch (r) {
       null => false,
       _ => r.$2 - r.$1 > 1,
@@ -40,7 +40,10 @@ class SelectionController extends GetxController {
   bool get on => ids.isNotEmpty;
   bool get off => ids.isEmpty;
 
-  void clear() => ids.clear();
+  void clear() {
+    ids.clear();
+    indices.clear();
+  }
 
   bool isSelected(int id) => ids.contains(id);
 
@@ -58,7 +61,7 @@ class SelectionController extends GetxController {
   }
 
   void selectRange() {
-    final r = range();
+    final r = _range();
     if (r == null) return;
 
     final lastId = ids.last;
@@ -74,12 +77,12 @@ class SelectionController extends GetxController {
 
   void selectAll() {
     ids.addAll(files.ids);
-    for (var i = 0; i < files.length; i++) {
+    for (var i = 0; i < files.ids.length; i++) {
       indices.add(i);
     }
   }
 
-  (int, int)? range() {
+  (int, int)? _range() {
     if (ids.length != 2) return null;
 
     final indices = <int>[
@@ -97,35 +100,41 @@ class SelectionController extends GetxController {
   void edit() async {
     switch (ids.length) {
       case 1:
-        final index = files.indexById(ids.first);
-        final page = PageGetxController(files: files, initial: index);
-
-        EditorPage(files)
-            .paged(page)
-            .onClose(clear)
-            .push();
-      case _:
-        final ids = this.ids.toList();
-
-        final token = CancellationToken();
-
-        loading(ids.length, token);
-
-        final result = await loader
-            .ensureLoaded(indices, token)
-            .tapFailure(Snack.error);
-
-        Get.back();
-
-        if (result is Failure || token.cancelled) {
-          return;
-        }
-
-        EditorPage(files.copyWithIds(ids))
-            .batch(gallery, ids)
-            .onClose(clear)
-            .push();
+        _openPagedEditor();
+      case > 1:
+        _openBatchEditor();
     }
+  }
+
+  void _openPagedEditor() {
+    final index = files.indexById(ids.first);
+    final page = PageGetxController(files: files, initial: index);
+
+    EditorPage(files)
+        .paged(page)
+        .onClose(clear)
+        .push();
+  }
+
+  void _openBatchEditor() async {
+    final token = CancellationToken();
+
+    _loading(ids.length, token);
+
+    final result = await loader
+        .ensureLoaded(indices, token)
+        .tapFailure(Snack.error);
+
+    Get.back();
+
+    if (result is Failure || token.cancelled) {
+      return;
+    }
+
+    EditorPage(files.copyWithIds(ids))
+        .batch(gallery, ids.toList())
+        .onClose(clear)
+        .push();
   }
 
   Future<void> delete() async {
@@ -155,9 +164,10 @@ class SelectionController extends GetxController {
     );
   }
 
-  Future<void> loading(int full, CancellationToken token) {
+  Future<void> _loading(int full, CancellationToken token) {
     return Get.dialog(
       transitionDuration: 150.ms,
+      barrierDismissible: false,
       Obx(() {
         return ProgressDialog(
           progress: files.length,

@@ -78,32 +78,26 @@ class ProgressDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        token.cancel();
-      },
-      child: AlertDialog(
-        actionsAlignment: .center,
-        title: title,
-        content: Column(
-          mainAxisSize: .min,
-          spacing: 15,
-          children: [
-            LinearProgressIndicator(value: (progress / full).clamp(0, 1)),
-            '$progress/$full'.n,
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              token.cancel();
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cancel'),
-          ),
+    return AlertDialog(
+      actionsAlignment: .center,
+      title: title,
+      content: Column(
+        mainAxisSize: .min,
+        spacing: 15,
+        children: [
+          LinearProgressIndicator(value: (progress / full).clamp(0, 1)),
+          '$progress/$full'.n,
         ],
       ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            token.cancel();
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
+      ],
     );
   }
 }

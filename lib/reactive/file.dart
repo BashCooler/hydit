@@ -40,6 +40,9 @@ class HydrusFile {
 
   String get thumbnailUrl => repo.buildUrl(id, thumbnail: true);
 
+  @override
+  String toString() => 'HydrusFile ${meta.id}';
+
   // MARK: LOAD
 
   Future<Result<void>>? _loadingFuture;
@@ -80,6 +83,8 @@ class HydrusFile {
   /// manually to clear the resources.
   void delete() => _deleted.value = true;
 
+  // MARK: DOWNLOAD
+
   Future<Result<void>> download() async {
 
     final result = await repo.api
@@ -93,7 +98,4 @@ class HydrusFile {
     return Native
         .saveFile(bytes, meta.fileName, meta.mime);
   }
-
-  @override
-  String toString() => 'HydrusFile ${meta.id}';
 }
