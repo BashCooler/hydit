@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
@@ -44,13 +46,9 @@ class SelectionController extends GetxController {
   bool isSelected(int id) => ids.contains(id);
 
   void selectTile(int id, int index) {
-    if (gallery.loading.value) return;
-
-    switch (ids.contains(id)) {
-      case true:
-        ids.remove(id);
-      case false:
-        ids.add(id);
+    if (!gallery.loading.value) {
+      ids.contains(id) ? ids.remove(id) : ids.add(id);
+      log('Selected $id');
     }
   }
 
@@ -167,7 +165,7 @@ class SelectionController extends GetxController {
     );
   }
 
-  void download({double delay = 0}) async {
+  Future<void> download({double delay = 0}) async {
     final files = this.files.withIds(ids);
 
     final progress = 0.obs;
@@ -175,6 +173,7 @@ class SelectionController extends GetxController {
 
     Get.dialog(
       transitionDuration: 150.ms,
+      barrierDismissible: false,
       Obx(() {
         return ProgressDialog(
           progress: progress.value,
@@ -194,12 +193,14 @@ class SelectionController extends GetxController {
           .tapSuccess((_) => progress.value++)
           .tapFailure(Snack.error);
 
-      final result = Future.wait([
+      final result = await Future.wait([
         download,
         sleep(delay.s),
       ]);
 
-      if (await result is Failure) return;
+      log('Downloaded ${file.id} at ${DateTime.now()}');
+
+      if (result is Failure) return;
     }
 
     Get.back();

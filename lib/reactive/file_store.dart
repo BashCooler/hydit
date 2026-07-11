@@ -38,7 +38,7 @@ class FileStore {
 
   /// Files with provided [ids].
   Iterable<HydrusFile> withIds(Iterable<int> ids) {
-    return cache.withIds(ids).values;
+    return ids.map((id) => cache[id]!);
   }
 
   /// Remove files with provided [ids].
