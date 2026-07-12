@@ -29,7 +29,7 @@
 
 ## Features
 
-> *Note on URL import:* The import is considered successful when the link reaches Hydrus. To my knowledge, there's no consistent way to verify if the content was actually loaded afterward. If you know how to do it, let me know!
+> *Note on URL import:* The import is considered successful when the link reaches Hydrus. There's no consistent way to verify if the content was actually loaded afterward [#2053](https://github.com/hydrusnetwork/hydrus/issues/2053)
 
 - **File and URL import** - via Android share menu
 - **Tag search** - suggests, multiple tags, sorting options
