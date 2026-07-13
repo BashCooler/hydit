@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'info.dart';
+import 'diff.dart';
 import 'preview_grid.dart';
 import '../getx/base.dart';
 

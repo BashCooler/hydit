@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/features/editor/widget/info.dart';
+import 'package:hydit/features/editor/widget/diff.dart';
 
 import '../getx/base.dart';
 
