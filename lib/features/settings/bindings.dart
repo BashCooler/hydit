@@ -17,6 +17,7 @@ class SettingsPage {
     Get.to(
       () => build(),
       curve: Curves.easeInOutCubic,
+      opaque: false,
     );
   }
 }

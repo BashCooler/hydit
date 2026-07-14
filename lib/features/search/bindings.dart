@@ -23,6 +23,7 @@ class SearchPage {
     Get.to(
       () => build(),
       curve: Curves.easeInOutCubic,
+      opaque: false,
     );
   }
 }

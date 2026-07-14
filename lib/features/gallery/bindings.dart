@@ -64,6 +64,7 @@ class GalleryPage {
     Get.to(
       () => build(),
       curve: Curves.easeInOutCubic,
+      opaque: false,
       binding: GalleryBindings(this),
     );
   }
