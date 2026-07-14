@@ -9,17 +9,17 @@ class Tag extends Equatable {
   final String? namespace;
   final String value;
   final String pretty;
-  final int? count;
+  final int count;
 
   Color get color => colorOf(namespace);
 
-  Tag(this.raw, {this.count})
+  Tag(this.raw, {this.count = 0})
       : namespace = _namespace(raw),
         value = _value(raw),
         pretty = _pretty(raw);
 
   Tag.parse(this.raw)
-      : count = null,
+      : count = 0,
         namespace = _namespace(raw),
         value = _value(raw),
         pretty = _pretty(raw);

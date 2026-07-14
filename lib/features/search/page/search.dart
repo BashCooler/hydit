@@ -8,7 +8,6 @@ import 'package:hydit/utils/utils.dart';
 import '../getx/query.dart';
 import '../getx/tag_search.dart';
 import '../widget/search.dart';
-import '../widget/suggests.dart';
 import '../widget/tag_actions.dart';
 
 
@@ -59,17 +58,22 @@ class Search extends HookWidget {
             const Divider(height: 1),
 
             Expanded(
-              child: Suggests(
-                tagSearchController: search,
-                scrollController: scrollDown,
-                itemBuilder: (context, tag) => TagTile(
-                  tag: tag,
-                  trailing: TagCount(tag: tag, count: tag.count ?? 0),
-                  onTap: (tag) {
-                    search.clear();
-                    query.add(tag.raw);
+              child: Obx(
+                () => TagList(
+                  reverse: true,
+                  tags: search.suggests.toList(),
+                  scrollController: scrollDown,
+                  itemBuilder: (context, tag) {
+                    return TagTile(
+                      tag: tag,
+                      trailing: TagCount(tag: tag, count: tag.count),
+                      onTap: (tag) {
+                        search.clear();
+                        query.add(tag.raw);
+                      },
+                      onLongPress: copyTag,
+                    );
                   },
-                  onLongPress: copyTag,
                 ),
               ),
             ),
