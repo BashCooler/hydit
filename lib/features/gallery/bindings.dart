@@ -49,7 +49,6 @@ class GalleryPage {
     Widget gallery = Gallery(
       tag: tag,
       state: state,
-      search: _search,
       editor: _editor,
     );
 

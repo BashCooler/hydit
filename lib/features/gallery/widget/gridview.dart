@@ -53,7 +53,9 @@ class GalleryGridView extends StatelessWidget {
       controller: gallery.grid,
       child: ExpressiveRefreshIndicator(
         displacement: 100.0,
-        notificationPredicate: allowRefresh,
+        notificationPredicate: (notification) {
+          return onRefresh != null && allowRefresh(notification);
+        },
         onRefresh: onRefresh ?? () async {},
         onStatusChange: (status) {
           switch (status) {

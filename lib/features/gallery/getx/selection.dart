@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
@@ -48,7 +46,6 @@ class SelectionController extends GetxController {
   void selectTile(int id, int index) {
     if (!gallery.loading.value) {
       ids.contains(id) ? ids.remove(id) : ids.add(id);
-      log('Selected $id');
     }
   }
 
@@ -197,8 +194,6 @@ class SelectionController extends GetxController {
         download,
         sleep(delay.s),
       ]);
-
-      log('Downloaded ${file.id} at ${DateTime.now()}');
 
       if (result is Failure) return;
     }
