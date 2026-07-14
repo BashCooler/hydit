@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 
-class SequencedSwitcher extends StatelessWidget {
+class SequencedSwitcher extends HookWidget {
   final bool visible;
   final bool showFirst;
   final Widget first;
@@ -18,7 +19,6 @@ class SequencedSwitcher extends StatelessWidget {
     this.duration = const Duration(milliseconds: 150),
   });
 
-  Duration get d2 => duration ~/ 2;
   Duration get d1 => duration;
 
   Widget get current => showFirst ? second : first;
@@ -26,6 +26,14 @@ class SequencedSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final initialized = useRef(false);
+
+    final current = initialized.value
+        ? this.current
+        : const SizedBox.shrink();
+
+    initialized.value = true;
+
     return AnimatedScale(
       duration: d1,
       scale: visible ? 1 : 0,
