@@ -60,7 +60,6 @@ class GalleryPage {
   void push() {
     Get.to(
       () => build(),
-      opaque: false,
       curve: Curves.easeInOutCubic,
       binding: GalleryBindings(this),
     );
@@ -102,22 +101,19 @@ class GalleryBindings extends Bindings {
       tag: page.tag,
     );
 
+    Get.put(
+      page.files?.copy() ?? FileStore(),
+      tag: page.tag,
+    );
+
     if (page._search) {
-      Get.put(
-        FileStore(),
-        tag: page.tag,
-      );
       Get.put(
         Loader(tag: page.tag),
         tag: page.tag,
       );
+
       Get.put(
         QueryController(tag: page.tag),
-        tag: page.tag,
-      );
-    } else {
-      Get.put(
-        page.files?.copy() ?? FileStore(),
         tag: page.tag,
       );
     }

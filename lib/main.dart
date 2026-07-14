@@ -76,6 +76,7 @@ class App extends StatelessWidget {
       initialBinding: GlobalBindings(),
       defaultTransition: .rightToLeft,
       transitionDuration: transition,
+      opaqueRoute: false,
       getPages: [
         GetPage(
           name: '/',

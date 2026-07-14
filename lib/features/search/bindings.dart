@@ -22,7 +22,6 @@ class SearchPage {
   void push() {
     Get.to(
       () => build(),
-      opaque: false,
       curve: Curves.easeInOutCubic,
     );
   }

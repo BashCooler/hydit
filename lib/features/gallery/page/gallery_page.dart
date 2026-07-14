@@ -58,19 +58,14 @@ class Gallery extends StatelessWidget {
         state: state,
         onTap: gallery.scrollUp,
       ),
-      body: Stack(
-        alignment: .bottomRight,
-        children: [
-          GalleryGridView(
-            tag: tag,
-            allowRefresh: (_) => selection.off,
-            onRefresh: query?.search,
-            selected: selection.isSelected,
-            onTap: onTileTap,
-            onLongPress: editor ? selection.selectTile : null,
-            onBuild: loader?.next,
-          ),
-        ],
+      body: GalleryGridView(
+        tag: tag,
+        allowRefresh: (_) => selection.off,
+        onRefresh: query?.search,
+        selected: selection.isSelected,
+        onTap: onTileTap,
+        onLongPress: editor ? selection.selectTile : null,
+        onBuild: loader?.next,
       ),
       floatingActionButton: GalleryFAB(tag: tag),
       bottomNavigationBar: SelectionBottomBar(tag: tag),

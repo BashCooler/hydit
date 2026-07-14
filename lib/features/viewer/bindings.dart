@@ -57,7 +57,6 @@ class ViewerPage {
       ),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
-      opaque: false,
       binding: ViewerBindings(this),
     )?.then((result) {
       _onClose?.call();

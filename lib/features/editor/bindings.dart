@@ -68,7 +68,6 @@ class EditorPage {
     Get.to(
       () => SwipeablePage(child: Editor(tag: tag)),
       curve: Curves.easeInOutCubic,
-      opaque: false,
       binding: EditorBindings(this),
     )?.then((result) {
       _onClose?.call();

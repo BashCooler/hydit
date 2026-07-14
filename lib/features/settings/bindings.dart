@@ -16,7 +16,6 @@ class SettingsPage {
   void push() {
     Get.to(
       () => build(),
-      opaque: false,
       curve: Curves.easeInOutCubic,
     );
   }
