@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
-import 'package:material_symbols_icons/symbols.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/widgets/gradient.dart';
@@ -18,13 +16,13 @@ class GalleryAppBar extends StatelessWidget
 
   final String tag;
   final void Function()? onTap;
-  final GlobalKey<InnerDrawerState>? state;
+  final Widget? trailing;
 
   const GalleryAppBar({
     super.key,
     required this.tag,
-    this.state,
     this.onTap,
+    this.trailing,
   });
 
   SelectionController get selection => Get.find(tag: tag);
@@ -48,15 +46,7 @@ class GalleryAppBar extends StatelessWidget
             ? SortPopUp(tag: tag)
             : const SizedBox.shrink(),
         ),
-
-        if (state != null)
-          OnGradientIconButton(
-            Symbols.dock_to_left,
-            tooltip: 'Sidebar',
-            onPressed: () => state
-                ?.currentState
-                ?.toggle(),
-          ),
+        ?trailing,
       ],
     );
   }

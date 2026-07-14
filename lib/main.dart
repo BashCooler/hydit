@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hydit/services/video.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import 'package:media_kit/media_kit.dart';
 import 'package:hive_ce_flutter/adapters.dart';
@@ -12,8 +12,10 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:hydit/utils/theme.dart';
 import 'package:hydit/services/repo.dart';
+import 'package:hydit/services/video.dart';
 import 'package:hydit/widgets/shell.dart';
 import 'package:hydit/widgets/sidebar.dart';
+import 'package:hydit/widgets/gradient.dart';
 
 import 'package:hydit/features/gallery/bindings.dart';
 import 'package:hydit/features/gallery/widget/menu_tiles.dart';
@@ -62,11 +64,30 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = GlobalKey<InnerDrawerState>();
+    final drawerKey = GlobalKey<InnerDrawerState>();
 
-    final page = GalleryPage(state: state)
+    final trailing = OnGradientIconButton(
+      Symbols.dock_to_left,
+      tooltip: 'Sidebar',
+      onPressed: () => drawerKey.currentState!.toggle(),
+    );
+
+    final page = GalleryPage()
         .withSearch()
-        .withEditor();
+        .withEditor()
+        .trailing(trailing);
+
+    final shell = AppShell(
+      drawerKey: drawerKey,
+      dialog: page.dialog,
+      sidebar: Sidebar(
+        tiles: [
+          InboxTile(tag: page.tag),
+          SettingsTile(tag: page.tag),
+        ],
+      ),
+      child: page.build(),
+    );
 
     return GetMaterialApp(
       title: 'Hydit',
@@ -82,32 +103,9 @@ class App extends StatelessWidget {
           name: '/',
           curve: Curves.easeInOutCubic,
           binding: GalleryBindings(page),
-          page: () => HomePage(page: page, state: state),
+          page: () => shell,
         ),
       ],
-    );
-  }
-}
-
-
-class HomePage extends StatelessWidget {
-  final GalleryPage page;
-  final GlobalKey<InnerDrawerState> state;
-
-  const HomePage({super.key, required this.page, required this.state});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppShell(
-      state: state,
-      dialog: page.dialog,
-      sidebar: Sidebar(
-        tiles: [
-          InboxTile(tag: page.tag),
-          SettingsTile(tag: page.tag),
-        ],
-      ),
-      child: page.build(),
     );
   }
 }

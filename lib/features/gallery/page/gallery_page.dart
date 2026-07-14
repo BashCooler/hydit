@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/loader.dart';
@@ -16,13 +15,13 @@ import '../widget/widgets.dart';
 class Gallery extends StatelessWidget {
   final String tag;
   final bool editor;
-  final GlobalKey<InnerDrawerState>? state;
+  final Widget? trailing;
 
   const Gallery({
     super.key,
     required this.tag,
     required this.editor,
-    this.state,
+    this.trailing,
   });
 
   FileStore get files => Get.find(tag: tag);
@@ -55,7 +54,7 @@ class Gallery extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: GalleryAppBar(
         tag: tag,
-        state: state,
+        trailing: trailing,
         onTap: gallery.scrollUp,
       ),
       body: GalleryGridView(

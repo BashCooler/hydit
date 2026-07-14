@@ -8,15 +8,15 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 class AppShell extends StatefulWidget {
   final Widget? sidebar;
   final bool Function()? dialog;
+  final GlobalKey<InnerDrawerState> drawerKey;
   final Widget child;
-  final GlobalKey<InnerDrawerState> state;
 
   const AppShell({
     super.key,
     this.dialog,
     this.sidebar,
+    required this.drawerKey,
     required this.child,
-    required this.state,
   });
 
   @override
@@ -30,7 +30,7 @@ class _AppShellState extends State<AppShell> {
     if (didPop) return;
 
     if (drawerOpened) {
-      widget.state.currentState?.toggle();
+      widget.drawerKey.currentState?.toggle();
       return;
     }
 
@@ -48,7 +48,7 @@ class _AppShellState extends State<AppShell> {
       canPop: false,
       onPopInvokedWithResult: handlePop,
       child: InnerDrawer(
-        key: widget.state,
+        key: widget.drawerKey,
         onTapClose: true,
         swipeChild: true,
         rightAnimationType: .quadratic,

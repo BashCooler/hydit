@@ -1,17 +1,16 @@
 import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
-import 'package:hydit/features/editor/getx/base.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/widgets/swipeable.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/search/getx/tag_search.dart';
-import 'package:hydit/features/gallery/getx/gallery.dart';
 
+import 'getx/base.dart';
 import 'getx/batch.dart';
-import 'page/editor.dart';
 import 'getx/single.dart';
+import 'page/editor.dart';
 
 
 enum Mode { paged, batch }
@@ -25,12 +24,6 @@ enum Mode { paged, batch }
 ///
 /// You can also provide an [onClose] similar to awaiting
 /// the result then performing an action with a regular route.
-///
-/// You can also [passTag]. You should only do this if you want to connect
-/// pages together. For example, if you pass the tag of the `Viewer` page,
-/// then `Viewer` and [Editor] will use the same [PageGetxController],
-/// because it was already instantiated in `Viewer` and [Get] will not
-/// create the controller again.
 class EditorPage {
   final String tag;
   final FileStore files;
@@ -51,8 +44,8 @@ class EditorPage {
     return this;
   }
 
-  EditorPage batch(GalleryController gallery, List<int> ids) {
-    this.ids = ids;
+  EditorPage batch(Iterable<int> ids) {
+    this.ids = ids.toList();
     mode = .batch;
 
     return this;

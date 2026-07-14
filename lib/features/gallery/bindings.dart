@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/loader.dart';
@@ -15,15 +14,14 @@ import 'page/gallery_page.dart';
 
 class GalleryPage {
   final String tag;
-  final GlobalKey<InnerDrawerState>? state;
 
   FileStore? files;
   bool _search = false;
   bool _editor = false;
   bool _swipe = false;
+  Widget? _trailing;
 
-  GalleryPage({this.state})
-      : tag = 'Gallery'.unique();
+  GalleryPage() : tag = 'Gallery'.unique();
 
   GalleryPage withSearch() {
     _search = true;
@@ -45,10 +43,15 @@ class GalleryPage {
     return this;
   }
 
+  GalleryPage trailing(Widget trailing) {
+    _trailing = trailing;
+    return this;
+  }
+
   Widget build() {
     Widget gallery = Gallery(
       tag: tag,
-      state: state,
+      trailing: _trailing,
       editor: _editor,
     );
 
