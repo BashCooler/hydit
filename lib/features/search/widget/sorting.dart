@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:niku/namespace.dart' as n;
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:niku/extra/primitive.dart';
 
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/utils/dictionaries.dart';
 
 import '../getx/query.dart';
@@ -13,10 +13,16 @@ class SortPopUp extends StatelessWidget {
 
   const SortPopUp({super.key, required this.tag});
 
-  QueryController get query => Get.find(tag: tag);
+  QueryController? get query => maybeFind(tag: tag);
 
   @override
   Widget build(BuildContext context) {
+    final query = this.query;
+
+    if (query == null) {
+      return const SizedBox.shrink();
+    }
+
     return PopupMenuButton<FileSortType>(
       icon: const Icon(
         Symbols.sort,

@@ -1,4 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide IconButton;
+import 'package:flutter/material.dart' as m;
+
+
+const onGradientShadow = [
+  Shadow(blurRadius: 16),
+];
 
 
 class GradientAppBar extends StatelessWidget
@@ -77,7 +83,7 @@ class OnGradientIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: IconButton(
+      child: m.IconButton(
         tooltip: tooltip,
         icon: Icon(
           icon,

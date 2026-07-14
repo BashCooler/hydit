@@ -55,7 +55,6 @@ class Gallery extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: GalleryAppBar(
         tag: tag,
-        search: search,
         state: state,
         onTap: gallery.scrollUp,
       ),
