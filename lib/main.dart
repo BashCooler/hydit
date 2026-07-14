@@ -74,10 +74,11 @@ class App extends StatelessWidget {
       theme: darkTheme(),
       initialRoute: '/',
       initialBinding: GlobalBindings(),
+      defaultTransition: .rightToLeft,
+      transitionDuration: transition,
       getPages: [
         GetPage(
           name: '/',
-          transition: .rightToLeft,
           curve: Curves.easeInOutCubic,
           binding: GalleryBindings(page),
           page: () => HomePage(page: page, state: state),

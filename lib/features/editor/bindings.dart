@@ -67,8 +67,6 @@ class EditorPage {
   void push() {
     Get.to(
       () => SwipeablePage(child: Editor(tag: tag)),
-      transition: .rightToLeft,
-      duration: transition,
       curve: Curves.easeInOutCubic,
       opaque: false,
       binding: EditorBindings(this),

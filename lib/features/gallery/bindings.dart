@@ -62,8 +62,6 @@ class GalleryPage {
     Get.to(
       () => build(),
       opaque: false,
-      transition: .rightToLeft,
-      duration: transition,
       curve: Curves.easeInOutCubic,
       binding: GalleryBindings(this),
     );

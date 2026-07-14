@@ -17,8 +17,6 @@ class SettingsPage {
     Get.to(
       () => build(),
       opaque: false,
-      transition: .rightToLeft,
-      duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOutCubic,
     );
   }
