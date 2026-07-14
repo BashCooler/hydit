@@ -4,7 +4,7 @@ import 'package:hydit/features/viewer/widget/image_view.dart';
 import 'package:hydit/features/viewer/widget/video_view.dart';
 
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/widgets/images.dart';
+import 'package:hydit/widgets/common/images.dart';
 
 import '../getx/page.dart';
 

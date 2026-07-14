@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/entities/tag.dart';
-import 'package:hydit/widgets/scrollbar.dart';
+import 'package:hydit/widgets/common/scrollbar.dart';
 
 
 /// Parameters [trailing] and [onTap] apply to each [ListTile] in

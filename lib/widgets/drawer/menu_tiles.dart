@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/settings/bindings.dart';
 
-import '../getx/selection.dart';
+import '../../features/gallery/getx/selection.dart';
 
 
 class InboxTile extends StatelessWidget {

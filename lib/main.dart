@@ -13,12 +13,12 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:hydit/utils/theme.dart';
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/services/video.dart';
-import 'package:hydit/widgets/shell.dart';
-import 'package:hydit/widgets/sidebar.dart';
-import 'package:hydit/widgets/gradient.dart';
+import 'package:hydit/widgets/drawer/shell.dart';
+import 'package:hydit/widgets/drawer/sidebar.dart';
+import 'package:hydit/widgets/systems/gradient.dart';
 
+import 'package:hydit/widgets/drawer/menu_tiles.dart';
 import 'package:hydit/features/gallery/bindings.dart';
-import 'package:hydit/features/gallery/widget/menu_tiles.dart';
 
 
 

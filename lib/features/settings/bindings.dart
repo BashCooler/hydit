@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/widgets/swipeable.dart';
+import 'package:hydit/widgets/common/swipeable.dart';
 import 'package:hydit/features/settings/page/settings_page.dart';
 
 

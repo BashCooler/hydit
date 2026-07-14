@@ -4,7 +4,7 @@ import 'package:niku/namespace.dart' as n;
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/snack.dart';
 import 'package:hydit/services/executor.dart';
-import 'package:hydit/widgets/acrylic.dart' as a;
+import 'package:hydit/widgets/systems/acrylic.dart' as a;
 
 
 class ViewerPopup extends StatelessWidget {

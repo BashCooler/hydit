@@ -5,7 +5,7 @@ import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/widgets/gradient.dart';
+import 'package:hydit/widgets/systems/gradient.dart';
 
 import '../getx/page.dart';
 import '../widget/bottom_bar.dart';

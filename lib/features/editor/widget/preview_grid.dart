@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:hydit/features/viewer/bindings.dart';
 import 'package:niku/extra/primitive.dart';
 
-import 'package:hydit/widgets/images.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/widgets/common/images.dart';
 import 'package:hydit/features/editor/getx/base.dart';
 import 'package:hydit/features/gallery/bindings.dart';
 import 'package:hydit/features/editor/getx/single.dart';

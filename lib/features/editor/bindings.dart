@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/widgets/swipeable.dart';
+import 'package:hydit/widgets/common/swipeable.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/search/getx/tag_search.dart';

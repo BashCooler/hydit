@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hydit/features/viewer/widget/popup.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-import 'package:hydit/widgets/acrylic.dart' as a;
-import 'package:hydit/widgets/gradient.dart';
+import 'package:hydit/widgets/systems/acrylic.dart' as a;
+import 'package:hydit/widgets/systems/gradient.dart';
 
 import '../getx/page.dart';
 

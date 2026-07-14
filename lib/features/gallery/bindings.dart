@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/loader.dart';
-import 'package:hydit/widgets/swipeable.dart';
+import 'package:hydit/widgets/common/swipeable.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/getx/query.dart';
 

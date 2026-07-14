@@ -6,8 +6,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/widgets/tag_list.dart';
-import 'package:hydit/widgets/service_list.dart';
+import 'package:hydit/widgets/lists/tag_list.dart';
+import 'package:hydit/widgets/lists/service_list.dart';
 import 'package:hydit/features/editor/bindings.dart';
 
 import '../getx/page.dart';

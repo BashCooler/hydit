@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/widgets/gradient.dart';
+import 'package:hydit/widgets/systems/gradient.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/search/widget/sorting.dart';

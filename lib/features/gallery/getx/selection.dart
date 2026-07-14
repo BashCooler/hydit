@@ -4,9 +4,9 @@ import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:niku/extra/primitive.dart';
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/widgets/dialog.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/widgets/common/dialog.dart';
 import 'package:hydit/features/editor/bindings.dart';
 
 import 'gallery.dart';

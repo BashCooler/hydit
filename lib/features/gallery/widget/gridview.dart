@@ -5,9 +5,9 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydit/utils/theme.dart';
 import 'package:hydit/services/repo.dart';
-import 'package:hydit/widgets/images.dart';
-import 'package:hydit/widgets/scrollbar.dart';
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/widgets/common/images.dart';
+import 'package:hydit/widgets/common/scrollbar.dart';
 
 import 'widgets.dart';
 import '../getx/gallery.dart';

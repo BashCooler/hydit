@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/widgets/dialog.dart';
+import 'package:hydit/widgets/common/dialog.dart';
 import 'package:hydit/services/services.dart';
 
 import '../getx/base.dart';
