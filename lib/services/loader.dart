@@ -32,8 +32,8 @@ class Loader {
   bool get failed => _failed.value;
 
   void init(Iterable<int> ids) {
-    if (store.ids.isEmpty) store.cache.clear();
     store.ids.assignAll(ids);
+    if (store.ids.isEmpty) store.cache.clear();
     load(clear: true);
   }
 
