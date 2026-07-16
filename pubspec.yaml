@@ -39,6 +39,7 @@ dependencies:
   # Network
   dio: ^5.9.2
   connectivity_plus: ^7.1.1
+  url_launcher: ^6.3.2
   # Widgets
   dismissible_page:
     git: https://github.com/itsezlife/Flutter_dismissible_page/
@@ -53,7 +54,6 @@ dependencies:
   flutter_inner_drawer:
     git: https://github.com/NANI-SORE/flutter_inner_drawer  # thx
   scrollview_observer: ^1.26.3
-  url_launcher: ^6.3.2
   # Video player
   media_kit: ^1.2.6
   media_kit_video: ^2.0.1
@@ -62,7 +62,6 @@ dependencies:
   deep_pick: ^1.1.0
   filesize: ^2.0.1
   equatable: ^2.0.8
-  string_validator: ^1.2.0
   niku: ^2.4.3
   font_awesome_flutter: ^11.0.0
   package_info_plus: ^10.1.0

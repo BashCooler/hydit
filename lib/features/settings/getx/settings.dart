@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:hydit/api/api.dart';
-import 'package:string_validator/string_validator.dart';
 
+import 'package:hydit/api/api.dart';
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/services.dart';
 
 
@@ -18,9 +18,20 @@ class SettingsController extends GetxController {
 
   AppSettings get $ => _settings.value;
 
-  Repo get repo => Get.find();
+  Repo repo = Get.find();
 
-  void save() {
+  Future<Result<void>> save() async {
+
+    final uri = isValidUrl($.url);
+
+    if (uri is Failure) return uri;
+
+    final api = HydrusApi(uri: uri.unwrapOrThrow(), key: $.key);
+
+    final access = await api.getVerifyAccessKey().run();
+
+    if (access is Failure) return access;
+
     final box = Hive.box('settings');
     box.put('url', $.url);
     box.put('key', $.key);
@@ -28,6 +39,10 @@ class SettingsController extends GetxController {
     Native
         .savePreferences($.url, $.key)
         .tapFailure(Snack.error);
+
+    repo.updateFromSettings();
+
+    return access;
   }
 
   void load() {
@@ -43,49 +58,19 @@ class SettingsController extends GetxController {
   void updateUrl(String value) {
     _settings.value = _settings.value.copyWith(url: value);
   }
+
   void updateKey(String value) {
     _settings.value = _settings.value.copyWith(key: value);
-  }
-
-  Future<void> verify() async {
-    final uri = Uri.tryParse($.url);
-
-    if (uri == null || !uri.host.isIP()) {
-      Snack.error('Input error', 'Invalid URL');
-      return;
-    }
-
-    await HydrusApi(uri: uri, key: $.key)
-        .getVerifyAccessKey()
-        .run()
-        .tapSuccess(_onSuccess)
-        .tapFailure(Snack.error);
-  }
-
-  void _onSuccess(String data) {
-    save();
-    repo.updateFromSettings();
-    Snack.success('Success', 'Successfully saved key and url');
   }
 }
 
 
-/// Object representing settings structure.
-///
-/// You can make this object observable to
-/// perform reactive updates on parameter
-/// change.
 class AppSettings {
   String url = '';
   String key = '';
 
   AppSettings({required this.url, required this.key});
 
-  /// Changing [AppSettings] value with this method
-  /// ensures UI updates are working fine.
-  ///
-  /// Returns new [AppSettings] object with applied
-  /// changes.
   AppSettings copyWith({String? url, String? key}) {
     return AppSettings(
       url: url ?? this.url,

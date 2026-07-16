@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:hydit/entities/tag.dart';
 
 export 'theme.dart';
+export 'url.dart';
 
 
 extension ToDuration on num {

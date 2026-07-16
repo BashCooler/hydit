@@ -48,6 +48,20 @@ class Failure<T> extends Result<T> {
   final Object? details;
 
   Failure(this.title, this.message, [this.details]);
+
+  @override
+  String toString() => '$title: $message';
+}
+
+
+class FailureBuilder<T> {
+  String title = 'Error';
+  String message = 'Unknown error';
+  Object? details;
+
+  Failure<T> build() => Failure<T>(title, message);
+
+  Failure<T> call() => build();
 }
 
 
@@ -175,7 +189,7 @@ extension Loading<T> on Future<T> {
 }
 
 
-extension FutureOperations<T> on Future<Result<T>> {
+extension TapsAsync<T> on Future<Result<T>> {
 
   Future<Result<T>> tapSuccess(
       FutureOr<void> Function(T data) callback) async {
@@ -202,6 +216,30 @@ extension FutureOperations<T> on Future<Result<T>> {
   }
 
   Future<T?> unwrap() async => (await this).unwrap();
+}
+
+
+extension Taps<T> on Result<T> {
+
+  Result<T> tapSuccess(
+      FutureOr<void> Function(T data) callback) {
+
+    if (this case Success<T>(data: final data)) {
+      callback(data);
+    }
+
+    return this;
+  }
+
+  Result<T> tapFailure(
+      FutureOr<void> Function(String title, String message) callback) {
+
+    if (this case Failure<T>(title: final title, message: final message)) {
+      callback(title, message);
+    }
+
+    return this;
+  }
 }
 
 
