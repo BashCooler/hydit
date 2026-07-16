@@ -1,6 +1,6 @@
 library;
 
-export 'executor.dart';
+export 'executor/executor.dart';
 export 'loader.dart';
 export 'native.dart';
 export 'repo.dart';

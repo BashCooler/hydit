@@ -1,3 +1,5 @@
+import 'dart:convert' hide json;
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,4 +61,22 @@ class If<T> extends StatelessWidget {
     }
     return child;
   }
+}
+
+
+extension ChunckedList<T> on List<T> {
+
+  Iterable<List<T>> chunked(int size) sync* {
+    for (var i = 0; i < length; i += size) {
+      yield sublist(
+        i,
+        (i + size).clamp(0, length),
+      );
+    }
+  }
+}
+
+
+extension Decode on String {
+  dynamic decode() => jsonDecode(this);
 }

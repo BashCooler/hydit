@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:pub_semver/pub_semver.dart' as sv;
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'package:hydit/services/executor.dart';
+import 'package:hydit/services/executor/executor.dart';
 
 
 class Version {

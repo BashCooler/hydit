@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:hydit/utils/url.dart';
-import 'package:hydit/services/executor.dart';
+import 'package:hydit/services/executor/executor.dart';
 
 
 void main() {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import 'package:hydit/services/executor.dart';
+import 'package:hydit/services/executor/executor.dart';
 
 
 class LoadingDialog extends HookWidget {

@@ -7,7 +7,7 @@ import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/service.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/services/executor.dart';
+import 'package:hydit/services/executor/executor.dart';
 import 'package:hydit/features/editor/getx/base.dart';
 
 
