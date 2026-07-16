@@ -6,7 +6,7 @@ import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/services.dart';
 
 
-class SettingsController extends GetxController {
+class SettingsController {
   String url = '127.0.0.1:45869';
   String key = '';
 
@@ -16,8 +16,14 @@ class SettingsController extends GetxController {
 
   Repo repo = Get.find();
 
-  Future<Result<void>> save() async {
+  void load() {
+    final box = Hive.box('settings');
 
+    url = box.get('url') ?? '';
+    key = box.get('key') ?? '';
+  }
+
+  Future<Result<void>> save() async {
     final uri = parseUrl(url);
 
     if (uri is Failure) return uri;
@@ -39,12 +45,5 @@ class SettingsController extends GetxController {
     repo.api.load();
 
     return access;
-  }
-
-  void load() {
-    final box = Hive.box('settings');
-
-    url = box.get('url') ?? '';
-    key = box.get('key') ?? '';
   }
 }
