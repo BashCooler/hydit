@@ -50,7 +50,7 @@ class SettingsTextField extends HookWidget {
               filled: true,
               suffixIcon: !focus.value
                   ? const SizedBox.shrink()
-                  : Actions(text: text),
+                  : Actions(text: text, onChanged: onChanged),
             ),
           )
         ],
@@ -62,12 +62,29 @@ class SettingsTextField extends HookWidget {
 
 class Actions extends StatelessWidget {
   final TextEditingController text;
+  final void Function(String) onChanged;
 
-  const Actions({super.key, required this.text});
+  const Actions({
+    super.key,
+    required this.text,
+    required this.onChanged,
+  });
 
   void paste(TextEditingController controller) async {
-    final data = await Clipboard.getData(Clipboard.kTextPlain);
-    if (data?.text != null) controller.text = data!.text!;
+    
+    final text = await Clipboard
+        .getData(Clipboard.kTextPlain)
+        .then((data) => data?.text);
+
+    if (text != null) {
+      controller.text = text;
+      onChanged(text);
+    }
+  }
+
+  void clear() {
+    text.clear();
+    onChanged('');
   }
 
   @override
@@ -82,7 +99,7 @@ class Actions extends StatelessWidget {
         ),
         IconButton(
           icon: const Icon(Icons.clear),
-          onPressed: () => text.clear(),
+          onPressed: clear,
         ),
       ],
     );
