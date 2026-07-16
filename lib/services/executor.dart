@@ -74,24 +74,7 @@ class Executor {
 
     } on DioException catch (e) {
 
-      switch (e.type) {
-        case .badResponse:
-          return handleBadResponse(e);
-
-        case .connectionError:
-          return handleConnectionError(e);
-
-        case .sendTimeout:
-        case .receiveTimeout:
-        case .connectionTimeout:
-          return handleTimeout(e);
-
-        case .unknown when e.error.runtimeType == ArgumentError:
-          return Failure('Client error', 'No host provided', e);
-
-        case _:
-          return handleUnknownError(e);
-      }
+      return handleDioException(e);
 
     } on PlatformException catch (e) {
 
@@ -99,7 +82,7 @@ class Executor {
     }
   }
 
-  static Future<String?> _connectionReport() async {
+  static Future<String?> connectionReport() async {
     final results = await (Connectivity().checkConnectivity());
 
     final connected = results.contains(ConnectivityResult.mobile)
@@ -120,9 +103,7 @@ class Executor {
   static Result<T> handleBadResponse<T>(DioException e) {
     final data = e.response?.data as String?;
 
-    final json = data != null
-        ? jsonDecode(data)
-        : null;
+    final json = data?.decode();
 
     final error = pick(json, 'exception_type')
         .asStringOrNull()
@@ -141,7 +122,7 @@ class Executor {
   }
 
   static Future<Result<T>> handleConnectionError<T>(DioException e) async {
-    final report = await _connectionReport();
+    final report = await connectionReport();
 
     final result = FailureBuilder<T>()
       ..title = 'Connection refused'
@@ -152,7 +133,7 @@ class Executor {
   }
 
   static Future<Result<T>> handleTimeout<T>(DioException e) async {
-    final report = await _connectionReport();
+    final report = await connectionReport();
 
     final result = FailureBuilder<T>()
       ..title = 'Connection timeout'
@@ -171,6 +152,27 @@ class Executor {
 
     return result();
   }
+
+  static Future<Result<T>> handleDioException<T>(DioException e) async {
+    switch (e.type) {
+      case .badResponse:
+        return handleBadResponse(e);
+
+      case .connectionError:
+        return handleConnectionError(e);
+
+      case .sendTimeout:
+      case .receiveTimeout:
+      case .connectionTimeout:
+        return handleTimeout(e);
+
+      case .unknown when e.error.runtimeType == ArgumentError:
+        return Failure('Client error', 'No host provided', e);
+
+      case _:
+        return handleUnknownError(e);
+    }
+  }
 }
 
 
@@ -188,7 +190,7 @@ extension Format on String {
 }
 
 
-extension SafeExecute<T> on Future<T> {
+extension SafeExecuteAsync<T> on Future<T> {
   /// Safely runs an [action], handles [DioException] and
   /// [PlatformException].
   Future<Result<T>> run() => Executor.run(() => this);
@@ -304,4 +306,9 @@ extension ChunckedList<T> on List<T> {
       );
     }
   }
+}
+
+
+extension Decode on String {
+  dynamic decode() => jsonDecode(this);
 }
