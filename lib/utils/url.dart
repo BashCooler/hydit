@@ -10,7 +10,7 @@ Result<Uri> parseUrl(String url) {
 
     final result = FailureBuilder<Uri>()
       ..title = 'Input error'
-      ..message = 'URL should start with "http://" or "https://"';
+      ..message = 'URL must start with "http://" or "https://"';
 
     return result();
   }
@@ -36,7 +36,7 @@ Result<Uri> parseUrl(String url) {
 
     final result = FailureBuilder<Uri>()
       ..title = 'Unsupported'
-      ..message = 'URL path should be empty';
+      ..message = 'URL path must be empty';
 
     return result();
   }
