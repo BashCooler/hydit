@@ -44,16 +44,16 @@ class Settings extends HookWidget {
 
             SettingsTextField(
               label: 'Url',
-              onChanged: settings.updateUrl,
+              onChanged: (url) => settings.url = url,
               enabled: !saving.value,
-              initial: settings.$.url,
+              initial: settings.url,
             ),
 
             SettingsTextField(
               label: 'API Key',
-              onChanged: settings.updateKey,
+              onChanged: (key) => settings.key = key,
               enabled: !saving.value,
-              initial: settings.$.key,
+              initial: settings.key,
             ),
 
             ListTile(
