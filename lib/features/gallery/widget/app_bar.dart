@@ -81,16 +81,23 @@ class QueryInfo extends StatelessWidget {
   QueryController? get query => maybeFind(tag: tag);
 
   @override
-  Widget build(BuildContext context) => Obx(() {
+  Widget build(BuildContext context) {
     final query = this.query;
 
-    if (query == null || query.values.isEmpty) {
-      return const SizedBox.shrink();
+    if (query == null) {
+      return SizedBox.shrink();
     }
 
-    return '$query'.n
-      ..color = Colors.white
-      ..bodySmall
-      ..shadows = onGradientShadow;
-  });
+    return Obx(() {
+
+      if (query.values.isEmpty) {
+        return const SizedBox.shrink();
+      }
+
+      return '$query'.n
+        ..color = Colors.white
+        ..bodySmall
+        ..shadows = onGradientShadow;
+    });
+  }
 }
