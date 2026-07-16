@@ -10,6 +10,7 @@ import 'executor.dart';
 
 
 class Handler {
+  const Handler._();
 
   static Future<Result<T>> handleDioException<T>(DioException e) async {
     switch (e.type) {

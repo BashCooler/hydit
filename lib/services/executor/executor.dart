@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
-import 'package:hydit/services/executor/handlers.dart';
+import 'package:hydit/services/executor/handler.dart';
 
 part 'models.dart';
 
