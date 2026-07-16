@@ -75,52 +75,22 @@ class Executor {
     } on DioException catch (e) {
 
       switch (e.type) {
-
-        case .badResponse when e.response?.data == null:
-          return Failure('Bad response', 'Empty response', e);
-
         case .badResponse:
-
-          final data = e.response?.data as String?;
-
-          final json = data != null ? jsonDecode(data) : null;
-
-          final error = pick(json, 'exception_type')
-              .asStringOrNull()
-              ?.format();
-
-          final message = pick(json, 'error')
-              .asStringOrNull()
-              ?.replaceAll('!', '');
-
-          return Failure(error ?? 'Bad response', message ?? 'Unknown error');
+          return handleBadResponse(e);
 
         case .connectionError:
-
-          return Failure(
-            'Connection refused',
-            await _connectionReport() ?? 'No running Hydrus client found',
-          );
+          return handleConnectionError(e);
 
         case .sendTimeout:
         case .receiveTimeout:
         case .connectionTimeout:
-
-          return Failure(
-            'Connection timeout',
-              await _connectionReport() ?? 'No response from Hydrus'
-          );
+          return handleTimeout(e);
 
         case .unknown when e.error.runtimeType == ArgumentError:
-
-          return Failure('Client error', 'No host provided');
+          return Failure('Client error', 'No host provided', e);
 
         case _:
-
-          return Failure(
-            e.error.runtimeType.toString().format(),
-            e.toString(),
-          );
+          return handleUnknownError(e);
       }
 
     } on PlatformException catch (e) {
@@ -145,6 +115,61 @@ class Executor {
     }
 
     return null;
+  }
+
+  static Result<T> handleBadResponse<T>(DioException e) {
+    final data = e.response?.data as String?;
+
+    final json = data != null
+        ? jsonDecode(data)
+        : null;
+
+    final error = pick(json, 'exception_type')
+        .asStringOrNull()
+        ?.format();
+
+    final message = pick(json, 'error')
+        .asStringOrNull()
+        ?.replaceAll('!', '');
+
+    final result = FailureBuilder<T>()
+      ..title = error ?? 'Bad response'
+      ..message = message ?? 'Empty response'
+      ..details = e;
+
+    return result();
+  }
+
+  static Future<Result<T>> handleConnectionError<T>(DioException e) async {
+    final report = await _connectionReport();
+
+    final result = FailureBuilder<T>()
+      ..title = 'Connection refused'
+      ..message = report ?? 'No running Hydrus client found'
+      ..details = e;
+
+    return result();
+  }
+
+  static Future<Result<T>> handleTimeout<T>(DioException e) async {
+    final report = await _connectionReport();
+
+    final result = FailureBuilder<T>()
+      ..title = 'Connection timeout'
+      ..message = report ?? 'No response from Hydrus'
+      ..details = e;
+
+    return result();
+  }
+
+  static Result<T> handleUnknownError<T>(DioException e) {
+
+    final result = FailureBuilder<T>()
+      ..title = e.error.runtimeType.toString().format()
+      ..message = e.toString()
+      ..details = e;
+
+    return result();
   }
 }
 

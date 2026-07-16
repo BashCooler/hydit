@@ -12,6 +12,7 @@ void main() {
       'http://127.0.0.1:45869': true,
       'https://127.0.0.1': true,
       'https://127.0.0.1:45869': true,
+      'https://127.0.0.1:45869/api_version/': false,
       '127.0.0.1': false,
       '256.0.0.1': false,
       '192.256.0.1': false,
