@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:hive_ce/hive.dart';
 import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/api/api.dart';
@@ -16,16 +15,7 @@ import 'executor.dart';
 class Repo {
   final HydrusApi api;
 
-  Repo() : api = HydrusApi() {
-    updateFromSettings();
-  }
-
-  void updateFromSettings() {
-    final box = Hive.box('settings');
-    final key = box.get('key') ?? '';
-    final url = box.get('url') ?? '';
-    api.update(Uri.parse(url), key);
-  }
+  Repo() : api = HydrusApi.load();
 
   String buildUrl(int id, {bool thumbnail = false}) => ""
       "${api.url}/get_files/"

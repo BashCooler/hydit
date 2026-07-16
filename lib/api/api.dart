@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:hive_ce/hive.dart';
 import 'package:hydit/api/params.dart';
 
 import 'dio.dart';
@@ -9,8 +10,28 @@ import 'dio.dart';
 class HydrusApi with DioClient {
   static const int version = 94;
 
-  HydrusApi({Uri? uri, String? key}) {
+  /// Create an instance of [HydrusApi] and update its
+  /// URL and access key from settings stored in [Hive].
+  HydrusApi.load() {
+    load();
+  }
+
+  HydrusApi.options({
+    required Uri uri,
+    required String key,
+  }) {
     update(uri, key);
+  }
+
+  /// Update api URL and access key from
+  /// settings stored in [Hive].
+  void load() {
+    final box = Hive.box('settings');
+
+    final key = box.get('key') ?? '';
+    final url = box.get('url') ?? '';
+
+    update(Uri.parse(url), key);
   }
 
   // MARK: ACCESS MANAGEMENT

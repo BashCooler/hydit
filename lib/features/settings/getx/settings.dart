@@ -22,11 +22,11 @@ class SettingsController extends GetxController {
 
   Future<Result<void>> save() async {
 
-    final uri = isValidUrl($.url);
+    final uri = parseUrl($.url);
 
     if (uri is Failure) return uri;
 
-    final api = HydrusApi(uri: uri.unwrapOrThrow(), key: $.key);
+    final api = HydrusApi.options(uri: uri.unwrapOrThrow(), key: $.key);
 
     final access = await api.getVerifyAccessKey().run();
 
@@ -40,15 +40,17 @@ class SettingsController extends GetxController {
         .savePreferences($.url, $.key)
         .tapFailure(Snack.error);
 
-    repo.updateFromSettings();
+    repo.api.load();
 
     return access;
   }
 
   void load() {
     final box = Hive.box('settings');
+
     final url = box.get('url') ?? '';
     final key = box.get('key') ?? '';
+
     _settings.value = AppSettings(
       url: url,
       key: key,

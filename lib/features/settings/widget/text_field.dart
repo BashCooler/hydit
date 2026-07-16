@@ -71,7 +71,7 @@ class Actions extends StatelessWidget {
   });
 
   void paste(TextEditingController controller) async {
-    
+
     final text = await Clipboard
         .getData(Clipboard.kTextPlain)
         .then((data) => data?.text);

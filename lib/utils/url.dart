@@ -1,7 +1,7 @@
 import 'package:hydit/services/executor.dart';
 
 
-Result<Uri> isValidUrl(String url) {
+Result<Uri> parseUrl(String url) {
   final uri = Uri.tryParse(url);
 
   if (uri == null) {
@@ -28,6 +28,15 @@ Result<Uri> isValidUrl(String url) {
     final result = FailureBuilder<Uri>()
       ..title = 'Input error'
       ..message = 'Host is empty';
+
+    return result();
+  }
+
+  if (uri.path.isNotEmpty && uri.path != '/') {
+
+    final result = FailureBuilder<Uri>()
+      ..title = 'Unsupported'
+      ..message = 'URL path should be empty';
 
     return result();
   }
