@@ -103,20 +103,34 @@ class Executor {
   static Result<T> handleBadResponse<T>(DioException e) {
     final data = e.response?.data as String?;
 
-    final json = data?.decode();
+    String title =
+        'Bad response';
+    String message =
+        'The received response does not look like a valid Hydrus response';
+    Object? details;
 
-    final error = pick(json, 'exception_type')
-        .asStringOrNull()
-        ?.format();
+    try {
+      final json = data?.decode();
 
-    final message = pick(json, 'error')
-        .asStringOrNull()
-        ?.replaceAll('!', '');
+      final exception = pick(json, 'exception_type')
+          .asStringOrNull();
+
+      if (exception != null) title = exception.format();
+
+      final error = pick(json, 'error')
+          .asStringOrNull()
+          ?.replaceAll('!', '');
+
+      if (error != null) message = error;
+
+    } catch (e) {
+      details = e;
+    }
 
     final result = FailureBuilder<T>()
-      ..title = error ?? 'Bad response'
-      ..message = message ?? 'Empty response'
-      ..details = e;
+      ..title = title
+      ..message = message
+      ..details = details ?? e;
 
     return result();
   }

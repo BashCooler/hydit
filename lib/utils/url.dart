@@ -4,10 +4,6 @@ import 'package:hydit/services/executor.dart';
 Result<Uri> parseUrl(String url) {
   final uri = Uri.tryParse(url);
 
-  if (uri == null) {
-    return Failure('Input error', 'Invalid URL');
-  }
-
   final str = uri.toString();
 
   if (!str.startsWith('http://') && !str.startsWith('https://')) {
@@ -17,6 +13,10 @@ Result<Uri> parseUrl(String url) {
       ..message = 'URL should start with "http://" or "https://"';
 
     return result();
+  }
+
+  if (uri == null) {
+    return Failure('Input error', 'Invalid URL');
   }
 
   if (uri.hasPort && (uri.port > 65535 || uri.port < 0)) {
