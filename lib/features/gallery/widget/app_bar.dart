@@ -81,7 +81,7 @@ class QueryInfo extends StatelessWidget {
   QueryController? get query => maybeFind(tag: tag);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Obx(() {
     final query = this.query;
 
     if (query == null || query.values.isEmpty) {
@@ -92,5 +92,5 @@ class QueryInfo extends StatelessWidget {
       ..color = Colors.white
       ..bodySmall
       ..shadows = onGradientShadow;
-  }
+  });
 }
