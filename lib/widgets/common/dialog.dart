@@ -12,7 +12,7 @@ class LoadingDialogBuilder {
   Widget title = const Text('Confirm?');
   Widget loadingTitle = const Text('Loading...');
   Widget? content;
-  Widget applyText = const Text('Apply');
+  Widget applyText = const Text('Confirm');
   Widget? discardButton;
   Future<Result<void>> Function()? onApply;
 
@@ -47,7 +47,7 @@ class LoadingDialog extends HookWidget {
     this.content,
     required this.title,
     required this.loadingTitle,
-    this.applyText = const Text('Apply'),
+    this.applyText = const Text('Confirm'),
     this.discardButton,
     required this.onApply,
   });

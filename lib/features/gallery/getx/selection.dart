@@ -160,7 +160,6 @@ class SelectionController extends GetxController {
     final dialog = LoadingDialogBuilder()
       ..icon = const Icon(Icons.delete_forever)
       ..title = 'Delete files?'.n
-      ..applyText = 'Delete'.n
       ..loadingTitle = 'Deleting...'.n
       ..onApply = onApply;
 
@@ -207,5 +206,35 @@ class SelectionController extends GetxController {
 
     Get.back();
     Snack.success('Success', 'Files saved to downloads');
+  }
+
+  // MARK: ARCHIVE
+
+  void archive() {
+    final files = this.files.withIds(this.ids);
+
+    final ids = files
+        .map((f) => f.id)
+        .toList();
+
+    void onSuccess(void data) {
+      for (final file in files) {
+        file.inbox.value = false;
+      }
+      Get.back();
+    }
+
+    Future<Result<void>> onApply() => repo.api
+        .archiveFiles(ids)
+        .run()
+        .tapSuccess(onSuccess)
+        .tapFailure(Snack.error);
+
+    final dialog = LoadingDialogBuilder()
+      ..icon = const Icon(Icons.archive_outlined)
+      ..title = 'Archive files?'.n
+      ..onApply = onApply;
+
+    dialog.show();
   }
 }

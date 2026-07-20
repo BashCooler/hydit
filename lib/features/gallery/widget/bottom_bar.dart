@@ -57,6 +57,7 @@ class SelectionBottomBar extends StatelessWidget {
                       onTap: selection.delete,
                       child: 'delete'.n,
                     ),
+
                     PopupMenuItem(
                       padding: const .only(left: 12),
                       onTap: selection.download,
@@ -74,6 +75,11 @@ class SelectionBottomBar extends StatelessWidget {
                         ],
                       ),
                     ),
+
+                    PopupMenuItem(
+                      onTap: selection.archive,
+                      child: 'archive'.n,
+                    )
                   ]),
                 ],
               ),

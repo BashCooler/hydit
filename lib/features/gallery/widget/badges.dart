@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/extra/primitive.dart';
 
@@ -19,9 +20,9 @@ class TileBadges extends StatelessWidget {
           Wrap(
             spacing: 2,
             runSpacing: 2,
-            children: BadgesBuilder(file)
-                .addInbox(context)
-                .build(),
+            children: [
+              Obx(() => InboxBadge(isInbox: file.isInbox)),
+            ],
           ),
           Wrap(
             spacing: 2,
@@ -74,20 +75,27 @@ class BadgesBuilder {
     return this;
   }
 
-  BadgesBuilder addInbox(BuildContext context) {
-    if (_file.isInbox) {
-      final badge = Badge(
-        label: Icon(
-          Icons.mail_outline,
-          color: Theme.of(context).colorScheme.onError,
-          size: 12,
-        ),
-      );
-
-      _badges.add(badge);
-    }
-    return this;
-  }
-
   List<Widget> build() => _badges;
+}
+
+
+class InboxBadge extends StatelessWidget {
+  final bool isInbox;
+
+  const InboxBadge({super.key, required this.isInbox});
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isInbox) {
+      return const SizedBox.shrink();
+    }
+
+    return Badge(
+      label: Icon(
+        Icons.mail_outline,
+        color: Theme.of(context).colorScheme.onError,
+        size: 12,
+      ),
+    );
+  }
 }
