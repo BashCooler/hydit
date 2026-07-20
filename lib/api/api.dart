@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:hive_ce/hive.dart';
+import 'package:get/get.dart';
+
 import 'package:hydit/api/params.dart';
+import 'package:hydit/services/storage.dart';
 
 import 'dio.dart';
 
@@ -10,23 +12,23 @@ import 'dio.dart';
 class HydrusApi with DioClient {
   static const int version = 94;
 
-  /// Create an instance of [HydrusApi] and update its
-  /// URL and access key from settings stored in [Hive].
-  HydrusApi.load() {
-    load();
-  }
-
-  HydrusApi.options({
+  HydrusApi({
     required Uri uri,
     required String key,
   }) {
     update(uri, key);
   }
 
-  /// Update api URL and access key from
-  /// settings stored in [Hive].
+  /// Create an instance of [HydrusApi] with settings
+  /// from [Storage].
+  HydrusApi.load() {
+    load();
+  }
+
+  /// Update api URL and access key with
+  /// settings from [Storage].
   void load() {
-    final box = Hive.box('settings');
+    final box = Get.find<Storage>();
 
     final key = box.get('key') ?? '';
     final url = box.get('url') ?? '';

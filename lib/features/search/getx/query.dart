@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:hive_ce/hive.dart';
 
 import 'package:hydit/api/params.dart';
 import 'package:hydit/entities/tag.dart';
@@ -31,7 +30,7 @@ class QueryController extends GetxController {
   List<Tag> get tags => _tags;
   List<String> get values => _tags.rawList();
 
-  Box get box => Hive.box('settings');
+  Storage get box => Get.find<Storage>();
 
   @override
   String toString() => values.toString().replaceAll(RegExp(r'[\[\]]'), '');

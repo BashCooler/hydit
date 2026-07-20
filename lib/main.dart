@@ -3,10 +3,10 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hydit/services/storage.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import 'package:media_kit/media_kit.dart';
-import 'package:hive_ce_flutter/adapters.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -26,8 +26,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
 
-  await Hive.initFlutter();
-  await Hive.openBox('settings');
+  await HiveStorage.init();
 
   await enableEdgeToEdge();
   await Permission.notification.request();
@@ -53,8 +52,9 @@ class GlobalBindings extends Bindings {
   @override
   void dependencies() {
     Get
-      ..put(Repo(), permanent: true)
-      ..put(VideoService(), permanent: true);
+      ..put<Storage>(HiveStorage())
+      ..put(Repo())
+      ..put(VideoService());
   }
 }
 

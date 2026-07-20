@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:hive_ce/hive.dart';
 
 import 'package:hydit/api/api.dart';
 import 'package:hydit/utils/utils.dart';
@@ -16,9 +15,9 @@ class SettingsController {
 
   Repo repo = Get.find();
 
-  void load() {
-    final box = Hive.box('settings');
+  Storage get box => Get.find<Storage>();
 
+  void load() {
     url = box.get('url') ?? '';
     key = box.get('key') ?? '';
   }
@@ -28,13 +27,12 @@ class SettingsController {
 
     if (uri is Failure) return uri;
 
-    final api = HydrusApi.options(uri: uri.unwrapOrThrow(), key: key);
+    final api = HydrusApi(uri: uri.unwrapOrThrow(), key: key);
 
     final access = await api.getVerifyAccessKey().run();
 
     if (access is Failure) return access;
 
-    final box = Hive.box('settings');
     box.put('url', url);
     box.put('key', key);
 
