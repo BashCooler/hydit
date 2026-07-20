@@ -113,8 +113,24 @@ class HydrusApi with DioClient {
       );
 
   Future<void> deleteFiles(List<int> ids) =>
-      post<void>(
+      post(
         '/add_files/delete_files',
+        params: {
+          'file_ids': ids,
+        },
+      );
+
+  Future<void> archiveFiles(List<int> ids) =>
+      post(
+        '/add_files/archive_files',
+        params: {
+          'file_ids': ids,
+        },
+      );
+
+  Future<void> unarchiveFiles(List<int> ids) =>
+      post(
+        '/add_files/unarchive_files',
         params: {
           'file_ids': ids,
         },
@@ -139,6 +155,6 @@ class HydrusApi with DioClient {
   }
 
   Future<void> postAddTags(AddTagsParams params) {
-    return post<void>('/add_tags/add_tags', params: params.toMap());
+    return post('/add_tags/add_tags', params: params.toMap());
   }
 }
