@@ -30,6 +30,7 @@ class Repo {
   }
 
   Future<Result<void>> update(List<HydrusFile> files) async {
+
     for (final chunk in files.chunked(20)) {
 
       final result = await api
@@ -45,8 +46,8 @@ class Repo {
           .map(Tags.fromMap)
           .toList();
 
-      for (var i = 0; i < files.length; i++) {
-        files[i].tags.value = tags[i];
+      for (var i = 0; i < chunk.length; i++) {
+        chunk[i].tags.value = tags[i];
       }
     }
 
