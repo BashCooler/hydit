@@ -11,7 +11,6 @@ class FileMetadata {
   final String mime;
   final Duration duration;
   final String ext;
-  final bool isInbox;
 
   FileMetadata({
     required this.id,
@@ -22,7 +21,6 @@ class FileMetadata {
     required this.mime,
     required int duration,
     required this.ext,
-    required this.isInbox,
   })
       : duration = Duration(milliseconds: duration);
 
@@ -39,7 +37,6 @@ class FileMetadata {
     mime: pick(map, 'mime').asStringOrThrow(),
     duration: pick(map, 'duration').asIntOr(0),
     ext: pick(map, 'ext').asStringOrThrow(),
-    isInbox: pick(map, 'is_inbox').asBoolOrThrow(),
   );
 
   String get fileName => '$hash$ext';

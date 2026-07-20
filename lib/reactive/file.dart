@@ -16,7 +16,9 @@ class HydrusFile {
 
   final Rx<Tags> tags;
 
-  HydrusFile(this.meta, this.tags);
+  final Rx<bool> inbox;
+
+  HydrusFile(this.meta, this.tags, this.inbox);
 
   /// The [map] parameter should be extracted from `file_metadata`
   /// response like so:
@@ -26,8 +28,9 @@ class HydrusFile {
 
     final meta = FileMetadata.fromMap(map);
     final tags = Tags.fromMap(map);
+    final inbox = pick(map, 'is_inbox').asBoolOrThrow();
 
-    return HydrusFile(meta, tags.obs);
+    return HydrusFile(meta, tags.obs, inbox.obs);
   }
 
   final Repo repo = Get.find();
@@ -39,6 +42,8 @@ class HydrusFile {
   String get url => repo.buildUrl(id);
 
   String get thumbnailUrl => repo.buildUrl(id, thumbnail: true);
+
+  bool get isInbox => inbox.value;
 
   @override
   String toString() => 'HydrusFile ${meta.id}';

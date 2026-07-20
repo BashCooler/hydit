@@ -75,7 +75,7 @@ class BadgesBuilder {
   }
 
   BadgesBuilder addInbox(BuildContext context) {
-    if (_file.meta.isInbox) {
+    if (_file.isInbox) {
       final badge = Badge(
         label: Icon(
           Icons.mail_outline,
