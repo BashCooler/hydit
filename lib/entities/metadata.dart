@@ -11,6 +11,7 @@ class FileMetadata {
   final String mime;
   final Duration duration;
   final String ext;
+  final bool isInbox;
 
   FileMetadata({
     required this.id,
@@ -21,6 +22,7 @@ class FileMetadata {
     required this.mime,
     required int duration,
     required this.ext,
+    required this.isInbox,
   })
       : duration = Duration(milliseconds: duration);
 
@@ -28,7 +30,7 @@ class FileMetadata {
   /// response like so:
   ///
   /// `json -> metadata -> 0` (or other index)
-  factory FileMetadata.fromMap(Map<String, dynamic> map) => .new(
+  factory FileMetadata.fromMap(Map<String, dynamic> map) => FileMetadata(
     id: pick(map, 'file_id').asIntOrThrow(),
     hash: pick(map, 'hash').asStringOrThrow(),
     width: pick(map, 'width').asDoubleOr(0),
@@ -37,6 +39,7 @@ class FileMetadata {
     mime: pick(map, 'mime').asStringOrThrow(),
     duration: pick(map, 'duration').asIntOr(0),
     ext: pick(map, 'ext').asStringOrThrow(),
+    isInbox: pick(map, 'is_inbox').asBoolOrThrow(),
   );
 
   String get fileName => '$hash$ext';

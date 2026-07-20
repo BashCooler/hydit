@@ -13,17 +13,28 @@ class TileBadges extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const .all(8.0),
-      child: Wrap(
-        alignment: .end,
-        spacing: 2,
-        runSpacing: 2,
-        children: BadgesBuilder(file)
-            .duration()
-            .addNumerical('volume', 'v')
-            .addNumerical('chapter', 'c')
-            .addNumerical('page', 'p')
-            .build(),
-      ),
+      child: Column(
+        mainAxisAlignment: .spaceBetween,
+        children: [
+          Wrap(
+            spacing: 2,
+            runSpacing: 2,
+            children: BadgesBuilder(file)
+                .addInbox(context)
+                .build(),
+          ),
+          Wrap(
+            spacing: 2,
+            runSpacing: 2,
+            children: BadgesBuilder(file)
+                .addNumerical('volume', 'v')
+                .addNumerical('chapter', 'c')
+                .addNumerical('page', 'p')
+                .duration()
+                .build(),
+          ),
+        ],
+      )
     );
   }
 }
@@ -60,6 +71,21 @@ class BadgesBuilder {
         .tags.value.namespaces[namespace]?.first
         .replaceAll(RegExp(r'^0+'), '');
     if (value != null) _badges.add(Badge(label: '${prefix ?? ''}$value'.n));
+    return this;
+  }
+
+  BadgesBuilder addInbox(BuildContext context) {
+    if (_file.meta.isInbox) {
+      final badge = Badge(
+        label: Icon(
+          Icons.mail_outline,
+          color: Theme.of(context).colorScheme.onError,
+          size: 12,
+        ),
+      );
+
+      _badges.add(badge);
+    }
     return this;
   }
 
