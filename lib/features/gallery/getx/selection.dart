@@ -160,8 +160,8 @@ class SelectionController extends GetxController {
     final dialog = LoadingDialogBuilder()
       ..icon = const Icon(Icons.delete_forever)
       ..title = 'Delete files?'.n
+      ..applyText = 'Delete'.n
       ..loadingTitle = 'Deleting...'.n
-      ..content = 'Selected files will be marked as deleted in Hydrus'.n
       ..onApply = onApply;
 
     dialog.show();

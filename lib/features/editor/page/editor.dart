@@ -82,7 +82,7 @@ class Editor extends StatelessWidget {
         icon: const Icon(Icons.save),
         title: 'Apply changes?'.n,
         loadingTitle: 'Saving...'.n,
-        discard: TextButton(
+        discardButton: TextButton(
           onPressed: () => Get.back(result: true),
           child: const Text('Discard'),
         ),

@@ -12,7 +12,8 @@ class LoadingDialogBuilder {
   Widget title = const Text('Confirm?');
   Widget loadingTitle = const Text('Loading...');
   Widget? content;
-  Widget? discard;
+  Widget applyText = const Text('Apply');
+  Widget? discardButton;
   Future<Result<void>> Function()? onApply;
 
   Future<void> show() => Get.dialog(
@@ -23,7 +24,8 @@ class LoadingDialogBuilder {
       title: title,
       loadingTitle: loadingTitle,
       content: content,
-      discard: discard,
+      applyText: applyText,
+      discardButton: discardButton,
       onApply: onApply!,
     ),
   );
@@ -35,7 +37,8 @@ class LoadingDialog extends HookWidget {
   final Widget title;
   final Widget loadingTitle;
   final Widget? content;
-  final Widget? discard;
+  final Widget applyText;
+  final Widget? discardButton;
   final Future<Result<void>> Function() onApply;
 
   const LoadingDialog({
@@ -44,7 +47,8 @@ class LoadingDialog extends HookWidget {
     this.content,
     required this.title,
     required this.loadingTitle,
-    this.discard,
+    this.applyText = const Text('Apply'),
+    this.discardButton,
     required this.onApply,
   });
 
@@ -70,9 +74,9 @@ class LoadingDialog extends HookWidget {
           TextButton(
             onPressed: () async => await onApply()
                 .loading(loading),
-            child: const Text('Apply'),
+            child: applyText,
           ),
-          ?discard,
+          ?discardButton,
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: const Text('Cancel'),
