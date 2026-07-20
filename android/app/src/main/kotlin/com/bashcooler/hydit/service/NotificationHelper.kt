@@ -25,7 +25,7 @@ object NotificationHelper {
             context,
             id,
             "Upload success",
-            NotificationManager.IMPORTANCE_LOW,
+            NotificationManager.IMPORTANCE_HIGH,
         )
 
         val notification = NotificationCompat.Builder(context, id)
