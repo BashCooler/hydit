@@ -237,4 +237,32 @@ class SelectionController extends GetxController {
 
     dialog.show();
   }
+
+  void inbox() {
+    final files = this.files.withIds(this.ids);
+
+    final ids = files
+        .map((f) => f.id)
+        .toList();
+
+    void onSuccess(void data) {
+      for (final file in files) {
+        file.inbox.value = true;
+      }
+      Get.back();
+    }
+
+    Future<Result<void>> onApply() => repo.api
+        .unarchiveFiles(ids)
+        .run()
+        .tapSuccess(onSuccess)
+        .tapFailure(Snack.error);
+
+    final dialog = LoadingDialogBuilder()
+      ..icon = const Icon(Icons.archive_outlined)
+      ..title = 'Inbox files?'.n
+      ..onApply = onApply;
+
+    dialog.show();
+  }
 }

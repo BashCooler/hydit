@@ -77,9 +77,14 @@ class SelectionBottomBar extends StatelessWidget {
                     ),
 
                     PopupMenuItem(
+                      onTap: selection.inbox,
+                      child: 'inbox'.n,
+                    ),
+
+                    PopupMenuItem(
                       onTap: selection.archive,
                       child: 'archive'.n,
-                    )
+                    ),
                   ]),
                 ],
               ),
