@@ -1,8 +1,33 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/executor/executor.dart';
+
+
+class LoadingDialogBuilder {
+  Widget? icon;
+  Widget title = const Text('Confirm?');
+  Widget loadingTitle = const Text('Loading...');
+  Widget? content;
+  bool discardButton = false;
+  Future<Result<void>> Function()? onApply;
+
+  Future<void> show() => Get.dialog(
+    barrierDismissible: false,
+    transitionDuration: 150.ms,
+    LoadingDialog(
+      icon: icon,
+      title: title,
+      loadingTitle: loadingTitle,
+      content: content,
+      discardButton: discardButton,
+      onApply: onApply!,
+    ),
+  );
+}
 
 
 class LoadingDialog extends HookWidget {

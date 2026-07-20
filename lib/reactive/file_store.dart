@@ -30,12 +30,6 @@ class FileStore {
 
   int get length => cache.length;
 
-  /// The first index in the list with provided [id].
-  /// Returns -1 if element is not found.
-  int indexById(int id) {
-    return ids.indexWhere((e) => e == id);
-  }
-
   /// Files with provided [ids].
   Iterable<HydrusFile> withIds(Iterable<int> ids) {
     return ids.map((id) => cache[id]!);

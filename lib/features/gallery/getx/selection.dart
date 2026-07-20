@@ -25,32 +25,37 @@ class SelectionController extends GetxController {
 
   Repo repo = Get.find();
 
+  // MARK: SELECTION
+
+  bool get on => ids.isNotEmpty;
+
+  bool get off => ids.isEmpty;
+
   bool get selectedAll => ids.length == files.ids.length;
 
   bool get selectedRange {
     if (ids.length != 2) return false;  // important
+
     final r = _range();
-    return switch (r) {
-      null => false,
-      _ => r.$2 - r.$1 > 1,
-    };
+
+    if (r == null) return false;
+
+    return r.$2 - r.$1 > 1;
   }
 
-  bool get on => ids.isNotEmpty;
-  bool get off => ids.isEmpty;
-
-  void clear() => ids.clear();
-
-  bool isSelected(int id) => ids.contains(id);
-
-  void selectTile(int id, int index) {
+  void select(int id, int index) {
     if (!gallery.loading.value) {
       ids.contains(id) ? ids.remove(id) : ids.add(id);
     }
   }
 
+  bool isSelected(int id) => ids.contains(id);
+
+  void clear() => ids.clear();
+
   void selectRange() {
     final r = _range();
+
     if (r == null) return;
 
     final lastId = ids.last;
@@ -63,14 +68,12 @@ class SelectionController extends GetxController {
     ids.add(lastId);
   }
 
-  void selectAll() => ids.addAll(files.ids);
-
   (int, int)? _range() {
     if (ids.length != 2) return null;
 
-    final indices = <int>[
-      files.indexById(ids.first),
-      files.indexById(ids.last),
+    final indices = [
+      files.ids.indexOf(ids.first),
+      files.ids.indexOf(ids.last),
     ];
 
     if (indices.length < 2) return null;
@@ -79,6 +82,10 @@ class SelectionController extends GetxController {
 
     return (indices.first, indices.last);
   }
+
+  void selectAll() => ids.addAll(files.ids);
+
+  // MARK: EDIT
 
   void edit() async {
     switch (ids.length) {
@@ -90,8 +97,11 @@ class SelectionController extends GetxController {
   }
 
   void _openPagedEditor() {
-    final index = files.indexById(ids.first);
-    final page = PageGetxController(files: files, initial: index);
+
+    final page = PageGetxController(
+      files: files,
+      initial: files.ids.indexOf(ids.first),
+    );
 
     EditorPage(files)
         .paged(page)
@@ -102,7 +112,18 @@ class SelectionController extends GetxController {
   void _openBatchEditor() async {
     final token = CancellationToken();
 
-    _loading(ids.length, token);
+    Get.dialog(
+      transitionDuration: 150.ms,
+      barrierDismissible: false,
+      Obx(
+        () => ProgressDialog(
+          progress: files.length,
+          full: ids.length,
+          title: 'Loading metadata...'.n,
+          token: token,
+        ),
+      ),
+    );
 
     final result = await loader
         .ensureLoaded(ids, token)
@@ -120,7 +141,9 @@ class SelectionController extends GetxController {
         .push();
   }
 
-  Future<void> delete() async {
+  // MARK: DELETE
+
+  void delete() {
 
     void onSuccess(void value) {
       Get.back();
@@ -128,39 +151,23 @@ class SelectionController extends GetxController {
       clear();
     }
 
-    await Get.dialog(
-      barrierDismissible: false,
-      transitionDuration: 150.ms,
-      LoadingDialog(
-        icon: const Icon(Icons.delete_forever),
-        title: 'Delete files?'.n,
-        loadingTitle: 'Deleting...'.n,
-        content: 'Selected files will be marked as deleted in Hydrus'.n,
-        onApply: () {
-          return repo.api
-              .deleteFiles(ids.toList())
-              .run()
-              .tapSuccess(onSuccess)
-              .tapFailure(Snack.error);
-        },
-      ),
-    );
+    Future<Result<void>> onApply() => repo.api
+        .deleteFiles(ids.toList())
+        .run()
+        .tapSuccess(onSuccess)
+        .tapFailure(Snack.error);
+
+    final dialog = LoadingDialogBuilder()
+      ..icon = const Icon(Icons.delete_forever)
+      ..title = 'Delete files?'.n
+      ..loadingTitle = 'Deleting...'.n
+      ..content = 'Selected files will be marked as deleted in Hydrus'.n
+      ..onApply = onApply;
+
+    dialog.show();
   }
 
-  Future<void> _loading(int full, CancellationToken token) {
-    return Get.dialog(
-      transitionDuration: 150.ms,
-      barrierDismissible: false,
-      Obx(() {
-        return ProgressDialog(
-          progress: files.length,
-          full: full,
-          title: 'Loading metadata...'.n,
-          token: token,
-        );
-      }),
-    );
-  }
+  // MARK: DOWNLOAD
 
   Future<void> download({double delay = 0}) async {
     final files = this.files.withIds(ids);

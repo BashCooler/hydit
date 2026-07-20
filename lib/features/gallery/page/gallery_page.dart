@@ -35,7 +35,7 @@ class Gallery extends StatelessWidget {
     if (gallery.loading.value) return;
 
     if (selection.on) {
-      selection.selectTile(id, index);
+      selection.select(id, index);
       return;
     }
 
@@ -63,7 +63,7 @@ class Gallery extends StatelessWidget {
         onRefresh: query?.search,
         selected: selection.isSelected,
         onTap: onTileTap,
-        onLongPress: editor ? selection.selectTile : null,
+        onLongPress: editor ? selection.select : null,
         onBuild: loader?.next,
       ),
       floatingActionButton: GalleryFAB(tag: tag),
