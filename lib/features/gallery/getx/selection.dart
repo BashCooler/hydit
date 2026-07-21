@@ -239,7 +239,7 @@ class SelectionController extends GetxController {
         .tapFailure(Snack.error);
 
     LoadingDialog.show(
-      icon: const Icon(Icons.archive_outlined),
+      icon: const Icon(Icons.mail_outline),
       title: 'Inbox files?'.n,
       onApply: onApply,
     );
