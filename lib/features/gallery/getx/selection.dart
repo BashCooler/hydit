@@ -169,8 +169,8 @@ class SelectionController extends GetxController {
 
   // MARK: DOWNLOAD
 
-  Future<void> download({double delay = 0}) async {
-    final files = this.files.withIds(ids);
+  Future<Result<void>> download({double delay = 0}) async {
+    final ids = this.ids.toList();
 
     final progress = 0.obs;
     final token = CancellationToken();
@@ -181,32 +181,33 @@ class SelectionController extends GetxController {
       Obx(() {
         return ProgressDialog(
           progress: progress.value,
-          full: files.length,
+          full: ids.length,
           title: 'Downloading files...'.n,
           token: token,
         );
       }),
     );
 
-    for (final file in files) {
+    for (final id in ids) {
 
-      if (token.cancelled) return;
-
-      final download = file
-          .download()
+      final download = await repo
+          .download(id)
           .tapSuccess((_) => progress.value++)
-          .tapFailure(Snack.error);
+          .delay(delay);
 
-      final result = await Future.wait([
-        download,
-        sleep(delay.s),
-      ]);
+      if (download is Failure) {
+        token.cancel();
+      }
 
-      if (result is Failure) return;
+      if (token.cancelled) {
+        Get.back();
+        return download;
+      }
     }
 
     Get.back();
-    Snack.success('Success', 'Files saved to downloads');
+
+    return Success(null);
   }
 
   // MARK: ARCHIVE

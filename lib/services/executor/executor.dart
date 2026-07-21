@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:hydit/services/executor/handler.dart';
+import 'package:hydit/utils/utils.dart';
 
 part 'models.dart';
 
@@ -79,6 +80,16 @@ extension TapsAsync<T> on Future<Result<T>> {
   }
 
   Future<T?> unwrap() async => (await this).unwrap();
+
+  Future<Result<T>> delay(double seconds) async {
+
+    final wait = await Future.wait<Result<T>?>([
+      this,
+      Future.delayed(seconds.s),
+    ]);
+
+    return wait.first!;
+  }
 }
 
 

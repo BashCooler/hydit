@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/services/executor/executor.dart';
+import 'package:hydit/services/services.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
@@ -25,6 +27,18 @@ class SelectionBottomBar extends StatelessWidget {
 
   FileStore get files => Get.find(tag: tag);
   SelectionController get selection => Get.find(tag: tag);
+
+  void download({double delay = 0}) {
+
+    void onSuccess(void data) {
+      Snack.success('Success', 'Files saved to downloads');
+    }
+
+    selection
+        .download(delay: delay)
+        .tapSuccess(onSuccess)
+        .tapFailure(Snack.error);
+  }
 
   @override
   Widget build(BuildContext context) => Obx(() {
@@ -60,7 +74,7 @@ class SelectionBottomBar extends StatelessWidget {
 
                     PopupMenuItem(
                       padding: const .only(left: 12),
-                      onTap: selection.download,
+                      onTap: download,
                       child: Row(
                         mainAxisAlignment: .spaceBetween,
                         children: [
@@ -69,7 +83,8 @@ class SelectionBottomBar extends StatelessWidget {
                             tooltip: 'Download 1 file per second',
                             icon: Icon(Symbols.chronic),
                             onPressed: () {
-                              selection.download(delay: 1);
+                              Get.back();
+                              download(delay: 1);
                             },
                           ),
                         ],

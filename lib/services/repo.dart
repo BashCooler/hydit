@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:deep_pick/deep_pick.dart';
 
@@ -9,8 +8,8 @@ import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/entities/tags.dart';
 import 'package:hydit/entities/service.dart';
-
-import 'executor/executor.dart';
+import 'package:hydit/entities/metadata.dart';
+import 'package:hydit/services/services.dart';
 
 
 class Repo {
@@ -39,9 +38,9 @@ class Repo {
 
       if (result is Failure) return result;
 
-      final json = result.unwrapOrThrow();
+      final json = result.unwrapOrThrow().decode();
 
-      final tags = pick(jsonDecode(json), 'metadata')
+      final tags = pick(json, 'metadata')
           .asListOrThrow((e) => e.asMapOrThrow<String, dynamic>())
           .map(Tags.fromMap)
           .toList();
@@ -52,5 +51,27 @@ class Repo {
     }
 
     return Success(null);
+  }
+
+  Future<Result<void>> download(int id) async {
+
+    final bytes = await api.getFile(id).run();
+
+    if (bytes is Failure) return bytes;
+
+    final data = await api
+        .getFileMetadata([id], onlyReturnBasicInformation: true)
+        .run();
+
+    if (data is Failure) return data;
+
+    final json = data.unwrapOrThrow().decode();
+
+    final map = pick(json, 'metadata', 0).asMapOrThrow<String, dynamic>();
+
+    final meta = FileMetadata.fromMap(map);
+
+    return Native
+        .saveFile(bytes.unwrapOrThrow(), meta.fileName, meta.mime);
   }
 }
