@@ -3,10 +3,14 @@ part of 'executor.dart';
 
 class CancellationToken {
   bool _cancelled = false;
+  bool _completed = false;
 
-  bool get cancelled => _cancelled;
+  bool get completed =>_completed;
+  bool get cancelled => _cancelled && !_completed;
 
   void cancel() => _cancelled = true;
+
+  void complete() => _completed = true;
 }
 
 

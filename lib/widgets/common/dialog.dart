@@ -15,6 +15,7 @@ class LoadingDialogBuilder {
   Widget applyText = const Text('Confirm');
   Widget? discardButton;
   Future<Result<void>> Function()? onApply;
+  CancellationToken? token;
 
   Future<void> show() => Get.dialog(
     barrierDismissible: false,
@@ -27,6 +28,7 @@ class LoadingDialogBuilder {
       applyText: applyText,
       discardButton: discardButton,
       onApply: onApply!,
+      token: token ?? CancellationToken(),
     ),
   );
 }
@@ -40,6 +42,7 @@ class LoadingDialog extends HookWidget {
   final Widget applyText;
   final Widget? discardButton;
   final Future<Result<void>> Function() onApply;
+  final CancellationToken token;
 
   const LoadingDialog({
     super.key,
@@ -50,6 +53,7 @@ class LoadingDialog extends HookWidget {
     this.applyText = const Text('Confirm'),
     this.discardButton,
     required this.onApply,
+    required this.token,
   });
 
   @override
@@ -59,9 +63,10 @@ class LoadingDialog extends HookWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        if (loading.value) return;
-        Navigator.of(context).pop(false);
+        if (didPop || loading.value) {
+          return;
+        }
+        Get.back();
       },
       child: AlertDialog(
         icon: icon,
@@ -72,13 +77,19 @@ class LoadingDialog extends HookWidget {
             : content,
         actions: loading.value ? [] : [
           TextButton(
-            onPressed: () async => await onApply()
-                .loading(loading),
+            onPressed: () async {
+              final result = await onApply().loading(loading);
+
+              if (result is Success) {
+                token.complete();
+                Get.back();
+              }
+            },
             child: applyText,
           ),
           ?discardButton,
           TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
+            onPressed: Get.back,
             child: const Text('Cancel'),
           ),
         ],

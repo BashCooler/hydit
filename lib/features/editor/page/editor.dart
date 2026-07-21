@@ -65,34 +65,37 @@ class Editor extends StatelessWidget {
   // MARK: NAV
 
   Future<void> onLeave(bool didPop, Object? result) async {
-    if (didPop) return;
-    if (await confirmPendingChanges()) Get.back();
+    if (!didPop && await confirmPendingChanges()) {
+      Get.back();
+    }
   }
 
   Future<bool> confirmPendingChanges() async {
     if (manager.unlocked) return true;
-    return await showPopDialog() ?? true;
-  }
 
-  Future<bool?> showPopDialog() async {
-    return Get.dialog(
+    final token = CancellationToken();
+
+    await Get.dialog(
       barrierDismissible: true,
       transitionDuration: 150.ms,
       LoadingDialog(
+        token: token,
         icon: const Icon(Icons.save),
         title: 'Apply changes?'.n,
         loadingTitle: 'Saving...'.n,
         discardButton: TextButton(
-          onPressed: () => Get.back(result: true),
+          onPressed: () {
+            token.complete();
+            Get.back();
+          },
           child: const Text('Discard'),
         ),
-        onApply: () {
-          return manager
-              .save()
-              .tapSuccess((_) => Get.back())
-              .tapFailure(Snack.error);
-        },
+        onApply: () => manager
+            .save()
+            .tapFailure(Snack.error),
       ),
     );
+
+    return token.completed;
   }
 }
