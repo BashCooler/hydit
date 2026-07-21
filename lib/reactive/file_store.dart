@@ -36,7 +36,7 @@ class FileStore {
   }
 
   /// Remove files with provided [ids].
-  Future<void> removeWithIds(Iterable<int> ids) async {
+  Future<void> removeWithIds(List<int> ids) async {
     final toRemove = cache.withIds(ids).values;
 
     for (final file in toRemove) {
@@ -47,7 +47,10 @@ class FileStore {
 
     for (final file in toRemove) {
       cache.remove(file.id);
-      this.ids.remove(file.id);
+    }
+
+    for (final id in ids) {
+      this.ids.remove(id);
     }
   }
 }

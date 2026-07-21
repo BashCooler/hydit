@@ -148,7 +148,7 @@ class SelectionController extends GetxController {
 
     void onSuccess(void value) {
       Get.back();
-      files.removeWithIds(ids);
+      files.removeWithIds(ids.toList());
       clear();
     }
 
