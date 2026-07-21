@@ -2,16 +2,12 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/utils/utils.dart';
 import 'package:hydit/widgets/common/dialog.dart';
 import 'package:hydit/services/services.dart';
 
 import '../getx/base.dart';
 import '../widget/widgets.dart';
 import '../widget/dropdown.dart';
-
-
-enum Action { save, discard, cancel }
 
 
 class Editor extends StatelessWidget {
@@ -75,25 +71,21 @@ class Editor extends StatelessWidget {
 
     final token = CompletionToken();
 
-    await Get.dialog(
-      barrierDismissible: true,
-      transitionDuration: 150.ms,
-      LoadingDialog(
-        token: token,
-        icon: const Icon(Icons.save),
-        title: 'Apply changes?'.n,
-        loadingTitle: 'Saving...'.n,
-        discardButton: TextButton(
-          onPressed: () {
-            token.complete();
-            Get.back();
-          },
-          child: const Text('Discard'),
-        ),
-        onApply: () => manager
-            .save()
-            .tapFailure(Snack.error),
+    await LoadingDialog.show(
+      token: token,
+      icon: const Icon(Icons.save),
+      title: 'Apply changes?'.n,
+      loadingTitle: 'Saving...'.n,
+      discardButton: TextButton(
+        onPressed: () {
+          token.complete();
+          Get.back();
+        },
+        child: const Text('Discard'),
       ),
+      onApply: () => manager
+          .save()
+          .tapFailure(Snack.error),
     );
 
     return token.completed;

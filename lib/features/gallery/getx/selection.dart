@@ -148,13 +148,12 @@ class SelectionController extends GetxController {
         .tapSuccess(onSuccess)
         .tapFailure(Snack.error);
 
-    final dialog = LoadingDialogBuilder()
-      ..icon = const Icon(Icons.delete_forever)
-      ..title = 'Delete files?'.n
-      ..loadingTitle = 'Deleting...'.n
-      ..onApply = onApply;
-
-    dialog.show();
+    LoadingDialog.show(
+      icon: const Icon(Icons.delete_forever),
+      title: 'Delete files?'.n,
+      loadingTitle: 'Deleting...'.n,
+      onApply: onApply,
+    );
   }
 
   // MARK: DOWNLOAD
@@ -214,12 +213,11 @@ class SelectionController extends GetxController {
         .tapSuccess(onSuccess)
         .tapFailure(Snack.error);
 
-    final dialog = LoadingDialogBuilder()
-      ..icon = const Icon(Icons.archive_outlined)
-      ..title = 'Archive files?'.n
-      ..onApply = onApply;
-
-    dialog.show();
+    LoadingDialog.show(
+      icon: const Icon(Icons.archive_outlined),
+      title: 'Archive files?'.n,
+      onApply: onApply,
+    );
   }
 
   void inbox() {
@@ -240,11 +238,10 @@ class SelectionController extends GetxController {
         .tapSuccess(onSuccess)
         .tapFailure(Snack.error);
 
-    final dialog = LoadingDialogBuilder()
-      ..icon = const Icon(Icons.archive_outlined)
-      ..title = 'Inbox files?'.n
-      ..onApply = onApply;
-
-    dialog.show();
+    LoadingDialog.show(
+      icon: const Icon(Icons.archive_outlined),
+      title: 'Inbox files?'.n,
+      onApply: onApply,
+    );
   }
 }

@@ -7,33 +7,6 @@ import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/executor/executor.dart';
 
 
-class LoadingDialogBuilder {
-  Widget? icon;
-  Widget title = const Text('Confirm?');
-  Widget loadingTitle = const Text('Loading...');
-  Widget? content;
-  Widget applyText = const Text('Confirm');
-  Widget? discardButton;
-  Future<Result<void>> Function()? onApply;
-  CompletionToken? token;
-
-  Future<void> show() => Get.dialog(
-    barrierDismissible: false,
-    transitionDuration: 150.ms,
-    LoadingDialog(
-      icon: icon,
-      title: title,
-      loadingTitle: loadingTitle,
-      content: content,
-      applyText: applyText,
-      discardButton: discardButton,
-      onApply: onApply!,
-      token: token ?? CompletionToken(),
-    ),
-  );
-}
-
-
 class LoadingDialog extends HookWidget {
   final Widget? icon;
   final Widget title;
@@ -42,10 +15,9 @@ class LoadingDialog extends HookWidget {
   final Widget applyText;
   final Widget? discardButton;
   final Future<Result<void>> Function() onApply;
-  final CompletionToken token;
+  final CompletionToken? token;
 
-  const LoadingDialog({
-    super.key,
+  const LoadingDialog._({
     this.icon,
     this.content,
     required this.title,
@@ -53,8 +25,38 @@ class LoadingDialog extends HookWidget {
     this.applyText = const Text('Confirm'),
     this.discardButton,
     required this.onApply,
-    required this.token,
+    this.token,
   });
+
+  /// Show a loading dialog.
+  ///
+  /// If the operation completed successfully, the [token]
+  /// will be marked completed.
+  static Future<void> show({
+    Widget? icon,
+    Widget title = const Text('Confirm?'),
+    Widget loadingTitle = const Text('Loading...'),
+    Widget? content,
+    Widget applyText = const Text('Confirm'),
+    Widget? discardButton,
+    required Future<Result<void>> Function() onApply,
+    CompletionToken? token,
+  }) {
+    return Get.dialog(
+      barrierDismissible: false,
+      transitionDuration: 150.ms,
+      LoadingDialog._(
+        icon: icon,
+        content: content,
+        title: title,
+        loadingTitle: loadingTitle,
+        applyText: applyText,
+        discardButton: discardButton,
+        onApply: onApply,
+        token: token,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +83,7 @@ class LoadingDialog extends HookWidget {
               final result = await onApply().loading(loading);
 
               if (result is Success) {
-                token.complete();
+                token?.complete();
                 Get.back();
               }
             },
