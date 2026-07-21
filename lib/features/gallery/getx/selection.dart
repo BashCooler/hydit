@@ -1,13 +1,14 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:niku/extra/primitive.dart';
 
 import 'package:hydit/utils/utils.dart';
+import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/widgets/common/dialog.dart';
 import 'package:hydit/features/editor/bindings.dart';
+import 'package:hydit/features/viewer/getx/page.dart';
 
 import 'gallery.dart';
 
@@ -211,21 +212,19 @@ class SelectionController extends GetxController {
   // MARK: ARCHIVE
 
   void archive() {
-    final files = this.files.withIds(this.ids);
-
-    final ids = files
-        .map((f) => f.id)
-        .toList();
+    final loaded = ids
+        .map((id) => files.cache[id])
+        .whereType<HydrusFile>();
 
     void onSuccess(void data) {
-      for (final file in files) {
+      for (final file in loaded) {
         file.inbox.value = false;
       }
       Get.back();
     }
 
     Future<Result<void>> onApply() => repo.api
-        .archiveFiles(ids)
+        .archiveFiles(ids.toList())
         .run()
         .tapSuccess(onSuccess)
         .tapFailure(Snack.error);
@@ -239,21 +238,19 @@ class SelectionController extends GetxController {
   }
 
   void inbox() {
-    final files = this.files.withIds(this.ids);
-
-    final ids = files
-        .map((f) => f.id)
-        .toList();
+    final loaded = ids
+        .map((id) => files.cache[id])
+        .whereType<HydrusFile>();
 
     void onSuccess(void data) {
-      for (final file in files) {
+      for (final file in loaded) {
         file.inbox.value = true;
       }
       Get.back();
     }
 
     Future<Result<void>> onApply() => repo.api
-        .unarchiveFiles(ids)
+        .unarchiveFiles(ids.toList())
         .run()
         .tapSuccess(onSuccess)
         .tapFailure(Snack.error);
