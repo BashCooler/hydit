@@ -58,6 +58,11 @@ class LoadingDialog extends HookWidget {
     );
   }
 
+  void onSuccess(void data) {
+    token?.complete();
+    Get.back();
+  }
+
   @override
   Widget build(BuildContext context) {
     final loading = useState(false);
@@ -79,14 +84,9 @@ class LoadingDialog extends HookWidget {
             : content,
         actions: loading.value ? [] : [
           TextButton(
-            onPressed: () async {
-              final result = await onApply().loading(loading);
-
-              if (result is Success) {
-                token?.complete();
-                Get.back();
-              }
-            },
+            onPressed: () => onApply()
+                .loading(loading)
+                .tapSuccess(onSuccess),
             child: applyText,
           ),
           ?discardButton,
