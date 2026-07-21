@@ -59,14 +59,11 @@ class SelectionController extends GetxController {
 
     if (r == null) return;
 
-    final lastId = ids.last;
-    ids.remove(lastId);
+    ids.clear();
 
-    for (int i = r.$1; i < r.$2; i++) {
+    for (int i = r.$1; i <= r.$2; i++) {
       ids.add(files[i].id);
     }
-
-    ids.add(lastId);
   }
 
   (int, int)? _range() {
@@ -84,7 +81,7 @@ class SelectionController extends GetxController {
     return (indices.first, indices.last);
   }
 
-  void selectAll() => ids.addAll(files.ids);
+  void selectAll() => ids.assignAll(files.ids);
 
   // MARK: EDIT
 
