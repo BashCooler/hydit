@@ -73,7 +73,7 @@ class Editor extends StatelessWidget {
   Future<bool> confirmPendingChanges() async {
     if (manager.unlocked) return true;
 
-    final token = CancellationToken();
+    final token = CompletionToken();
 
     await Get.dialog(
       barrierDismissible: true,

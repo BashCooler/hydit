@@ -15,7 +15,7 @@ class LoadingDialogBuilder {
   Widget applyText = const Text('Confirm');
   Widget? discardButton;
   Future<Result<void>> Function()? onApply;
-  CancellationToken? token;
+  CompletionToken? token;
 
   Future<void> show() => Get.dialog(
     barrierDismissible: false,
@@ -28,7 +28,7 @@ class LoadingDialogBuilder {
       applyText: applyText,
       discardButton: discardButton,
       onApply: onApply!,
-      token: token ?? CancellationToken(),
+      token: token ?? CompletionToken(),
     ),
   );
 }
@@ -42,7 +42,7 @@ class LoadingDialog extends HookWidget {
   final Widget applyText;
   final Widget? discardButton;
   final Future<Result<void>> Function() onApply;
-  final CancellationToken token;
+  final CompletionToken token;
 
   const LoadingDialog({
     super.key,
