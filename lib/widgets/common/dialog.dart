@@ -89,18 +89,37 @@ class LoadingDialog extends HookWidget {
 
 
 class ProgressDialog extends HookWidget {
-  final int progress;
-  final int full;
   final Widget? title;
   final CancellationToken token;
+  final int full;
+  final int Function() progress;
 
-  const ProgressDialog({
-    super.key,
-    required this.progress,
-    required this.full,
+  const ProgressDialog._({
     this.title,
     required this.token,
+    required this.full,
+    required this.progress,
   });
+
+  static Future<void> show({
+    Widget? title,
+    required CancellationToken token,
+    required int full,
+    required int Function() progress,
+  }) {
+    return Get.dialog(
+      transitionDuration: 150.ms,
+      barrierDismissible: false,
+      ProgressDialog._(
+        title: title,
+        token: token,
+        full: full,
+        progress: progress,
+      ),
+    );
+  }
+
+  double get value => (progress() / full).clamp(0, 1);
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +130,8 @@ class ProgressDialog extends HookWidget {
         mainAxisSize: .min,
         spacing: 15,
         children: [
-          LinearProgressIndicator(value: (progress / full).clamp(0, 1)),
-          '$progress/$full'.n,
+          Obx(() => LinearProgressIndicator(value: value)),
+          Obx(() => '${progress()}/$full'.n),
         ],
       ),
       actions: [

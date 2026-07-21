@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/extra/primitive.dart';
 
-import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/reactive/file_store.dart';
@@ -110,17 +109,11 @@ class SelectionController extends GetxController {
   void _openBatchEditor() async {
     final token = CancellationToken();
 
-    Get.dialog(
-      transitionDuration: 150.ms,
-      barrierDismissible: false,
-      Obx(
-        () => ProgressDialog(
-          progress: files.length,
-          full: ids.length,
-          title: 'Loading metadata...'.n,
-          token: token,
-        ),
-      ),
+    ProgressDialog.show(
+      title: 'Loading metadata...'.n,
+      token: token,
+      full: ids.length,
+      progress: () => files.length,
     );
 
     final result = await loader
@@ -172,17 +165,11 @@ class SelectionController extends GetxController {
     final progress = 0.obs;
     final token = CancellationToken();
 
-    Get.dialog(
-      transitionDuration: 150.ms,
-      barrierDismissible: false,
-      Obx(() {
-        return ProgressDialog(
-          progress: progress.value,
-          full: ids.length,
-          title: 'Downloading files...'.n,
-          token: token,
-        );
-      }),
+    ProgressDialog.show(
+      title: 'Downloading files...'.n,
+      token: token,
+      full: ids.length,
+      progress: () => progress.value,
     );
 
     for (final id in ids) {
