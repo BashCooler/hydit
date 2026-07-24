@@ -30,16 +30,30 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   # State management
   get: 4.7.3
   flutter_hooks: ^0.21.3+1
+
   # Storage
   hive_ce: ^2.19.3
   hive_ce_flutter: ^2.3.4
-  # Network
+
+  # Network and parsing
   dio: ^5.9.2
   connectivity_plus: ^7.1.1
   url_launcher: ^6.3.2
+  deep_pick: ^1.1.0
+
+  # Video player
+  media_kit: ^1.2.6
+  media_kit_video: ^2.0.1
+  media_kit_libs_video: ^1.0.7
+
+  # Icons
+  font_awesome_flutter: ^11.0.0
+  material_symbols_icons: ^4.2951.0
+
   # Widgets
   dismissible_page:
     git: https://github.com/itsezlife/Flutter_dismissible_page/
@@ -54,21 +68,15 @@ dependencies:
   flutter_inner_drawer:
     git: https://github.com/NANI-SORE/flutter_inner_drawer  # thx
   scrollview_observer: ^1.26.3
-  # Video player
-  media_kit: ^1.2.6
-  media_kit_video: ^2.0.1
-  media_kit_libs_video: ^1.0.7
+
   # Other packages
-  deep_pick: ^1.1.0
   filesize: ^2.0.1
   equatable: ^2.0.8
   niku: ^2.4.3
-  font_awesome_flutter: ^11.0.0
   package_info_plus: ^10.1.0
   pub_semver: ^2.2.0
   dartx: ^1.2.0
   permission_handler: ^12.0.3
-  material_symbols_icons: ^4.2951.0
   flutter_animate: ^4.5.2
 
   # The following adds the Cupertino Icons font to your application.
