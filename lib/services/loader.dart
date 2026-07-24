@@ -114,7 +114,7 @@ class Loader {
     return Success(null);
   }
 
-  void _fail(String title, String message) {
+  void _fail(Failure failure) {
     // Add for the grid to rebuild then update state
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _failed.value = true);

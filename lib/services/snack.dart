@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
+import 'package:hydit/services/services.dart';
+
 
 class Snack {
   Snack._();
@@ -8,8 +10,8 @@ class Snack {
   static void success(String title, String message) =>
       snackBar(const Icon(Icons.check), title, message);
 
-  static void error(String title, String message) =>
-      snackBar(const Icon(Icons.clear), title, message);
+  static void error(Failure failure) =>
+      snackBar(const Icon(Icons.clear), failure.title, failure.message);
 
   static void snackBar(Icon icon, String title, String message, [
     TextButton? button,

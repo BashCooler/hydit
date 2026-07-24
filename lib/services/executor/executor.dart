@@ -69,13 +69,11 @@ extension TapsAsync<T> on Future<Result<T>> {
   }
 
   Future<Result<T>> tapFailure(
-      FutureOr<void> Function(String title, String message) callback) async {
+      FutureOr<void> Function(Failure<T> failure) callback) async {
 
     final result = await this;
 
-    if (result case Failure<T>(title: final title, message: final message)) {
-      await callback(title, message);
-    }
+    if (result is Failure<T>) await callback(result);
 
     return result;
   }
