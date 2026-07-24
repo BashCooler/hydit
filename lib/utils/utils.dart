@@ -4,6 +4,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:deep_pick/deep_pick.dart' hide pick;
+import 'package:deep_pick/deep_pick.dart' as p show pick;
+
 import 'package:hydit/entities/tag.dart';
 
 export 'theme.dart';
@@ -79,4 +82,35 @@ extension ChunckedList<T> on List<T> {
 
 extension Decode on String {
   dynamic decode() => jsonDecode(this);
+}
+
+
+extension PickExtension on String {
+
+  Pick pick([
+    Object? arg0,
+    Object? arg1,
+    Object? arg2,
+    Object? arg3,
+    Object? arg4,
+    Object? arg5,
+    Object? arg6,
+    Object? arg7,
+    Object? arg8,
+    Object? arg9,
+  ]) {
+    return p.pick(
+      this,
+      arg0,
+      arg1,
+      arg2,
+      arg3,
+      arg4,
+      arg5,
+      arg6,
+      arg7,
+      arg8,
+      arg9,
+    );
+  }
 }
