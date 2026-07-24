@@ -1,5 +1,4 @@
 import 'dart:math' hide log;
-import 'dart:convert' hide json;
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -71,13 +70,12 @@ class Loader {
         .tapFailure(Snack.error)
         .tapFailure(_fail);
 
-    final json = result.unwrap();
+    if (result is Failure) return result;
 
-    if (json == null) return result;
-
-    final files = pick(jsonDecode(json), 'metadata')
-        .asListOrThrow((e) => e.asMapOrThrow<String, dynamic>())
-        .map(HydrusFile.fromMap);
+    final files = result
+        .unwrapOrThrow()
+        .pick('metadata')
+        .asListOrThrow(HydrusFile.fromPick);
 
     final map = Map<int, HydrusFile>.fromIterable(
       files,

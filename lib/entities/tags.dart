@@ -21,6 +21,12 @@ class Tags extends MapBase<String, TagService> {
     return Tags(tags, namespaces);
   }
 
+  factory Tags.fromPick(Pick pick) {
+    final map = pick.asMapOrThrow<String, dynamic>();
+
+    return Tags.fromMap(map);
+  }
+
   /// Replace all elements of this map with key/value
   /// pairs from [other].
   void assignAll(Map<String, TagService> other) {

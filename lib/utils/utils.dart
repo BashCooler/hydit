@@ -4,13 +4,14 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:deep_pick/deep_pick.dart' hide pick;
+import 'package:deep_pick/deep_pick.dart';
 import 'package:deep_pick/deep_pick.dart' as p show pick;
 
 import 'package:hydit/entities/tag.dart';
 
 export 'theme.dart';
 export 'url.dart';
+export 'package:dart_scope_functions/dart_scope_functions.dart';
 
 
 extension ToDuration on num {
@@ -100,7 +101,7 @@ extension PickExtension on String {
     Object? arg9,
   ]) {
     return p.pick(
-      this,
+      jsonDecode(this),
       arg0,
       arg1,
       arg2,

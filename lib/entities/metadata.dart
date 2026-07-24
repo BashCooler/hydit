@@ -39,6 +39,16 @@ class FileMetadata {
     ext: pick(map, 'ext').asStringOrThrow(),
   );
 
+  /// The [pick] parameter should be extracted from `file_metadata`
+  /// response like so:
+  ///
+  /// `pick(json, 'metadata', 0)` (or other index)
+  factory FileMetadata.fromPick(Pick pick) {
+    final map = pick.asMapOrThrow<String, dynamic>();
+
+    return FileMetadata.fromMap(map);
+  }
+
   String get fileName => '$hash$ext';
   String get type => mime.split('/').first;
   String get size => filesize(_size);

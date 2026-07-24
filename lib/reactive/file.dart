@@ -33,6 +33,16 @@ class HydrusFile {
     return HydrusFile(meta, tags.obs, inbox.obs);
   }
 
+  /// The [pick] parameter should be extracted from `file_metadata`
+  /// response like so:
+  ///
+  /// `pick(json, 'metadata', 0)` (or other index)
+  factory HydrusFile.fromPick(Pick pick) {
+    final map = pick.asMapOrThrow<String, dynamic>();
+
+    return HydrusFile.fromMap(map);
+  }
+
   final Repo repo = Get.find();
 
   Iterable<Tag> get all => tags.value['all known tags']?.entries ?? [];
@@ -92,15 +102,11 @@ class HydrusFile {
 
   Future<Result<void>> download() async {
 
-    final result = await repo.api
-        .getFile(id)
-        .run();
+    final bytes = await repo.api.getFile(id).run();
 
-    if (result is Failure) return result;
-
-    final bytes = result.unwrapOrThrow();
+    if (bytes is Failure) return bytes;
 
     return Native
-        .saveFile(bytes, meta.fileName, meta.mime);
+        .saveFile(bytes.unwrapOrThrow(), meta.fileName, meta.mime);
   }
 }

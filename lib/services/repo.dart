@@ -38,12 +38,10 @@ class Repo {
 
       if (result is Failure) return result;
 
-      final json = result.unwrapOrThrow().decode();
-
-      final tags = pick(json, 'metadata')
-          .asListOrThrow((e) => e.asMapOrThrow<String, dynamic>())
-          .map(Tags.fromMap)
-          .toList();
+      final tags = result
+          .unwrapOrThrow()
+          .pick('metadata')
+          .asListOrThrow(Tags.fromPick);
 
       for (var i = 0; i < chunk.length; i++) {
         chunk[i].tags.value = tags[i];
@@ -65,11 +63,10 @@ class Repo {
 
     if (data is Failure) return data;
 
-    final json = data.unwrapOrThrow().decode();
-
-    final map = pick(json, 'metadata', 0).asMapOrThrow<String, dynamic>();
-
-    final meta = FileMetadata.fromMap(map);
+    final meta = data
+        .unwrapOrThrow()
+        .pick('metadata', 0)
+        .let(FileMetadata.fromPick);
 
     return Native
         .saveFile(bytes.unwrapOrThrow(), meta.fileName, meta.mime);
