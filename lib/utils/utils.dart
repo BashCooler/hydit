@@ -1,4 +1,5 @@
 import 'dart:convert' hide json;
+import 'dart:developer' as dev;
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -102,5 +103,34 @@ extension ScopeFunctions<T> on T {
 
   R let<R>(R Function(T it) toElement) {
     return toElement.call(this);
+  }
+
+  T also(void Function(T it) action) {
+    action.call(this);
+    return this;
+  }
+
+  T log([String Function(T it)? message]) {
+    dev.log(
+      message?.call(this) ?? '$this',
+    );
+    return this;
+  }
+}
+
+
+extension Range<T> on List<T> {
+
+  Iterable<T> range(T from, T to) {
+
+    final a = indexOf(from);
+    final b = indexOf(to);
+
+    if (a < 0 || b < 0) return .empty();
+
+    return getRange(
+      a < b ? a : b,
+      a < b ? b + 1 : a + 1,
+    );
   }
 }

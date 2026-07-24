@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/utils/utils.dart';
 import 'package:niku/extra/primitive.dart';
 
 import 'package:hydit/reactive/file.dart';
@@ -34,13 +35,11 @@ class SelectionController extends GetxController {
   bool get selectedAll => ids.length == files.ids.length;
 
   bool get selectedRange {
-    if (ids.length != 2) return false;  // important
+    if (ids.length != 2) return false;
 
-    final r = _range();
-
-    if (r == null) return false;
-
-    return r.$2 - r.$1 > 1;
+    return files.ids
+        .range(ids.first, ids.last)
+        .let((it) => it.length > 2);
   }
 
   void select(int id, int index) {
@@ -54,37 +53,18 @@ class SelectionController extends GetxController {
   void clear() => ids.clear();
 
   void selectRange() {
-    final r = _range();
+    assert(ids.length == 2);
 
-    if (r == null) return;
-
-    ids.clear();
-
-    for (int i = r.$1; i <= r.$2; i++) {
-      ids.add(files[i].id);
-    }
-  }
-
-  (int, int)? _range() {
-    if (ids.length != 2) return null;
-
-    final indices = [
-      files.ids.indexOf(ids.first),
-      files.ids.indexOf(ids.last),
-    ];
-
-    if (indices.length < 2) return null;
-
-    indices.sort();
-
-    return (indices.first, indices.last);
+    files.ids
+        .range(ids.first, ids.last)
+        .also(ids.assignAll);
   }
 
   void selectAll() => ids.assignAll(files.ids);
 
   // MARK: EDIT
 
-  void edit() async {
+  void edit() {
     switch (ids.length) {
       case 1:
         _openPagedEditor();
