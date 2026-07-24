@@ -29,7 +29,6 @@ mixin class DioClient {
 
   Future<T> post<T>(String path, {
     Map<String, dynamic>? params,
-    T Function(Response r)? parser,
     bool file = false,
   }) {
     final options = Options(headers: {
@@ -37,7 +36,7 @@ mixin class DioClient {
       'Content-Type': file ? 'application/octet-stream' : 'application/json',
     });
     return dio.post<T>(path, data: params, options: options)
-        .then((r) => parser?.call(r) ?? r.data as T);
+        .then((r) => r.data as T);
   }
 }
 

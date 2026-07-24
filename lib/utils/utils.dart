@@ -2,16 +2,13 @@ import 'dart:convert' hide json;
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:deep_pick/deep_pick.dart';
 import 'package:deep_pick/deep_pick.dart' as p show pick;
 
-import 'package:hydit/entities/tag.dart';
-
 export 'theme.dart';
 export 'url.dart';
-export 'package:dart_scope_functions/dart_scope_functions.dart';
+export 'package:dartx/dartx.dart' show IterableChunked;
 
 
 extension ToDuration on num {
@@ -19,11 +16,8 @@ extension ToDuration on num {
   Duration get s =>  Duration(seconds: round());
 }
 
-Future<void> sleep(Duration duration) => Future.delayed(duration);
 
-void copyTag(Tag tag) {
-  Clipboard.setData(ClipboardData(text: tag.raw));
-}
+Future<void> sleep(Duration duration) => Future.delayed(duration);
 
 
 extension Unique on String {
@@ -68,19 +62,6 @@ class If<T> extends StatelessWidget {
 }
 
 
-extension ChunckedList<T> on List<T> {
-
-  Iterable<List<T>> chunked(int size) sync* {
-    for (var i = 0; i < length; i += size) {
-      yield sublist(
-        i,
-        (i + size).clamp(0, length),
-      );
-    }
-  }
-}
-
-
 extension Decode on String {
   dynamic decode() => jsonDecode(this);
 }
@@ -113,5 +94,13 @@ extension PickExtension on String {
       arg8,
       arg9,
     );
+  }
+}
+
+
+extension ScopeFunctions<T> on T {
+
+  R let<R>(R Function(T it) toElement) {
+    return toElement.call(this);
   }
 }

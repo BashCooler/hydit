@@ -1,6 +1,6 @@
-import 'dart:ui';
-
+import 'package:flutter/services.dart';
 import 'package:equatable/equatable.dart';
+
 import 'package:hydit/utils/theme.dart';
 
 
@@ -55,6 +55,11 @@ class Tag extends Equatable {
 
   @override
   List<Object?> get props => [raw];
+}
+
+
+void copyTag(Tag tag) {
+  Clipboard.setData(ClipboardData(text: tag.raw));
 }
 
 

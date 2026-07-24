@@ -1,4 +1,4 @@
-import 'package:hydit/api/unicode.dart';
+import 'package:hydit/utils/unicode.dart';
 import 'package:hydit/entities/service.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/utils/dictionaries.dart';

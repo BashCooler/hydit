@@ -96,13 +96,9 @@ class Loader {
   Future<Result<void>> ensureLoaded(Iterable<int> ids,
       CancellationToken token) async {
 
-    final toLoad = <int>[];
-
-    for (final id in ids) {
-      if (store.cache[id] == null) toLoad.add(id);
-    }
-
-    final chunks = toLoad.chunked(chunkSize);
+    final chunks = ids
+        .where((id) => store.cache[id] == null)
+        .chunked(chunkSize);
 
     for (final chunk in chunks) {
       await load(ids: chunk);
@@ -128,12 +124,11 @@ class Loader {
     final ping = await repo.api
         .getApiVersion()
         .run()
-        .tapFailure(Snack.error)
-        .unwrap();
+        .tapFailure(Snack.error);
 
     _retrying = false;
 
-    if (ping == null) return;
+    if (ping is Failure) return;
 
     _failed.value = false;
 
