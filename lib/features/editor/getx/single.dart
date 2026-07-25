@@ -40,7 +40,7 @@ class PagedTagManager extends TagManager {
   void init([String? service]) {
 
     final tags = file.tags.value
-        .map((k, v) => MapEntry(k, v.entries));
+        .map((k, v) => MapEntry(k, v));
 
     assign(tags);
 

@@ -1,19 +1,26 @@
-import 'dart:collection';
-
 import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/service.dart';
+import 'package:hydit/utils/collection.dart';
 
 
-class Tags extends MapBase<String, TagService> {
+class Tags extends DelegatingMapBase<String, TagService> {
+
   final Map<String, TagService> tags;
   final Map<String, List<String>> namespaces;
 
   Tags(this.tags, this.namespaces);
 
-  factory Tags.fromMap(Map<String, dynamic> metadataEntry) {
-    final tags = parseTags(metadataEntry);
+  @override
+  Map<String, TagService> get delegate => tags;
+
+  /// The [map] parameter should be extracted from `file_metadata`
+  /// response like so:
+  ///
+  /// `json -> metadata -> 0` (or other index)
+  factory Tags.fromMap(Map<String, dynamic> map) {
+    final tags = parseTags(map);
 
     final all = tags['all known tags'];
     final namespaces = buildNamespaceIndex(all!);
@@ -21,17 +28,14 @@ class Tags extends MapBase<String, TagService> {
     return Tags(tags, namespaces);
   }
 
+  /// The [pick] parameter should be extracted from `file_metadata`
+  /// response like so:
+  ///
+  /// `pick(json, 'metadata', 0)` (or other index)
   factory Tags.fromPick(Pick pick) {
     final map = pick.asMapOrThrow<String, dynamic>();
 
     return Tags.fromMap(map);
-  }
-
-  /// Replace all elements of this map with key/value
-  /// pairs from [other].
-  void assignAll(Map<String, TagService> other) {
-    tags.clear();
-    tags.addAll(other);
   }
 
   // MARK: FACTORY METHODS
@@ -71,7 +75,7 @@ class Tags extends MapBase<String, TagService> {
   static Map<String, List<String>> buildNamespaceIndex(TagService all) {
     final map = <String, List<String>>{};
 
-    for (final tag in all.entries) {
+    for (final tag in all) {
       final ns = tag.namespace;
       if (ns != null) {
         map.putIfAbsent(ns, () => []).add(tag.value);
@@ -84,21 +88,4 @@ class Tags extends MapBase<String, TagService> {
 
     return map;
   }
-
-  // MARK: OVERRIDES
-
-  @override
-  TagService? operator [](Object? key) => tags[key];
-
-  @override
-  void operator []=(String key, TagService value) => tags[key] = value;
-
-  @override
-  void clear() => tags.clear();
-
-  @override
-  Iterable<String> get keys => tags.keys;
-
-  @override
-  TagService? remove(Object? key) => tags.remove(key);
 }

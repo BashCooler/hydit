@@ -108,7 +108,7 @@ class BatchTagManager extends TagManager {
       final original = file.tags.value.entries;
 
       for (final MapEntry(key: name, value: service) in original) {
-        tags.putIfAbsent(name, () => {}).addAll(service.entries);
+        tags.putIfAbsent(name, () => {}).addAll(service);
         _added.putIfAbsent(name, () => <Tag>{}.obs);
 
         countService(name, service);
@@ -123,7 +123,7 @@ class BatchTagManager extends TagManager {
   void countService(String name, TagService service) {
     final serviceCounts = _counts.putIfAbsent(name, () => {});
 
-    for (final tag in service.entries) {
+    for (final tag in service) {
       serviceCounts[tag] = (serviceCounts[tag] ?? 0) + 1;
     }
   }

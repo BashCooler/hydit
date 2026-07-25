@@ -11,25 +11,8 @@ enum AddTagsAction {
   rescindPetitionFromTagRepository(5);
 
   final int value;
+
   const AddTagsAction(this.value);
-}
-
-
-class BasicPermission {
-  static const importAndEditURLs = 0;
-  static const importAndDeleteFiles = 1;
-  static const editFileTags = 2;
-  static const searchForAndFetchFiles = 3;
-  static const managePages = 4;
-  static const manageCookiesAndHeaders = 5;
-  static const manageDatabase = 6;
-  static const editFileNotes = 7;
-  static const editFileRelationships = 8;
-  static const editFileRatings = 9;
-  static const managePopups = 10;
-  static const editFileTimes = 11;
-  static const commitPending = 12;
-  static const seeLocalPaths = 13;
 }
 
 
