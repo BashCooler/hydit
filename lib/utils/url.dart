@@ -1,4 +1,4 @@
-import 'package:hydit/services/executor/executor.dart';
+import 'package:hydit/services/executor.dart';
 
 
 Result<Uri> parseUrl(String url) {

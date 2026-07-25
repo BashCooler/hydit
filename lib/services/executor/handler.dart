@@ -6,7 +6,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:hydit/utils/utils.dart';
 
-import 'executor.dart';
+import 'models.dart';
 
 
 class Handler {

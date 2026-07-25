@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/executor/handler.dart';
 
-part 'models.dart';
+import 'models.dart';
 
 
 class Executor {
