@@ -35,6 +35,11 @@ extension SafeExecuteAsync<T> on Future<T> {
 }
 
 
+extension ToSuccess<T> on T {
+  Success<T> toSuccess() => Success(this);
+}
+
+
 extension Loading<T> on Future<T> {
 
   /// Toggles [loading] on, then awaits for a composable
@@ -73,12 +78,12 @@ extension TapsAsync<T> on Future<Result<T>> {
 
     final result = await this;
 
-    if (result is Failure<T>) await callback(result);
+    if (result is Failure<T>) {
+      await callback(result);
+    }
 
     return result;
   }
-
-  Future<T?> unwrap() async => (await this).unwrap();
 
   Future<Result<T>> delay(double seconds) async {
 
@@ -89,6 +94,27 @@ extension TapsAsync<T> on Future<Result<T>> {
 
     return wait.first!;
   }
+}
+
+
+extension MapResult<T> on Future<Result<T>> {
+
+  Future<Result<R>> map<R>(FutureOr<R> Function(T data) f) async {
+    final result = await this;
+
+    switch (result) {
+      case Success<T>(data: final data):
+        return Success<R>(await f(data));
+      case Failure<T>():
+        return Failure<R>.from(result);
+    }
+  }
+}
+
+
+extension Unwrap<T> on Future<Result<T>> {
+
+  Future<T?> unwrap() async => (await this).unwrap();
 }
 
 

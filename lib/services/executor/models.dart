@@ -26,6 +26,7 @@ class Token with CancellationToken, CompletionToken {
 
 
 sealed class Result<T> {
+  const Result();
 
   T? unwrap() {
     if (this case Success(data: final data)) {
@@ -45,7 +46,7 @@ sealed class Result<T> {
 class Success<T> extends Result<T> {
   final T data;
 
-  Success(this.data);
+  const Success(this.data);
 }
 
 
@@ -65,7 +66,15 @@ class Failure<T> extends Result<T> {
   final String message;
   final Object? details;
 
-  Failure(this.title, this.message, [this.details]);
+  const Failure(this.title, this.message, [
+    this.details,
+  ]);
+
+  factory Failure.from(Failure failure) => Failure(
+    failure.title,
+    failure.message,
+    failure.details,
+  );
 
   @override
   String toString() => '$title: $message';

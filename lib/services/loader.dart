@@ -64,21 +64,18 @@ class Loader {
 
     _loading = true;
 
-    final result = await repo.api
+    final files = await repo.api
         .getFileMetadata(load)
         .run()
         .tapFailure(Snack.error)
-        .tapFailure(_fail);
-
-    if (result is Failure) return result;
-
-    final files = result
-        .unwrapOrThrow()
+        .tapFailure(_fail)
         .pick('metadata')
         .asListOrThrow(HydrusFile.fromPick);
 
+    if (files is Failure) return files;
+
     final map = Map<int, HydrusFile>.fromIterable(
-      files,
+      files.unwrapOrThrow(),
       key: (file) => file.id,
     );
 
