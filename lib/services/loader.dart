@@ -2,7 +2,6 @@ import 'dart:math' hide log;
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
@@ -19,7 +18,7 @@ class Loader {
 
   Loader({required this.tag});
 
-  final Repo repo = Get.find();
+  static Repo get repo => Get.find();
 
   /// Batch is already loading and new requests should
   /// be rejected.
@@ -31,53 +30,44 @@ class Loader {
   /// [retry].
   bool get failed => _failed.value;
 
+  /// Clear existing files and load new files.
   void init(Iterable<int> ids) {
     store.ids.assignAll(ids);
     if (store.ids.isEmpty) store.cache.clear();
-    load(clear: true);
+    loadNextBatch(clear: true);
   }
 
   /// Load next batch of files if needed.
   void next(int index) {
-    if (_loading) return;
-    if (_failed.value == true) return;
-    if (index < store.length - chunkSize) return;
-
-    load();
+    if (index < store.length - chunkSize) {
+      return;
+    }
+    loadNextBatch();
   }
 
-  /// Forcefully load next batch of files.
+  /// Load next batch of files.
   ///
   /// If [clear] is true clears [FileStore] without flicker.
-  Future<Result<void>> load({bool clear = false, List<int>? ids}) async {
-    if (failed) {
-      retry();
-      return Success(null);
-    }
+  void loadNextBatch({bool clear = false}) async {
+    if (_loading) return;
+    if (failed) return retry();
 
     final start = clear ? 0 : store.length;
     final end = min(start + chunkSize, store.ids.length);
 
-    final load = ids ?? store.ids.sublist(start, end);
+    final batch = store.ids.sublist(start, end);
 
-    if (load.isEmpty) return Success(null);
+    if (batch.isEmpty) return;
 
     _loading = true;
 
-    final files = await repo.api
-        .getFileMetadata(load)
-        .run()
+    final files = await load(batch)
         .tapFailure(Snack.error)
-        .tapFailure(_fail)
-        .pick('metadata')
-        .asListOrThrow(HydrusFile.fromPick);
+        .tapFailure(_fail);
 
-    if (files is Failure) return files;
+    if (files is Failure) return;
 
-    final map = Map<int, HydrusFile>.fromIterable(
-      files.unwrapOrThrow(),
-      key: (file) => file.id,
-    );
+    final map = files.unwrapOrThrow().toMap();
 
     if (clear) {
       store.cache.assignAll(map);
@@ -86,8 +76,16 @@ class Loader {
     }
 
     _loading = false;
+  }
 
-    return Success(null);
+  static Future<Result<List<HydrusFile>>> load(List<int> ids, {
+    bool clear = false,
+  }) {
+    return repo.api
+        .getFileMetadata(ids)
+        .run()
+        .pick('metadata')
+        .asListOrThrow(HydrusFile.fromPick);
   }
 
   Future<Result<void>> ensureLoaded(Iterable<int> ids,
@@ -98,11 +96,23 @@ class Loader {
         .chunked(chunkSize);
 
     for (final chunk in chunks) {
-      await load(ids: chunk);
-      if (token.cancelled) return Success(null);
+
+      final files = await load(chunk)
+          .tapFailure(Snack.error)
+          .tapFailure(_fail);
+
+      if (files is Failure) {
+        return files;
+      }
+
+      final map = files.unwrapOrThrow().toMap();
+
+      store.cache.addAll(map);
+
+      if (token.cancelled) break;
     }
 
-    return Success(null);
+    return unit.toSuccess();
   }
 
   void _fail(Failure failure) {
@@ -131,8 +141,16 @@ class Loader {
 
     // Turn off failed state, then update the grid
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      load();
+      loadNextBatch();
       _loading = false;
     });
   }
+}
+
+extension ToMap on Iterable<HydrusFile> {
+  /// The ids to files [Map].
+  Map<int, HydrusFile> toMap() => Map.fromIterable(
+    this,
+    key: (file) => file.id,
+  );
 }
