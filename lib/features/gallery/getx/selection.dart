@@ -106,7 +106,7 @@ class SelectionController extends GetxController {
       return;
     }
 
-    EditorPage(files.copyWithIds(ids))
+    EditorPage(FileStore(ids))
         .batch(ids)
         .onClose(clear)
         .push();

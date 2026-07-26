@@ -106,7 +106,7 @@ class GalleryBindings extends Bindings {
     );
 
     Get.put(
-      page.files?.copy() ?? FileStore(),
+      page.files?.copy() ?? FileStore.empty(),
       tag: page.tag,
     );
 

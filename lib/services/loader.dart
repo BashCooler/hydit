@@ -63,16 +63,15 @@ class Loader {
 
     final files = await load(batch)
         .tapFailure(Snack.error)
-        .tapFailure(_fail);
+        .tapFailure(_fail)
+        .unwrap();
 
-    if (files is Failure) return;
-
-    final map = files.unwrapOrThrow().toMap();
+    if (files == null) return;
 
     if (clear) {
-      store.cache.assignAll(map);
+      store.commit(files, clear: clear);
     } else {
-      store.cache.addAll(map);
+      store.commit(files);
     }
 
     _loading = false;
@@ -105,9 +104,7 @@ class Loader {
         return files;
       }
 
-      final map = files.unwrapOrThrow().toMap();
-
-      store.cache.addAll(map);
+      store.commit(files.unwrapOrThrow());
 
       if (token.cancelled) break;
     }

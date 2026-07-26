@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hydit/entities/cache.dart';
 import 'package:hydit/services/storage.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
@@ -54,7 +55,8 @@ class GlobalBindings extends Bindings {
     Get
       ..put<Storage>(HiveStorage())
       ..put(Repo())
-      ..put(VideoService());
+      // ..put(VideoService())
+      ..put(FileCache());
   }
 }
 
