@@ -1,4 +1,3 @@
-import 'package:dartx/dartx.dart';
 import 'package:get/get.dart';
 import 'package:hydit/entities/cache.dart';
 
@@ -10,18 +9,14 @@ class FileStore {
   /// All files in this store, loaded and not.
   final RxList<int> ids;
 
-  final Rx<int> _loaded;
+  final RxList<int> loaded;
 
   /// The number of loaded files.
-  int get length => _loaded.value;
+  int get length => loaded.length;
 
-  FileStore(Iterable<int> ids)
-      : ids = .of(ids),
-        _loaded = ids.length.obs;
+  FileStore(Iterable<int> ids) : ids = .of(ids), loaded = .of(ids);
 
-  FileStore.empty()
-      : ids = .empty(growable: true),
-        _loaded = 0.obs;
+  FileStore.empty() : ids = .new(), loaded = .new();
 
   FileStore copy() => FileStore(ids);
 
@@ -33,14 +28,15 @@ class FileStore {
     bool clear = false,
   }) {
 
+    final ids = files.map((file) => file.id);
     final map = files.toMap();
 
     if (clear) {
       cache.assignAll(map);
-      _loaded.value = map.length;
+      loaded.assignAll(ids);
     } else {
       cache.addAll(map);
-      _loaded.value += files.length;
+      loaded.addAll(ids);
     }
   }
 
@@ -51,7 +47,8 @@ class FileStore {
 
   /// Remove files with provided [ids].
   Future<void> removeWithIds(List<int> ids) async {
-    final toRemove = cache.withIds(ids).values;
+
+    final toRemove = ids.map((id) => cache[id]!);
 
     for (final file in toRemove) {
       file.delete();
@@ -59,20 +56,13 @@ class FileStore {
 
     await sleep(deletionDuration + 100.ms);
 
+    this.ids.removeWhere(ids.contains);
+
+    loaded.removeWhere(ids.contains);
+
     for (final file in toRemove) {
       cache.remove(file.id);
     }
-
-    for (final id in ids) {
-      this.ids.remove(id);
-    }
-  }
-}
-
-extension ByIds on Map<int, HydrusFile> {
-
-  Map<int, HydrusFile> withIds(Iterable<int> ids) {
-    return filterValues((file) => ids.contains(file.id));
   }
 }
 
