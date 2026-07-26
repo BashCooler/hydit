@@ -6,9 +6,10 @@ import 'package:hydit/reactive/file.dart';
 
 
 class FileStore {
-  /// All files in this store, loaded and not.
+  /// Ids of all files in this store, loaded and not.
   final RxList<int> ids;
 
+  /// Loaded file ids.
   final RxList<int> loaded;
 
   /// The number of loaded files.
@@ -16,20 +17,24 @@ class FileStore {
 
   FileStore(Iterable<int> ids) : ids = .of(ids), loaded = .of(ids);
 
-  FileStore copy() => FileStore(ids);
-
   FileCache get cache => Get.find();
 
   HydrusFile operator [](int index) => cache[ids[index]]!;
 
+  /// Loaded files from this store.
   Iterable<HydrusFile> get files => loaded.map((id) => cache[id]!);
 
+  /// Add files to this store and the [FileCache].
   void commit(Iterable<HydrusFile> files, {
     bool clear = false,
   }) {
 
     final ids = files.map((file) => file.id);
-    final map = files.toMap();
+
+    final map = Map<int, HydrusFile>.fromIterable(
+      files,
+      key: (file) => file.id,
+    );
 
     if (clear) {
       cache.assignAll(map);
@@ -38,11 +43,6 @@ class FileStore {
       cache.addAll(map);
       loaded.addAll(ids);
     }
-  }
-
-  /// Files with provided [ids].
-  Iterable<HydrusFile> withIds(Iterable<int> ids) {
-    return ids.map((id) => cache[id]!);
   }
 
   /// Remove files with provided [ids].
@@ -64,13 +64,4 @@ class FileStore {
       cache.remove(file.id);
     }
   }
-}
-
-
-extension ToMap on Iterable<HydrusFile> {
-  /// The ids to files [Map].
-  Map<int, HydrusFile> toMap() => Map.fromIterable(
-    this,
-    key: (file) => file.id,
-  );
 }
