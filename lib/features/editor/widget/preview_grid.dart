@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/editor/getx/batch.dart';
 import 'package:hydit/features/viewer/bindings.dart';
 import 'package:niku/extra/primitive.dart';
 
@@ -18,7 +19,6 @@ class PreviewGrid extends StatelessWidget {
 
   static const placeholder = ColoredBox(color: Colors.black12);
 
-  FileStore get files => Get.find(tag: tag);
   TagManager get manager => Get.find(tag: tag);
 
   Widget count(int count) {
@@ -52,10 +52,15 @@ class PreviewGrid extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: () => GalleryPage()
-          .predictive()
-          .withFiles(this.files)
-          .push(),
+      onTap: () {
+        final manager = this.manager as BatchTagManager;
+        final ids = manager.files.map((file) => file.id);
+
+        GalleryPage()
+            .predictive()
+            .withFiles(ids)
+            .push();
+      },
       child: GridView.count(
         crossAxisCount: 2,
         physics: const NeverScrollableScrollPhysics(),

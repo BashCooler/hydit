@@ -71,7 +71,8 @@ class TagSheet extends HookWidget {
                 return ServiceList(
                   tags,
                   controller: scroll,
-                  onTap: (name) => EditorPage(page.files, name)
+                  onTap: (name) => EditorPage()
+                      .service(name)
                       .paged(page)
                       .push(),
                 );

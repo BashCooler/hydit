@@ -80,7 +80,7 @@ class SelectionController extends GetxController {
       initial: files.ids.indexOf(ids.first),
     );
 
-    EditorPage(files)
+    EditorPage()
         .paged(page)
         .onClose(clear)
         .push();
@@ -106,7 +106,7 @@ class SelectionController extends GetxController {
       return;
     }
 
-    EditorPage(FileStore(ids))
+    EditorPage()
         .batch(ids)
         .onClose(clear)
         .push();

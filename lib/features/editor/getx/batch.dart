@@ -12,9 +12,9 @@ import 'package:hydit/features/editor/getx/base.dart';
 
 
 class BatchTagManager extends TagManager {
-  final Iterable<HydrusFile> files;
+  final List<HydrusFile> files;
 
-  BatchTagManager(FileStore store) : files = store.cache.values {
+  BatchTagManager(FileStore store) : files = .unmodifiable(store.files) {
     init();
   }
 

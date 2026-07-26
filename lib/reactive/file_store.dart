@@ -16,13 +16,13 @@ class FileStore {
 
   FileStore(Iterable<int> ids) : ids = .of(ids), loaded = .of(ids);
 
-  FileStore.empty() : ids = .new(), loaded = .new();
-
   FileStore copy() => FileStore(ids);
 
   FileCache get cache => Get.find();
 
   HydrusFile operator [](int index) => cache[ids[index]]!;
+
+  Iterable<HydrusFile> get files => loaded.map((id) => cache[id]!);
 
   void commit(Iterable<HydrusFile> files, {
     bool clear = false,

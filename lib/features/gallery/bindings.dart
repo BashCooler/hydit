@@ -15,7 +15,7 @@ import 'page/gallery_page.dart';
 class GalleryPage {
   final String tag;
 
-  FileStore? files;
+  Iterable<int>? ids;
   bool _search = false;
   bool _editor = false;
   bool _swipe = false;
@@ -33,8 +33,8 @@ class GalleryPage {
     return this;
   }
 
-  GalleryPage withFiles(FileStore files) {
-    this.files = files;
+  GalleryPage withFiles(Iterable<int> ids) {
+    this.ids = ids;
     return this;
   }
 
@@ -106,7 +106,7 @@ class GalleryBindings extends Bindings {
     );
 
     Get.put(
-      page.files?.copy() ?? FileStore.empty(),
+      FileStore(page.ids ?? .empty()),
       tag: page.tag,
     );
 
