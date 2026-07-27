@@ -1,11 +1,12 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:hydit/entities/cache.dart';
 
-import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 
 
-class FileStore {
+class FileStore extends GetxController {
   /// Ids of all files in this store, loaded and not.
   final RxList<int> ids;
 
@@ -23,6 +24,20 @@ class FileStore {
 
   /// Loaded files from this store.
   Iterable<HydrusFile> get files => loaded.map((id) => cache[id]!);
+
+  late final StreamSubscription<Iterable<int>> subscription;
+
+  @override
+  void onInit() {
+    subscription = cache.stream.listen(remove);
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    subscription.cancel();
+    super.onClose();
+  }
 
   /// Add files to this store and the [FileCache].
   void commit(Iterable<HydrusFile> files, {
@@ -45,23 +60,9 @@ class FileStore {
     }
   }
 
-  /// Remove files with provided [ids].
-  Future<void> removeWithIds(List<int> ids) async {
-
-    final toRemove = ids.map((id) => cache[id]!);
-
-    for (final file in toRemove) {
-      file.delete();
-    }
-
-    await sleep(deletionDuration + 100.ms);
-
+  void remove(Iterable<int> ids) {
     this.ids.removeWhere(ids.contains);
 
     loaded.removeWhere(ids.contains);
-
-    for (final file in toRemove) {
-      cache.remove(file.id);
-    }
   }
 }
