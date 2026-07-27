@@ -1,6 +1,10 @@
 import 'dart:async';
 
+import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:deep_pick/deep_pick.dart';
+import 'package:hydit/entities/cache.dart';
+import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/api/api.dart';
 import 'package:hydit/api/params.dart';
@@ -17,13 +21,18 @@ class Repo {
 
   Repo() : api = HydrusApi.load();
 
+  FileCache get cache => Get.find();
+
   String buildUrl(int id, {bool thumbnail = false}) => ""
       "${api.url}/get_files/"
       "${thumbnail ? "thumbnail" : "file"}"
       "?file_id=$id"
       "&Hydrus-Client-API-Access-Key=${api.key}";
 
-  Future<Result<void>> apply(Iterable<int> ids, List<TagDiff> changes) {
+  Future<Result<void>> apply(
+    Iterable<int> ids,
+    List<TagDiff> changes,
+  ) {
     final params = AddTagsParams(ids: ids, changes: changes);
     return api.postAddTags(params).run();
   }
@@ -34,14 +43,13 @@ class Repo {
 
       final result = await api
           .getFileMetadata(chunk.map((f) => f.id))
-          .run();
+          .run()
+          .pick('metadata')
+          .asListOrThrow(Tags.fromPick);
 
       if (result is Failure) return result;
 
-      final tags = result
-          .unwrapOrThrow()
-          .pick('metadata')
-          .asListOrThrow(Tags.fromPick);
+      final tags = result.unwrapOrThrow();
 
       for (var i = 0; i < chunk.length; i++) {
         chunk[i].tags.value = tags[i];
@@ -57,16 +65,15 @@ class Repo {
 
     if (bytes is Failure) return bytes;
 
-    final data = await api
+    final metadata = await api
         .getFileMetadata([id], onlyReturnBasicInformation: true)
-        .run();
-
-    if (data is Failure) return data;
-
-    final meta = data
-        .unwrapOrThrow()
+        .run()
         .pick('metadata', 0)
-        .let(FileMetadata.fromPick);
+        .map(FileMetadata.fromPick);
+
+    if (metadata is Failure) return metadata;
+
+    final meta = metadata.unwrapOrThrow();
 
     return Native
         .saveFile(bytes.unwrapOrThrow(), meta.fileName, meta.mime);

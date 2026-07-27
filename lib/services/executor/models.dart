@@ -25,11 +25,11 @@ class Token with CancellationToken, CompletionToken {
 }
 
 
-class _Unit {
-  const _Unit._();
+class Unit {
+  const Unit._();
 }
 
-const unit = _Unit._();
+const unit = Unit._();
 
 
 sealed class Result<T> {
