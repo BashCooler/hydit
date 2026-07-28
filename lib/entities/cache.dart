@@ -18,7 +18,7 @@ class FileCache extends DelegatingMapBase<int, HydrusFile> {
     final toRemove = ids.map((id) => cache[id]!);
 
     for (final file in toRemove) {
-      file.delete();
+      file.remove();
     }
 
     await sleep(deletionDuration + 100.ms);

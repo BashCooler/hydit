@@ -90,7 +90,7 @@ class GalleryGridView extends StatelessWidget {
                   return AnimatedScale(
                     key: ValueKey(file.id),
                     duration: deletionDuration,
-                    scale: file.deleted ? 0 : 1,
+                    scale: file.removed ? 0 : 1,
                     child: Stack(
                       children: [
                         LinearHero(
@@ -103,7 +103,7 @@ class GalleryGridView extends StatelessWidget {
                           badges: TileBadges(file),
                           selected: selected?.call(file.id) ?? false,
                           showBadges: gallery.badges,
-                          deleted: file.deleted,
+                          deleted: file.removed,
                           onTap: onTap,
                           onLongPress: onLongPress,
                         ),

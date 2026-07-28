@@ -55,4 +55,16 @@ extension PickAs on Future<Result<Pick>> {
         .asListOrThrow(map, whenNull: whenNull)
         .toSuccess();
   }
+
+  Future<Result<Map<K, V>>> asMapOrThrow<K, V>() async {
+    final result = await this;
+
+    if (result is Failure<Pick>) {
+      return Failure.from(result);
+    }
+
+    return result
+        .unwrapOrThrow().asMapOrThrow<K, V>()
+        .toSuccess();
+  }
 }

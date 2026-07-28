@@ -45,6 +45,7 @@ class TagSearchController extends GetxController {
         .getSearchTags(q)
         .run()
         .unwrap();
+
     if (id != _requestId || response == null) return;
 
     final json = jsonDecode(response);

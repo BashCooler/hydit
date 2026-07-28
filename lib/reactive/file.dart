@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:deep_pick/deep_pick.dart';
 
@@ -43,7 +41,7 @@ class HydrusFile {
     return HydrusFile.fromMap(map);
   }
 
-  final Repo repo = Get.find();
+  Repo get repo => Get.find();
 
   Iterable<Tag> get all => tags.value['all known tags'] ?? [];
 
@@ -58,55 +56,18 @@ class HydrusFile {
   @override
   String toString() => 'HydrusFile ${meta.id}';
 
-  // MARK: LOAD
+  Future<Result<void>> update() => repo.update([this]);
 
-  Future<Result<void>>? _loadingFuture;
+  final _removed = false.obs;
 
-  Future<Result<void>> update() async {
-    return _loadingFuture ??= _loadMetadata();
-  }
+  bool get removed => _removed.value;
 
-  Future<Result<void>> _loadMetadata() async {
-    final result = await repo.api
-        .getFileMetadata([id])
-        .run();
-
-    final json = result.unwrap();
-
-    if (json != null) {
-      final meta = pick(jsonDecode(json), 'metadata', 0)
-          .asMapOrThrow<String, dynamic>();
-
-      tags.value = Tags.fromMap(meta);
-    }
-
-    _loadingFuture = null;
-
-    return result;
-  }
-
-  // MARK: DELETE
-
-  final _deleted = false.obs;
-
-  bool get deleted => _deleted.value;
-
-  /// Mark file as [deleted].
+  /// Mark file as [removed].
   ///
   /// This method serves only to signal UI elements that file
   /// is being deleted. Make sure to remove it from [FileStore]
   /// manually to clear the resources.
-  void delete() => _deleted.value = true;
+  void remove() => _removed.value = true;
 
-  // MARK: DOWNLOAD
-
-  Future<Result<void>> download() async {
-
-    final bytes = await repo.api.getFile(id).run();
-
-    if (bytes is Failure) return bytes;
-
-    return Native
-        .saveFile(bytes.unwrapOrThrow(), meta.fileName, meta.mime);
-  }
+  Future<Result<void>> download() => repo.download(id);
 }
