@@ -1,5 +1,4 @@
 import 'dart:convert' hide json;
-import 'dart:developer' as dev;
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -108,13 +107,6 @@ extension ScopeFunctions<T> on T {
 
   T also(void Function(T it) action) {
     action.call(this);
-    return this;
-  }
-
-  T log([String Function(T it)? message]) {
-    dev.log(
-      message?.call(this) ?? '$this',
-    );
     return this;
   }
 }
