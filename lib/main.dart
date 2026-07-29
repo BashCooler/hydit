@@ -55,7 +55,7 @@ class GlobalBindings extends Bindings {
     Get
       ..put<Storage>(HiveStorage())
       ..put(Repo())
-      // ..put(VideoService())
+      ..put(VideoService())
       ..put(FileCache());
   }
 }
