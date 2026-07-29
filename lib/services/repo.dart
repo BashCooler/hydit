@@ -29,6 +29,11 @@ class Repo {
       "?file_id=$id"
       "&Hydrus-Client-API-Access-Key=${api.key}";
 
+  String render(int id) => ""
+      "${api.url}/get_files/render"
+      "?file_id=$id"
+      "&Hydrus-Client-API-Access-Key=${api.key}";
+
   Future<Result<void>> apply(
     Iterable<int> ids,
     List<TagDiff> changes,

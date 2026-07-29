@@ -47,7 +47,10 @@ class HydrusFile {
 
   int get id => meta.id;
 
-  String get url => repo.buildUrl(id);
+  String get url => switch (meta.mime) {
+    'image/jxl' when meta.duration == .zero => repo.render(id),
+    _ => repo.buildUrl(id),
+  };
 
   String get thumbnailUrl => repo.buildUrl(id, thumbnail: true);
 
