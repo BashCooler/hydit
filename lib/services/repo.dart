@@ -1,10 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
-import 'package:deep_pick/deep_pick.dart';
 import 'package:hydit/entities/cache.dart';
-import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/api/api.dart';
 import 'package:hydit/api/params.dart';
