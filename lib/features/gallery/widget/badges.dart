@@ -16,6 +16,7 @@ class TileBadges extends StatelessWidget {
       padding: const .all(8.0),
       child: Column(
         mainAxisAlignment: .spaceBetween,
+        crossAxisAlignment: .end,
         children: [
           Wrap(
             spacing: 2,
