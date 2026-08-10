@@ -8,6 +8,7 @@ import 'package:hydit/reactive/file.dart';
 import 'package:hydit/widgets/systems/gradient.dart';
 
 import '../getx/page.dart';
+import '../getx/sheet.dart';
 import '../widget/bottom_bar.dart';
 import '../widget/physics.dart';
 import '../widget/views.dart';
@@ -28,7 +29,11 @@ class Viewer extends StatelessWidget {
     this.heroPrefix,
   });
 
-  PageGetxController get page => Get.find(tag: tag);
+  SheetController get sheet => Get.find(tag: tag);
+
+  void closeOrBack() => sheet.progress.value > 0.5
+      ? sheet.close()
+      : Get.back();
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +41,7 @@ class Viewer extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-
-        if (page.sheetProgress.value > 0.5) {
-          page.closeSheet();
-          return;
-        }
-
-        Get.back();
+        closeOrBack();
       },
       child: Scaffold(
         appBar: GradientAppBar(automaticallyImplyLeading: false),

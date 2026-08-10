@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/animation.dart';
+import 'package:hydit/features/viewer/getx/sheet.dart';
 import 'package:hydit/features/viewer/getx/video.dart';
 
 import 'package:hydit/utils/utils.dart';
@@ -79,6 +80,10 @@ class ViewerBindings implements Bindings {
         initial: page.index,
         grid: page.gallery?.grid,
       ),
+      tag: page.tag,
+    );
+    Get.put(
+      SheetController(),
       tag: page.tag,
     );
     Get.lazyPut(

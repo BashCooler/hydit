@@ -11,6 +11,7 @@ import 'package:hydit/widgets/lists/service_list.dart';
 import 'package:hydit/features/editor/bindings.dart';
 
 import '../getx/page.dart';
+import '../getx/sheet.dart';
 
 
 class TagSheet extends HookWidget {
@@ -25,17 +26,24 @@ class TagSheet extends HookWidget {
 
   PageGetxController get page => Get.find(tag: tag);
 
+  SheetController get sheet => Get.find(tag: tag);
+
   static const snaps = <SnappingPosition>[
     SnappingPosition.factor(positionFactor: 0.0),
     SnappingPosition.factor(positionFactor: 0.5),
   ];
 
   void syncPageLock(dynamic positionData) {
-    if (!Get.isRegistered<PageGetxController>(tag: tag)) return;
+    if (!Get.isRegistered<PageGetxController>(tag: tag)) {
+      return;
+    }
+
     final PageGetxController page = Get.find(tag: tag);
 
     final pos = positionData.relativeToSheetHeight;
-    page.sheetProgress.value = clampDouble(pos/0.5, 0, 1);
+
+    sheet.progress.value = clampDouble(pos/0.5, 0, 1);
+
     if (pos > 0) {
       page.blockDismiss = true;
     } else {
@@ -48,7 +56,7 @@ class TagSheet extends HookWidget {
     final scroll = useScrollController();
 
     return SnappingSheet(
-      controller: page.sheet,
+      controller: sheet.controller,
       onSheetMoved: syncPageLock,
       lockOverflowDrag: true,
       initialSnappingPosition: snaps.first,

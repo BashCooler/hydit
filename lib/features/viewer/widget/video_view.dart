@@ -9,6 +9,7 @@ import 'package:hydit/reactive/file.dart';
 import 'package:hydit/features/viewer/widget/seekbar.dart';
 
 import '../getx/page.dart';
+import '../getx/sheet.dart';
 import '../getx/video.dart';
 
 
@@ -114,7 +115,7 @@ class AnimatedControlsPadding extends StatelessWidget {
     required this.child,
   });
 
-  PageGetxController get page => Get.find(tag: tag);
+  SheetController get sheet => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +125,7 @@ class AnimatedControlsPadding extends StatelessWidget {
     final padding = mq.padding.bottom;
 
     return Obx(() {
-      final inverseProgress = (1 - page.sheetProgress.value);
+      final inverseProgress = (1 - sheet.progress.value);
       final bottom = inverseProgress * (viewPadding + padding);
 
       return Padding(

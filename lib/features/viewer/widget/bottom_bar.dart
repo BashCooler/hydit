@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/viewer/getx/sheet.dart';
 import 'package:hydit/features/viewer/widget/popup.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
@@ -16,6 +17,8 @@ class ViewerBottomBar extends StatelessWidget {
   const ViewerBottomBar({super.key, required this.tag, this.editButton});
 
   PageGetxController get page => Get.find(tag: tag);
+
+  SheetController get sheet => Get.find(tag: tag);
 
   static const shadows = [Shadow(blurRadius: 24)];
 
@@ -45,10 +48,10 @@ class ViewerBottomBar extends StatelessWidget {
             return a.Pill(
               children: [
                 a.TextButton(
-                  onPressed: page.openSheet,
+                  onPressed: sheet.open,
                   child: a.Text(file.all.length, padding: .zero),
                 ),
-                page.sheetProgress > 0.5 && editButton != null
+                sheet.progress > 0.5 && editButton != null
                     ? editButton!
                     : ViewerPopup(file: file),
               ],
