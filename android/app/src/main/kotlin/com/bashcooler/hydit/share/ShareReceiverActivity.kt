@@ -11,6 +11,7 @@ import com.bashcooler.hydit.worker.UrlWorker
 import java.io.File
 import java.util.UUID
 
+
 class ShareReceiverActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

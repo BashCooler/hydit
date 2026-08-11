@@ -37,9 +37,9 @@ object NotificationHelper {
             .setSmallIcon(R.drawable.check)
             .setContentTitle("Success")
             .setContentText(text)
-            .setContentIntent(getOpenAppIntent(context))
+            .setOpenAppIntent(context)
             .setAutoCancel(true)
-            .addCopyIntent(context, copy)
+            .setCopyIntent(context, copy)
 
         NotificationManagerCompat
             .from(context)
@@ -69,9 +69,9 @@ object NotificationHelper {
                 NotificationCompat.BigTextStyle()
                     .bigText(bigText)
             )
-            .setContentIntent(getOpenAppIntent(context))
+            .setOpenAppIntent(context)
             .setAutoCancel(true)
-            .addCopyIntent(context, copy)
+            .setCopyIntent(context, copy)
 
         NotificationManagerCompat
             .from(context)
@@ -106,48 +106,49 @@ object NotificationHelper {
         }
     }
 
-    private fun NotificationCompat.Builder.addCopyIntent(
+    private fun NotificationCompat.Builder.setCopyIntent(
         context: Context,
         copy: String? = null
     ): NotificationCompat.Builder {
         if (copy == null) return this
 
-        return this.addAction(
-            R.drawable.copy,
-            "Copy link",
-            getCopyIntent(context, copy)
-        )
-    }
-
-    private fun getCopyIntent(context: Context, url: String): PendingIntent? {
-        val copyIntent = Intent(
+        val intent = Intent(
             context,
             CopyUrlReceiver::class.java
         ).apply {
-            putExtra("url", url)
+            putExtra("url", copy)
+        }.let {
+            PendingIntent.getBroadcast(
+                context,
+                copy.hashCode(),
+                it,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
         }
 
-        return PendingIntent.getBroadcast(
-            context,
-            url.hashCode(),
-            copyIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        return this.addAction(
+            R.drawable.copy,
+            "Copy link",
+            intent
         )
     }
 
-    private fun getOpenAppIntent(context: Context): PendingIntent? {
+    private fun NotificationCompat.Builder.setOpenAppIntent(
+        context: Context,
+    ): NotificationCompat.Builder {
+
         val intent = Intent(
             context,
             MainActivity::class.java
-        ).apply {
-            putExtra("route", "/imports")  // TODO open imports page
+        ).let {
+            PendingIntent.getActivity(
+                context,
+                0,
+                it,
+                PendingIntent.FLAG_IMMUTABLE
+            )
         }
 
-        return PendingIntent.getActivity(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
+        return this.setContentIntent(intent)
     }
 }

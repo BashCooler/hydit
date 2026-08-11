@@ -35,7 +35,6 @@ class FileWorker(context: Context, params: WorkerParameters)
             NotificationHelper
                 .showFileImportResult(applicationContext, response)
 
-            file.delete()
             Result.success()
 
         } catch (e: Exception) {
@@ -52,6 +51,9 @@ class FileWorker(context: Context, params: WorkerParameters)
             )
 
             Result.failure()
+
+        } finally {
+            file.delete()
         }
     }
 
