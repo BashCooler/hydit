@@ -16,24 +16,35 @@ import com.bashcooler.hydit.R
 import com.bashcooler.hydit.api.AddFileResponse
 import com.bashcooler.hydit.share.CopyUrlReceiver
 
+
 object NotificationHelper {
+
+    const val SUCCESS = "upload_success"
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    val successChannel = NotificationChannel(
+        SUCCESS,
+        "Upload success",
+        NotificationManager.IMPORTANCE_HIGH,
+    )
+
+    const val FAILURE = "upload_error"
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    val failureChannel = NotificationChannel(
+        FAILURE,
+        "Upload failure",
+        NotificationManager.IMPORTANCE_HIGH,
+    )
 
     @RequiresApi(Build.VERSION_CODES.O)
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun success(context: Context, text: String, copy: String? = null) {
-        val id = "upload_success"
-
-        val channel = NotificationChannel(
-            id,
-            "Upload success",
-            NotificationManager.IMPORTANCE_HIGH,
-        )
-
         context
             .getSystemService(NotificationManager::class.java)
-            .createNotificationChannel(channel)
+            .createNotificationChannel(successChannel)
 
-        val notification = NotificationCompat.Builder(context, id)
+        val notification = NotificationCompat.Builder(context, SUCCESS)
             .setSmallIcon(R.drawable.check)
             .setContentTitle("Success")
             .setContentText(text)
@@ -49,19 +60,11 @@ object NotificationHelper {
     @RequiresApi(Build.VERSION_CODES.O)
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun error(context: Context, text: String, bigText: String? = null, copy: String? = null) {
-        val id = "upload_error"
-
-        val channel = NotificationChannel(
-            id,
-            "Upload error",
-            NotificationManager.IMPORTANCE_HIGH,
-        )
-
         context
             .getSystemService(NotificationManager::class.java)
-            .createNotificationChannel(channel)
+            .createNotificationChannel(failureChannel)
 
-        val notification = NotificationCompat.Builder(context, id)
+        val notification = NotificationCompat.Builder(context, FAILURE)
             .setSmallIcon(R.drawable.close)
             .setContentTitle("Failure")
             .setContentText(text)
