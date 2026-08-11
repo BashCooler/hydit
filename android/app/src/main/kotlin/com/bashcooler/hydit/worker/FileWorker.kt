@@ -27,7 +27,7 @@ class FileWorker(context: Context, params: WorkerParameters)
         if (!file.exists()) return Result.failure()
 
         return try {
-            val response = HydrusApi.addFile(applicationContext, file)
+            val response = HydrusApi(applicationContext).addFile(file)
 
             NotificationHelper
                 .showFileImportResult(applicationContext, response)

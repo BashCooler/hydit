@@ -32,7 +32,7 @@ class BatchFileWorker(context: Context, params: WorkerParameters)
 
         for (file in files) {
             try {
-                val result = HydrusApi.addFile(applicationContext, file)
+                val result = HydrusApi(applicationContext).addFile(file)
 
                 when (result.status) {
                     1, 2 -> successCount++

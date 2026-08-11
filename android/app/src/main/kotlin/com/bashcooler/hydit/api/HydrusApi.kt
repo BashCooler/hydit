@@ -12,14 +12,26 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 
 
-object HydrusApi {
-    private const val KEY_HEADER = "Hydrus-Client-API-Access-Key"
+class HydrusApi(context: Context) {
+
+    companion object {
+        private const val KEY_HEADER = "Hydrus-Client-API-Access-Key"
+    }
 
     private val client = OkHttpClient.Builder()
         .callTimeout(3, TimeUnit.SECONDS)
         .build()
 
-    fun addUrl(context: Context, url: String): AddUrlResponse? {
+    private val prefs = context
+        .getSharedPreferences("settings", Context.MODE_PRIVATE)
+
+    val host: String
+        get() = prefs.getString("url", null) ?: ""
+
+    val key: String
+        get() = prefs.getString("key", null) ?: ""
+
+    fun addUrl(url: String): AddUrlResponse? {
         val json =
             """
             {
@@ -27,13 +39,9 @@ object HydrusApi {
             }
             """.trimIndent()
 
-        val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val host = prefs.getString("url", null)
-        val key = prefs.getString("key", null)
-
         val request = Request.Builder()
             .url("$host/add_urls/add_url")
-            .header(KEY_HEADER, key ?: "")
+            .header(KEY_HEADER, key)
             .post(
                 json.toRequestBody(
                     "application/json".toMediaType()
@@ -53,18 +61,14 @@ object HydrusApi {
         }
     }
 
-    fun addFile(context: Context, file: File): AddFileResponse {
+    fun addFile(file: File): AddFileResponse {
         val body = file.asRequestBody(
             "application/octet-stream".toMediaType()
         )
 
-        val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val host = prefs.getString("url", null)
-        val key = prefs.getString("key", null)
-
         val request = Request.Builder()
             .url("$host/add_files/add_file")
-            .header(KEY_HEADER, key ?: "")
+            .header(KEY_HEADER, key)
             .post(body)
             .build()
 
