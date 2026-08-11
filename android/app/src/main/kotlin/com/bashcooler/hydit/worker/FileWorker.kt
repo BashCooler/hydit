@@ -2,7 +2,9 @@ package com.bashcooler.hydit.worker
 
 import android.Manifest
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
@@ -16,6 +18,7 @@ import java.io.File
 class FileWorker(context: Context, params: WorkerParameters)
     : CoroutineWorker(context, params) {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override suspend fun doWork(): Result {
         val filePath =

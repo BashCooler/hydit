@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -17,25 +18,25 @@ import com.bashcooler.hydit.share.CopyUrlReceiver
 
 object NotificationHelper {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun success(context: Context, text: String, bigText: String? = null, copy: String? = null) {
+    fun success(context: Context, text: String, copy: String? = null) {
         val id = "upload_success"
 
-        createChannel(
-            context,
+        val channel = NotificationChannel(
             id,
             "Upload success",
             NotificationManager.IMPORTANCE_HIGH,
         )
 
+        context
+            .getSystemService(NotificationManager::class.java)
+            .createNotificationChannel(channel)
+
         val notification = NotificationCompat.Builder(context, id)
             .setSmallIcon(R.drawable.check)
             .setContentTitle("Success")
             .setContentText(text)
-            .setStyle(
-                NotificationCompat.BigTextStyle()
-                    .bigText(bigText)
-            )
             .setContentIntent(getOpenAppIntent(context))
             .setAutoCancel(true)
             .addCopyIntent(context, copy)
@@ -45,18 +46,20 @@ object NotificationHelper {
             .notify(System.currentTimeMillis().toInt(), notification.build())
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun error(context: Context, text: String, bigText: String? = null, copy: String? = null) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-
         val id = "upload_error"
 
-        createChannel(
-            context,
+        val channel = NotificationChannel(
             id,
             "Upload error",
             NotificationManager.IMPORTANCE_HIGH,
         )
+
+        context
+            .getSystemService(NotificationManager::class.java)
+            .createNotificationChannel(channel)
 
         val notification = NotificationCompat.Builder(context, id)
             .setSmallIcon(R.drawable.close)
@@ -75,6 +78,7 @@ object NotificationHelper {
             .notify(System.currentTimeMillis().toInt(), notification.build())
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun showFileImportResult(context: Context, response: AddFileResponse?) {
         when (response?.status) {
@@ -86,6 +90,7 @@ object NotificationHelper {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun showBatchFileImportResult(context: Context, successCount: Int, failCount: Int) {
         val total = successCount + failCount
@@ -99,16 +104,6 @@ object NotificationHelper {
             0 -> success(context, "$successCount files imported")
             else -> error(context, "$successCount/$total files imported")
         }
-    }
-
-    private fun createChannel(context: Context, id: String, name: String, importance: Int) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-
-        val channel = NotificationChannel(id, name, importance)
-
-        context
-            .getSystemService(NotificationManager::class.java)
-            .createNotificationChannel(channel)
     }
 
     private fun NotificationCompat.Builder.addCopyIntent(
