@@ -1,6 +1,7 @@
 package com.bashcooler.hydit.service
 
 import android.Manifest
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -19,66 +20,84 @@ import com.bashcooler.hydit.share.CopyUrlReceiver
 
 object NotificationHelper {
 
-    const val SUCCESS = "upload_success"
+    private const val SUCCESS = "upload_success"
 
     @RequiresApi(Build.VERSION_CODES.O)
-    val successChannel = NotificationChannel(
+    private val successChannel = NotificationChannel(
         SUCCESS,
         "Upload success",
         NotificationManager.IMPORTANCE_HIGH,
     )
 
-    const val FAILURE = "upload_error"
+    private const val FAILURE = "upload_error"
 
     @RequiresApi(Build.VERSION_CODES.O)
-    val failureChannel = NotificationChannel(
+    private val failureChannel = NotificationChannel(
         FAILURE,
         "Upload failure",
         NotificationManager.IMPORTANCE_HIGH,
     )
 
     @RequiresApi(Build.VERSION_CODES.O)
+    fun channel(id: String): NotificationChannel = when (id) {
+        SUCCESS -> successChannel
+        FAILURE -> failureChannel
+        else -> throw Exception("No such channel $id")
+    }
+
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun success(context: Context, text: String, copy: String? = null) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun Notification.show(
+        context: Context,
+        id: Int = System.currentTimeMillis().toInt(),
+    ) {
         context
             .getSystemService(NotificationManager::class.java)
-            .createNotificationChannel(successChannel)
+            .createNotificationChannel(
+                channel(this.channelId)
+            )
 
-        val notification = NotificationCompat.Builder(context, SUCCESS)
+        NotificationManagerCompat
+            .from(context)
+            .notify(id, this)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
+    fun success(
+        context: Context,
+        text: String,
+        copy: String? = null,
+    ) {
+        NotificationCompat.Builder(context, SUCCESS)
             .setSmallIcon(R.drawable.check)
             .setContentTitle("Success")
             .setContentText(text)
             .setOpenAppIntent(context)
             .setAutoCancel(true)
             .setCopyIntent(context, copy)
-
-        NotificationManagerCompat
-            .from(context)
-            .notify(System.currentTimeMillis().toInt(), notification.build())
+            .build()
+            .show(context)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun error(context: Context, text: String, bigText: String? = null, copy: String? = null) {
-        context
-            .getSystemService(NotificationManager::class.java)
-            .createNotificationChannel(failureChannel)
-
-        val notification = NotificationCompat.Builder(context, FAILURE)
+    fun error(
+        context: Context,
+        text: String,
+        bigText: String? = null,
+        copy: String? = null,
+    ) {
+        NotificationCompat.Builder(context, FAILURE)
             .setSmallIcon(R.drawable.close)
             .setContentTitle("Failure")
             .setContentText(text)
-            .setStyle(
-                NotificationCompat.BigTextStyle()
-                    .bigText(bigText)
-            )
+            .setBigText(bigText)
             .setOpenAppIntent(context)
             .setAutoCancel(true)
             .setCopyIntent(context, copy)
-
-        NotificationManagerCompat
-            .from(context)
-            .notify(System.currentTimeMillis().toInt(), notification.build())
+            .build()
+            .show(context)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -109,7 +128,12 @@ object NotificationHelper {
         }
     }
 
-    private fun NotificationCompat.Builder.setCopyIntent(
+    fun NotificationCompat.Builder.setBigText(text: String?) = this
+        .setStyle(
+            NotificationCompat.BigTextStyle().bigText(text)
+        )
+
+    fun NotificationCompat.Builder.setCopyIntent(
         context: Context,
         copy: String? = null
     ): NotificationCompat.Builder {
@@ -136,7 +160,7 @@ object NotificationHelper {
         )
     }
 
-    private fun NotificationCompat.Builder.setOpenAppIntent(
+    fun NotificationCompat.Builder.setOpenAppIntent(
         context: Context,
     ): NotificationCompat.Builder {
 
