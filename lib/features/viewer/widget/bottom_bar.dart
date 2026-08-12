@@ -87,6 +87,9 @@ class ArchiveButton extends StatelessWidget {
       icon: page.current.isInbox
           ? Icon(Symbols.inventory_2)
           : Icon(Symbols.mail_outline),
+      tooltip: page.current.isInbox
+          ? 'Archive'
+          : 'Inbox',
       onPressed: () {
         page.current.toggleInbox()
             .tapFailure(Snack.error);
