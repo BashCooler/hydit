@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/loader.dart';
-import 'package:hydit/widgets/common/swipeable.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
@@ -48,17 +47,12 @@ class GalleryPage {
     return this;
   }
 
-  Widget build() {
-    Widget gallery = Gallery(
-      tag: tag,
-      trailing: _trailing,
-      editor: _editor,
-    );
-
-    if (_swipe) gallery = SwipeablePage(child: gallery);
-
-    return gallery;
-  }
+  Widget build() => Gallery(
+    tag: tag,
+    trailing: _trailing,
+    editor: _editor,
+    swipeGesture: _swipe,
+  );
 
   void push() {
     Get.to(

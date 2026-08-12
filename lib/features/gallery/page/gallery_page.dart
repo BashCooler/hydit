@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/loader.dart';
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/widgets/common/swipeable.dart';
 import 'package:hydit/features/viewer/bindings.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
@@ -15,11 +16,13 @@ import '../widget/widgets.dart';
 class Gallery extends StatelessWidget {
   final String tag;
   final bool editor;
+  final bool swipeGesture;
   final Widget? trailing;
 
   const Gallery({
     super.key,
     required this.tag,
+    this.swipeGesture = true,
     required this.editor,
     this.trailing,
   });
@@ -48,26 +51,30 @@ class Gallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      extendBodyBehindAppBar: true,
-      resizeToAvoidBottomInset: false,
-      appBar: GalleryAppBar(
-        tag: tag,
-        trailing: trailing,
-        onTap: gallery.scrollUp,
+    return Wrapper(
+      condition: swipeGesture,
+      builder: (child) => SwipeablePage(child: child),
+      child: Scaffold(
+        extendBody: true,
+        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: false,
+        appBar: GalleryAppBar(
+          tag: tag,
+          trailing: trailing,
+          onTap: gallery.scrollUp,
+        ),
+        body: GalleryGridView(
+          tag: tag,
+          allowRefresh: (_) => selection.off,
+          onRefresh: query?.search,
+          selected: selection.isSelected,
+          onTap: onTileTap,
+          onLongPress: editor ? selection.select : null,
+          onBuild: loader?.next,
+        ),
+        floatingActionButton: GalleryFAB(tag: tag),
+        bottomNavigationBar: SelectionBottomBar(tag: tag),
       ),
-      body: GalleryGridView(
-        tag: tag,
-        allowRefresh: (_) => selection.off,
-        onRefresh: query?.search,
-        selected: selection.isSelected,
-        onTap: onTileTap,
-        onLongPress: editor ? selection.select : null,
-        onBuild: loader?.next,
-      ),
-      floatingActionButton: GalleryFAB(tag: tag),
-      bottomNavigationBar: SelectionBottomBar(tag: tag),
     );
   }
 }

@@ -63,6 +63,25 @@ class If<T> extends StatelessWidget {
 }
 
 
+class Wrapper extends StatelessWidget {
+  final bool condition;
+  final Widget Function(Widget child) builder;
+  final Widget child;
+
+  const Wrapper({
+    super.key,
+    required this.condition,
+    required this.builder,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) => condition
+      ? builder(child)
+      : child;
+}
+
+
 extension Decode on String {
   dynamic decode() => jsonDecode(this);
 }
