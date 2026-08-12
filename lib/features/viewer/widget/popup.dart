@@ -1,18 +1,22 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/snack.dart';
 import 'package:hydit/services/executor/executor.dart';
 import 'package:hydit/widgets/systems/acrylic.dart' as a;
 
+import '../getx/page.dart';
+
 
 class ViewerPopup extends StatelessWidget {
-  final HydrusFile file;
+  final String tag;
 
-  const ViewerPopup({super.key, required this.file});
+  const ViewerPopup({super.key, required this.tag});
 
-  void download() => file.download()
+  PageGetxController get page => Get.find(tag: tag);
+
+  void download() => page.current.download()
       .tapFailure(Snack.error)
       .tapSuccess(showSuccess);
 
@@ -26,6 +30,11 @@ class ViewerPopup extends StatelessWidget {
       PopupMenuItem(
         onTap: download,
         child: 'download'.n,
+      ),
+
+      PopupMenuItem(
+        onTap: page.delete,
+        child: 'delete'.n,
       ),
     ]);
   }

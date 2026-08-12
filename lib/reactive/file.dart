@@ -63,6 +63,11 @@ class HydrusFile {
 
   final _removed = false.obs;
 
+  /// The file is about to be removed and all operations with
+  /// it should be discarded.
+  bool removing = false;
+
+  /// The file should be hidden from UI.
   bool get removed => _removed.value;
 
   /// Mark file as [removed].
@@ -70,7 +75,10 @@ class HydrusFile {
   /// This method serves only to signal UI elements that file
   /// is being deleted. Make sure to remove it from [FileStore]
   /// manually to clear the resources.
-  void remove() => _removed.value = true;
+  void remove() {
+    removing = true;
+    _removed.value = true;
+  }
 
   Future<Result<void>> download() => repo.download(id);
 }

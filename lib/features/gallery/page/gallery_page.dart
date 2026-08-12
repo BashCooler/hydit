@@ -42,6 +42,10 @@ class Gallery extends StatelessWidget {
       return;
     }
 
+    final file = files[index];
+
+    if (file.removing) return;
+
     ViewerPage(files, index, gallery)
         .editor(editor)
         .beforePush(gallery.hide)

@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 
@@ -12,9 +14,23 @@ class FileCache extends DelegatingMapBase<int, HydrusFile> {
   final deleted = <int>[].rx;
 
   /// Remove files with provided [ids].
-  Future<void> removeWithIds(List<int> ids) async {
+  ///
+  /// Use [getOffAll] when deleting the last file to
+  /// get to the home screen.
+  Future<void> removeWithIds(List<int> ids, {
+    bool getOffAll = false,
+  }) async {
 
     final toRemove = ids.map((id) => cache[id]!);
+
+    for (final file in toRemove) {
+      file.removing = true;
+    }
+
+    if (getOffAll) {
+      Get.until((route) => route.isFirst);
+      await sleep(transition);
+    }
 
     for (final file in toRemove) {
       file.remove();

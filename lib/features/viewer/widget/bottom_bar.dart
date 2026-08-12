@@ -33,10 +33,7 @@ class ViewerBottomBar extends StatelessWidget {
           if (page.files.length > 1)
             a.IconButton(
               tooltip: 'Previous page',
-              onPressed: () => page.controller.previousPage(
-                duration: const Duration(milliseconds: 150),
-                curve: Curves.decelerate,
-              ),
+              onPressed: page.previousPage,
               icon: const Icon(Symbols.keyboard_arrow_left),
             )
           else
@@ -53,7 +50,7 @@ class ViewerBottomBar extends StatelessWidget {
                 ),
                 sheet.progress > 0.5 && editButton != null
                     ? editButton!
-                    : ViewerPopup(file: file),
+                    : ViewerPopup(tag: tag),
               ],
             );
           }),
@@ -62,10 +59,7 @@ class ViewerBottomBar extends StatelessWidget {
             a.IconButton(
               tooltip: 'Next page',
               icon: const Icon(Symbols.keyboard_arrow_right),
-              onPressed: () => page.controller.nextPage(
-                duration: const Duration(milliseconds: 150),
-                curve: Curves.decelerate,
-              ),
+              onPressed: page.nextPage,
             )
           else
             const SizedBox.shrink(),

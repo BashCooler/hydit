@@ -25,7 +25,7 @@ class EditorBottomBar extends StatelessWidget {
     if (!await callback()) return;
 
     final manager = this.manager as PagedTagManager;
-    manager.page.next();
+    manager.page.jumpNext();
     manager.init();
   }
 
@@ -34,7 +34,7 @@ class EditorBottomBar extends StatelessWidget {
     if (!await callback()) return;
 
     final manager = this.manager as PagedTagManager;
-    manager.page.previous();
+    manager.page.jumpPrevious();
     manager.init();
   }
 

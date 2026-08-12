@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/entities/cache.dart';
+import 'package:hydit/services/services.dart';
+import 'package:hydit/widgets/common/dialog.dart';
 
 
 class PageGetxController extends GetxController {
@@ -37,15 +41,29 @@ class PageGetxController extends GetxController {
   /// Currently selected file.
   HydrusFile get current => files[i];
 
-  HydrusFile next() {
-    navigateToPage(i + 1);
+  Repo get repo => Get.find();
+
+  FileCache get cache => Get.find();
+
+  HydrusFile jumpNext() {
+    jumpToPage(i + 1);
     return current;
   }
 
-  HydrusFile previous() {
-    navigateToPage(i - 1);
+  HydrusFile jumpPrevious() {
+    jumpToPage(i - 1);
     return current;
   }
+
+  Future<void> nextPage() => controller.nextPage(
+    duration: 150.ms,
+    curve: Curves.decelerate,
+  );
+
+  Future<void> previousPage() => controller.previousPage(
+    duration: 150.ms,
+    curve: Curves.decelerate,
+  );
 
   /// [Hero] callback. Disable the animation for preloaded pages.
   bool enabled(int index) => index == i;
@@ -69,7 +87,7 @@ class PageGetxController extends GetxController {
 
   /// Navigates the visible [PageView] and keeps the background [GridView]
   /// centered on the same image.
-  void navigateToPage(int page) {
+  void jumpToPage(int page) {
     if (page == i || page < 0 || page >= files.length) return;
 
     index.value = page;
@@ -86,6 +104,35 @@ class PageGetxController extends GetxController {
         grid?.controller?.jumpTo(0);
       case _:
         grid?.jumpTo(index: item - 2 > 0 ? item - 2 : 0);
+    }
+  }
+
+  Future<void> delete() async {
+    final ids = [current.id];
+
+    Future<Result<void>> onApply() async {
+      if (i == files.length - 1 && files.length > 1) {
+        await previousPage();
+      }
+
+      return repo.api
+          .deleteFiles(ids)
+          .run()
+          .tapFailure(Snack.error);
+    }
+
+    final token = CompletionToken();
+
+    await LoadingDialog.show(
+      icon: const Icon(Icons.delete_forever),
+      title: const Text('Delete file?'),
+      loadingTitle: const Text('Deleting...'),
+      onApply: onApply,
+      token: token,
+    );
+
+    if (token.completed) {
+      cache.removeWithIds(ids, getOffAll: files.length < 2);
     }
   }
 }
