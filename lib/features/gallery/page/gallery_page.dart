@@ -62,6 +62,9 @@ class Gallery extends StatelessWidget {
         index: index,
         grid: gallery.grid,
       ),
+      arguments: {
+        'delete': editor,
+      }
     );
 
     gallery.show();

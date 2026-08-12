@@ -16,6 +16,8 @@ class ViewerPopup extends StatelessWidget {
 
   PageGetxController get page => Get.find(tag: tag);
 
+  bool get delete => Get.arguments?['delete'] ?? false;
+
   void download() => page.current.download()
       .tapFailure(Snack.error)
       .tapSuccess(showSuccess);
@@ -32,10 +34,11 @@ class ViewerPopup extends StatelessWidget {
         child: 'download'.n,
       ),
 
-      PopupMenuItem(
-        onTap: page.delete,
-        child: 'delete'.n,
-      ),
+      if (delete)
+        PopupMenuItem(
+          onTap: page.delete,
+          child: 'delete'.n,
+        ),
     ]);
   }
 }
