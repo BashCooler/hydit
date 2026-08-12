@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+
 import 'package:hydit/utils/utils.dart';
 
 
-ThemeData darkTheme() => ThemeData(
+ColorScheme get colorScheme => ColorScheme.fromSeed(
   brightness: .dark,
-  colorSchemeSeed: Colors.black,
+  seedColor: Colors.black,
+);
+
+
+ThemeData darkTheme() => ThemeData(
+  colorScheme: colorScheme,
 
   appBarTheme: const AppBarThemeData(
     elevation: 0,
@@ -23,10 +29,16 @@ ThemeData darkTheme() => ThemeData(
   ),
 
   scrollbarTheme: ScrollbarThemeData(
+    thumbColor: WidgetStatePropertyAll(colorScheme.primary),
     thumbVisibility: .all(true),
     thickness: .all(6),
     radius: .circular(3),
     interactive: true,
+  ),
+
+  badgeTheme: BadgeThemeData(
+    textColor: colorScheme.onPrimary,
+    backgroundColor: colorScheme.primary,
   ),
 );
 

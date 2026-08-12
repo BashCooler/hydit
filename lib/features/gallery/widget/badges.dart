@@ -94,7 +94,7 @@ class InboxBadge extends StatelessWidget {
     return Badge(
       label: Icon(
         Icons.mail_outline,
-        color: Theme.of(context).colorScheme.onError,
+        color: Theme.of(context).colorScheme.onPrimary,
         size: 12,
       ),
     );
