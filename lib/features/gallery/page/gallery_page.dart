@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/viewer/page/viewer.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/loader.dart';
@@ -34,7 +35,7 @@ class Gallery extends StatelessWidget {
   Loader? get loader => maybeFind(tag: tag);
   QueryController? get query => maybeFind(tag: tag);
 
-  void onTileTap(int id, int index) {
+  Future<void> onTileTap(int id, int index) async {
     if (gallery.loading.value) return;
 
     if (selection.on) {
@@ -46,11 +47,24 @@ class Gallery extends StatelessWidget {
 
     if (file.removing) return;
 
-    ViewerPage(files, index, gallery)
-        .editor(editor)
-        .beforePush(gallery.hide)
-        .onClose(gallery.show)
-        .push();
+    final tag = 'Viewer'.unique();
+
+    gallery.hide();
+
+    await Get.to(
+      () => Viewer(tag: tag, editor: editor),
+      transition: .fadeIn,
+      curve: Curves.easeInCubic,
+      opaque: false,
+      binding: ViewerBindings(
+        tag: tag,
+        files: files,
+        index: index,
+        grid: gallery.grid,
+      ),
+    );
+
+    gallery.show();
   }
 
   @override

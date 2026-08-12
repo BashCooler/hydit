@@ -16,15 +16,13 @@ import '../widget/tag_sheet.dart';
 
 
 class Viewer extends StatelessWidget {
-  final int index;
   final String tag;
   final bool editor;
 
   const Viewer({
     super.key,
-    required this.index,
     required this.tag,
-    this.editor = true,
+    required this.editor,
   });
 
   SheetController get sheet => Get.find(tag: tag);
@@ -129,7 +127,7 @@ class DismissibleFile extends StatelessWidget {
           DismissiblePageDismissDirection.up: threshold,
         },
         builder: (context, scrollController) {
-          final prefix = Get.arguments['heroPrefix'];
+          final prefix = Get.arguments?['heroPrefix'];
 
           return ViewFile(
             tag: tag,

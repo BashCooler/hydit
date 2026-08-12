@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/features/editor/getx/batch.dart';
 import 'package:hydit/features/viewer/bindings.dart';
+import 'package:hydit/features/viewer/page/viewer.dart';
+import 'package:hydit/utils/utils.dart';
 import 'package:niku/extra/primitive.dart';
 
 import 'package:hydit/reactive/file.dart';
@@ -79,9 +81,21 @@ class PreviewGrid extends StatelessWidget {
   void openPreview(HydrusFile file) {
     final files = FileStore([file.id]);
 
-    ViewerPage(files, 0)
-        .editor(false)
-        .hero(prefix: 'Preview ')
-        .push();
+    final tag = 'Viewer'.unique();
+
+    Get.to(
+      () => Viewer(tag: tag, editor: false),
+      transition: .fadeIn,
+      curve: Curves.easeInCubic,
+      opaque: false,
+      binding: ViewerBindings(
+        tag: tag,
+        files: files,
+        index: 0,
+      ),
+      arguments: {
+        'heroPrefix': 'Preview ',
+      }
+    );
   }
 }
