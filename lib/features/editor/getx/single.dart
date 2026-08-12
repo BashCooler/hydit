@@ -44,7 +44,7 @@ class PagedTagManager extends TagManager {
 
     assign(tags);
 
-    this.service = service ?? 'my tags';
+    this.service = service;
   }
 
   @override

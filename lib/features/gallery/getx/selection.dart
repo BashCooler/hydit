@@ -83,6 +83,7 @@ class SelectionController extends GetxController {
     EditorPage()
         .paged(page)
         .onClose(clear)
+        .service('my tags')
         .push();
   }
 

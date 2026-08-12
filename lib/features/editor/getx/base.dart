@@ -41,7 +41,8 @@ abstract class TagManager {
 
   String get service => _service.value;
 
-  set service(String service) {
+  set service(String? service) {
+    if (service == null) return;
     if (services.contains(service)) _service.value = service;
   }
 
