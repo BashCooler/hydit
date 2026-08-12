@@ -127,3 +127,8 @@ extension Range<T> on List<T> {
     );
   }
 }
+
+
+extension ToRx<T> on T {
+  Rx<T> get rx => Rx<T>(this);
+}

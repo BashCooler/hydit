@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:get/get.dart';
 import 'package:hydit/entities/cache.dart';
 
@@ -25,17 +23,17 @@ class FileStore extends GetxController {
   /// Loaded files from this store.
   Iterable<HydrusFile> get files => loaded.map((id) => cache[id]!);
 
-  late final StreamSubscription<Iterable<int>> subscription;
+  late final Worker worker;
 
   @override
   void onInit() {
-    subscription = cache.stream.listen(remove);
+    worker = ever(cache.deleted, remove);
     super.onInit();
   }
 
   @override
   void onClose() {
-    subscription.cancel();
+    worker.dispose();
     super.onClose();
   }
 
