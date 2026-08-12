@@ -166,7 +166,7 @@ class EditButton extends StatelessWidget {
             ? 'All tags'
             : 'Edit tags',
         icon: page.showServices.value
-            ? const Icon(Symbols.label_important_outline)
+            ? const Icon(Symbols.label)
             : const Icon(Symbols.edit_square),
         onPressed: page.showServices.toggle,
       );

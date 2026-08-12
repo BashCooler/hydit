@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:hydit/features/viewer/getx/sheet.dart';
 import 'package:hydit/features/viewer/widget/popup.dart';
+import 'package:hydit/services/repo.dart';
+import 'package:hydit/services/services.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import 'package:hydit/widgets/systems/acrylic.dart' as a;
@@ -44,6 +46,7 @@ class ViewerBottomBar extends StatelessWidget {
 
             return a.Pill(
               children: [
+                ArchiveButton(tag: tag),
                 a.TextButton(
                   onPressed: sheet.open,
                   child: a.Text(file.all.length, padding: .zero),
@@ -67,4 +70,28 @@ class ViewerBottomBar extends StatelessWidget {
       ),
     );
   }
+}
+
+
+class ArchiveButton extends StatelessWidget {
+  final String tag;
+
+  const ArchiveButton({super.key, required this.tag});
+
+  Repo get repo => Get.find();
+
+  PageGetxController get page => Get.find(tag: tag);
+
+  @override
+  Widget build(BuildContext context) => Obx(() {
+    return IconButton(
+      icon: page.current.isInbox
+          ? Icon(Symbols.inventory_2)
+          : Icon(Symbols.mail_outline),
+      onPressed: () {
+        page.current.toggleInbox()
+            .tapFailure(Snack.error);
+      },
+    );
+  });
 }
