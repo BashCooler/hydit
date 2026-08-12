@@ -1,17 +1,19 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/editor/getx/batch.dart';
-import 'package:hydit/features/viewer/bindings.dart';
-import 'package:hydit/features/viewer/page/viewer.dart';
-import 'package:hydit/utils/utils.dart';
-import 'package:niku/extra/primitive.dart';
+import 'package:niku/namespace.dart' as n;
 
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/widgets/common/images.dart';
-import 'package:hydit/features/editor/getx/base.dart';
 import 'package:hydit/features/gallery/bindings.dart';
-import 'package:hydit/features/editor/getx/single.dart';
+import 'package:hydit/features/gallery/page/gallery_page.dart';
+import 'package:hydit/features/viewer/bindings.dart';
+import 'package:hydit/features/viewer/page/viewer.dart';
+import 'package:hydit/widgets/common/images.dart';
+
+import '../getx/base.dart';
+import '../getx/batch.dart';
+import '../getx/single.dart';
 
 
 class PreviewGrid extends StatelessWidget {
@@ -32,6 +34,31 @@ class PreviewGrid extends StatelessWidget {
     );
   }
 
+  void previewGallery() {
+    final manager = this.manager as BatchTagManager;
+
+    final ids = manager.files
+        .map((file) => file.id)
+        .toList();
+
+    final tag = 'Gallery'.unique();
+
+    Get.to(
+      () => Gallery(
+        tag: tag,
+        editor: false,
+        swipeGesture: true,
+      ),
+      curve: Curves.easeInOutCubic,
+      opaque: false,
+      binding: GalleryBindings(
+        tag: tag,
+        ids: ids,
+        search: false,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final files = manager.take(4);
@@ -41,6 +68,7 @@ class PreviewGrid extends StatelessWidget {
 
       return Obx(() {
         final manager = this.manager as PagedTagManager;
+
         final file = manager.file;
 
         return GestureDetector(
@@ -54,15 +82,7 @@ class PreviewGrid extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: () {
-        final manager = this.manager as BatchTagManager;
-        final ids = manager.files.map((file) => file.id);
-
-        GalleryPage()
-            .predictive()
-            .withFiles(ids)
-            .push();
-      },
+      onTap: previewGallery,
       child: GridView.count(
         crossAxisCount: 2,
         physics: const NeverScrollableScrollPhysics(),

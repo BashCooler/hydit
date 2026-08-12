@@ -7,3 +7,4 @@ export 'repo.dart';
 export 'snack.dart';
 export 'storage.dart';
 export 'version.dart';
+export 'video.dart';
