@@ -6,6 +6,7 @@ import 'package:hydit/features/viewer/getx/video.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
+import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'page/viewer.dart';
 import 'getx/page.dart';
@@ -54,12 +55,19 @@ class ViewerPage {
         tag: tag,
         index: index,
         editor: _editor,
-        heroPrefix: _heroPrefix,
       ),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
       opaque: false,
-      binding: ViewerBindings(this),
+      binding: ViewerBindings(
+        tag: tag,
+        files: files,
+        index: index,
+        grid: gallery?.grid,
+      ),
+      arguments: {
+        "heroPrefix": _heroPrefix,
+      }
     )?.then((result) {
       _onClose?.call();
     });
@@ -68,27 +76,35 @@ class ViewerPage {
 
 
 class ViewerBindings implements Bindings {
-  final ViewerPage page;
+  final String tag;
+  final FileStore files;
+  final int index;
+  final GridObserverController? grid;
 
-  const ViewerBindings(this.page);
+  const ViewerBindings({
+    required this.tag,
+    required this.files,
+    required this.index,
+    this.grid,
+  });
 
   @override
   void dependencies() {
     Get.put(
       PageGetxController(
-        files: page.files,
-        initial: page.index,
-        grid: page.gallery?.grid,
+        files: files,
+        initial: index,
+        grid: grid,
       ),
-      tag: page.tag,
+      tag: tag,
     );
     Get.put(
       SheetController(),
-      tag: page.tag,
+      tag: tag,
     );
     Get.lazyPut(
-      () => VideoGetxController(tag: page.tag),
-      tag: page.tag,
+      () => VideoGetxController(tag: tag),
+      tag: tag,
     );
   }
 }
