@@ -8,23 +8,33 @@ class SettingsTextField extends HookWidget {
   final String label;
   final void Function(String) onChanged;
   final bool enabled;
-  final String? initial;
+  final TextEditingController controller;
 
   const SettingsTextField({
     super.key,
     required this.label,
     required this.onChanged,
     required this.enabled,
-    this.initial,
+    required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    final text = useTextEditingController(text: initial);
 
     final focus = useState(false);
+
     final node = useFocusNode();
-    node.addListener(() => focus.value = node.hasFocus);
+
+    useEffect(
+      () {
+        void listener() => focus.value = node.hasFocus;
+
+        node.addListener(listener);
+
+        return () => node.removeListener(listener);
+      },
+      [node],
+    );
 
     return Padding(
       padding: const .symmetric(horizontal: 24),
@@ -37,7 +47,7 @@ class SettingsTextField extends HookWidget {
             enabled: enabled,
             onChanged: onChanged,
             onTapOutside: (_) => node.unfocus(),
-            controller: text,
+            controller: controller,
             focusNode: node,
             textAlignVertical: .center,
             decoration: InputDecoration(
@@ -50,7 +60,7 @@ class SettingsTextField extends HookWidget {
               filled: true,
               suffixIcon: !focus.value
                   ? const SizedBox.shrink()
-                  : Actions(text: text, onChanged: onChanged),
+                  : Actions(text: controller, onChanged: onChanged),
             ),
           )
         ],

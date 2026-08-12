@@ -44,16 +44,37 @@ class Settings extends HookWidget {
 
             SettingsTextField(
               label: 'Url',
-              onChanged: (url) => settings.url = url,
+              onChanged: settings.setUrl,
               enabled: !saving.value,
-              initial: settings.url,
+              controller: settings.urlController,
+            ),
+
+            SegmentedButton<Protocol>(
+              segments: const [
+                ButtonSegment(
+                  value: .http,
+                  icon: Icon(Icons.http),
+                  label: Text('HTTP'),
+                ),
+                ButtonSegment(
+                  value: .https,
+                  icon: Icon(Icons.security),
+                  label: Text('HTTPS'),
+                ),
+              ],
+              selected: {
+                settings.protocol,
+              },
+              onSelectionChanged: saving.value
+                  ? null
+                  : (protocol) => settings.protocol = protocol.first,
             ),
 
             SettingsTextField(
               label: 'API Key',
               onChanged: (key) => settings.key = key,
               enabled: !saving.value,
-              initial: settings.key,
+              controller: TextEditingController(text: settings.key),
             ),
 
             ListTile(
