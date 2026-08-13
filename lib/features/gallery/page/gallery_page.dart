@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/viewer/page/viewer.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/loader.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/widgets/common/swipeable.dart';
-import 'package:hydit/features/viewer/bindings.dart';
 import 'package:hydit/features/search/getx/query.dart';
+import 'package:hydit/features/viewer/bindings.dart';
+import 'package:hydit/features/viewer/page/viewer.dart';
 
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
@@ -52,7 +52,7 @@ class Gallery extends StatelessWidget {
     gallery.hide();
 
     await Get.to(
-      () => Viewer(tag: tag, editor: editor),
+      () => Viewer(tag: tag),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
       opaque: false,
@@ -63,6 +63,7 @@ class Gallery extends StatelessWidget {
         grid: gallery.grid,
       ),
       arguments: {
+        'editor': editor,
         'delete': editor,
       }
     );

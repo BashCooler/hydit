@@ -104,7 +104,7 @@ class PreviewGrid extends StatelessWidget {
     final tag = 'Viewer'.unique();
 
     Get.to(
-      () => Viewer(tag: tag, editor: false),
+      () => Viewer(tag: tag),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
       opaque: false,
