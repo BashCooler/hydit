@@ -56,6 +56,11 @@ android {
                 signingConfigs.getByName("debug")
             }
         }
+
+        debug {
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+        }
     }
 }
 
