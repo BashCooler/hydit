@@ -132,7 +132,7 @@ class PageGetxController extends GetxController {
     );
 
     if (token.completed) {
-      cache.removeWithIds(ids, getOffAll: files.length < 2);
+      cache.remove(ids, getOffAll: files.length < 2);
     }
   }
 }

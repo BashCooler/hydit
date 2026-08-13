@@ -119,7 +119,7 @@ class SelectionController extends GetxController {
 
     void onSuccess(void value) {
       Get.back();
-      files.cache.removeWithIds(ids.toList());
+      files.cache.remove(ids.toList());
       clear();
     }
 
