@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/utils/utils.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -129,11 +130,17 @@ class DismissibleFile extends StatelessWidget {
         builder: (context, scrollController) {
           final prefix = Get.arguments?['heroPrefix'];
 
-          return ViewFile(
-            tag: tag,
-            index: index,
-            file: file,
-            heroTag: prefix != null ? '$prefix${file.id}' : file.id,
+          return Obx(
+            () => AnimatedScale(
+              scale: file.removed ? 0 : 1,
+              duration: deletionDuration,
+              child: ViewFile(
+                tag: tag,
+                index: index,
+                file: file,
+                heroTag: prefix != null ? '$prefix${file.id}' : file.id,
+              ),
+            ),
           );
         },
       );
