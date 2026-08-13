@@ -23,6 +23,8 @@ class Settings extends HookWidget {
 
     final settings = useMemoized(() => SettingsController());
 
+    final keyController = useTextEditingController(text: settings.key);
+
     final version = useFuture(Version.current());
 
     final saving = useState(false);
@@ -74,7 +76,7 @@ class Settings extends HookWidget {
               label: 'API Key',
               onChanged: (key) => settings.key = key,
               enabled: !saving.value,
-              controller: TextEditingController(text: settings.key),
+              controller: keyController,
             ),
 
             ListTile(
