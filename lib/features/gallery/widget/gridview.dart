@@ -19,7 +19,6 @@ class GalleryGridView extends StatelessWidget {
   final void Function(int id, int index)? onLongPress;
   final void Function(int index)? onBuild;
   final bool Function(ScrollNotification) allowRefresh;
-  final bool Function(int id)? selected;
 
   const GalleryGridView({
     super.key,
@@ -29,7 +28,6 @@ class GalleryGridView extends StatelessWidget {
     this.onLongPress,
     this.onBuild,
     this.allowRefresh = defaultScrollNotificationPredicate,
-    this.selected,
   });
 
   static const physics = BouncingScrollPhysics(
@@ -43,7 +41,9 @@ class GalleryGridView extends StatelessWidget {
   );
 
   Repo get repo => Get.find();
+
   FileStore get files => Get.find(tag: tag);
+
   GalleryController get gallery => Get.find(tag: tag);
 
   @override
@@ -66,6 +66,7 @@ class GalleryGridView extends StatelessWidget {
           }
         },
         child: Obx(() {
+
           return Scrollbar(
             controller: gallery.scroll,
             child: GridView.builder(
@@ -84,32 +85,28 @@ class GalleryGridView extends StatelessWidget {
 
                 final file = files[index];
 
-                return Obx(() {
-
-                  return AnimatedScale(
-                    key: ValueKey(file.id),
-                    duration: deletionDuration,
-                    scale: file.removed ? 0 : 1,
-                    child: Stack(
-                      children: [
-                        LinearHero(
+                return Stack(
+                  key: ValueKey(file.id),
+                  children: [
+                    Obx(
+                      () => AnimatedScale(
+                        duration: deletionDuration,
+                        scale: file.removed ? 0 : 1,
+                        child: LinearHero(
                           tag: file.id,
                           child: Thumbnail(file.thumbnailUrl),
                         ),
-                        Tile(
-                          index: index,
-                          id: file.id,
-                          badges: TileBadges(file),
-                          selected: selected?.call(file.id) ?? false,
-                          showBadges: gallery.badges,
-                          deleted: file.removed,
-                          onTap: onTap,
-                          onLongPress: onLongPress,
-                        ),
-                      ],
+                      ),
                     ),
-                  );
-                });
+                    Tile(
+                      tag: tag,
+                      index: index,
+                      file: file,
+                      onTap: onTap,
+                      onLongPress: onLongPress,
+                    ),
+                  ],
+                );
               },
             ),
           );

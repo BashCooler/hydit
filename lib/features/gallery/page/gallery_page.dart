@@ -89,7 +89,6 @@ class Gallery extends StatelessWidget {
           tag: tag,
           allowRefresh: (_) => selection.off,
           onRefresh: query?.search,
-          selected: selection.isSelected,
           onTap: onTileTap,
           onLongPress: editor ? selection.select : null,
           onBuild: loader?.next,
