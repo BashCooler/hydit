@@ -78,20 +78,20 @@ class EditButton extends StatelessWidget {
 
   const EditButton({super.key, required this.tag});
 
-  PageGetxController get page => Get.find(tag: tag);
+  SheetController get sheet => Get.find(tag: tag);
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
 
       return IconButton(
-        tooltip: page.showServices.value
+        tooltip: sheet.showServices.value
             ? 'All tags'
             : 'Edit tags',
-        icon: page.showServices.value
+        icon: sheet.showServices.value
             ? const Icon(Symbols.label)
             : const Icon(Symbols.edit_square),
-        onPressed: page.showServices.toggle,
+        onPressed: sheet.showServices.toggle,
       );
     });
   }

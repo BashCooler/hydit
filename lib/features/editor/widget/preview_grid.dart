@@ -8,7 +8,7 @@ import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/gallery/bindings.dart';
 import 'package:hydit/features/gallery/page/gallery_page.dart';
 import 'package:hydit/features/viewer/bindings.dart';
-import 'package:hydit/features/viewer/page/viewer.dart';
+import 'package:hydit/features/viewer/page/viewer_page.dart';
 import 'package:hydit/widgets/common/images.dart';
 
 import '../getx/base.dart';

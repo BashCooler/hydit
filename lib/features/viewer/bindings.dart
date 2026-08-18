@@ -3,6 +3,7 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydit/reactive/file_store.dart';
 
+import 'getx/gesture.dart';
 import 'getx/sheet.dart';
 import 'getx/video.dart';
 import 'getx/page.dart';
@@ -33,6 +34,10 @@ class ViewerBindings implements Bindings {
     );
     Get.put(
       SheetController(),
+      tag: tag,
+    );
+    Get.put(
+      GestureController(),
       tag: tag,
     );
     Get.lazyPut(

@@ -9,6 +9,7 @@ import 'package:hydit/widgets/systems/gradient.dart';
 
 import '../getx/page.dart';
 import '../getx/sheet.dart';
+import '../getx/gesture.dart';
 import '../widget/widgets.dart';
 
 
@@ -59,15 +60,17 @@ class Pages extends StatelessWidget {
 
   PageGetxController get page => Get.find(tag: tag);
 
+  GestureController get gesture => Get.find(tag: tag);
+
   @override
   Widget build(BuildContext context) {
     return Listener(
-      onPointerUp: page.registerPointer,
-      onPointerDown: page.registerPointer,
+      onPointerUp: gesture.registerPointer,
+      onPointerDown: gesture.registerPointer,
       child: Obx(() {
         return PreloadPageView.builder(
           onPageChanged: page.onPageChanged,
-          physics: page.noScroll ? noScroll : scroll,
+          physics: gesture.interacting ? noScroll : scroll,
           controller: page.controller,
           itemCount: page.files.length,
           preloadPagesCount: 3,
@@ -103,12 +106,14 @@ class DismissibleFile extends StatelessWidget {
 
   SheetController get sheet => Get.find(tag: tag);
 
+  GestureController get gesture => Get.find(tag: tag);
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
 
       return DismissiblePage(
-        disabled: page.zoom.value || sheet.opened,
+        disabled: gesture.zoom || sheet.opened,
         backgroundColor: Theme
             .of(context)
             .scaffoldBackgroundColor,

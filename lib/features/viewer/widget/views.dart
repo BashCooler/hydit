@@ -1,12 +1,14 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/viewer/widget/image_view.dart';
-import 'package:hydit/features/viewer/widget/video_view.dart';
+
+import 'image_view.dart';
+import 'video_view.dart';
 
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/widgets/common/images.dart';
 
 import '../getx/page.dart';
+import '../getx/gesture.dart';
 
 
 class ViewFile extends StatelessWidget {
@@ -25,6 +27,8 @@ class ViewFile extends StatelessWidget {
 
   PageGetxController get page => Get.find(tag: tag);
 
+  GestureController get gesture => Get.find(tag: tag);
+
   @override
   Widget build(BuildContext context) {
     switch(file.meta.type) {
@@ -33,7 +37,7 @@ class ViewFile extends StatelessWidget {
           key: ValueKey(file.id),
           width: file.meta.width,
           height: file.meta.height,
-          onZoomChanged: (zoom) => page.zoom.value = zoom,
+          onZoomChanged: gesture.onZoomChanged,
           child: ObxHero(
             index: index,
             tag: heroTag ?? file.id,

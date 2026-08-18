@@ -10,6 +10,7 @@ import 'package:hydit/features/editor/bindings.dart';
 
 import '../getx/page.dart';
 import '../getx/sheet.dart';
+import '../getx/gesture.dart';
 
 
 class TagSheet extends HookWidget {
@@ -25,6 +26,8 @@ class TagSheet extends HookWidget {
   PageGetxController get page => Get.find(tag: tag);
 
   SheetController get sheet => Get.find(tag: tag);
+
+  GestureController get gesture => Get.find(tag: tag);
 
   static const snaps = [
     SheetController.closedFactor,
@@ -43,7 +46,7 @@ class TagSheet extends HookWidget {
       snappingPositions: snaps,
       grabbingHeight: -1,
       sheetAbove: SnappingSheetContent(
-        draggable: (_) => !page.zoom.value,
+        draggable: (_) => !gesture.zoom,
         child: child,
       ),
       sheetBelow: SnappingSheetContent(
@@ -55,7 +58,7 @@ class TagSheet extends HookWidget {
             child: Obx(() {
               final tags = page.current.tags.value;
 
-              if (page.showServices.value) {
+              if (sheet.showServices.value) {
                 return ServiceList(
                   tags,
                   controller: scroll,

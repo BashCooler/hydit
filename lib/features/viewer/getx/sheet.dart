@@ -12,6 +12,8 @@ class SheetController {
 
   final progress = 0.0.obs;
 
+  final showServices = false.obs;
+
   bool get opened => progress.value > openedValue;
 
   static const openedValue = 0.5;

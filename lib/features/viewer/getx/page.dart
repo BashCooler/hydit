@@ -14,22 +14,13 @@ import 'package:hydit/widgets/common/dialog.dart';
 class PageGetxController extends GetxController {
   final GridObserverController? grid;
   final PreloadPageController controller;
-  final FileStore files;
 
   final RxInt index;
+  final FileStore files;
 
   PageGetxController({required this.files, required int initial, this.grid})
       : index = initial.obs,
         controller = PreloadPageController(initialPage: initial);
-
-  final _pinch = false.obs;
-  final _pointers = RxSet<int>();
-
-  final zoom = false.obs;
-
-  final showServices = false.obs;
-
-  bool get noScroll => _pinch.value || zoom.value;
 
   /// Current page index.
   int get i => index.value;
@@ -68,12 +59,6 @@ class PageGetxController extends GetxController {
   void onClose() {
     controller.dispose();
     super.onClose();
-  }
-
-  void registerPointer(Object details) {
-    if (details is PointerDownEvent) _pointers.add(details.pointer);
-    if (details is PointerUpEvent) _pointers.remove(details.pointer);
-    _pinch.value = _pointers.length > 1;
   }
 
   void onPageChanged(int page) {

@@ -7,7 +7,7 @@ import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/widgets/common/swipeable.dart';
 import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/viewer/bindings.dart';
-import 'package:hydit/features/viewer/page/viewer.dart';
+import 'package:hydit/features/viewer/page/viewer_page.dart';
 
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
