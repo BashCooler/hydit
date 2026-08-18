@@ -6,7 +6,6 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/features/viewer/widget/seekbar.dart';
 
 import '../getx/page.dart';
 import '../getx/sheet.dart';
@@ -73,30 +72,44 @@ class VideoPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
+    final theme = MaterialVideoControlsThemeData(
+      seekBarAlignment: .center,
+      seekBarPositionColor: primary,
+      seekBarThumbColor: primary,
+    );
+
     return Video(
       fit: .contain,
       controller: controller,
       fill: Colors.transparent,
       controls: (state) {
-        return AnimatedControlsPadding(
-          tag: tag,
-          child: const Column(
-            mainAxisAlignment: .end,
-            children: [
-              MaterialPositionIndicator(),
-              Row(
-                crossAxisAlignment: .center,
-                children: [
-                  Padding(
-                    padding: .only(left: 12),
-                    child: MaterialPlayOrPauseButton(),
-                  ),
-                  CustomMaterialSeekBar(),
-                  // MaterialFullscreenButton(),
-                  MaterialDesktopVolumeButton(),
-                ],
-              ),
-            ],
+        return MaterialVideoControlsTheme(
+          normal: theme,
+          fullscreen: theme,
+          child: AnimatedControlsPadding(
+            tag: tag,
+            child: const Column(
+              mainAxisAlignment: .end,
+              children: [
+                MaterialPositionIndicator(),
+                Row(
+                  crossAxisAlignment: .center,
+                  children: [
+                    Padding(
+                      padding: .only(left: 12),
+                      child: MaterialPlayOrPauseButton(),
+                    ),
+                    Expanded(
+                      child: MaterialSeekBar(),
+                    ),
+                    // MaterialFullscreenButton(),
+                    MaterialDesktopVolumeButton(),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
