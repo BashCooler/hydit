@@ -16,6 +16,8 @@ class SheetController {
 
   bool get opened => progress.value > openedValue;
 
+  bool get closed => progress.value < openedValue;
+
   static const openedValue = 0.5;
 
   static const closedValue = 0.0;
