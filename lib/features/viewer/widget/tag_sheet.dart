@@ -46,7 +46,7 @@ class TagSheet extends HookWidget {
       snappingPositions: snaps,
       grabbingHeight: -1,
       sheetAbove: SnappingSheetContent(
-        draggable: (_) => !gesture.zoom,
+        draggable: (_) => !gesture.zoomed,
         child: child,
       ),
       sheetBelow: SnappingSheetContent(

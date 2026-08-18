@@ -113,7 +113,7 @@ class DismissibleFile extends StatelessWidget {
     return Obx(() {
 
       return DismissiblePage(
-        disabled: gesture.zoom || sheet.opened,
+        disabled: gesture.zoomed || sheet.opened,
         backgroundColor: Theme
             .of(context)
             .scaffoldBackgroundColor,
