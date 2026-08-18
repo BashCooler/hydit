@@ -10,8 +10,8 @@ class VideoService extends GetxController {
   late final controller = VideoController(player);
 
   @override
-  void dispose() {
+  void onClose() {
     player.dispose();
-    super.dispose();
+    super.onClose();
   }
 }

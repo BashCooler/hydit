@@ -21,9 +21,9 @@ class TagSearchController extends GetxController {
   TextEditingController get $ => controller;
 
   @override
-  void dispose() {
+  void onClose() {
     controller.dispose();
-    super.dispose();
+    super.onClose();
   }
 
   void query(String query) {
