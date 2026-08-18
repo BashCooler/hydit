@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -28,28 +26,10 @@ class TagSheet extends HookWidget {
 
   SheetController get sheet => Get.find(tag: tag);
 
-  static const snaps = <SnappingPosition>[
-    SnappingPosition.factor(positionFactor: 0.0),
-    SnappingPosition.factor(positionFactor: 0.5),
+  static const snaps = [
+    SheetController.closedFactor,
+    SheetController.openedFactor,
   ];
-
-  void syncPageLock(dynamic positionData) {
-    if (!Get.isRegistered<PageGetxController>(tag: tag)) {
-      return;
-    }
-
-    final PageGetxController page = Get.find(tag: tag);
-
-    final pos = positionData.relativeToSheetHeight;
-
-    sheet.progress.value = clampDouble(pos/0.5, 0, 1);
-
-    if (pos > 0) {
-      page.blockDismiss = true;
-    } else {
-      page.blockDismiss = false;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +37,7 @@ class TagSheet extends HookWidget {
 
     return SnappingSheet(
       controller: sheet.controller,
-      onSheetMoved: syncPageLock,
+      onSheetMoved: sheet.onSheetMoved,
       lockOverflowDrag: true,
       initialSnappingPosition: snaps.first,
       snappingPositions: snaps,

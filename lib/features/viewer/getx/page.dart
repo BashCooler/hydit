@@ -31,10 +31,6 @@ class PageGetxController extends GetxController {
 
   bool get noScroll => _pinch.value || zoom.value;
 
-  final _blockDismiss = false.obs;
-  set blockDismiss(bool block) => _blockDismiss.value = block;
-  bool get blockDismiss => _blockDismiss.value || zoom.value;
-
   /// Current page index.
   int get i => index.value;
 

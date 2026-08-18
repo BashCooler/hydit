@@ -101,12 +101,14 @@ class DismissibleFile extends StatelessWidget {
 
   PageGetxController get page => Get.find(tag: tag);
 
+  SheetController get sheet => Get.find(tag: tag);
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
 
       return DismissiblePage(
-        disabled: page.blockDismiss,
+        disabled: page.zoom.value || sheet.opened,
         backgroundColor: Theme
             .of(context)
             .scaffoldBackgroundColor,
