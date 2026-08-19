@@ -31,25 +31,29 @@ class ViewFile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch(file.meta.type) {
-      case 'image':
-        return ImageView(
-          key: ValueKey(file.id),
-          width: file.meta.width,
-          height: file.meta.height,
-          onZoomChanged: gesture.onZoomChanged,
-          child: ObxHero(
-            index: index,
-            tag: heroTag ?? file.id,
-            page: page,
-            child: HighResImage(image: file),
-          ),
-        );
-      case 'video':
-        return VideoView(index: index, file: file, tag: tag);
-      case _:
-        return NotSupported(file.meta.type);
+
+    final content = switch (file.meta.type) {
+      'image' => HighResImage(image: file),
+      'video' => VideoView(index: index, file: file, tag: tag),
+      _ => NotSupported(file.meta.type),
+    };
+
+    if (content is NotSupported) {
+      return content;
     }
+
+    return ImageView(
+      key: ValueKey(file.id),
+      width: file.meta.width,
+      height: file.meta.height,
+      onZoomChanged: gesture.onZoomChanged,
+      child: ObxHero(
+        index: index,
+        tag: heroTag ?? file.id,
+        page: page,
+        child: content,
+      ),
+    );
   }
 }
 

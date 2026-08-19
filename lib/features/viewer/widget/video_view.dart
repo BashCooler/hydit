@@ -5,12 +5,11 @@ import 'package:cached_network_image_ce/cached_network_image.dart';
 
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:media_kit_video/media_kit_video_controls/src/controls/extensions/duration.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/services.dart';
-import 'package:hydit/features/viewer/widget/views.dart';
-import 'package:media_kit_video/media_kit_video_controls/src/controls/extensions/duration.dart';
 
 import '../getx/page.dart';
 import '../getx/video.dart';
@@ -31,6 +30,7 @@ class VideoView extends StatelessWidget {
   static const placeholder = SizedBox.shrink();
 
   PageGetxController get page => Get.find(tag: tag);
+
   VideoGetxController get video => Get.find(tag: tag);
 
   @override
@@ -38,15 +38,10 @@ class VideoView extends StatelessWidget {
     return Stack(
       alignment: .center,
       children: [
-        ObxHero(
-          index: index,
-          tag: file.id,
-          page: page,
-          child: CachedNetworkImage(
-            imageUrl: file.thumbnailUrl,
-            placeholder: (context, url) => placeholder,
-            fit: .contain,
-          ),
+        CachedNetworkImage(
+          imageUrl: file.thumbnailUrl,
+          placeholder: (context, url) => placeholder,
+          fit: .contain,
         ),
         Obx(() {
           if (page.i != index) {
