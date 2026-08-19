@@ -129,8 +129,12 @@ class SeekBar extends HookWidget {
 
   const SeekBar({super.key, required this.player});
 
-  double progress(Duration pos, Duration dur) {
-    return pos.inMilliseconds / dur.inMilliseconds;
+  double progress(Duration pos, Duration dur, {
+    double? seekPos,
+  }) {
+    return seekPos
+        .or(pos.inMilliseconds / dur.inMilliseconds)
+        .clamp(0, 1);
   }
 
   @override
@@ -154,7 +158,7 @@ class SeekBar extends HookWidget {
     final seekPos = useState<double?>(null);
 
     return SliderTheme(
-      data: SliderThemeData(
+      data: const SliderThemeData(
         trackHeight: 2.4,
         trackShape: RectangularSliderTrackShape(),
         thumbShape: RoundSliderThumbShape(
@@ -164,12 +168,15 @@ class SeekBar extends HookWidget {
         ),
       ),
       child: Slider(
-        value: seekPos.value ?? progress(pos, dur),
+        value: progress(pos, dur, seekPos: seekPos.value),
         secondaryTrackValue: progress(buf, dur),
         min: 0,
         max: 1,
-        onChangeEnd: (value) {
-          seekPos.value = null;
+        onChangeEnd: (value) async {
+          await player.seek(dur * value);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            seekPos.value = null;
+          });
         },
         onChanged: (value) {
           seekPos.value = value;

@@ -138,6 +138,11 @@ extension Math on num {
 }
 
 
+extension Or<T> on T? {
+  T or(T value) => this ?? value;
+}
+
+
 extension Range<T> on List<T> {
 
   Iterable<T> range(T from, T to) {

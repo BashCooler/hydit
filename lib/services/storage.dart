@@ -23,9 +23,3 @@ class HiveStorage extends Storage {
   @override
   void put<T>(String key, T value) => box.put(key, value);
 }
-
-
-extension Or<T> on T? {
-
-  T or(T value) => this ?? value;
-}
