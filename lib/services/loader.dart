@@ -33,7 +33,12 @@ class Loader {
   /// Clear existing files and load new files.
   void init(Iterable<int> ids) {
     store.ids.assignAll(ids);
-    if (store.ids.isEmpty) store.cache.clear();
+
+    if (store.ids.isEmpty) {
+      store.loaded.clear();
+      store.cache.clear();
+    }
+
     loadNextBatch(clear: true);
   }
 
