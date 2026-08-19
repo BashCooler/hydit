@@ -13,9 +13,9 @@ import '../widget/tag_actions.dart';
 
 
 class Search extends HookWidget {
-  const Search({super.key});
+  final String tag;
 
-  String get tag => Get.arguments['tag'];
+  const Search({super.key, required this.tag});
 
   QueryController get query => Get.find(tag: tag);
 
