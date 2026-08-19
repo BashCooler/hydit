@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:hydit/services/services.dart';
+import 'package:hydit/widgets/common/swipeable.dart';
 
 import '../getx/settings.dart';
 import '../widget/text_field.dart';
@@ -31,7 +32,7 @@ class Settings extends HookWidget {
 
     final checking = useState(false);
 
-    return Scaffold(
+    return SwipeableScaffold(
       appBar: AppBar(
         title: const Text('Settings'),
         elevation: 2,

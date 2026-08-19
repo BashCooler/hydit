@@ -15,6 +15,8 @@ import 'package:hydit/services/services.dart';
 import 'package:hydit/features/gallery/bindings.dart';
 import 'package:hydit/features/gallery/getx/selection.dart';
 import 'package:hydit/features/gallery/page/gallery_page.dart';
+import 'package:hydit/features/search/page/search.dart';
+import 'package:hydit/features/settings/page/settings_page.dart';
 
 import 'package:hydit/widgets/drawer.dart';
 import 'package:hydit/widgets/systems/gradient.dart';
@@ -86,6 +88,18 @@ class App extends StatelessWidget {
             tag: tag,
             drawerKey: drawerKey,
           ),
+        ),
+        GetPage(
+          name: '/settings',
+          page: () => Settings(),
+          curve: Curves.easeInOutCubic,
+          opaque: false,
+        ),
+        GetPage(
+          name: '/search',
+          page: () => Search(),
+          curve: Curves.easeInOutCubic,
+          opaque: false,
         ),
       ],
     );

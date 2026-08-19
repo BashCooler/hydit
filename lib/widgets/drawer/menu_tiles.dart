@@ -1,9 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/features/search/getx/query.dart';
-import 'package:hydit/features/settings/bindings.dart';
 
-import '../../features/gallery/getx/selection.dart';
+import 'package:hydit/features/search/getx/query.dart';
+import 'package:hydit/features/gallery/getx/selection.dart';
 
 
 class InboxTile extends StatelessWidget {
@@ -46,7 +45,7 @@ class SettingsTile extends StatelessWidget {
       title: const Text('Settings'),
       onTap: () {
         selection.clear();
-        SettingsPage().push();
+        Get.toNamed('/settings');
       },
     );
   }

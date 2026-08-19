@@ -5,7 +5,6 @@ import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/loader.dart';
 import 'package:hydit/widgets/common/switcher.dart';
 import 'package:hydit/widgets/systems/acrylic.dart' as a;
-import 'package:hydit/features/search/bindings.dart';
 
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
@@ -37,7 +36,9 @@ class GalleryFAB extends StatelessWidget {
         showFirst: !loader.failed,
         first: a.FAB(
           icon: const Icon(Icons.search),
-          onTap: SearchPage(tag: tag).push,
+          onTap: () => Get.toNamed('/search', arguments: {
+            'tag': tag,
+          }),
         ),
         second: FAB(
           onPressed: loader.retry,

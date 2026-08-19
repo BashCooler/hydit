@@ -26,3 +26,26 @@ class SwipeablePage extends StatelessWidget {
     );
   }
 }
+
+
+class SwipeableScaffold extends StatelessWidget {
+  final PreferredSizeWidget? appBar;
+  final Widget? body;
+
+  const SwipeableScaffold({
+    super.key,
+    this.appBar,
+    this.body,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SwipeablePage(
+      child: Scaffold(
+        appBar: appBar,
+        body: body,
+      ),
+    );
+  }
+}
+

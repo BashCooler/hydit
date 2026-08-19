@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/widgets/lists/tag_list.dart';
+import 'package:hydit/widgets/common/swipeable.dart';
 
 import '../getx/query.dart';
 import '../getx/tag_search.dart';
@@ -12,9 +13,11 @@ import '../widget/tag_actions.dart';
 
 
 class Search extends HookWidget {
-  final QueryController query;
+  const Search({super.key});
 
-  const Search({super.key, required this.query});
+  String get tag => Get.arguments['tag'];
+
+  QueryController get query => Get.find(tag: tag);
 
   void searchThenBack(String entry) {
     if (query.tags.isEmpty) query.add(entry);
@@ -28,7 +31,7 @@ class Search extends HookWidget {
     final scrollUp = useScrollController();
     final scrollDown = useScrollController();
 
-    return Scaffold(
+    return SwipeableScaffold(
       appBar: AppBar(
         elevation: 2,
         scrolledUnderElevation: 0,
