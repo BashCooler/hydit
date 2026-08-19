@@ -118,7 +118,18 @@ class VideoPlayer extends StatelessWidget {
                 Column(
                   children: [
                     PositionIndicator(player: video.controller.player),
-                    SeekBar(player: video.controller.player),
+                    Row(
+                      crossAxisAlignment: .center,
+                      children: [
+                        Padding(
+                          padding: const .only(left: 12),
+                          child: PlayOrPauseButton(player: video.controller.player),
+                        ),
+                        Expanded(
+                          child: SeekBar(player: video.controller.player),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -158,6 +169,44 @@ class PositionIndicator extends HookWidget {
     );
   }
 }
+
+
+class PlayOrPauseButton extends HookWidget {
+  final Player player;
+
+  const PlayOrPauseButton({super.key, required this.player});
+
+  @override
+  Widget build(BuildContext context) {
+
+    final playing = useStream(
+      player.stream.playing,
+      initialData: player.state.playing,
+    ).requireData;
+
+    final controller = useAnimationController(
+      duration: 200.ms,
+    );
+
+    useEffect(() {
+      if (playing) {
+        controller.forward();
+      } else {
+        controller.reverse();
+      }
+      return null;
+    }, [playing]);
+
+    return IconButton(
+      onPressed: player.playOrPause,
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.play_pause,
+        progress: controller,
+      ),
+    );
+  }
+}
+
 
 
 class SeekBar extends HookWidget {
