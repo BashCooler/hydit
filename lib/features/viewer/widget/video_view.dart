@@ -128,6 +128,10 @@ class VideoPlayer extends StatelessWidget {
                         Expanded(
                           child: SeekBar(player: video.controller.player),
                         ),
+                        Padding(
+                          padding: const .only(right: 12),
+                          child: VolumeButton(player: video.controller.player),
+                        ),
                       ],
                     ),
                   ],
@@ -257,6 +261,7 @@ class SeekBar extends HookWidget {
         ),
       ),
       child: Slider(
+        padding: const .fromLTRB(0, 11.6, 0, 11.6),
         value: progress(pos, dur, seekPos: seekPos.value),
         secondaryTrackValue: progress(buf, dur),
         min: 0,
@@ -281,6 +286,34 @@ class SeekBar extends HookWidget {
     );
   }
 }
+
+
+class VolumeButton extends HookWidget {
+  final Player player;
+
+  const VolumeButton({super.key, required this.player});
+
+  @override
+  Widget build(BuildContext context) {
+
+    final volume = useStream(
+      player.stream.volume,
+      initialData: player.state.volume,
+    ).requireData;
+
+    return IconButton(
+      onPressed: () => switch (volume) {
+        0 => player.setVolume(100),
+        _ => player.setVolume(0),
+      },
+      icon: switch (volume) {
+        0 => const Icon(Icons.volume_off),
+        _ => const Icon(Icons.volume_up),
+      },
+    );
+  }
+}
+
 
 
 class AnimatedControlsPadding extends StatelessWidget {
