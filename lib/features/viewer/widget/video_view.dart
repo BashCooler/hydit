@@ -10,6 +10,7 @@ import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/features/viewer/widget/views.dart';
+import 'package:media_kit_video/media_kit_video_controls/src/controls/extensions/duration.dart';
 
 import '../getx/page.dart';
 import '../getx/sheet.dart';
@@ -114,12 +115,46 @@ class VideoPlayer extends StatelessWidget {
                     MaterialDesktopVolumeButton(),
                   ],
                 ),
-                SeekBar(player: video.controller.player),
+                Column(
+                  children: [
+                    PositionIndicator(player: video.controller.player),
+                    SeekBar(player: video.controller.player),
+                  ],
+                ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+
+class PositionIndicator extends HookWidget {
+  final Player player;
+
+  const PositionIndicator({super.key, required this.player});
+
+  @override
+  Widget build(BuildContext context) {
+
+    final pos = useStream(
+      player.stream.position,
+      initialData: player.state.position,
+    ).requireData;
+
+    final dur = useStream(
+      player.stream.duration,
+      initialData: player.state.duration,
+    ).requireData;
+
+    return Text(
+      '${pos.label(reference: dur)} / ${dur.label(reference: dur)}',
+      style: TextStyle(
+        height: 1.0,
+        fontSize: 12.0,
+      ),
     );
   }
 }
