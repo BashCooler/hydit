@@ -13,14 +13,7 @@ import 'getx/single.dart';
 import 'page/editor.dart';
 
 
-/// Builds an [Editor] page.
-///
-/// First initialize the [EditorPage], then call [paged] or [batch] to
-/// select the page type. Finish with a [push] to push a newly created
-/// [Editor] page.
-///
-/// You can also provide an [onClose] similar to awaiting
-/// the result then performing an action with a regular route.
+/// Pushes an [Editor] page, either [paged] or [batch].
 class EditorPage {
   final String tag;
   final String? service;
@@ -52,6 +45,7 @@ class EditorPage {
   }
 
   void push() {
+    beforePush?.call();
     Get.to(
       () => SwipeablePage(child: Editor(tag: tag)),
       curve: Curves.easeInOutCubic,

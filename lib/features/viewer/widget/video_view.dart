@@ -38,10 +38,13 @@ class VideoView extends StatelessWidget {
     return Stack(
       alignment: .center,
       children: [
-        CachedNetworkImage(
-          imageUrl: file.thumbnailUrl,
-          placeholder: (context, url) => placeholder,
-          fit: .contain,
+        Container(
+          padding: const .all(0.05),
+          child: CachedNetworkImage(
+            imageUrl: file.thumbnailUrl,
+            placeholder: (context, url) => placeholder,
+            fit: .contain,
+          ),
         ),
         Obx(() {
           if (page.i != index) {
