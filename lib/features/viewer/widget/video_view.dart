@@ -1,7 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hydit/features/viewer/widget/views.dart';
+import 'package:hydit/services/services.dart';
+import 'package:hydit/utils/utils.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 
@@ -70,6 +73,8 @@ class VideoPlayer extends StatelessWidget {
 
   const VideoPlayer({super.key, required this.controller, required this.tag});
 
+  VideoGetxController get video => Get.find(tag: tag);
+
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
@@ -90,11 +95,11 @@ class VideoPlayer extends StatelessWidget {
           fullscreen: theme,
           child: AnimatedControlsPadding(
             tag: tag,
-            child: const Column(
+            child: Column(
               mainAxisAlignment: .end,
               children: [
-                MaterialPositionIndicator(),
-                Row(
+                const MaterialPositionIndicator(),
+                const Row(
                   crossAxisAlignment: .center,
                   children: [
                     Padding(
@@ -108,11 +113,68 @@ class VideoPlayer extends StatelessWidget {
                     MaterialDesktopVolumeButton(),
                   ],
                 ),
+                SeekBar(player: video.controller.player),
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+
+class SeekBar extends HookWidget {
+  final Player player;
+
+  const SeekBar({super.key, required this.player});
+
+  double progress(Duration pos, Duration dur) {
+    return pos.inMilliseconds / dur.inMilliseconds;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    final pos = useStream(
+      player.stream.position,
+      initialData: player.state.position,
+    ).requireData;
+
+    final dur = useStream(
+      player.stream.duration,
+      initialData: player.state.duration,
+    ).requireData;
+
+    final buf = useStream(
+      player.stream.buffer,
+      initialData: player.state.buffer,
+    ).requireData;
+
+    final seekPos = useState<double?>(null);
+
+    return SliderTheme(
+      data: SliderThemeData(
+        trackHeight: 2.4,
+        trackShape: RectangularSliderTrackShape(),
+        thumbShape: RoundSliderThumbShape(
+          enabledThumbRadius: 6.4,
+          elevation: 0,
+          pressedElevation: 0,
+        ),
+      ),
+      child: Slider(
+        value: seekPos.value ?? progress(pos, dur),
+        secondaryTrackValue: progress(buf, dur),
+        min: 0,
+        max: 1,
+        onChangeEnd: (value) {
+          seekPos.value = null;
+        },
+        onChanged: (value) {
+          seekPos.value = value;
+        },
+      ),
     );
   }
 }

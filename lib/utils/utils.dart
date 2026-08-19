@@ -131,6 +131,13 @@ extension ScopeFunctions<T> on T {
 }
 
 
+extension Math on num {
+  num mult(num a) => this * a;
+
+  num div(num a) => this / a;
+}
+
+
 extension Range<T> on List<T> {
 
   Iterable<T> range(T from, T to) {
