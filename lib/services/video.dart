@@ -5,7 +5,8 @@ import 'package:media_kit_video/media_kit_video.dart';
 
 class VideoService extends GetxController {
   final Player player = Player()
-    ..setVolume(0);
+    ..setVolume(0)
+    ..setPlaylistMode(.single);
 
   late final controller = VideoController(player);
 
