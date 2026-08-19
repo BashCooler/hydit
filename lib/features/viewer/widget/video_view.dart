@@ -13,7 +13,6 @@ import 'package:hydit/features/viewer/widget/views.dart';
 import 'package:media_kit_video/media_kit_video_controls/src/controls/extensions/duration.dart';
 
 import '../getx/page.dart';
-import '../getx/sheet.dart';
 import '../getx/video.dart';
 
 
@@ -57,70 +56,15 @@ class VideoView extends StatelessWidget {
           return AnimatedOpacity(
             duration: 150.ms,
             opacity: video.ready ? 1 : 0,
-            child: VideoPlayer(
+            child: Video(
+              fit: .contain,
               controller: video.controller,
-              tag: tag,
+              fill: Colors.transparent,
+              controls: NoVideoControls,
             ),
           );
         }),
       ],
-    );
-  }
-}
-
-
-class VideoPlayer extends StatelessWidget {
-  final String tag;
-  final VideoController controller;
-
-  const VideoPlayer({super.key, required this.controller, required this.tag});
-
-  VideoGetxController get video => Get.find(tag: tag);
-
-  @override
-  Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-
-    final theme = MaterialVideoControlsThemeData(
-      seekBarAlignment: .center,
-      seekBarPositionColor: primary,
-      seekBarThumbColor: primary,
-    );
-
-    return Video(
-      fit: .contain,
-      controller: controller,
-      fill: Colors.transparent,
-      controls: (state) {
-        return MaterialVideoControlsTheme(
-          normal: theme,
-          fullscreen: theme,
-          child: AnimatedControlsPadding(
-            tag: tag,
-            child: Column(
-              mainAxisAlignment: .end,
-              children: [
-                const MaterialPositionIndicator(),
-                const Row(
-                  crossAxisAlignment: .center,
-                  children: [
-                    Padding(
-                      padding: .only(left: 12),
-                      child: MaterialPlayOrPauseButton(),
-                    ),
-                    Expanded(
-                      child: MaterialSeekBar(),
-                    ),
-                    // MaterialFullscreenButton(),
-                    MaterialDesktopVolumeButton(),
-                  ],
-                ),
-                VideoControls(player: video.controller.player),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }
@@ -153,7 +97,6 @@ class VideoControls extends StatelessWidget {
     );
   }
 }
-
 
 
 class PositionIndicator extends HookWidget {
@@ -321,41 +264,5 @@ class VolumeButton extends HookWidget {
         _ => const Icon(Icons.volume_up),
       },
     );
-  }
-}
-
-
-
-class AnimatedControlsPadding extends StatelessWidget {
-  final String tag;
-  final Widget child;
-
-  const AnimatedControlsPadding({
-    super.key,
-    required this.tag,
-    required this.child,
-  });
-
-  SheetController get sheet => Get.find(tag: tag);
-
-  @override
-  Widget build(BuildContext context) {
-    final mq = MediaQuery.of(context);
-
-    final viewPadding = mq.viewPadding.bottom;
-    final padding = mq.padding.bottom;
-
-    return Obx(() {
-      final inverseProgress = (1 - sheet.progress.value);
-      final bottom = inverseProgress * (viewPadding + padding);
-
-      return Padding(
-        padding: .only(bottom: bottom),
-        child: Material(
-          color: Colors.transparent,
-          child: child,
-        ),
-      );
-    });
   }
 }
