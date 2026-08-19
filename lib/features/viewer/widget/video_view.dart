@@ -115,27 +115,7 @@ class VideoPlayer extends StatelessWidget {
                     MaterialDesktopVolumeButton(),
                   ],
                 ),
-                Column(
-                  children: [
-                    PositionIndicator(player: video.controller.player),
-                    Row(
-                      crossAxisAlignment: .center,
-                      children: [
-                        Padding(
-                          padding: const .only(left: 12),
-                          child: PlayOrPauseButton(player: video.controller.player),
-                        ),
-                        Expanded(
-                          child: SeekBar(player: video.controller.player),
-                        ),
-                        Padding(
-                          padding: const .only(right: 12),
-                          child: VolumeButton(player: video.controller.player),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                VideoControls(player: video.controller.player),
               ],
             ),
           ),
@@ -144,6 +124,36 @@ class VideoPlayer extends StatelessWidget {
     );
   }
 }
+
+
+class VideoControls extends StatelessWidget {
+  final Player player;
+
+  const VideoControls({super.key, required this.player});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const .fromLTRB(8, 0, 8, 0),
+      child: Column(
+        children: [
+          PositionIndicator(player: player),
+          Row(
+            crossAxisAlignment: .center,
+            children: [
+              PlayOrPauseButton(player: player),
+              Expanded(
+                child: SeekBar(player: player),
+              ),
+              VolumeButton(player: player),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 
 class PositionIndicator extends HookWidget {
