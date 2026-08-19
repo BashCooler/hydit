@@ -39,8 +39,15 @@ class GradientAppBar extends StatelessWidget
 
 class GradientBottomAppBar extends StatelessWidget {
   final Widget? child;
+  final double height;
+  final EdgeInsetsGeometry padding;
 
-  const GradientBottomAppBar({super.key, this.child});
+  const GradientBottomAppBar({
+    super.key,
+    this.child,
+    this.height = 40,
+    this.padding = const .symmetric(horizontal: 10),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +66,9 @@ class GradientBottomAppBar extends StatelessWidget {
       ),
       child: BottomAppBar(
         color: Colors.transparent,
-        child: Padding(
-          padding: const .symmetric(horizontal: 10),
-          child: child,
-        ),
+        height: height,
+        padding: padding,
+        child: child,
       ),
     );
   }

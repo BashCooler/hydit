@@ -77,8 +77,9 @@ class VideoControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const .fromLTRB(8, 0, 8, 0),
+      height: 60,
       child: Column(
         children: [
           PositionIndicator(player: player),
@@ -203,38 +204,41 @@ class SeekBar extends HookWidget {
 
     final pending = useRef(false);
 
-    return SliderTheme(
-      data: const SliderThemeData(
-        trackHeight: 2.4,
-        trackShape: RectangularSliderTrackShape(),
-        thumbShape: RoundSliderThumbShape(
-          enabledThumbRadius: 6.4,
-          elevation: 0,
-          pressedElevation: 0,
+    return SizedBox(
+      height: 48,
+      child: SliderTheme(
+        data: const SliderThemeData(
+          padding: .zero,
+          trackHeight: 2.4,
+          trackShape: RectangularSliderTrackShape(),
+          thumbShape: RoundSliderThumbShape(
+            enabledThumbRadius: 6.4,
+            elevation: 0,
+            pressedElevation: 0,
+          ),
         ),
-      ),
-      child: Slider(
-        padding: const .fromLTRB(0, 11.6, 0, 11.6),
-        value: progress(pos, dur, seekPos: seekPos.value),
-        secondaryTrackValue: progress(buf, dur),
-        min: 0,
-        max: 1,
-        onChangeStart: (value) {
-          shouldResume.value = player.state.playing;
-          player.pause();
-        },
-        onChangeEnd: (value) async {
-          await player.seek(dur * value);
-          if (shouldResume.value) await player.play();
-          WidgetsBinding.instance
-              .addPostFrameCallback((_) => seekPos.value = null);
-        },
-        onChanged: (value) {
-          seekPos.value = value;
-          if (!pending.value) {
-            player.seek(dur * value).loading(pending);
-          }
-        },
+        child: Slider(
+          value: progress(pos, dur, seekPos: seekPos.value),
+          secondaryTrackValue: progress(buf, dur),
+          min: 0,
+          max: 1,
+          onChangeStart: (value) {
+            shouldResume.value = player.state.playing;
+            player.pause();
+          },
+          onChangeEnd: (value) async {
+            await player.seek(dur * value);
+            if (shouldResume.value) await player.play();
+            WidgetsBinding.instance
+                .addPostFrameCallback((_) => seekPos.value = null);
+          },
+          onChanged: (value) {
+            seekPos.value = value;
+            if (!pending.value) {
+              player.seek(dur * value).loading(pending);
+            }
+          },
+        ),
       ),
     );
   }

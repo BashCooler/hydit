@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import 'package:hydit/services/services.dart';
-import 'package:hydit/features/viewer/widget/popup.dart';
-import 'package:hydit/widgets/systems/acrylic.dart' as a;
 import 'package:hydit/widgets/systems/gradient.dart';
+import 'package:hydit/widgets/systems/acrylic.dart' as a;
+import 'package:hydit/features/viewer/widget/popup.dart';
+import 'package:hydit/features/viewer/widget/video_view.dart';
 
+import '../getx/video.dart';
 import '../getx/sheet.dart';
 import '../getx/page.dart';
 
@@ -15,6 +17,35 @@ class ViewerBottomBar extends StatelessWidget {
   final String tag;
 
   const ViewerBottomBar({super.key, required this.tag});
+
+  PageGetxController get page => Get.find(tag: tag);
+
+  VideoGetxController get video => Get.find(tag: tag);
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final isVideo = page.current.meta.type == 'video';
+
+      return GradientBottomAppBar(
+        height: isVideo ? 100 : 40,
+        child: Column(
+          children: [
+            if (isVideo)
+              VideoControls(player: video.controller.player),
+            ViewerNavBar(tag: tag),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+
+class ViewerNavBar extends StatelessWidget {
+  final String tag;
+
+  const ViewerNavBar({super.key, required this.tag});
 
   bool get editor => Get.arguments?['editor'] ?? false;
 
@@ -26,7 +57,8 @@ class ViewerBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GradientBottomAppBar(
+    return Container(
+      constraints: const BoxConstraints(maxHeight: 40),
       child: Row(
         mainAxisSize: .max,
         mainAxisAlignment: .spaceBetween,

@@ -56,10 +56,7 @@ class VideoGetxController extends GetxController {
     await player.open(Media(url), play: false);
   }
 
-  Future<void> reset() async {
-    await player.pause();
-    await player.seek(Duration.zero);
-  }
+  void reset() => player.stop();
 
   Future<void> _onPageChanged(int index) async {
     final file = page.files[index];
