@@ -23,39 +23,32 @@ import 'page/editor.dart';
 /// the result then performing an action with a regular route.
 class EditorPage {
   final String tag;
+  final String? service;
+  final VoidCallback? beforePush;
+  final VoidCallback? onClose;
+  final List<int>? ids;
+  final PageGetxController? page;
 
-  String? selectedService;
-
-  List<int>? ids;
-
-  PageGetxController? page;
-
-  VoidCallback? onCloseCallback;
-
-  EditorPage() : tag = 'Editor'.unique();
-
-  EditorPage paged(PageGetxController page) {
-    this.page = page;
-
-    return this;
+  EditorPage.paged({
+    required this.page,
+    this.service,
+    this.beforePush,
+    this.onClose,
+  })
+      : tag = 'Editor'.unique(),
+        ids = null {
+    push();
   }
 
-  EditorPage batch(Iterable<int> ids) {
-    this.ids = ids.toList();
-
-    return this;
-  }
-
-  EditorPage onClose(VoidCallback callback) {
-    onCloseCallback = callback;
-
-    return this;
-  }
-
-  EditorPage service(String name) {
-    selectedService = name;
-
-    return this;
+  EditorPage.batch({
+    required this.ids,
+    this.service,
+    this.beforePush,
+    this.onClose,
+  })
+      : tag = 'Editor'.unique(),
+        page = null {
+    push();
   }
 
   void push() {
@@ -63,39 +56,60 @@ class EditorPage {
       () => SwipeablePage(child: Editor(tag: tag)),
       curve: Curves.easeInOutCubic,
       opaque: false,
-      binding: EditorBindings(this),
+      binding: page != null
+          ? PagedEditorBindings(tag: tag, page: page!, service: service)
+          : BatchEditorBindings(tag: tag, ids: ids!),
     )?.then((result) {
-      onCloseCallback?.call();
+      onClose?.call();
     });
   }
 }
 
 
-class EditorBindings extends Bindings {
-  final EditorPage page;
+class PagedEditorBindings extends Bindings {
+  final String tag;
+  final String? service;
+  final PageGetxController page;
 
-  EditorBindings(this.page);
+  PagedEditorBindings({
+    required this.tag,
+    required this.page,
+    this.service,
+  });
 
   @override
   void dependencies() {
+    Get.put(
+      TagSearchController(),
+      tag: tag,
+    );
 
-    Get.put(TagSearchController(), tag: page.tag);
+    Get.put<TagManager>(
+      PagedTagManager(page: page, service: service),
+      tag: tag,
+    );
+  }
+}
 
-    switch (page.page) {
 
-      case null:
-        final store = FileStore(page.ids!);
+class BatchEditorBindings extends Bindings {
+  final String tag;
+  final List<int> ids;
 
-        Get.put<TagManager>(
-          BatchTagManager(store),
-          tag: page.tag,
-        );
+  BatchEditorBindings({required this.tag, required this.ids});
 
-      case _:
-        Get.put<TagManager>(
-          PagedTagManager(page: page.page!, service: page.selectedService),
-          tag: page.tag,
-        );
-    }
+  @override
+  void dependencies() {
+    Get.put(
+      TagSearchController(),
+      tag: tag,
+    );
+
+    final store = FileStore(ids);
+
+    Get.put<TagManager>(
+      BatchTagManager(store),
+      tag: tag,
+    );
   }
 }

@@ -80,11 +80,11 @@ class SelectionController extends GetxController {
       initial: files.ids.indexOf(ids.first),
     );
 
-    EditorPage()
-        .paged(page)
-        .onClose(clear)
-        .service('my tags')
-        .push();
+    EditorPage.paged(
+      page: page,
+      service: 'my tags',
+      onClose: clear,
+    );
   }
 
   void _openBatchEditor() async {
@@ -107,10 +107,10 @@ class SelectionController extends GetxController {
       return;
     }
 
-    EditorPage()
-        .batch(ids)
-        .onClose(clear)
-        .push();
+    EditorPage.batch(
+      ids: ids.toList(),
+      onClose: clear,
+    );
   }
 
   // MARK: DELETE

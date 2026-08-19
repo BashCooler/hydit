@@ -56,6 +56,8 @@ class VideoGetxController extends GetxController {
     await player.open(Media(url), play: false);
   }
 
+  void reload() => _onPageChanged(page.i);
+
   void reset() => player.stop();
 
   Future<void> _onPageChanged(int index) async {
