@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -157,6 +159,8 @@ class SeekBar extends HookWidget {
 
     final seekPos = useState<double?>(null);
 
+    final shouldResume = useRef(true);
+
     return SliderTheme(
       data: const SliderThemeData(
         trackHeight: 2.4,
@@ -172,11 +176,15 @@ class SeekBar extends HookWidget {
         secondaryTrackValue: progress(buf, dur),
         min: 0,
         max: 1,
+        onChangeStart: (value) {
+          shouldResume.value = player.state.playing;
+          player.pause();
+        },
         onChangeEnd: (value) async {
           await player.seek(dur * value);
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            seekPos.value = null;
-          });
+          if (shouldResume.value) await player.play();
+          WidgetsBinding.instance
+              .addPostFrameCallback((_) => seekPos.value = null);
         },
         onChanged: (value) {
           seekPos.value = value;
