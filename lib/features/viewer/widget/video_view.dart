@@ -1,16 +1,15 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hydit/features/viewer/widget/views.dart';
-import 'package:hydit/services/services.dart';
-import 'package:hydit/utils/utils.dart';
-import 'package:media_kit/media_kit.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import 'package:cached_network_image_ce/cached_network_image.dart';
 
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
+
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
+import 'package:hydit/services/services.dart';
+import 'package:hydit/features/viewer/widget/views.dart';
 
 import '../getx/page.dart';
 import '../getx/sheet.dart';
@@ -161,6 +160,8 @@ class SeekBar extends HookWidget {
 
     final shouldResume = useRef(true);
 
+    final pending = useRef(false);
+
     return SliderTheme(
       data: const SliderThemeData(
         trackHeight: 2.4,
@@ -188,6 +189,9 @@ class SeekBar extends HookWidget {
         },
         onChanged: (value) {
           seekPos.value = value;
+          if (!pending.value) {
+            player.seek(dur * value).loading(pending);
+          }
         },
       ),
     );
