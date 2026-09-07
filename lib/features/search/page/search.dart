@@ -38,63 +38,65 @@ class Search extends HookWidget {
         title: const Text('Search'),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 55 * 3,
-              child: Obx(() {
-                return TagList(
-                  tags: query.tags.toList(),
-                  reverse: true,
-                  scrollController: scrollUp,
-                  itemBuilder: (context, tag) {
-                    return TagTile(
-                      tag: tag,
-                      trailing: const Icon(Icons.remove),
-                      onTap: query.remove,
-                    );
-                  },
-                );
-              }),
-            ),
+        child: TextFieldTapRegion(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 55 * 3,
+                child: Obx(() {
+                  return TagList(
+                    tags: query.tags.toList(),
+                    reverse: true,
+                    scrollController: scrollUp,
+                    itemBuilder: (context, tag) {
+                      return TagTile(
+                        tag: tag,
+                        trailing: const Icon(Icons.remove),
+                        onTap: query.remove,
+                      );
+                    },
+                  );
+                }),
+              ),
 
-            const Divider(height: 1),
+              const Divider(height: 1),
 
-            Expanded(
-              child: Obx(
-                () => TagList(
-                  reverse: true,
-                  tags: search.suggests.toList(),
-                  scrollController: scrollDown,
-                  itemBuilder: (context, tag) {
-                    return TagTile(
-                      tag: tag,
-                      trailing: TagCount(tag: tag, count: tag.count),
-                      onTap: (tag) {
-                        search.clear();
-                        query.add(tag.raw);
-                      },
-                      onLongPress: copyTag,
-                    );
-                  },
+              Expanded(
+                child: Obx(
+                  () => TagList(
+                    reverse: true,
+                    tags: search.suggests.toList(),
+                    scrollController: scrollDown,
+                    itemBuilder: (context, tag) {
+                      return TagTile(
+                        tag: tag,
+                        trailing: TagCount(tag: tag, count: tag.count),
+                        onTap: (tag) {
+                          search.clear();
+                          query.add(tag.raw);
+                        },
+                        onLongPress: copyTag,
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
 
-            const Divider(height: 1),
+              const Divider(height: 1),
 
-            TagSearchBar(
-              autofocus: true,
-              hintText: 'Enter tags here',
-              tagSearchController: search,
-              actions: TagActions(
-                onClear: search.clear,
-                onInsert: () => query.add(search.text),
-                onSearch: () => searchThenBack(search.text),
+              TagSearchBar(
+                autofocus: true,
+                hintText: 'Enter tags here',
+                tagSearchController: search,
+                actions: TagActions(
+                  onClear: search.clear,
+                  onInsert: () => query.add(search.text),
+                  onSearch: () => searchThenBack(search.text),
+                ),
+                onSubmitted: () => searchThenBack(search.text),
               ),
-              onSubmitted: () => searchThenBack(search.text),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
