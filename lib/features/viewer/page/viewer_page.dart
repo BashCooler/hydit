@@ -68,8 +68,7 @@ class ViewerAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) => Obx(() {
-    return AnimatedOpacity(
-      duration: 75.ms,
+    return Opacity(
       opacity: ui.visible.value ? 1 : 0,
       child: GradientAppBar(
         enabled: false,

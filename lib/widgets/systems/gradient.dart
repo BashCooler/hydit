@@ -76,8 +76,7 @@ class GradientBottomAppBar extends StatelessWidget {
             end: .bottomCenter,
           ),
         ),
-        child: AnimatedOpacity(
-          duration: 75.ms,
+        child: Opacity(
           opacity: opacity,
           child: BottomAppBar(
             color: Colors.transparent,
