@@ -5,17 +5,21 @@ import 'package:flutter/material.dart';
 class GestureController {
   final _pointers = <int>{}.obs;
 
-  final zoom = false.obs;
+  final _zoom = false.obs;
 
   bool _stopped = false;
 
-  bool get zoomed => zoom.value;
+  bool get zoomed => _zoom.value;
 
   bool get pinch => _pointers.length > 1;
 
   bool get interacting => pinch || zoomed;
 
-  void onZoomChanged(bool value) => zoom.value = value;
+  Worker zoomWorker({required void Function(bool zoomed) callback}) {
+    return ever(_zoom, callback);
+  }
+
+  void onZoomChanged(bool value) => _zoom.value = value;
 
   void onPointerDown(PointerDownEvent event) {
     _pointers.add(event.pointer);

@@ -24,7 +24,7 @@ class UiController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    zoomWorker = ever(gesture.zoom, onZoomChanged);
+    zoomWorker = gesture.zoomWorker(callback: onZoomChanged);
     chromeWorker = ever(visible, updateSystemUiMode);
   }
 
