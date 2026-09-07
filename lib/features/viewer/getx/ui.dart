@@ -32,6 +32,7 @@ class UiController extends GetxController {
   void onClose() {
     zoomWorker();
     chromeWorker();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.onClose();
   }
 
