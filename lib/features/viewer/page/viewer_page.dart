@@ -98,8 +98,9 @@ class Pages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Listener(
-      onPointerUp: gesture.registerPointer,
-      onPointerDown: gesture.registerPointer,
+      onPointerUp: gesture.onPointerUp,
+      onPointerDown: gesture.onPointerDown,
+      onPointerCancel: gesture.onPointerCancel,
       child: Obx(() {
         return PreloadPageView.builder(
           onPageChanged: page.onPageChanged,
@@ -150,7 +151,10 @@ class DismissibleFile extends StatelessWidget {
         backgroundColor: Theme
             .of(context)
             .scaffoldBackgroundColor,
-        onDismissed: Get.back,
+        onDismissed: () {
+          gesture.stop();
+          Get.back();
+        },
         direction: .vertical,
         interactionMode: .gesture,
         minScale: 0,

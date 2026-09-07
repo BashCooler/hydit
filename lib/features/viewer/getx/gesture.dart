@@ -7,6 +7,8 @@ class GestureController {
 
   final zoom = false.obs;
 
+  bool _stopped = false;
+
   bool get zoomed => zoom.value;
 
   bool get pinch => _pointers.length > 1;
@@ -15,8 +17,23 @@ class GestureController {
 
   void onZoomChanged(bool value) => zoom.value = value;
 
-  void registerPointer(Object details) {
-    if (details is PointerDownEvent) _pointers.add(details.pointer);
-    if (details is PointerUpEvent) _pointers.remove(details.pointer);
+  void onPointerDown(PointerDownEvent event) {
+    _pointers.add(event.pointer);
   }
+
+  void onPointerUp(PointerUpEvent event) {
+    if (_stopped) return;
+    _pointers.remove(event.pointer);
+  }
+
+  void onPointerCancel(PointerCancelEvent event) {
+    if (_stopped) return;
+    _pointers.remove(event.pointer);
+  }
+
+  /// Permanently stop tracking gestures.
+  ///
+  /// Call this before popping the current page to make sure the [Hero] works
+  /// properly and not interrupted by the rebuild of the parent [PageView].
+  void stop() => _stopped = true;
 }
