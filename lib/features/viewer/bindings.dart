@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hydit/features/viewer/getx/ui.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydit/reactive/file_store.dart';
@@ -38,6 +39,10 @@ class ViewerBindings implements Bindings {
     );
     Get.put(
       GestureController(),
+      tag: tag,
+    );
+    Get.put(
+      UiController(tag: tag),
       tag: tag,
     );
     Get.lazyPut(

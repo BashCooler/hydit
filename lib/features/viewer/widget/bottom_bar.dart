@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/features/viewer/getx/ui.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import 'package:hydit/services/services.dart';
@@ -22,23 +23,25 @@ class ViewerBottomBar extends StatelessWidget {
 
   VideoGetxController get video => Get.find(tag: tag);
 
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      final isVideo = page.current.meta.type == 'video';
+  UiController get ui => Get.find(tag: tag);
 
-      return GradientBottomAppBar(
-        height: isVideo ? 100 : 40,
-        child: Column(
-          children: [
-            if (isVideo)
-              VideoControls(player: video.controller.player),
-            ViewerNavBar(tag: tag),
-          ],
-        ),
-      );
-    });
-  }
+  @override
+  Widget build(BuildContext context) => Obx(() {
+    final isVideo = page.current.meta.type == 'video';
+    final visible = ui.visible.value;
+
+    return GradientBottomAppBar(
+      enabled: visible,
+      opacity: visible ? 1 : 0,
+      height: isVideo ? 100 : 40,
+      child: Column(
+        children: [
+          if (isVideo) VideoControls(player: video.controller.player),
+          ViewerNavBar(tag: tag),
+        ],
+      ),
+    );
+  });
 }
 
 

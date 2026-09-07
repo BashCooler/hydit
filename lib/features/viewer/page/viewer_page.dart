@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:dismissible_page/dismissible_page.dart';
+import 'package:hydit/features/viewer/getx/ui.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydit/utils/utils.dart';
@@ -23,6 +24,8 @@ class Viewer extends StatelessWidget {
 
   SheetController get sheet => Get.find(tag: tag);
 
+  UiController get ui => Get.find(tag: tag);
+
   void closeOrBack() => sheet.progress.value > 0.5
       ? sheet.close()
       : Get.back();
@@ -36,19 +39,49 @@ class Viewer extends StatelessWidget {
         closeOrBack();
       },
       child: Scaffold(
-        appBar: GradientAppBar(automaticallyImplyLeading: false),
+        appBar: ViewerAppBar(tag: tag),
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
         body: TagSheet(
           tag: tag,
-          child: Pages(tag: tag),
+          child: GestureDetector(
+            onTap: ui.toggle,
+            child: Pages(tag: tag),
+          ),
         ),
         bottomNavigationBar: ViewerBottomBar(tag: tag),
       ),
     );
   }
 }
+
+
+class ViewerAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
+
+  final String tag;
+
+  const ViewerAppBar({super.key, required this.tag});
+
+  UiController get ui => Get.find(tag: tag);
+
+  @override
+  Widget build(BuildContext context) => Obx(() {
+    return AnimatedOpacity(
+      duration: 75.ms,
+      opacity: ui.visible.value ? 1 : 0,
+      child: GradientAppBar(
+        enabled: false,
+        automaticallyImplyLeading: false,
+      ),
+    );
+  });
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
 
 
 class Pages extends StatelessWidget {

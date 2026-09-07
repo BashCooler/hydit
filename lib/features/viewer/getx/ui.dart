@@ -14,6 +14,8 @@ class UiController extends GetxController {
 
   SheetController get sheet => Get.find(tag: tag);
 
+  bool get hidden => !visible.value;
+
   late final Worker zoomWorker;
 
   @override
