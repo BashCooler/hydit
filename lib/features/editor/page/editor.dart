@@ -48,6 +48,7 @@ class Editor extends StatelessWidget {
         ),
         floatingActionButtonLocation: .endFloat,
         bottomNavigationBar: SafeArea(
+          maintainBottomViewPadding: true,
           child: EditorBottomBar(
             tag: tag,
             callback: confirmPendingChanges,

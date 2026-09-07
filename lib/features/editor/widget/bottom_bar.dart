@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:niku/namespace.dart' as n;
 
 import '../getx/base.dart';
 import '../getx/single.dart';
@@ -44,29 +43,31 @@ class EditorBottomBar extends StatelessWidget {
 
     return Padding(
       padding: const .symmetric(horizontal: 5),
-      child: n.Row([
-        if (paged)
+      child: Row(
+        children: [
+          if (paged)
+            IconButton(
+              tooltip: 'Previous page',
+              icon: const Icon(Icons.keyboard_arrow_left),
+              onPressed: previous,
+            ),
+
+          Expanded(child: child),
+
           IconButton(
-            tooltip: 'Previous page',
-            icon: const Icon(Icons.keyboard_arrow_left),
-            onPressed: previous,
+            tooltip: 'Save',
+            icon: const Icon(Icons.save),
+            onPressed: Navigator.of(context).maybePop,
           ),
 
-        Expanded(child: child),
-
-        IconButton(
-          tooltip: 'Save',
-          icon: const Icon(Icons.save),
-          onPressed: Navigator.of(context).maybePop,
-        ),
-
-        if (paged)
-          IconButton(
-            tooltip: 'Next page',
-            icon: const Icon(Icons.keyboard_arrow_right),
-            onPressed: next,
-          ),
-      ]),
+          if (paged)
+            IconButton(
+              tooltip: 'Next page',
+              icon: const Icon(Icons.keyboard_arrow_right),
+              onPressed: next,
+            ),
+        ],
+      ),
     );
   }
 }
