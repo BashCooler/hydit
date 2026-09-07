@@ -9,7 +9,7 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/entities/cache.dart';
+import 'package:hydit/reactive/cache.dart';
 import 'package:hydit/services/services.dart';
 
 import 'package:hydit/features/gallery/bindings.dart';

@@ -4,6 +4,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/entities/tag.dart';
+import 'package:hydit/entities/diff.dart';
 import 'package:hydit/entities/service.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';

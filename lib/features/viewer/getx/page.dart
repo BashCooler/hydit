@@ -6,7 +6,7 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/entities/cache.dart';
+import 'package:hydit/reactive/cache.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/widgets/common/dialog.dart';
 

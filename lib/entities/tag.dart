@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:hydit/utils/theme.dart';
+import 'package:hydit/utils/utils.dart';
 
 
 class Tag extends Equatable {

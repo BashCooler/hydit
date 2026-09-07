@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:hydit/entities/cache.dart';
 
 import 'package:hydit/api/api.dart';
 import 'package:hydit/api/params.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
+import 'package:hydit/reactive/cache.dart';
 import 'package:hydit/entities/tags.dart';
-import 'package:hydit/entities/service.dart';
+import 'package:hydit/entities/diff.dart';
 import 'package:hydit/entities/metadata.dart';
 import 'package:hydit/services/services.dart';
 
