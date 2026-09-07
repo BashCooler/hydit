@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hydit/features/viewer/getx/gesture.dart';
 import 'package:hydit/features/viewer/getx/sheet.dart';
@@ -18,15 +19,19 @@ class UiController extends GetxController {
 
   late final Worker zoomWorker;
 
+  late final Worker chromeWorker;
+
   @override
   void onInit() {
     super.onInit();
     zoomWorker = ever(gesture.zoom, onZoomChanged);
+    chromeWorker = ever(visible, updateSystemUiMode);
   }
 
   @override
   void onClose() {
     zoomWorker();
+    chromeWorker();
     super.onClose();
   }
 
@@ -37,5 +42,9 @@ class UiController extends GetxController {
   void toggle() {
     if (sheet.closed) visible.toggle();
   }
+
+  void updateSystemUiMode(bool visible) => visible
+      ? SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge)
+      : SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 }
 
