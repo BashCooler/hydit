@@ -27,22 +27,25 @@ class Editor extends StatelessWidget {
         body: SafeArea(
           child: Obx(() {
 
-            return Column(
-              children: [
-                Up(tag: tag, tags: manager.tags),
+            return TextFieldTapRegion(
+              child: Column(
+                children: [
+                  Up(tag: tag, tags: manager.tags),
 
-                if (manager.editable)
+                  if (manager.editable)
+                    const Divider(height: 1),
+
+                  if (manager.editable)
+                    SizedBox(
+                      height: 55 * 3,
+                      child: Down(tag: tag),
+                    ),
+
                   const Divider(height: 1),
 
-                if (manager.editable)
-                  SizedBox(
-                    height: 55 * 3,
-                    child: Down(tag: tag),
-                  ),
-
-                const Divider(height: 1),
-                EditorTagSearchBar(tag: tag),
-              ],
+                  EditorTagSearchBar(tag: tag),
+                ],
+              ),
             );
           }),
         ),

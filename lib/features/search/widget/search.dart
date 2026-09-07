@@ -22,10 +22,6 @@ class TagSearchBar extends HookWidget {
     required this.tagSearchController,
   });
 
-  void keepFocus(FocusNode node) {
-    node.requestFocus();
-  }
-
   @override
   Widget build(BuildContext context) {
     final node = useFocusNode();
@@ -47,7 +43,7 @@ class TagSearchBar extends HookWidget {
         ),
         onChanged: tagSearchController.query,
         onSubmitted: (_) => onSubmitted?.call(),
-        onTapOutside: (_) => keepFocus(node),
+        onTapOutside: (_) => node.unfocus(),
       ),
     );
   }
