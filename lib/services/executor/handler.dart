@@ -58,7 +58,6 @@ class Handler {
         'Bad response';
     String message =
         'The received response does not look like a valid Hydrus response';
-    Object? details;
 
     try {
       final json = data?.decode();
@@ -75,47 +74,35 @@ class Handler {
       if (error != null) message = error;
 
     } catch (e) {
-      details = e;
+      //
     }
 
-    final result = FailureBuilder<T>()
-      ..title = title
-      ..message = message
-      ..details = details ?? e;
-
-    return result();
+    return Failure(title, message);
   }
 
   static Future<Result<T>> handleConnectionError<T>(DioException e) async {
     final report = await connectionReport();
 
-    final result = FailureBuilder<T>()
-      ..title = 'Connection refused'
-      ..message = report ?? 'No running Hydrus client found'
-      ..details = e;
-
-    return result();
+    return Failure(
+      'Connection refused',
+      report ?? 'No running Hydrus client found',
+    );
   }
 
   static Future<Result<T>> handleTimeout<T>(DioException e) async {
     final report = await connectionReport();
 
-    final result = FailureBuilder<T>()
-      ..title = 'Connection timeout'
-      ..message = report ?? 'No response from Hydrus'
-      ..details = e;
-
-    return result();
+    return Failure(
+      'Connection timeout',
+      report ?? 'No response from Hydrus',
+    );
   }
 
   static Result<T> handleUnknownError<T>(DioException e) {
-
-    final result = FailureBuilder<T>()
-      ..title = e.error.runtimeType.toString().format()
-      ..message = e.toString()
-      ..details = e;
-
-    return result();
+    return Failure(
+      e.error.runtimeType.toString().format(),
+      e.toString(),
+    );
   }
 
   static Result<T> handlePlatformException<T>(PlatformException e) {

@@ -57,17 +57,6 @@ class Success<T> extends Result<T> {
 }
 
 
-class FailureBuilder<T> {
-  String title = 'Error';
-  String message = 'Unknown error';
-  Object? details;
-
-  Failure<T> build() => Failure<T>(title, message);
-
-  Failure<T> call() => build();
-}
-
-
 class Failure<T> extends Result<T> {
   final String title;
   final String message;

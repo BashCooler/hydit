@@ -7,12 +7,10 @@ Result<Uri> parseUrl(String url) {
   final str = uri.toString();
 
   if (!str.startsWith('http://') && !str.startsWith('https://')) {
-
-    final result = FailureBuilder<Uri>()
-      ..title = 'Input error'
-      ..message = 'URL must start with "http://" or "https://"';
-
-    return result();
+    return Failure(
+      'Input error',
+      'URL must start with "http://" or "https://"',
+    );
   }
 
   if (uri == null) {
@@ -24,21 +22,11 @@ Result<Uri> parseUrl(String url) {
   }
 
   if (uri.host.isEmpty) {
-
-    final result = FailureBuilder<Uri>()
-      ..title = 'Input error'
-      ..message = 'Host is empty';
-
-    return result();
+    return Failure('Input error', 'Host is empty');
   }
 
   if (uri.path.isNotEmpty && uri.path != '/') {
-
-    final result = FailureBuilder<Uri>()
-      ..title = 'Unsupported'
-      ..message = 'URL path must be empty';
-
-    return result();
+    return Failure('Unsupported', 'URL path must be empty');
   }
 
   return Success(uri);
