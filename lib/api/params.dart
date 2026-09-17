@@ -1,7 +1,7 @@
+import 'package:hydit/api/enums.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/diff.dart';
 import 'package:hydit/utils/unicode.dart';
-import 'package:hydit/utils/dictionaries.dart';
 
 
 class SearchFilesParamsBuilder {
@@ -46,7 +46,7 @@ class SearchFilesParams {
 
 class AddTagsParams {
   final List<int> fileIds;
-  final List<TagDiff> changes;
+  final List<TagChanges> changes;
 
   AddTagsParams({
     required Iterable<int> ids,

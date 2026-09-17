@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 
+import 'package:hydit/api/enums.dart';
 import 'package:hydit/api/params.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/services.dart';
-import 'package:hydit/utils/dictionaries.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 

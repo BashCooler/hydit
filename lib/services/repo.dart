@@ -33,7 +33,7 @@ class Repo {
 
   Future<Result<void>> apply(
     Iterable<int> ids,
-    List<TagDiff> changes,
+    List<TagChanges> changes,
   ) {
     final params = AddTagsParams(ids: ids, changes: changes);
     return api.postAddTags(params).run();
@@ -43,8 +43,10 @@ class Repo {
 
     for (final chunk in files.chunked(20)) {
 
+      final ids = chunk.map((f) => f.id).toList();
+
       final result = await api
-          .getFileMetadata(chunk.map((f) => f.id))
+          .getFileMetadata(ids)
           .run()
           .pick('metadata')
           .asListOrThrow(Tags.fromPick);

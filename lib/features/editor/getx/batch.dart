@@ -149,13 +149,13 @@ class BatchTagManager extends TagManager {
   }
 
   @override
-  List<TagDiff> summarize() {
+  List<TagChanges> summarize() {
     final changes = super.summarize();
 
     for (final MapEntry(key: name, value: tagsToAdd) in _added.entries) {
       if (tagsToAdd.isEmpty) continue;
 
-      final change = TagDiff(
+      final change = TagChanges(
         key: original[name]!.key,
         added: tagsToAdd,
         deleted: {},

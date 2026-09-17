@@ -107,9 +107,9 @@ abstract class TagManager {
   /// metadata.
   Future<Result<void>> save();
 
-  /// Generate [TagDiff]s.
-  List<TagDiff> summarize() {
-    final changes = <TagDiff>[];
+  /// Generate [TagChanges]s.
+  List<TagChanges> summarize() {
+    final changes = <TagChanges>[];
 
     for (final MapEntry(key: name, value: service) in _initial.entries) {
       final current = _current[name]!;
@@ -119,7 +119,7 @@ abstract class TagManager {
 
       if (add.isEmpty && del.isEmpty) continue;
 
-      final diff = TagDiff(
+      final diff = TagChanges(
         key: original[name]!.key,
         added: add,
         deleted: del,

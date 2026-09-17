@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:hydit/api/params.dart';
 import 'package:hydit/services/storage.dart';
+import 'package:hydit/api/enums.dart';
 
 import 'dio.dart';
 
@@ -40,28 +41,7 @@ class HydrusApi with DioClient {
 
   Future<String> getApiVersion() => get('/api_version');
 
-  Future<String> getRequestNewPermission(String name, {
-    bool? permitsEverything,
-    List<int>? basicPermissions,
-  }) {
-    final Map<String, dynamic> params = {
-      'name': name,
-      'permits_everything': permitsEverything,
-      'basic_permissions': basicPermissions,
-    };
-    return get('/request_new_permissions', params: params);
-  }
-
   Future<String> getVerifyAccessKey() => get('/verify_access_key');
-
-  Future<String> getService({String? name, String? key}) {
-    final Map<String, dynamic> params = {};
-
-    if (key != null) params['key'] = key;
-    if (name != null) params['service_name'] = name;
-
-    return get('/get_service', params: params);
-  }
 
   // MARK: SEARCHING AND FETCHING FILES
 
@@ -75,30 +55,18 @@ class HydrusApi with DioClient {
         .then((l) => l.cast<int>());
   }
 
-  Future<String> getFileMetadata(Iterable<int> ids, {
-    bool? createNewFileIds,
-    bool? onlyReturnIdentifiers,
-    bool? onlyReturnBasicInformation,
-    bool? detailedUrlInformation,
-    bool? includeBlurhash,
-    bool? includeMilliseconds,
-    bool? includeNotes,
+  Future<String> getFileMetadata(List<int> ids, {
+    bool onlyReturnBasicInformation = false,
     bool includeServicesObject = false,
-  }) {
-    final Map<String, dynamic> params = {
-      'file_ids': ids.toList(),
-      'only_return_identifiers': onlyReturnIdentifiers,
-      'only_return_basic_information': onlyReturnBasicInformation,
-      'detailed_url_information': detailedUrlInformation,
-      'include_blurhash': includeBlurhash,
-      'include_milliseconds': includeMilliseconds,
-      'include_notes': includeNotes,
-      'include_services_object': includeServicesObject,
-    };
-    params.removeWhere((k, v) => v == null);
-
-    return get('/get_files/file_metadata', params: params);
-  }
+  }) =>
+      get(
+        '/get_files/file_metadata',
+        params: {
+          'file_ids': ids,
+          'only_return_basic_information': onlyReturnBasicInformation,
+          'include_services_object': includeServicesObject,
+        },
+      );
 
   // MARK: FILES
 
@@ -139,22 +107,19 @@ class HydrusApi with DioClient {
   // MARK: TAGS
 
   Future<String> getSearchTags(String tag, {
-    // List<String>? fileDomain,
-    // String? tagServiceKey,
-    String? tagDisplayType,
-  }) {
-    final Map<String, dynamic> params = {
-      'search': tag,
-      // 'file_domain': fileDomain,
-      // 'tag_service_key': tagServiceKey,
-      'tag_display_type': tagDisplayType,
-    };
-    params.removeWhere((k, v) => (v == null));
+    TagDisplayType tagDisplayType = .storage,
+  }) =>
+      get(
+        '/add_tags/search_tags',
+        params: {
+          'search': tag,
+          'tag_display_type': tagDisplayType.toString(),
+        },
+      );
 
-    return get('/add_tags/search_tags', params: params);
-  }
-
-  Future<void> postAddTags(AddTagsParams params) {
-    return post('/add_tags/add_tags', params: params.toMap());
-  }
+  Future<void> postAddTags(AddTagsParams params) =>
+      post(
+        '/add_tags/add_tags',
+        params: params.toMap(),
+      );
 }

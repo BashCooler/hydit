@@ -1,21 +1,6 @@
 library;
 
 
-/// An action performed by POST /add_tags/add_tags request
-enum AddTagsAction {
-  addToLocalFileDomain(0),
-  deleteFromLocalFileDomain(1),
-  pendToTagRepository(2),
-  rescindPendFromTagRepository(3),
-  petitionFromTagRepository(4),
-  rescindPetitionFromTagRepository(5);
-
-  final int value;
-
-  const AddTagsAction(this.value);
-}
-
-
 enum FileSortType {
   fileSize(0, 'size'),
   duration(1, 'duration'),
@@ -51,4 +36,16 @@ enum FileSortType {
   final String name;
 
   const FileSortType(this.value, this.name);
+}
+
+
+enum TagDisplayType {
+  storage,
+  display;
+
+  @override
+  String toString() => switch (this) {
+    TagDisplayType.storage => 'storage',
+    TagDisplayType.display => 'display',
+  };
 }

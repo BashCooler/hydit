@@ -1,12 +1,12 @@
 import 'package:hydit/entities/tag.dart';
 
 
-class TagDiff {
+class TagChanges {
   final String key;
   final Set<Tag> _added;
   final Set<Tag> _deleted;
 
-  TagDiff({
+  TagChanges({
     required this.key,
     required this._added,
     required this._deleted,

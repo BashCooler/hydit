@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
+import 'package:hydit/api/enums.dart';
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/utils/dictionaries.dart';
 
 import '../getx/query.dart';
 
