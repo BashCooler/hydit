@@ -8,7 +8,7 @@ import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/cache.dart';
 import 'package:hydit/entities/tags.dart';
-import 'package:hydit/entities/diff.dart';
+import 'package:hydit/entities/changes.dart';
 import 'package:hydit/entities/metadata.dart';
 import 'package:hydit/services/services.dart';
 

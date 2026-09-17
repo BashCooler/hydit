@@ -1,6 +1,6 @@
 import 'package:hydit/api/enums.dart';
 import 'package:hydit/entities/tag.dart';
-import 'package:hydit/entities/diff.dart';
+import 'package:hydit/entities/changes.dart';
 import 'package:hydit/utils/unicode.dart';
 
 
