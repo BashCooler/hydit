@@ -60,16 +60,12 @@ class Success<T> extends Result<T> {
 class Failure<T> extends Result<T> {
   final String title;
   final String message;
-  final Object? details;
 
-  const Failure(this.title, this.message, [
-    this.details,
-  ]);
+  const Failure(this.title, this.message);
 
   factory Failure.from(Failure failure) => Failure(
     failure.title,
     failure.message,
-    failure.details,
   );
 
   @override

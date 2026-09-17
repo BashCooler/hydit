@@ -26,7 +26,7 @@ class Handler {
         return handleTimeout(e);
 
       case .unknown when e.error.runtimeType == ArgumentError:
-        return Failure('Client error', 'No host provided', e);
+        return Failure('Client error', 'No host provided');
 
       case _:
         return handleUnknownError(e);
@@ -106,7 +106,7 @@ class Handler {
   }
 
   static Result<T> handlePlatformException<T>(PlatformException e) {
-    return Failure('Platform error', e.toString(), e);
+    return Failure('Platform error', e.toString());
   }
 }
 
