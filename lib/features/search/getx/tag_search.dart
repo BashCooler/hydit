@@ -42,7 +42,7 @@ class TagSearchController extends GetxController {
     final int id = ++_requestId;
 
     final response = await repo.api
-        .getSearchTags(q)
+        .getSearchTags(q, tagDisplayType: .display)
         .run()
         .unwrap();
 
