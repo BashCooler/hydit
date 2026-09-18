@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
 import 'package:hydit/services/snack.dart';
-import 'package:hydit/services/executor/executor.dart';
+import 'package:hydit/services/executor.dart';
 import 'package:hydit/widgets/systems/acrylic.dart' as a;
 
 import '../getx/page.dart';
