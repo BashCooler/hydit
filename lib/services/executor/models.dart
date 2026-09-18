@@ -1,5 +1,7 @@
 library;
 
+import 'dart:async';
+
 import 'package:hydit/services/executor.dart';
 
 
@@ -46,6 +48,8 @@ sealed class Result<T> {
   Result<T> tapFailure(void Function(Failure<T> failure) f);
 
   Result<R> map<R>(R Function(T data) f);
+
+  Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T data) f);
 }
 
 class Success<T> extends Result<T> {
@@ -72,6 +76,11 @@ class Success<T> extends Result<T> {
 
   @override
   Result<R> map<R>(R Function(T data) f) => f(data).toSuccess();
+
+  @override
+  Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T data) f) async {
+    return await f(data);
+  }
 }
 
 
@@ -109,5 +118,12 @@ class Failure<T> extends Result<T> {
   }
 
   @override
-  Result<R> map<R>(R Function(T data) f) => Failure<R>.from(this);
+  Result<R> map<R>(R Function(T data) f) {
+    return Failure<R>.from(this);
+  }
+
+  @override
+  Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T data) f) async {
+    return Failure<R>.from(this);
+  }
 }

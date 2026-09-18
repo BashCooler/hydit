@@ -42,13 +42,9 @@ class SettingsController {
   Future<Result<void>> save() async {
     final url = buildUrl();
 
-    final uri = parseUrl(url);
-
-    if (uri is Failure) return uri;
-
-    final api = HydrusApi(uri: uri.getOrThrow(), key: key);
-
-    final access = await api.getVerifyAccessKey().run();
+    final access = await parseUrl(url)
+        .map((uri) => HydrusApi(uri: uri, key: key))
+        .flatMap((api) => api.getVerifyAccessKey().run());
 
     if (access is Failure) return access;
 
