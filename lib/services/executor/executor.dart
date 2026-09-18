@@ -116,27 +116,3 @@ extension Unwrap<T> on Future<Result<T>> {
 
   Future<T?> unwrap() async => (await this).getOrNull();
 }
-
-
-extension Taps<T> on Result<T> {
-
-  Result<T> tapSuccess(
-      FutureOr<void> Function(T data) callback) {
-
-    if (this case Success<T>(data: final data)) {
-      callback(data);
-    }
-
-    return this;
-  }
-
-  Result<T> tapFailure(
-      FutureOr<void> Function(String title, String message) callback) {
-
-    if (this case Failure<T>(title: final title, message: final message)) {
-      callback(title, message);
-    }
-
-    return this;
-  }
-}
