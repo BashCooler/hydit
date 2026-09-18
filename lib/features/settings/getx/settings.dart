@@ -21,7 +21,7 @@ class SettingsController {
 
   final urlController = TextEditingController();
 
-  String url = '127.0.0.1:45869';
+  String host = '127.0.0.1:45869';
   String key = '';
 
   SettingsController() {
@@ -32,7 +32,7 @@ class SettingsController {
 
   Storage get box => Get.find<Storage>();
 
-  String buildUrl() => '${protocol.scheme}$url';
+  String buildUrl() => '${protocol.scheme}$host';
 
   void load() {
     setUrl(box.get('url') ?? '');
@@ -63,16 +63,16 @@ class SettingsController {
   void setUrl(String url) {
     final uri = Uri.tryParse(url);
 
-    this.url = url
+    host = url
         .replaceFirst(RegExp(r'^https?:/?/?'), '');
 
     switch (uri?.scheme) {
       case 'http':
         protocol = .http;
-        urlController.text = this.url;
+        urlController.text = host;
       case 'https':
         protocol = .https;
-        urlController.text = this.url;
+        urlController.text = host;
     }
   }
 }
