@@ -38,6 +38,10 @@ sealed class Result<T> {
   T? getOrNull();
 
   T getOrThrow();
+
+  Result<T> tapSuccess(void Function(T data) f);
+
+  Result<T> tapFailure(void Function(Failure<T> failure) f);
 }
 
 class Success<T> extends Result<T> {
@@ -50,6 +54,17 @@ class Success<T> extends Result<T> {
 
   @override
   T getOrThrow() => data;
+
+  @override
+  Result<T> tapSuccess(void Function(T data) f) {
+    f(data);
+    return this;
+  }
+
+  @override
+  Result<T> tapFailure(void Function(Failure<T> failure) f) {
+    return this;
+  }
 }
 
 
@@ -73,5 +88,16 @@ class Failure<T> extends Result<T> {
   @override
   T getOrThrow() {
     throw StateError('An attempt to unwrap a Failure');
+  }
+
+  @override
+  Result<T> tapSuccess(void Function(T data) f) {
+    return this;
+  }
+
+  @override
+  Result<T> tapFailure(void Function(Failure<T> failure) f) {
+    f(this);
+    return this;
   }
 }

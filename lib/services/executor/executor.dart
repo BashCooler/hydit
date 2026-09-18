@@ -62,27 +62,15 @@ extension Loading<T> on Future<T> {
 extension TapsAsync<T> on Future<Result<T>> {
 
   Future<Result<T>> tapSuccess(
-      FutureOr<void> Function(T data) callback) async {
+      FutureOr<void> Function(T data) f) async {
 
-    final result = await this;
-
-    if (result case Success<T>(data: final data)) {
-      await callback(data);
-    }
-
-    return result;
+    return (await this).tapSuccess(f);
   }
 
   Future<Result<T>> tapFailure(
-      FutureOr<void> Function(Failure<T> failure) callback) async {
+      FutureOr<void> Function(Failure<T> failure) f) async {
 
-    final result = await this;
-
-    if (result is Failure<T>) {
-      await callback(result);
-    }
-
-    return result;
+    return (await this).tapFailure(f);
   }
 
   Future<Result<T>> delay(double seconds) async {
