@@ -20,7 +20,7 @@ class Version {
 
     final map = await dio.get<Map<String, dynamic>>(_apiUrl)
         .run()
-        .unwrap()
+        .getOrNull()
         .then((r) => r?.data);
 
     if (map == null) {

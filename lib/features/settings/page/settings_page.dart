@@ -117,20 +117,18 @@ class Settings extends HookWidget {
     final release = await Version
         .checkForUpdates()
         .tapFailure(Snack.error)
-        .unwrap();
+        .getOrNull();
 
     if (release == null) return;
 
-    final update = release.update;
-
     Snack.snackBar(
-      update
+      release.update
           ? const Icon(Icons.system_update_alt)
           : const Icon(Icons.check),
-      update
+      release.update
           ? 'Update available'
           : 'Up to date',
-      update
+      release.update
           ? 'Version ${release.tag}'
           : 'You have the latest version',
       TextButton.icon(

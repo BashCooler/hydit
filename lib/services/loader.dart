@@ -69,7 +69,7 @@ class Loader {
     final files = await load(batch)
         .tapFailure(Snack.error)
         .tapFailure(_fail)
-        .unwrap();
+        .getOrNull();
 
     if (files == null) return;
 
