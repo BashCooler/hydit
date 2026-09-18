@@ -35,25 +35,21 @@ const unit = Unit._();
 sealed class Result<T> {
   const Result();
 
-  T? unwrap() {
-    if (this case Success(data: final data)) {
-      return data;
-    }
-    return null;
-  }
+  T? getOrNull();
 
-  T unwrapOrThrow() {
-    if (this case Success(data: final data)) {
-      return data;
-    }
-    throw StateError('An attempt to unwrap a Failure');
-  }
+  T getOrThrow();
 }
 
 class Success<T> extends Result<T> {
   final T data;
 
   const Success(this.data);
+
+  @override
+  T? getOrNull() => data;
+
+  @override
+  T getOrThrow() => data;
 }
 
 
@@ -70,4 +66,12 @@ class Failure<T> extends Result<T> {
 
   @override
   String toString() => '$title: $message';
+
+  @override
+  T? getOrNull() => null;
+
+  @override
+  T getOrThrow() {
+    throw StateError('An attempt to unwrap a Failure');
+  }
 }

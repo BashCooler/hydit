@@ -46,7 +46,7 @@ class SettingsController {
 
     if (uri is Failure) return uri;
 
-    final api = HydrusApi(uri: uri.unwrapOrThrow(), key: key);
+    final api = HydrusApi(uri: uri.getOrThrow(), key: key);
 
     final access = await api.getVerifyAccessKey().run();
 

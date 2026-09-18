@@ -51,7 +51,7 @@ extension PickAs on Future<Result<Pick>> {
     }
 
     return result
-        .unwrapOrThrow()
+        .getOrThrow()
         .asListOrThrow(map, whenNull: whenNull)
         .toSuccess();
   }
@@ -64,7 +64,7 @@ extension PickAs on Future<Result<Pick>> {
     }
 
     return result
-        .unwrapOrThrow().asMapOrThrow<K, V>()
+        .getOrThrow().asMapOrThrow<K, V>()
         .toSuccess();
   }
 }

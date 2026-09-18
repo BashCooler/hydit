@@ -114,7 +114,7 @@ extension MapResult<T> on Future<Result<T>> {
 
 extension Unwrap<T> on Future<Result<T>> {
 
-  Future<T?> unwrap() async => (await this).unwrap();
+  Future<T?> unwrap() async => (await this).getOrNull();
 }
 
 

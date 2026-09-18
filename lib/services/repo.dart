@@ -53,7 +53,7 @@ class Repo {
 
       if (result is Failure) return result;
 
-      final tags = result.unwrapOrThrow();
+      final tags = result.getOrThrow();
 
       for (var i = 0; i < chunk.length; i++) {
         chunk[i].tags.value = tags[i];
@@ -77,9 +77,9 @@ class Repo {
 
     if (metadata is Failure) return metadata;
 
-    final meta = metadata.unwrapOrThrow();
+    final meta = metadata.getOrThrow();
 
     return Native
-        .saveFile(bytes.unwrapOrThrow(), meta.fileName, meta.mime);
+        .saveFile(bytes.getOrThrow(), meta.fileName, meta.mime);
   }
 }

@@ -109,7 +109,7 @@ class Loader {
         return files;
       }
 
-      store.commit(files.unwrapOrThrow());
+      store.commit(files.getOrThrow());
 
       if (token.cancelled) break;
     }
