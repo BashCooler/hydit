@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:deep_pick/deep_pick.dart';
 
-import 'package:hydit/services/repo.dart';
-import 'package:hydit/services/executor/executor.dart';
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/entities/tag.dart';
+import 'package:hydit/services/services.dart';
 
 
 class TagSearchController extends GetxController {
@@ -43,19 +42,17 @@ class TagSearchController extends GetxController {
 
     final response = await repo.api
         .getSearchTags(q, tagDisplayType: .display)
-        .run()
-        .unwrap();
+        .run();
 
-    if (id != _requestId || response == null) return;
+    if (id != _requestId || response is Failure) return;
 
-    final json = jsonDecode(response);
-    final tags = json['tags'] as List<dynamic>;
+    final tags = response
+        .getOrThrow()
+        .pick('tags')
+        .asListOrThrow(Tag.fromPick)
+        .take(15);
 
-    final mapped = tags
-        .take(15)
-        .map((map) => Tag(map['value'], count: map['count']));
-
-    suggests.assignAll(mapped);
+    suggests.assignAll(tags);
 
     _suggestVisible.value = true;
   }

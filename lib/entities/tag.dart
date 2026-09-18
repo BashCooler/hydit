@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:deep_pick/deep_pick.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:hydit/utils/utils.dart';
@@ -23,6 +24,23 @@ class Tag extends Equatable {
         namespace = _namespace(raw),
         value = _value(raw),
         pretty = _pretty(raw);
+
+  /// The [map] parameter should be extracted from `search_tags`
+  /// response like so:
+  ///
+  /// `json -> tags -> 0` (or other index)
+  factory Tag.fromMap(Map<String, dynamic> map) =>
+      Tag(map['value'], count: map['count']);
+
+  /// The [pick] parameter should be extracted from `search_tags`
+  /// response like so:
+  ///
+  /// `pick(json, 'tags', 0)` (or other index)
+  factory Tag.fromPick(Pick pick) {
+    final map = pick.asMapOrThrow<String, dynamic>();
+
+    return Tag.fromMap(map);
+  }
 
   String? get ns => namespace;
 
