@@ -87,15 +87,8 @@ extension TapsAsync<T> on Future<Result<T>> {
 
 extension MapResult<T> on Future<Result<T>> {
 
-  Future<Result<R>> map<R>(FutureOr<R> Function(T data) f) async {
-    final result = await this;
-
-    switch (result) {
-      case Success<T>(data: final data):
-        return Success<R>(await f(data));
-      case Failure<T>():
-        return Failure<R>.from(result);
-    }
+  Future<Result<R>> map<R>(R Function(T data) f) async {
+    return (await this).map(f);
   }
 }
 

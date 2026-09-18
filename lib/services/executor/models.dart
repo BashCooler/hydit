@@ -1,5 +1,7 @@
 library;
 
+import 'package:hydit/services/executor.dart';
+
 
 mixin class CancellationToken {
   bool _cancelled = false;
@@ -42,6 +44,8 @@ sealed class Result<T> {
   Result<T> tapSuccess(void Function(T data) f);
 
   Result<T> tapFailure(void Function(Failure<T> failure) f);
+
+  Result<R> map<R>(R Function(T data) f);
 }
 
 class Success<T> extends Result<T> {
@@ -65,6 +69,9 @@ class Success<T> extends Result<T> {
   Result<T> tapFailure(void Function(Failure<T> failure) f) {
     return this;
   }
+
+  @override
+  Result<R> map<R>(R Function(T data) f) => f(data).toSuccess();
 }
 
 
@@ -100,4 +107,7 @@ class Failure<T> extends Result<T> {
     f(this);
     return this;
   }
+
+  @override
+  Result<R> map<R>(R Function(T data) f) => Failure<R>.from(this);
 }
