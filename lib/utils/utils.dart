@@ -82,11 +82,6 @@ class Wrapper extends StatelessWidget {
 }
 
 
-extension Decode on String {
-  dynamic decode() => jsonDecode(this);
-}
-
-
 extension PickExtension on String {
 
   Pick pick([
@@ -128,13 +123,6 @@ extension ScopeFunctions<T> on T {
     action.call(this);
     return this;
   }
-}
-
-
-extension Math on num {
-  num mult(num a) => this * a;
-
-  num div(num a) => this / a;
 }
 
 

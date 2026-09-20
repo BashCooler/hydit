@@ -6,8 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:deep_pick/deep_pick.dart';
 
 import 'package:hydit/utils/utils.dart';
-
-import 'models.dart';
+import 'package:hydit/services/executor.dart';
 
 
 class Handler {
@@ -37,28 +36,15 @@ class Handler {
   static Result<T> handleBadResponse<T>(DioException e) {
     final data = e.response?.data as String?;
 
-    String title =
-        'Bad response';
-    String message =
-        'The received response does not look like a valid Hydrus response';
+    final title = data.tryOr(
+      (v) => v.pick('exception_type').asStringOrThrow().format(),
+      or: 'Bad response',
+    );
 
-    try {
-      final json = data?.decode();
-
-      final exception = pick(json, 'exception_type')
-          .asStringOrNull();
-
-      if (exception != null) title = exception.format();
-
-      final error = pick(json, 'error')
-          .asStringOrNull()
-          ?.replaceAll('!', '');
-
-      if (error != null) message = error;
-
-    } catch (e) {
-      //
-    }
+    final message = data.tryOr(
+      (v) => v.pick('error').asStringOrThrow().replaceAll('!', ''),
+      or: 'The received response does not look like a valid Hydrus response',
+    );
 
     return Failure(title, message);
   }

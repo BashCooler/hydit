@@ -28,6 +28,26 @@ class Executor {
 }
 
 
+extension OrElse<T> on T? {
+
+  R tryOr<R>(R Function(T v) f, {
+    required R or,
+  }) {
+    final v = this;
+
+    if (v == null) {
+      return or;
+    }
+
+    try {
+      return f(v);
+    } catch (e) {
+      return or;
+    }
+  }
+}
+
+
 extension SafeExecuteAsync<T> on Future<T> {
   /// Safely runs an [action], handles [DioException] and
   /// [PlatformException].
