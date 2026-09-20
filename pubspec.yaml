@@ -41,7 +41,6 @@ dependencies:
 
   # Network and parsing
   dio: ^5.9.2
-  connectivity_plus: ^7.1.1
   url_launcher: ^6.3.2
   deep_pick: ^1.1.0
 

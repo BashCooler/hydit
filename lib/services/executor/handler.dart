@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter/services.dart';
 import 'package:deep_pick/deep_pick.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:hydit/utils/utils.dart';
 
@@ -31,24 +32,6 @@ class Handler {
       case _:
         return handleUnknownError(e);
     }
-  }
-
-  static Future<String?> connectionReport() async {
-    final results = await (Connectivity().checkConnectivity());
-
-    final connected = results.contains(ConnectivityResult.mobile)
-        || results.contains(ConnectivityResult.wifi)
-        || results.contains(ConnectivityResult.ethernet);
-
-    if (!connected) {
-      return 'No internet connection';
-    }
-
-    if (results.contains(ConnectivityResult.vpn)) {
-      return 'This issue may be caused by an active VPN connection';
-    }
-
-    return null;
   }
 
   static Result<T> handleBadResponse<T>(DioException e) {
@@ -80,23 +63,18 @@ class Handler {
     return Failure(title, message);
   }
 
-  static Future<Result<T>> handleConnectionError<T>(DioException e) async {
-    final report = await connectionReport();
+  static Result<T> handleConnectionError<T>(DioException e) => Failure(
+    'Connection refused',
+    switch (e.error) {
+      SocketException(osError: OSError(errorCode: 101)) => 'No internet connection',
+      _ => 'No running Hydrus client found',
+    },
+  );
 
-    return Failure(
-      'Connection refused',
-      report ?? 'No running Hydrus client found',
-    );
-  }
-
-  static Future<Result<T>> handleTimeout<T>(DioException e) async {
-    final report = await connectionReport();
-
-    return Failure(
-      'Connection timeout',
-      report ?? 'No response from Hydrus',
-    );
-  }
+  static Result<T> handleTimeout<T>(DioException e) => Failure(
+    'Connection timeout',
+    'No response from Hydrus',
+  );
 
   static Result<T> handleUnknownError<T>(DioException e) {
     return Failure(
