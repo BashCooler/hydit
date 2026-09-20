@@ -16,13 +16,9 @@ class Executor {
     try {
       return Success(await action());
 
-    } on DioException catch (e) {
+    } catch (e) {
 
-      return HydrusConnectionError(e).toFailure();
-
-    } on PlatformException catch (e) {
-
-      return PlatformError(e).toFailure();
+      return AppError.from(e).toFailure();
     }
   }
 }

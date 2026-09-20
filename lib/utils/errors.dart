@@ -12,6 +12,12 @@ import 'package:hydit/services/executor.dart';
 sealed class AppError implements Exception {
   const AppError();
 
+  factory AppError.from(Object e) => switch (e) {
+    DioException() => HydrusConnectionError(e),
+    PlatformException() => PlatformError(e),
+    _ => UnknownError(e),
+  };
+
   String get title;
 
   String get message;
@@ -113,4 +119,17 @@ final class PlatformError extends AppError {
 
   @override
   String get title => e.toString();
+}
+
+
+final class UnknownError extends AppError {
+  final Object e;
+
+  const UnknownError(this.e);
+
+  @override
+  String get title => 'Unknown error';
+
+  @override
+  String get message => e.toString();
 }
