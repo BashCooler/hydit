@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:pub_semver/pub_semver.dart' as sv;
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'package:hydit/utils/errors.dart';
 import 'package:hydit/services/executor.dart';
 
 
@@ -24,7 +25,8 @@ class Version {
         .then((r) => r?.data);
 
     if (map == null) {
-      return Failure('Connection error', 'Failed to get update info');
+      return CustomError('Connection error', 'Failed to get update info')
+          .toFailure();
     }
 
     final cur = sv.Version.parse(await current());

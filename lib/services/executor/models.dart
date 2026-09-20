@@ -2,6 +2,7 @@ library;
 
 import 'dart:async';
 
+import 'package:hydit/utils/errors.dart';
 import 'package:hydit/services/executor.dart';
 
 
@@ -90,18 +91,14 @@ extension ToSuccess<T> on T {
 
 
 class Failure<T> extends Result<T> {
-  final String title;
-  final String message;
+  final AppError e;
 
-  const Failure(this.title, this.message);
+  const Failure(this.e);
 
-  factory Failure.from(Failure failure) => Failure(
-    failure.title,
-    failure.message,
-  );
+  factory Failure.from(Failure failure) => Failure(failure.e);
 
   @override
-  String toString() => '$title: $message';
+  String toString() => e.toString();
 
   @override
   T? getOrNull() => null;

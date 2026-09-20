@@ -22,7 +22,7 @@ sealed class AppError implements Exception {
 
   String get message;
 
-  Failure<T> toFailure<T>() => Failure(title, message);
+  Failure<T> toFailure<T>() => Failure(this);
 }
 
 
@@ -132,4 +132,15 @@ final class UnknownError extends AppError {
 
   @override
   String get message => e.toString();
+}
+
+
+final class CustomError extends AppError {
+  @override
+  final String title;
+
+  @override
+  final String message;
+
+  CustomError(this.title, this.message);
 }

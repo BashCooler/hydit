@@ -10,8 +10,8 @@ class Snack {
   static void success(String title, String message) =>
       snackBar(const Icon(Icons.check), title, message);
 
-  static void error(Failure failure) =>
-      snackBar(const Icon(Icons.clear), failure.title, failure.message);
+  static void error(Failure f) =>
+      snackBar(const Icon(Icons.clear), f.e.title, f.e.message);
 
   static void snackBar(Icon icon, String title, String message, [
     TextButton? button,
