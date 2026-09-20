@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:hydit/utils/errors.dart';
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/services/executor/handler.dart';
 
 import 'models.dart';
 
@@ -18,17 +18,17 @@ class Executor {
 
     } on DioException catch (e) {
 
-      return Handler.handleDioException(e);
+      return HydrusConnectionError(e).toFailure();
 
     } on PlatformException catch (e) {
 
-      return Handler.handlePlatformException(e);
+      return PlatformError(e).toFailure();
     }
   }
 }
 
 
-extension OrElse<T> on T? {
+extension TryOr<T> on T? {
 
   R tryOr<R>(R Function(T v) f, {
     required R or,
