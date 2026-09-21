@@ -1,31 +1,37 @@
 import 'package:deep_pick/deep_pick.dart';
+import 'package:hydit/api/enums.dart';
 
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/service.dart';
-import 'package:hydit/utils/collection.dart';
 
 
-class Tags extends DelegatingMapBase<String, TagService> {
+class Tags {
 
-  final Map<String, TagService> tags;
+  final Map<String, TagService> storage;
+
+  final Map<String, TagService> display;
+
   final Map<String, List<String>> namespaces;
 
-  Tags(this.tags, this.namespaces);
-
-  @override
-  Map<String, TagService> get delegate => tags;
+  Tags(this.storage, this.display, this.namespaces);
 
   /// The [map] parameter should be extracted from `file_metadata`
   /// response like so:
   ///
   /// `json -> metadata -> 0` (or other index)
   factory Tags.fromMap(Map<String, dynamic> map) {
-    final tags = parseTags(map);
 
-    final all = tags['all known tags'];
-    final namespaces = buildNamespaceIndex(all!);
+    final storage = parseTags(map, type: .storage);
 
-    return Tags(tags, namespaces);
+    final display = parseTags(map, type: .display);
+
+    final all = display['all known tags']!;
+
+    return Tags(
+      storage,
+      display,
+      buildNamespaceIndex(all),
+    );
   }
 
   /// The [pick] parameter should be extracted from `file_metadata`
@@ -40,14 +46,18 @@ class Tags extends DelegatingMapBase<String, TagService> {
 
   // MARK: FACTORY METHODS
 
-  static Map<String, TagService> parseTags(Map<String, dynamic> metadataEntry) {
+  static Map<String, TagService> parseTags(Map<String, dynamic> metadataEntry, {
+    required TagDisplayType type,
+  }) {
     final Map<String, TagService> result = {};
+
+    final tagType = type == .storage ? 'storage_tags' : 'display_tags';
 
     final tags = metadataEntry['tags'] as Map<String, dynamic>;
 
     for (final MapEntry(:key, value: map) in tags.entries) {
 
-      final storage = pick(map, 'storage_tags', '0')
+      final storage = pick(map, tagType, '0')
           .asListOrEmpty<String>((t) => t.asStringOrThrow())
           .map(Tag.parse);
 

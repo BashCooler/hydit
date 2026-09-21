@@ -20,7 +20,7 @@ class PagedTagManager extends TagManager {
   int get fileCount => 1;
 
   @override
-  Map<String, TagService> get original => file.tags.value;
+  Map<String, TagService> get original => file.tags.value.storage;
 
   @override
   void remove(Tag tag) {
@@ -39,7 +39,7 @@ class PagedTagManager extends TagManager {
 
   void init([String? service]) {
 
-    final tags = file.tags.value
+    final tags = file.tags.value.storage
         .map((k, v) => MapEntry(k, v));
 
     assign(tags);

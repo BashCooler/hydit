@@ -29,7 +29,7 @@ class BatchTagManager extends TagManager {
   final _counts = <String, Map<Tag, int>>{};
 
   @override
-  Map<String, TagService> get original => files.first.tags.value;
+  Map<String, TagService> get original => files.first.tags.value.storage;
 
   @override
   void remove(Tag tag) {
@@ -106,7 +106,7 @@ class BatchTagManager extends TagManager {
     final Map<String, Set<Tag>> tags = {};
 
     for (final file in files) {
-      final original = file.tags.value.entries;
+      final original = file.tags.value.storage.entries;
 
       for (final MapEntry(key: name, value: service) in original) {
         tags.putIfAbsent(name, () => {}).addAll(service);

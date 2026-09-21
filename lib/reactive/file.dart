@@ -43,7 +43,7 @@ class HydrusFile {
 
   Repo get repo => Get.find();
 
-  Iterable<Tag> get all => tags.value['all known tags'] ?? [];
+  Iterable<Tag> get all => tags.value.display['all known tags'] ?? [];
 
   int get id => meta.id;
 
