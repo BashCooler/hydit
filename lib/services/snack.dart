@@ -2,16 +2,21 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/services/services.dart';
+import 'package:hydit/utils/errors.dart';
+import 'package:hydit/utils/utils.dart';
 
 
 class Snack {
   Snack._();
 
-  static void success(String title, String message) =>
-      snackBar(const Icon(Icons.check), title, message);
+  static void success(String title, String message) {
+    snackBar(const Icon(Icons.check), title, message);
+  }
 
-  static void error(Failure f) =>
-      snackBar(const Icon(Icons.clear), f.e.title, f.e.message);
+  static void error(Failure f) {
+    final e = AppError.from(f.e);
+    snackBar(const Icon(Icons.clear), e.title, e.message);
+  }
 
   static void snackBar(Icon icon, String title, String message, [
     TextButton? button,

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
-import 'package:hydit/utils/errors.dart';
 
 import 'package:hydit/utils/utils.dart';
 
@@ -16,7 +15,7 @@ extension SafeExecuteAsync<T> on Future<T> {
     try {
       return Success(await this);
     } catch (e) {
-      return AppError.from(e).toFailure();
+      return Failure(e);
     }
   }
 }

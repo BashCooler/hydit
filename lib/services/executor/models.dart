@@ -118,7 +118,7 @@ extension ToSuccess<T> on T {
 
 
 class Failure<T> extends Result<T> {
-  final AppError e;
+  final Object e;
 
   const Failure(this.e);
 
