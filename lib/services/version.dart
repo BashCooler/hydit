@@ -1,60 +1,68 @@
 import 'package:dio/dio.dart';
-import 'package:pub_semver/pub_semver.dart' as sv;
+import 'package:pub_semver/pub_semver.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/utils/errors.dart';
 import 'package:hydit/services/executor.dart';
 
 
-class Version {
-  const Version._();
+class UpdateService {
+  const UpdateService._();
 
-  static const _apiUrl =
+  static const apiUrl =
       'https://api.github.com/repos/BashCooler/hydit/releases/latest';
 
   /// Current version of Hydit.
   static Future<String> current() =>
       PackageInfo.fromPlatform().then((i) => i.version);
 
-  static Future<Result<Release>> checkForUpdates() async {
-    final dio = Dio();
+  static Future<Result<Release>> latestRelease() async {
 
-    final map = await dio.get<Map<String, dynamic>>(_apiUrl)
+    final origin = await Dio().get<Map<String, dynamic>>(apiUrl)
         .run()
-        .getOrNull()
-        .then((r) => r?.data);
+        .map((r) => r.data!)
+        .map(Release.fromMap)
+        .getOrNull();
 
-    if (map == null) {
+    if (origin == null) {
       return CustomError('Connection error', 'Failed to get update info')
           .toFailure();
     }
 
-    final cur = sv.Version.parse(await current());
+    final app = await current().then(Release.parse);
 
-    final versionString = map['tag_name'].replaceFirst('v', '');
-    final available = sv.Version.parse(versionString);
+    if (app < origin) {
+      return origin.asUpdate().toSuccess();
+    }
 
-    final update = cur < available;
-
-    final release = Release(
-      tag: available.canonicalizedVersion,
-      url: map['html_url'],
-      update: update,
-    );
-
-    return Success(release);
+    return origin.toSuccess();
   }
 }
 
 
 class Release {
-  final String tag;
-  final String url;
-  final bool update;
+  final Version version;
+  final String? httpUrl;
+  final bool isUpdate;
 
-  Release({
-    required this.tag,
-    required this.url,
-    required this.update,
-  });
+  Release(this.version, {this.httpUrl, this.isUpdate = false});
+
+  bool operator <(Release other) => version < other.version;
+
+  factory Release.fromMap(Map<String, dynamic> m) => Release.parse(
+      m['tag_name'],
+      httpUrl: m['html_url'],
+  );
+
+  factory Release.parse(String tagName, {
+    String? httpUrl,
+  }) {
+    return Release(
+      tagName.replaceFirst('v', '').let(Version.parse),
+      httpUrl: httpUrl,
+    );
+  }
+
+  Release asUpdate() => Release(version, httpUrl: httpUrl, isUpdate: true);
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hydit/utils/utils.dart';
 import 'package:niku/namespace.dart' as n;
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -26,7 +27,7 @@ class Settings extends HookWidget {
 
     final keyController = useTextEditingController(text: settings.key);
 
-    final version = useFuture(Version.current());
+    final version = UpdateService.current().let(useFuture);
 
     final saving = useState(false);
 
@@ -114,25 +115,25 @@ class Settings extends HookWidget {
 
   Future<void> checkForUpdates() async {
 
-    final release = await Version
-        .checkForUpdates()
+    final release = await UpdateService
+        .latestRelease()
         .tapFailure(Snack.error)
         .getOrNull();
 
     if (release == null) return;
 
     Snack.snackBar(
-      release.update
+      release.isUpdate
           ? const Icon(Icons.system_update_alt)
           : const Icon(Icons.check),
-      release.update
+      release.isUpdate
           ? 'Update available'
           : 'Up to date',
-      release.update
-          ? 'Version ${release.tag}'
+      release.isUpdate
+          ? 'Version ${release.version}'
           : 'You have the latest version',
       TextButton.icon(
-        onPressed: () => launchUrlString(release.url),
+        onPressed: () => release.httpUrl?.let(launchUrlString),
         label: 'Release'.n,
         icon: const FaIcon(FontAwesomeIcons.github),
       ),
