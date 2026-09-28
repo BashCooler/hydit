@@ -11,20 +11,25 @@ class Task<T> {
 
   const Task(this._run);
 
-  Future<Result<T>> run() => _run();
+  Future<Result<T>> run() async {
+    try {
+      return await _run();
+    } catch (e) {
+      return AppError.from(e).toFailure();
+    }
+  }
 
-  Task<R> map<R>(R Function(T v) f) => _run()
-      .then((r) => r.map(f))
-      .toTask();
+  Task<R> map<R>(R Function(T v) f) => Task(
+    () => _run().then((r) => r.map(f)),
+  );
 
-  Task<R> flatMap<R>(FutureOr<Result<R>> Function(T v) f) => _run()
-      .then((r) => r.flatMap(f))
-      .toTask();
+  Task<R> flatMap<R>(FutureOr<Result<R>> Function(T v) f) => Task(
+    () => _run().then((r) => r.flatMap(f)),
+  );
 }
 
-
-extension FutureResultExtension<T> on FutureOr<Result<T>> {
-  Task<T> toTask() => Task(() async => this);
+extension FutureToTask<T> on Future<T> {
+  Task<T> toTask() => Task(() => run());
 }
 
 
