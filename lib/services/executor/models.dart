@@ -26,6 +26,14 @@ class Task<T> {
   Task<R> flatMap<R>(FutureOr<Result<R>> Function(T v) f) => Task(
     () => _run().then((r) => r.flatMap(f)),
   );
+
+  Task<T> tapSuccess(void Function(T v) f) => Task(
+    () => _run().then((r) => r.tapSuccess(f)),
+  );
+
+  Task<T> tapFailure(void Function(Failure<T> failure) f) => Task(
+    () => _run().then((r) => r.tapFailure(f)),
+  );
 }
 
 extension FutureToTask<T> on Future<T> {

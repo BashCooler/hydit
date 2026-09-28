@@ -1,9 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/services/services.dart';
 import 'package:hydit/utils/errors.dart';
-import 'package:hydit/utils/utils.dart';
+import 'package:hydit/services/services.dart';
 
 
 class Snack {
