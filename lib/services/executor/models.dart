@@ -6,6 +6,28 @@ import 'package:hydit/utils/errors.dart';
 import 'package:hydit/services/executor.dart';
 
 
+class Task<T> {
+  final Future<Result<T>> Function() _run;
+
+  const Task(this._run);
+
+  Future<Result<T>> run() => _run();
+
+  Task<R> map<R>(R Function(T v) f) => _run()
+      .then((r) => r.map(f))
+      .toTask();
+
+  Task<R> flatMap<R>(FutureOr<Result<R>> Function(T v) f) => _run()
+      .then((r) => r.flatMap(f))
+      .toTask();
+}
+
+
+extension FutureResultExtension<T> on FutureOr<Result<T>> {
+  Task<T> toTask() => Task(() async => this);
+}
+
+
 mixin class CancellationToken {
   bool _cancelled = false;
 
