@@ -13,6 +13,7 @@ sealed class AppError implements Exception {
   const AppError();
 
   factory AppError.from(Object e) => switch (e) {
+    AppError() => e,
     DioException() => HydrusConnectionError(e),
     PlatformException() => PlatformError(e),
     _ => UnknownError(e),
