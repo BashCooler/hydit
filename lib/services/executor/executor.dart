@@ -9,15 +9,13 @@ import 'package:hydit/utils/utils.dart';
 import 'models.dart';
 
 
-class Executor {
-  Executor._();
-
-  static Future<Result<T>> run<T>(Future<T> Function() action) async {
+extension SafeExecuteAsync<T> on Future<T> {
+  /// Safely runs an [action], handles [DioException] and
+  /// [PlatformException].
+  Future<Result<T>> run() async {
     try {
-      return Success(await action());
-
+      return Success(await this);
     } catch (e) {
-
       return AppError.from(e).toFailure();
     }
   }
@@ -41,13 +39,6 @@ extension TryOr<T> on T? {
       return or;
     }
   }
-}
-
-
-extension SafeExecuteAsync<T> on Future<T> {
-  /// Safely runs an [action], handles [DioException] and
-  /// [PlatformException].
-  Future<Result<T>> run() => Executor.run(() => this);
 }
 
 
