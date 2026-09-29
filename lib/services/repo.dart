@@ -45,11 +45,10 @@ class Repo {
 
       final ids = chunk.map((f) => f.id).toList();
 
-      final result = await api
-          .getFileMetadata(ids)
-          .run()
+      final result = await api.getFileMetadata(ids).toTask()
           .pick('metadata')
-          .asListOrThrow(Tags.fromPick);
+          .asListOrThrow(Tags.fromPick)
+          .run();
 
       if (result is Failure) return result;
 
@@ -71,9 +70,10 @@ class Repo {
 
     final metadata = await api
         .getFileMetadata([id], onlyReturnBasicInformation: true)
-        .run()
+        .toTask()
         .pick('metadata', 0)
-        .map(FileMetadata.fromPick);
+        .map(FileMetadata.fromPick)
+        .run();
 
     if (metadata is Failure) return metadata;
 

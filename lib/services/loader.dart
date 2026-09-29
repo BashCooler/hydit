@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/services/services.dart';
+import 'package:hydit/reactive/file_store.dart';
 
 
 class Loader {
@@ -69,6 +69,7 @@ class Loader {
     final files = await load(batch)
         .tapFailure(Snack.error)
         .tapFailure(_fail)
+        .run()
         .getOrNull();
 
     if (files == null) return;
@@ -82,12 +83,10 @@ class Loader {
     _loading = false;
   }
 
-  static Future<Result<List<HydrusFile>>> load(List<int> ids, {
+  static Task<List<HydrusFile>> load(List<int> ids, {
     bool clear = false,
   }) {
-    return repo.api
-        .getFileMetadata(ids)
-        .run()
+    return repo.api.getFileMetadata(ids).toTask()
         .pick('metadata')
         .asListOrThrow(HydrusFile.fromPick);
   }
@@ -103,7 +102,8 @@ class Loader {
 
       final files = await load(chunk)
           .tapFailure(Snack.error)
-          .tapFailure(_fail);
+          .tapFailure(_fail)
+          .run();
 
       if (files is Failure) {
         return files;

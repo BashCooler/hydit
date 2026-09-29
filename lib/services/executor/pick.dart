@@ -34,9 +34,9 @@ extension PickExtension on String {
 }
 
 
-extension PickResult on Future<Result<String>> {
+extension PickResult on Result<String> {
 
-  Future<Result<Pick>> pick([
+  Result<Pick> pick([
     Object? arg0,
     Object? arg1,
     Object? arg2,
@@ -67,13 +67,12 @@ extension PickResult on Future<Result<String>> {
 }
 
 
-extension PickAs on Future<Result<Pick>> {
+extension PickAs on Result<Pick> {
 
-  Future<Result<List<T>>> asListOrThrow<T>(
-    T Function(RequiredPick) map, {
+  Result<List<T>> asListOrThrow<T>(T Function(RequiredPick) map, {
     T Function(Pick pick)? whenNull,
-  }) async {
-    final result = await this;
+  }) {
+    final result = this;
 
     if (result is Failure<Pick>) {
       return Failure.from(result);
@@ -85,8 +84,8 @@ extension PickAs on Future<Result<Pick>> {
         .toSuccess();
   }
 
-  Future<Result<Map<K, V>>> asMapOrThrow<K, V>() async {
-    final result = await this;
+  Result<Map<K, V>> asMapOrThrow<K, V>() {
+    final result = this;
 
     if (result is Failure<Pick>) {
       return Failure.from(result);
