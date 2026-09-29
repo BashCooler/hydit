@@ -1,10 +1,5 @@
-import 'dart:convert' hide json;
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-
-import 'package:deep_pick/deep_pick.dart';
-import 'package:deep_pick/deep_pick.dart' as p show pick;
 
 export 'theme.dart';
 export 'url.dart';
@@ -79,37 +74,6 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) => condition
       ? builder(child)
       : child;
-}
-
-
-extension PickExtension on String {
-
-  Pick pick([
-    Object? arg0,
-    Object? arg1,
-    Object? arg2,
-    Object? arg3,
-    Object? arg4,
-    Object? arg5,
-    Object? arg6,
-    Object? arg7,
-    Object? arg8,
-    Object? arg9,
-  ]) {
-    return p.pick(
-      jsonDecode(this),
-      arg0,
-      arg1,
-      arg2,
-      arg3,
-      arg4,
-      arg5,
-      arg6,
-      arg7,
-      arg8,
-      arg9,
-    );
-  }
 }
 
 

@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:deep_pick/deep_pick.dart';
 
-import 'package:hydit/utils/utils.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/services.dart';
 
