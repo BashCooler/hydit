@@ -32,6 +32,10 @@ class Task<T> {
   Task<T> tapFailure(void Function(Failure<T> failure) f) => Task(
     () => _run().then((r) => r.tapFailure(f)),
   );
+
+  Future<T?> getOrNull() => _run().then((r) => r.getOrNull());
+
+  Future<T> getOrThrow() => _run().then((r) => r.getOrThrow());
 }
 
 

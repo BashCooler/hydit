@@ -20,9 +20,8 @@ class UpdateService {
   static Future<Result<Release>> latestRelease() async {
 
     final origin = await Dio().get<Map<String, dynamic>>(apiUrl)
-        .run()
-        .map((r) => r.data!)
-        .map(Release.fromMap)
+        .toTask()
+        .map(Release.fromResponse)
         .getOrNull();
 
     if (origin == null) {
@@ -49,6 +48,9 @@ class Release {
   Release(this.version, {this.httpUrl, this.isUpdate = false});
 
   bool operator <(Release other) => version < other.version;
+
+  factory Release.fromResponse(Response<Map<String, dynamic>> m) =>
+      Release.fromMap(m.data!);
 
   factory Release.fromMap(Map<String, dynamic> m) => Release.parse(
       m['tag_name'],
