@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:hydit/services/services.dart';
 import 'package:hydit/utils/errors.dart';
-import 'package:hydit/utils/utils.dart';
 
 
 class Snack {

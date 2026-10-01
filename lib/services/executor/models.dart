@@ -2,7 +2,6 @@ library;
 
 import 'dart:async';
 
-import 'package:hydit/utils/errors.dart';
 import 'package:hydit/services/executor.dart';
 
 
@@ -139,6 +138,10 @@ extension AsyncOperations<T> on Future<Result<T>> {
 
   Future<Result<R>> map<R>(R Function(T data) f) async {
     return (await this).map(f);
+  }
+
+  Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T v) f) async {
+    return (await this).flatMap((r) => f(r));
   }
 
   Future<Result<T>> tapSuccess(

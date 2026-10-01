@@ -8,7 +8,6 @@ import 'package:hydit/entities/changes.dart';
 import 'package:hydit/entities/service.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
-import 'package:hydit/services/executor.dart';
 import 'package:hydit/features/editor/getx/base.dart';
 
 
@@ -130,15 +129,6 @@ class BatchTagManager extends TagManager {
   @override
   bool get unlocked =>
       super.unlocked && _added.values.expand((s) => s).isEmpty;
-
-  @override
-  Future<Result<void>> save() async {
-    final result = await repo.apply(files.ids, summarize());
-
-    if (result is Failure) return result;
-
-    return repo.update(files.toList());
-  }
 
   @override
   List<TagChanges> summarize() {

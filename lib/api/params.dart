@@ -48,7 +48,7 @@ class AddTagsParams {
   final List<int> ids;
   final List<TagChanges> changes;
 
-  AddTagsParams({required this.ids, required this.changes});
+  AddTagsParams(this.ids, this.changes);
 
   Map<String, dynamic> toMap() {
     return {

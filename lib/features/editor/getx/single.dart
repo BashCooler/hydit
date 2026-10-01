@@ -1,4 +1,3 @@
-import 'package:hydit/services/executor.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/service.dart';
 import 'package:hydit/reactive/file.dart';
@@ -45,15 +44,5 @@ class PagedTagManager extends TagManager {
     assign(tags);
 
     this.service = service;
-  }
-
-  @override
-  Future<Result<void>> save() async {
-    final result = await repo
-        .apply([file.id], summarize());
-
-    if (result is Failure) return result;
-
-    return await file.update();
   }
 }

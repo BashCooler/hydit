@@ -3,12 +3,10 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 import 'package:hydit/api/api.dart';
-import 'package:hydit/api/params.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/cache.dart';
 import 'package:hydit/entities/tags.dart';
-import 'package:hydit/entities/changes.dart';
 import 'package:hydit/entities/metadata.dart';
 import 'package:hydit/services/services.dart';
 
@@ -30,11 +28,6 @@ class Repo {
       "${api.url}/get_files/render"
       "?file_id=$id"
       "&Hydrus-Client-API-Access-Key=${api.key}";
-
-  Future<Result<void>> apply(List<int> ids, List<TagChanges> changes) {
-    final params = AddTagsParams(ids: ids, changes: changes);
-    return api.postAddTags(params).run();
-  }
 
   Future<Result<void>> update(List<HydrusFile> files) async {
 

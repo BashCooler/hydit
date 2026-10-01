@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import 'package:hydit/api/params.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/changes.dart';
 import 'package:hydit/entities/service.dart';
@@ -101,10 +102,6 @@ abstract class TagManager {
     return true;
   }
 
-  /// Send changes to Hydrus and update local files
-  /// metadata.
-  Future<Result<void>> save();
-
   /// Generate [TagChanges]s.
   List<TagChanges> summarize() {
     final changes = <TagChanges>[];
@@ -143,4 +140,11 @@ abstract class TagManager {
 
     return (add: add, del: del);
   }
+
+  /// Send changes to Hydrus and update local files
+  /// metadata.
+  Future<Result<void>> save() => repo.api
+      .postAddTags(AddTagsParams(files.ids, summarize()))
+      .run()
+      .flatMap((_) => repo.update(files));
 }
