@@ -95,3 +95,8 @@ class HydrusFile {
         .tapSuccess((_) => inbox.value = true),
   };
 }
+
+
+extension Ids on Iterable<HydrusFile> {
+  List<int> get ids => map((f) => f.id).toList();
+}

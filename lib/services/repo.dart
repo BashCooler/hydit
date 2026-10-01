@@ -43,9 +43,8 @@ class Repo {
 
     for (final chunk in files.chunked(20)) {
 
-      final ids = chunk.map((f) => f.id).toList();
-
-      final result = await api.getFileMetadata(ids).toTask()
+      final result = await api.getFileMetadata(chunk.ids)
+          .toTask()
           .pick('metadata')
           .asListOrThrow(Tags.fromPick)
           .run();

@@ -133,8 +133,7 @@ class BatchTagManager extends TagManager {
 
   @override
   Future<Result<void>> save() async {
-    final result = await repo
-        .apply(files.map((f) => f.id), summarize());
+    final result = await repo.apply(files.ids, summarize());
 
     if (result is Failure) return result;
 
