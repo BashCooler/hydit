@@ -13,6 +13,7 @@ import 'package:hydit/features/editor/getx/base.dart';
 
 
 class BatchTagManager extends TagManager {
+  @override
   final List<HydrusFile> files;
 
   BatchTagManager(FileStore store) : files = .unmodifiable(store.files) {
@@ -21,9 +22,6 @@ class BatchTagManager extends TagManager {
 
   final _added = <String, RxSet<Tag>>{};
   Set<Tag> get added => _added[service]!;
-
-  @override
-  int get fileCount => files.length;
 
   /// Service name -> tag -> count.
   final _counts = <String, Map<Tag, int>>{};
@@ -128,11 +126,6 @@ class BatchTagManager extends TagManager {
       serviceCounts[tag] = (serviceCounts[tag] ?? 0) + 1;
     }
   }
-
-  @override
-  List<HydrusFile> take([int count = 4]) => files
-      .take(count)
-      .toList();
 
   @override
   bool get unlocked =>

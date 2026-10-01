@@ -14,10 +14,10 @@ class PagedTagManager extends TagManager {
     init(service);
   }
 
-  HydrusFile get file => page.current;
-
   @override
-  int get fileCount => 1;
+  List<HydrusFile> get files => [page.current];
+
+  HydrusFile get file => page.current;
 
   @override
   Map<String, TagService> get original => file.tags.value.storage;
@@ -56,7 +56,4 @@ class PagedTagManager extends TagManager {
 
     return await file.update();
   }
-
-  @override
-  List<HydrusFile> take([int count = 4]) => [file];
 }

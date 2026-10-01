@@ -49,7 +49,8 @@ class Info extends StatelessWidget {
   const Info({super.key, required this.tag});
 
   TagManager get manager => Get.find(tag: tag);
-  int get count => manager.fileCount;
+
+  int get count => manager.files.length;
 
   @override
   Widget build(BuildContext context) {
