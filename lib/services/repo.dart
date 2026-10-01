@@ -31,10 +31,7 @@ class Repo {
       "?file_id=$id"
       "&Hydrus-Client-API-Access-Key=${api.key}";
 
-  Future<Result<void>> apply(
-    Iterable<int> ids,
-    List<TagChanges> changes,
-  ) {
+  Future<Result<void>> apply(List<int> ids, List<TagChanges> changes) {
     final params = AddTagsParams(ids: ids, changes: changes);
     return api.postAddTags(params).run();
   }

@@ -45,18 +45,14 @@ class SearchFilesParams {
 
 
 class AddTagsParams {
-  final List<int> fileIds;
+  final List<int> ids;
   final List<TagChanges> changes;
 
-  AddTagsParams({
-    required Iterable<int> ids,
-    required this.changes,
-  })
-      : fileIds = ids.toList();
+  AddTagsParams({required this.ids, required this.changes});
 
   Map<String, dynamic> toMap() {
     return {
-      'file_ids': fileIds,
+      'file_ids': ids,
       'service_keys_to_actions_to_tags': {
         for (final change in changes)
           if (change.isNotEmpty)
