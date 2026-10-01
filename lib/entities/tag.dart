@@ -7,23 +7,21 @@ import 'package:hydit/utils/utils.dart';
 
 class Tag extends Equatable {
   final String raw;
-  final String? namespace;
-  final String value;
-  final String pretty;
   final int count;
 
+  late final int idx = raw.indexOf(':');
+
+  late final String value = idx
+      .let((it) => it == -1 ? raw : raw.substring(it + 1));
+
+  late final String? namespace = idx
+      .let((it) => it == -1 ? null : raw.substring(0, it));
+
+  late final String pretty = raw.replaceFirst(_pattern, '').trim();
+
+  Tag(this.raw, {this.count = 0});
+
   Color get color => colorOf(namespace);
-
-  Tag(this.raw, {this.count = 0})
-      : namespace = _namespace(raw),
-        value = _value(raw),
-        pretty = _pretty(raw);
-
-  Tag.parse(this.raw)
-      : count = 0,
-        namespace = _namespace(raw),
-        value = _value(raw),
-        pretty = _pretty(raw);
 
   /// The [map] parameter should be extracted from `search_tags`
   /// response like so:
@@ -42,18 +40,6 @@ class Tag extends Equatable {
     return Tag.fromMap(map);
   }
 
-  String? get ns => namespace;
-
-  static String? _namespace(String raw) {
-    final idx = raw.indexOf(':');
-    return idx == -1 ? null : raw.substring(0 , idx);
-  }
-
-  static String _value(String raw) {
-    final idx = raw.indexOf(':');
-    return idx == -1 ? raw : raw.substring(idx + 1);
-  }
-
   static const Set<String> namespaces = {
     'system',
     'creator',
@@ -63,36 +49,21 @@ class Tag extends Equatable {
     'studio',
   };
 
-  static String _pretty(String raw) {
-    final pattern = RegExp('^(${namespaces.join('|')}):');
-    return raw.replaceFirst(pattern, '').trim();
-  }
+  static final _pattern = RegExp('^(${namespaces.join('|')}):');
 
   @override
   String toString() => raw;
 
   @override
   List<Object?> get props => [raw];
+
+  static void toClipboard(Tag t) =>
+      Clipboard.setData(ClipboardData(text: t.raw));
 }
 
 
-void copyTag(Tag tag) {
-  Clipboard.setData(ClipboardData(text: tag.raw));
-}
-
-
-extension IterableOperations on Iterable<Tag> {
+extension IterableTagExtension on Iterable<Tag> {
   List<String> rawList() => map((t) => t.raw).toList();
-}
-
-
-extension ToTags on List<String> {
-  Iterable<Tag> toTags() => map((t) => Tag(t));
-}
-
-
-extension Sorting on Iterable<Tag> {
-  TagSortBuilder sortBuilder() => TagSortBuilder(this);
 }
 
 
@@ -113,8 +84,8 @@ class TagSortBuilder {
   /// without namespace
   TagSortBuilder namespace() {
     _comparators.add((a, b) {
-      final aNs = a.ns != null;
-      final bNs = b.ns != null;
+      final aNs = a.namespace != null;
+      final bNs = b.namespace != null;
 
       if (aNs && !bNs) return -1;
       if (!aNs && bNs) return 1;

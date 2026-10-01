@@ -70,7 +70,7 @@ class QueryController extends GetxController {
     final query = box.get('query') as List<String>?;
     if (query == null || query.isEmpty) return;
 
-    _tags.assignAll(query.toTags());
+    _tags.assignAll(query.map(Tag.new));
     search();
   }
 

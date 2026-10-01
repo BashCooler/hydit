@@ -59,7 +59,7 @@ class Tags {
 
       final storage = pick(map, tagType, '0')
           .asListOrEmpty<String>((t) => t.asStringOrThrow())
-          .map(Tag.parse);
+          .map(Tag.new);
 
       final set = TagSortBuilder(storage)
           .namespace()

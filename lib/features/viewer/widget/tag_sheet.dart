@@ -82,7 +82,7 @@ class TagSheet extends HookWidget {
                 itemBuilder: (context, tag) {
                   return TagTile(
                     tag: tag,
-                    onTap: copyTag,
+                    onTap: Tag.toClipboard,
                   );
                 },
               );

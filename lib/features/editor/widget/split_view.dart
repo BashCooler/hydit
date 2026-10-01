@@ -47,7 +47,7 @@ class Up extends HookWidget {
             return TagTile(
               tag: tag,
               onTap: manager.editable ? manager.remove : null,
-              onLongPress: copyTag,
+              onLongPress: Tag.toClipboard,
               background: background(state),
               trailing: Row(
                 mainAxisSize: .min,
@@ -94,7 +94,7 @@ class Down extends HookWidget {
           return TagTile(
             tag: tag,
             onTap: manager.add,
-            onLongPress: copyTag,
+            onLongPress: Tag.toClipboard,
             trailing: const Icon(Icons.add),
           );
         },

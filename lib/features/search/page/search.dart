@@ -75,7 +75,7 @@ class Search extends HookWidget {
                           search.clear();
                           query.add(tag.raw);
                         },
-                        onLongPress: copyTag,
+                        onLongPress: Tag.toClipboard,
                       );
                     },
                   ),
