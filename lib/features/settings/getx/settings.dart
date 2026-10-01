@@ -16,10 +16,12 @@ enum Protocol {
 }
 
 
-class SettingsController {
+class SettingsController extends GetxController {
   Protocol protocol = Protocol.http;
 
   final urlController = TextEditingController();
+
+  late final keyController = TextEditingController(text: key);
 
   String host = '127.0.0.1:45869';
   String key = '';
@@ -28,9 +30,16 @@ class SettingsController {
     load();
   }
 
-  Repo repo = Get.find();
+  Repo get repo => Get.find();
 
   Storage get box => Get.find<Storage>();
+
+  @override
+  void onClose() {
+    urlController.dispose();
+    keyController.dispose();
+    super.onClose();
+  }
 
   String buildUrl() => '${protocol.scheme}$host';
 

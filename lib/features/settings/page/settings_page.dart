@@ -25,13 +25,7 @@ class Settings extends HookWidget {
 
     final settings = useMemoized(() => SettingsController());
 
-    final keyController = useTextEditingController(text: settings.key);
-
-    final version = UpdateService.current().let(useFuture);
-
     final saving = useState(false);
-
-    final checking = useState(false);
 
     return SwipeableScaffold(
       appBar: AppBar(
@@ -78,7 +72,7 @@ class Settings extends HookWidget {
               label: 'API Key',
               onChanged: (key) => settings.key = key,
               enabled: !saving.value,
-              controller: keyController,
+              controller: settings.keyController,
             ),
 
             ListTile(
@@ -95,25 +89,19 @@ class Settings extends HookWidget {
                   .tapFailure(Snack.error),
             ),
 
-            ListTile(
-              enabled: !checking.value,
-              leading: const Padding(
-                padding: .all(8),
-                child: FaIcon(FontAwesomeIcons.github, size: 32),
-              ),
-              title: version.hasData
-                  ? 'v${version.data}'.n
-                  : Skeletonizer(child: 'v.0.0.0'.n),
-              subtitle: 'Check for updates'.n,
-              onTap: () => checkForUpdates().loading(checking),
-            ),
+            const VersionTile(),
           ],
         ),
       ),
     );
   }
+}
 
-  Future<void> checkForUpdates() async {
+
+class VersionTile extends HookWidget {
+  const VersionTile({super.key});
+
+  static Future<void> checkForUpdates() async {
 
     final release = await UpdateService
         .latestRelease()
@@ -134,9 +122,30 @@ class Settings extends HookWidget {
           : 'You have the latest version',
       TextButton.icon(
         onPressed: () => release.httpUrl?.let(launchUrlString),
-        label: 'Release'.n,
+        label: const Text('Release'),
         icon: const FaIcon(FontAwesomeIcons.github),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    final version = UpdateService.current().let(useFuture);
+
+    final checking = useState(false);
+
+    return ListTile(
+      enabled: !checking.value,
+      leading: const Padding(
+        padding: .all(8),
+        child: FaIcon(FontAwesomeIcons.github, size: 32),
+      ),
+      title: version.hasData
+          ? 'v${version.data}'.n
+          : Skeletonizer(child: 'v.0.0.0'.n),
+      subtitle: 'Check for updates'.n,
+      onTap: () => checkForUpdates().loading(checking),
     );
   }
 }
