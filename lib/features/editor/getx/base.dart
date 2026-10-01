@@ -20,6 +20,9 @@ abstract class TagManager {
   Set<Tag> get initial => _initial[_service.value]!;
   Set<Tag> get current => _current[_service.value]!;
 
+  /// Files in this [TagManager].
+  List<HydrusFile> get files;
+
   /// Use this to access fields like key, editable etc.
   Map<String, TagService> get original;
 
@@ -48,8 +51,6 @@ abstract class TagManager {
   }
 
   Iterable<String> get services => _initial.keys;
-
-  int get fileCount;
 
   void add(Tag tag) {
     if (!editable) return;
@@ -87,9 +88,6 @@ abstract class TagManager {
   bool equal(Set<Tag> a, Set<Tag> b) {
     return a.length == b.length && a.difference(b).isEmpty;
   }
-
-  /// Take from 0 to [count] files from [TagManager].
-  List<HydrusFile> take([int count = 4]);
 
   /// No changes, editor can be safely closed.
   bool get unlocked {

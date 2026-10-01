@@ -53,7 +53,7 @@ class Up extends HookWidget {
                 mainAxisSize: .min,
                 spacing: 20,
                 children: [
-                  if (manager.fileCount > 1)
+                  if (manager.files.length > 1)
                     TagCount(
                       tag: tag,
                       count: manager.count(tag),

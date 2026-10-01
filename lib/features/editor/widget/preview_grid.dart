@@ -13,7 +13,6 @@ import 'package:hydit/widgets/common/images.dart';
 
 import '../getx/base.dart';
 import '../getx/batch.dart';
-import '../getx/single.dart';
 
 
 class PreviewGrid extends StatelessWidget {
@@ -61,15 +60,13 @@ class PreviewGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final files = manager.take(4);
+    final files = manager.files.take(4).toList();
     final length = files.length;
 
     if (length == 1) {
 
       return Obx(() {
-        final manager = this.manager as PagedTagManager;
-
-        final file = manager.file;
+        final file = manager.files.first;
 
         return GestureDetector(
           onTap: () => openPreview(file),
@@ -92,7 +89,7 @@ class PreviewGrid extends StatelessWidget {
           Thumbnail(files.first.thumbnailUrl),
           length > 1 ? Thumbnail(files[1].thumbnailUrl) : placeholder,
           length > 2 ? Thumbnail(files[2].thumbnailUrl) : placeholder,
-          length > 3 ? count(manager.fileCount - 3) : placeholder,
+          length > 3 ? count(manager.files.length - 3) : placeholder,
         ],
       ),
     );
