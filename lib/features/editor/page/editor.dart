@@ -87,9 +87,7 @@ class Editor extends StatelessWidget {
         },
         child: const Text('Discard'),
       ),
-      onApply: () => manager
-          .save()
-          .tapFailure(Snack.error),
+      onApply: () => manager.save().tapFailure(Snack.error).run(),
     );
 
     return token.completed;
