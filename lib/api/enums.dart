@@ -45,7 +45,7 @@ enum TagDisplayType {
 
   @override
   String toString() => switch (this) {
-    TagDisplayType.storage => 'storage',
-    TagDisplayType.display => 'display',
+    .storage => 'storage_tags',
+    .display => 'display_tags',
   };
 }

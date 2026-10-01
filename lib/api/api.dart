@@ -113,7 +113,10 @@ class HydrusApi with DioClient {
         '/add_tags/search_tags',
         params: {
           'search': tag,
-          'tag_display_type': tagDisplayType.toString(),
+          'tag_display_type': switch (tagDisplayType) {
+            .storage => 'storage',
+            .display => 'display',
+          },
         },
       );
 

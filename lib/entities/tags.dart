@@ -1,7 +1,7 @@
 import 'package:deep_pick/deep_pick.dart';
-import 'package:hydit/api/enums.dart';
 
-import 'package:hydit/entities/tag.dart';
+import 'package:hydit/api/enums.dart';
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/entities/service.dart';
 
 
@@ -20,17 +20,15 @@ class Tags {
   ///
   /// `json -> metadata -> 0` (or other index)
   factory Tags.fromMap(Map<String, dynamic> map) {
+    final tags = map['tags'] as Map<String, dynamic>;
 
-    final storage = parseTags(map, type: .storage);
-
-    final display = parseTags(map, type: .display);
-
-    final all = display['all known tags']!;
+    final storage = parseTags(tags, type: .storage);
+    final display = parseTags(tags, type: .display);
 
     return Tags(
       storage,
       display,
-      buildNamespaceIndex(all),
+      display['all known tags']!.let(buildNamespaceIndex),
     );
   }
 
@@ -44,42 +42,13 @@ class Tags {
     return Tags.fromMap(map);
   }
 
-  // MARK: FACTORY METHODS
-
-  static Map<String, TagService> parseTags(Map<String, dynamic> metadataEntry, {
+  static Map<String, TagService> parseTags(Map<String, dynamic> tags, {
     required TagDisplayType type,
   }) {
-    final Map<String, TagService> result = {};
-
-    final tagType = type == .storage ? 'storage_tags' : 'display_tags';
-
-    final tags = metadataEntry['tags'] as Map<String, dynamic>;
-
-    for (final MapEntry(:key, value: map) in tags.entries) {
-
-      final storage = pick(map, tagType, '0')
-          .asListOrEmpty<String>((t) => t.asStringOrThrow())
-          .map(Tag.new);
-
-      final set = TagSortBuilder(storage)
-          .namespace()
-          .alphabetical()
-          .sort()
-          .toSet();
-
-      final name = map['name'];
-
-      final service = TagService(
-        name: name,
-        key: key,
-        type: map['type'],
-        initial: set,
-      );
-
-      result[name] = service;
-    }
-
-    return result;
+    return {
+      for (final entry in tags.entries)
+        entry.value['name']: TagService.fromMapEntry(entry, type: type),
+    };
   }
 
   static Map<String, List<String>> buildNamespaceIndex(TagService all) {
