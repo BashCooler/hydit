@@ -36,10 +36,6 @@ class PreviewGrid extends StatelessWidget {
   void previewGallery() {
     final manager = this.manager as BatchTagManager;
 
-    final ids = manager.files
-        .map((file) => file.id)
-        .toList();
-
     final tag = 'Gallery'.unique();
 
     Get.to(
@@ -52,7 +48,7 @@ class PreviewGrid extends StatelessWidget {
       opaque: false,
       binding: GalleryBindings(
         tag: tag,
-        ids: ids,
+        ids: manager.files.ids,
         search: false,
       ),
     );

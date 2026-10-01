@@ -42,7 +42,7 @@ class FileStore extends GetxController {
     bool clear = false,
   }) {
 
-    final ids = files.map((file) => file.id);
+    final ids = files.ids;
 
     final map = Map<int, HydrusFile>.fromIterable(
       files,
