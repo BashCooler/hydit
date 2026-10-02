@@ -9,33 +9,29 @@ import 'package:hydit/services/services.dart';
 import 'file_store.dart';
 
 
-class HydrusFile {
-  final FileMetadata meta;
-
-  final Rx<Tags> tags;
-
-  final Rx<bool> inbox;
-
-  HydrusFile(this.meta, this.tags, this.inbox);
-
+class HydrusFile._(
+  final FileMetadata meta,
+  final Rx<Tags> tags,
+  final Rx<bool> inbox,
+) {
   /// The [map] parameter should be extracted from `file_metadata`
   /// response like so:
   ///
   /// `json -> metadata -> 0` (or other index)
-  factory HydrusFile.fromMap(Map<String, dynamic> map) {
+  factory fromMap(Map<String, dynamic> map) {
 
     final meta = FileMetadata.fromMap(map);
     final tags = Tags.fromMap(map);
     final inbox = pick(map, 'is_inbox').asBoolOrThrow();
 
-    return HydrusFile(meta, tags.obs, inbox.obs);
+    return HydrusFile._(meta, tags.obs, inbox.obs);
   }
 
   /// The [pick] parameter should be extracted from `file_metadata`
   /// response like so:
   ///
   /// `pick(json, 'metadata', 0)` (or other index)
-  factory HydrusFile.fromPick(Pick pick) {
+  factory fromPick(Pick pick) {
     final map = pick.asMapOrThrow<String, dynamic>();
 
     return HydrusFile.fromMap(map);
@@ -58,8 +54,6 @@ class HydrusFile {
 
   @override
   String toString() => 'HydrusFile ${meta.id}';
-
-  Future<Result<void>> update() => repo.update([this]);
 
   final _removed = false.obs;
 

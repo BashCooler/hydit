@@ -6,15 +6,13 @@ import 'package:hydit/reactive/file.dart';
 
 class FileStore extends GetxController {
   /// Ids of all files in this store, loaded and not.
-  final RxList<int> ids;
+  final ids = <int>[].obs;
 
   /// Loaded file ids.
-  final RxList<int> loaded;
+  final loaded = <int>[].obs;
 
   /// The number of loaded files.
   int get length => loaded.length;
-
-  FileStore(Iterable<int> ids) : ids = .of(ids), loaded = .of(ids);
 
   FileCache get cache => Get.find();
 
@@ -41,7 +39,6 @@ class FileStore extends GetxController {
   void commit(Iterable<HydrusFile> files, {
     bool clear = false,
   }) {
-
     final ids = files.ids;
 
     final map = Map<int, HydrusFile>.fromIterable(
