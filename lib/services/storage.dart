@@ -1,14 +1,14 @@
 import 'package:hive_ce_flutter/adapters.dart';
 
 
-abstract class Storage {
+abstract class const Storage() {
   T? get<T>(String key);
 
   void put<T>(String key, T value);
 }
 
 
-class HiveStorage extends Storage {
+class const HiveStorage() extends Storage {
 
   static Future<void> init() async {
     await Hive.initFlutter();

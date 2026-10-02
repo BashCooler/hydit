@@ -7,8 +7,7 @@ import 'package:hydit/utils/errors.dart';
 import 'package:hydit/services/executor.dart';
 
 
-class UpdateService {
-  const UpdateService._();
+class const UpdateService._() {
 
   static const apiUrl =
       'https://api.github.com/repos/BashCooler/hydit/releases/latest';
@@ -17,6 +16,7 @@ class UpdateService {
   static Future<String> current() =>
       PackageInfo.fromPlatform().then((i) => i.version);
 
+  /// Latest version of Hydit from GitHub.
   static Future<Result<Release>> latestRelease() async {
 
     final origin = await Dio().get<Map<String, dynamic>>(apiUrl)
@@ -40,24 +40,21 @@ class UpdateService {
 }
 
 
-class Release {
-  final Version version;
-  final String? httpUrl;
-  final bool isUpdate;
-
-  Release(this.version, {this.httpUrl, this.isUpdate = false});
-
+class const Release(final Version version, {
+  final String? httpUrl,
+  final bool isUpdate = false,
+}) {
   bool operator <(Release other) => version < other.version;
 
-  factory Release.fromResponse(Response<Map<String, dynamic>> m) =>
+  factory fromResponse(Response<Map<String, dynamic>> m) =>
       Release.fromMap(m.data!);
 
-  factory Release.fromMap(Map<String, dynamic> m) => Release.parse(
+  factory fromMap(Map<String, dynamic> m) => Release.parse(
       m['tag_name'],
       httpUrl: m['html_url'],
   );
 
-  factory Release.parse(String tagName, {
+  factory parse(String tagName, {
     String? httpUrl,
   }) {
     return Release(

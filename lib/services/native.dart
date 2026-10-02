@@ -2,8 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:hydit/services/executor.dart';
 
 
-class Native {
-  Native._();
+class const Native._() {
 
   static const _channel = MethodChannel("com.bashcooler.hydit/native");
 

@@ -11,10 +11,10 @@ import 'package:hydit/entities/metadata.dart';
 import 'package:hydit/services/services.dart';
 
 
-class Repo {
+class Repo() {
   final HydrusApi api;
 
-  Repo() : api = HydrusApi.load();
+  this : api = HydrusApi.load();
 
   FileCache get cache => Get.find();
 

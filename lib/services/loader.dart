@@ -9,14 +9,9 @@ import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/services/services.dart';
 
 
-class Loader {
-  final String tag;
+class Loader({required final String tag, final int chunkSize = 20}) {
 
   FileStore get store => Get.find(tag: tag);
-
-  static const int chunkSize = 20;
-
-  Loader({required this.tag});
 
   static Repo get repo => Get.find();
 

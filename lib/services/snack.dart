@@ -5,8 +5,7 @@ import 'package:hydit/services/services.dart';
 import 'package:hydit/utils/errors.dart';
 
 
-class Snack {
-  Snack._();
+class const Snack._() {
 
   static void success(String title, String message) {
     snackBar(const Icon(Icons.check), title, message);
