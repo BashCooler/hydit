@@ -4,12 +4,14 @@ import 'package:hydit/reactive/cache.dart';
 import 'package:hydit/reactive/file.dart';
 
 
-class FileStore extends GetxController {
+class FileStore(List<int> ids) extends GetxController {
+  this: ids = ids.obs, loaded = ids.obs;
+
   /// Ids of all files in this store, loaded and not.
-  final ids = <int>[].obs;
+  final RxList<int> ids;
 
   /// Loaded file ids.
-  final loaded = <int>[].obs;
+  final RxList<int> loaded;
 
   /// The number of loaded files.
   int get length => loaded.length;
