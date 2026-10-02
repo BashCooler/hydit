@@ -8,10 +8,9 @@ import 'package:deep_pick/deep_pick.dart';
 import 'package:hydit/services/executor.dart';
 
 
-sealed class AppError implements Exception {
-  const AppError();
+sealed class const AppError() implements Exception {
 
-  factory AppError.from(Object e) => switch (e) {
+  factory from(Object e) => switch (e) {
     AppError() => e,
     DioException() => HydrusConnectionError(e),
     PlatformException() => PlatformError(e),
@@ -39,11 +38,7 @@ enum UrlErrorCode {
 }
 
 
-final class UrlError extends AppError {
-  final UrlErrorCode code;
-
-  const UrlError(this.code);
-
+final class const UrlError(final UrlErrorCode code) extends AppError {
   @override
   String get title => switch (code) {
     .pathNotEmpty => 'Unsupported',
@@ -61,10 +56,7 @@ final class UrlError extends AppError {
 }
 
 
-final class HydrusConnectionError extends AppError {
-  final DioException e;
-
-  const HydrusConnectionError(this.e);
+final class const HydrusConnectionError(final DioException e) extends AppError {
 
   String? get response => e.response?.data;
 
@@ -109,11 +101,7 @@ extension Format on String {
 }
 
 
-final class PlatformError extends AppError {
-  final PlatformException e;
-
-  const PlatformError(this.e);
-
+final class const PlatformError(final PlatformException e) extends AppError {
   @override
   String get message => 'Platform error';
 
@@ -122,11 +110,7 @@ final class PlatformError extends AppError {
 }
 
 
-final class UnknownError extends AppError {
-  final Object e;
-
-  const UnknownError(this.e);
-
+final class const UnknownError(final Object e) extends AppError {
   @override
   String get title => 'Unknown error';
 
@@ -135,12 +119,10 @@ final class UnknownError extends AppError {
 }
 
 
-final class CustomError extends AppError {
+final class const CustomError(this.title, this.message) extends AppError {
   @override
   final String title;
 
   @override
   final String message;
-
-  CustomError(this.title, this.message);
 }

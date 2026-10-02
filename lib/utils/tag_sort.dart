@@ -1,12 +1,9 @@
 import 'package:hydit/entities/tag.dart';
 
 
-class TagSortBuilder {
-  final Iterable<Tag> _tags;
+class TagSortBuilder(final Iterable<Tag> _tags) {
 
   final List<Comparator<Tag>> _comparators = [];
-
-  TagSortBuilder(this._tags);
 
   /// Sort tags in alphabetical order
   TagSortBuilder alphabetical() {
