@@ -131,13 +131,13 @@ class BatchTagManager extends TagManager {
       super.unlocked && _added.values.expand((s) => s).isEmpty;
 
   @override
-  List<TagChanges> summarize() {
+  List<Changes> summarize() {
     final changes = super.summarize();
 
     for (final MapEntry(key: name, value: tagsToAdd) in _added.entries) {
       if (tagsToAdd.isEmpty) continue;
 
-      final change = TagChanges(
+      final change = Changes(
         key: original[name]!.key,
         added: tagsToAdd,
         deleted: {},

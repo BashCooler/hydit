@@ -1,17 +1,11 @@
 import 'package:hydit/entities/tag.dart';
 
 
-class TagChanges {
-  final String key;
-  final Set<Tag> _added;
-  final Set<Tag> _deleted;
-
-  TagChanges({
-    required this.key,
-    required this._added,
-    required this._deleted,
-  });
-
+class const Changes({
+  required final String key,
+  required final Set<Tag> _added,
+  required final Set<Tag> _deleted,
+}) {
   bool get isNotEmpty => _added.isNotEmpty || _deleted.isNotEmpty;
 
   Map<String, List<String>> get value => {

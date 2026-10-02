@@ -18,7 +18,7 @@ class const SearchFilesParams({
 
 class const AddTagsParams(
   final List<int> ids, //
-  final List<TagChanges> changes,
+  final List<Changes> changes,
 ) {
   Map<String, dynamic> toMap() => {
     'file_ids': ids,

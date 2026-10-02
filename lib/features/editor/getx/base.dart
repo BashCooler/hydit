@@ -102,9 +102,9 @@ abstract class TagManager {
     return true;
   }
 
-  /// Generate [TagChanges]s.
-  List<TagChanges> summarize() {
-    final changes = <TagChanges>[];
+  /// Generate [Changes]s.
+  List<Changes> summarize() {
+    final changes = <Changes>[];
 
     for (final MapEntry(key: name, value: service) in _initial.entries) {
       final current = _current[name]!;
@@ -114,7 +114,7 @@ abstract class TagManager {
 
       if (add.isEmpty && del.isEmpty) continue;
 
-      final diff = TagChanges(
+      final diff = Changes(
         key: original[name]!.key,
         added: add,
         deleted: del,
