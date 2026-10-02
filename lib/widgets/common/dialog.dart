@@ -7,26 +7,16 @@ import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/executor.dart';
 
 
-class LoadingDialog extends HookWidget {
-  final Widget? icon;
-  final Widget title;
-  final Widget loadingTitle;
-  final Widget? content;
-  final Widget applyText;
-  final Widget? discardButton;
-  final Future<Result<void>> Function() onApply;
-  final CompletionToken? token;
-
-  const LoadingDialog._({
-    this.icon,
-    this.content,
-    required this.title,
-    required this.loadingTitle,
-    this.applyText = const Text('Confirm'),
-    this.discardButton,
-    required this.onApply,
-    this.token,
-  });
+class const LoadingDialog._({
+  final Widget? icon,
+  final Widget? content,
+  required final Widget title,
+  required final Widget loadingTitle,
+  final Widget applyText = const Text('Confirm'),
+  final Widget? discardButton,
+  required final Future<Result<void>> Function() onApply,
+  final CompletionToken? token,
+}) extends HookWidget {
 
   /// Show a loading dialog.
   ///
@@ -101,18 +91,12 @@ class LoadingDialog extends HookWidget {
 }
 
 
-class ProgressDialog extends HookWidget {
-  final Widget? title;
-  final CancellationToken token;
-  final int full;
-  final int Function() progress;
-
-  const ProgressDialog._({
-    this.title,
-    required this.token,
-    required this.full,
-    required this.progress,
-  });
+class const ProgressDialog ._({
+  final Widget? title,
+  required final CancellationToken token,
+  required final int full,
+  required final int Function() progress,
+}) extends HookWidget {
 
   static Future<void> show({
     Widget? title,
