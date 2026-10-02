@@ -11,11 +11,9 @@ class Tag extends Equatable {
 
   late final int idx = raw.indexOf(':');
 
-  late final String value = idx
-      .let((it) => it == -1 ? raw : raw.substring(it + 1));
+  late final String value = idx == -1 ? raw : raw.substring(idx + 1);
 
-  late final String? namespace = idx
-      .let((it) => it == -1 ? null : raw.substring(0, it));
+  late final String? namespace = idx == -1 ? null : raw.substring(0, idx);
 
   late final String pretty = raw.replaceFirst(_pattern, '').trim();
 
