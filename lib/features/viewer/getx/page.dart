@@ -11,14 +11,17 @@ import 'package:hydit/services/services.dart';
 import 'package:hydit/widgets/common/dialog.dart';
 
 
-class PageGetxController extends GetxController {
-  final GridObserverController? grid;
+class PageGetxController({
+  required final FileStore files,
+  required int initial,
+  final GridObserverController? grid,
+}) extends GetxController {
+
   final PreloadPageController controller;
 
   final RxInt index;
-  final FileStore files;
 
-  PageGetxController({required this.files, required int initial, this.grid})
+  this
       : index = initial.obs,
         controller = PreloadPageController(initialPage: initial);
 

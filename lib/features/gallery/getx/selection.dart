@@ -13,18 +13,16 @@ import 'package:hydit/features/viewer/getx/page.dart';
 import 'gallery.dart';
 
 
-class SelectionController extends GetxController {
+class SelectionController({required final String tag}) {
   final ids = <int>{}.obs;
 
-  final String tag;
-
   Loader get loader => Get.find(tag: tag);
+
   FileStore get files => Get.find(tag: tag);
+
   GalleryController get gallery => Get.find(tag: tag);
 
-  SelectionController({required this.tag});
-
-  Repo repo = Get.find();
+  Repo get repo => Get.find();
 
   // MARK: SELECTION
 

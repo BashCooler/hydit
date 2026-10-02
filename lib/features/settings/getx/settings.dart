@@ -16,7 +16,7 @@ enum Protocol {
 }
 
 
-class SettingsController extends GetxController {
+class SettingsController() extends GetxController {
   Protocol protocol = Protocol.http;
 
   final urlController = TextEditingController();
@@ -26,7 +26,7 @@ class SettingsController extends GetxController {
   String host = '127.0.0.1:45869';
   String key = '';
 
-  SettingsController() {
+  this {
     load();
   }
 

@@ -8,15 +8,16 @@ import 'package:hydit/services/services.dart';
 
 class TagSearchController extends GetxController {
   final suggests = <Tag>[].obs;
+
   final _suggestVisible = false.obs;
 
-  final Repo repo = Get.find();
   final controller = TextEditingController();
 
   bool get suggestsVisible => _suggestVisible.value;
 
+  Repo get repo => Get.find();
+
   String get text => controller.text;
-  TextEditingController get $ => controller;
 
   @override
   void onClose() {

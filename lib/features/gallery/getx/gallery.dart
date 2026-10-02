@@ -5,18 +5,23 @@ import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:hydit/utils/utils.dart';
 
 
-class GalleryController extends GetxController {
+class GalleryController() extends GetxController {
   final loading = false.obs;
   final _visible = true.obs;
 
   final GridObserverController grid;
 
-  GalleryController()
-      : grid = GridObserverController(controller: ScrollController());
+  this : grid = GridObserverController(controller: ScrollController());
 
   ScrollController get scroll => grid.controller!;
 
   bool get badges => _visible.value;
+
+  @override
+  void onClose() {
+    grid.controller?.dispose();
+    super.onClose();
+  }
 
   void scrollUp() {
     scroll.animateTo(0, duration: 500.ms, curve: Curves.easeInCubic);

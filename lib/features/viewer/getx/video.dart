@@ -10,10 +10,7 @@ import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/video.dart';
 
 
-class VideoGetxController extends GetxController {
-  final String tag;
-
-  VideoGetxController({required this.tag});
+class VideoGetxController({required final String tag}) extends GetxController {
 
   VideoService get service => Get.find();
 

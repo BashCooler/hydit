@@ -1,13 +1,11 @@
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hydit/features/viewer/getx/gesture.dart';
-import 'package:hydit/features/viewer/getx/sheet.dart';
+import 'package:flutter/services.dart';
+
+import 'sheet.dart';
+import 'gesture.dart';
 
 
-class UiController extends GetxController {
-  final String tag;
-
-  UiController({required this.tag});
+class UiController({required final String tag}) extends GetxController {
 
   final visible = true.obs;
 

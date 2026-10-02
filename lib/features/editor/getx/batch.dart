@@ -11,11 +11,11 @@ import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/editor/getx/base.dart';
 
 
-class BatchTagManager extends TagManager {
+class BatchTagManager(FileStore store) extends TagManager {
   @override
   final List<HydrusFile> files;
 
-  BatchTagManager(FileStore store) : files = .unmodifiable(store.files) {
+  this : files = .unmodifiable(store.files) {
     init();
   }
 

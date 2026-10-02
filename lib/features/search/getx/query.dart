@@ -9,31 +9,35 @@ import 'package:hydit/services/services.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 
-class QueryController extends GetxController {
-  final String tag;
+class QueryController({required final String tag}) extends GetxController {
 
-  QueryController({required this.tag}) {
+  this {
     loadSearchOptions();
     load();
   }
 
   final _tags = <Tag>[].obs;
 
+  List<Tag> get tags => _tags;
+
+  List<String> get values => _tags.rawList();
+
   FileSortType _sortType = .importTime;
+
   bool _sortAsc = false;
 
-  final Repo repo = Get.find();
+  Repo get repo => Get.find();
 
   Loader get loader => Get.find(tag: tag);
-  GalleryController get gallery => Get.find(tag: tag);
 
-  List<Tag> get tags => _tags;
-  List<String> get values => _tags.rawList();
+  GalleryController get gallery => Get.find(tag: tag);
 
   Storage get box => Get.find<Storage>();
 
+  static final pattern = RegExp(r'[\[\]]');
+
   @override
-  String toString() => values.toString().replaceAll(RegExp(r'[\[\]]'), '');
+  String toString() => values.toString().replaceAll(pattern, '');
 
   bool hasTag(Tag tag) => values.contains(tag.raw);
 
