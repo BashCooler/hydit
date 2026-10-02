@@ -53,13 +53,14 @@ class QueryController extends GetxController {
   Future<Result<List<int>>> search() {
     saveQuery();
 
-    final params = SearchFilesParamsBuilder()
-      ..tags = _tags
-      ..fileSortType = _sortType
-      ..fileSortAsc = _sortAsc;
+    final params = SearchFilesParams(
+      tags: _tags.rawList(),
+      fileSortType: _sortType,
+      fileSortAsc: _sortAsc,
+    );
 
     return repo.api
-        .getSearchFiles(params.build())
+        .getSearchFiles(params)
         .run()
         .loading(gallery.loading)
         .tapSuccess(loader.init)
