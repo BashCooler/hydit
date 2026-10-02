@@ -5,21 +5,16 @@ import 'package:hydit/utils/utils.dart';
 import 'package:hydit/entities/service.dart';
 
 
-class Tags {
-
-  final Map<String, TagService> storage;
-
-  final Map<String, TagService> display;
-
-  final Map<String, List<String>> namespaces;
-
-  Tags(this.storage, this.display, this.namespaces);
-
+class const Tags(
+  final Map<String, TagService> storage,
+  final Map<String, TagService> display,
+  final Map<String, List<String>> namespaces,
+) {
   /// The [map] parameter should be extracted from `file_metadata`
   /// response like so:
   ///
   /// `json -> metadata -> 0` (or other index)
-  factory Tags.fromMap(Map<String, dynamic> map) {
+  factory fromMap(Map<String, dynamic> map) {
     final tags = map['tags'] as Map<String, dynamic>;
 
     final storage = parseTags(tags, type: .storage);
@@ -36,11 +31,8 @@ class Tags {
   /// response like so:
   ///
   /// `pick(json, 'metadata', 0)` (or other index)
-  factory Tags.fromPick(Pick pick) {
-    final map = pick.asMapOrThrow<String, dynamic>();
-
-    return Tags.fromMap(map);
-  }
+  factory fromPick(Pick pick) =>
+      pick.asMapOrThrow<String, dynamic>().let(Tags.fromMap);
 
   static Map<String, TagService> parseTags(Map<String, dynamic> tags, {
     required TagDisplayType type,
