@@ -6,26 +6,19 @@ import 'package:hydit/utils/tag_sort.dart';
 import 'package:hydit/entities/tag.dart';
 
 
-class TagService extends DelegatingSetBase<Tag> {
-  final String name;
-  final String key;
-  final int type;
-
-  final Set<Tag> entries;
+class const TagService({
+  required final String name,
+  required final String key,
+  required final int type,
+  required final Set<Tag> entries,
+}) extends DelegatingSetBase<Tag> {
 
   @override
   Set<Tag> get delegate => entries;
 
   bool get editable => type == 5;
 
-  TagService({
-    required this.name,
-    required this.key,
-    required this.type,
-    required this.entries,
-  });
-
-  factory TagService.fromMapEntry(MapEntry<String, dynamic> entry, {
+  factory fromMapEntry(MapEntry<String, dynamic> entry, {
     required TagDisplayType type,
   }) {
     return TagService(

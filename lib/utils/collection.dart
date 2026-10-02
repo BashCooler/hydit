@@ -5,7 +5,7 @@ import 'dart:collection';
 ///
 /// A basic Map class can be implemented by extending this class
 /// and implementing the [delegate].
-abstract class DelegatingMapBase<K, V>
+abstract class const DelegatingMapBase<K, V>()
     with MapBase<K, V>, MapBaseDelegate<K, V> {}
 
 
@@ -36,7 +36,7 @@ mixin MapBaseDelegate<K, V> implements MapBase<K, V> {
 ///
 /// This class provides a base implementation of a Set that
 /// depends only on the [delegate].
-abstract class DelegatingSetBase<E>
+abstract class const DelegatingSetBase<E>()
     with SetBase<E>, SetBaseDelegate<E> {}
 
 
