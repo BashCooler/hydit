@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 import 'package:hydit/api/enums.dart';
-import 'package:hydit/api/params.dart';
-import 'package:hydit/utils/utils.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
+
+import '../reactive/options.dart';
 
 
 class QueryController({required final String tag}) {
@@ -63,47 +63,4 @@ class QueryController({required final String tag}) {
     search();
     options.save();
   }
-}
-
-
-class SearchOptions({
-  var FileSortType sort = .importTime,
-  var bool asc = false,
-  required Set<Tag> query,
-}) {
-  final RxSet<Tag> query = query.obs;
-
-  factory load() => SearchStorage.load();
-
-  void save() => SearchStorage.save(this);
-
-  SearchFilesParams get params => SearchFilesParams(
-    tags: query.rawList(),
-    fileSortType: sort,
-    fileSortAsc: asc,
-  );
-}
-
-
-class const SearchStorage._() {
-  static const sortKey = 'sort type';
-
-  static const ascKey = 'sort ascending';
-
-  static const queryKey = 'query';
-
-  static Storage get box => Get.find<Storage>();
-
-  static SearchOptions load() => SearchOptions(
-    sort: box.get<String>(sortKey).let(FileSortType.byName),
-    asc: box.get<bool>(ascKey).or(false),
-    query: {
-      ...?box.get<List<String>>(queryKey)?.map(Tag.new),
-    },
-  );
-
-  static void save(SearchOptions options) => box
-    ..put(sortKey, options.sort.name)
-    ..put(ascKey, options.asc)
-    ..put(queryKey, options.query.rawList());
 }
