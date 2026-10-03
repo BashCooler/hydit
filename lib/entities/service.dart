@@ -1,38 +1,41 @@
 import 'package:deep_pick/deep_pick.dart';
 
-import 'package:hydit/api/enums.dart';
-import 'package:hydit/utils/utils.dart';
-import 'package:hydit/utils/tag_sort.dart';
 import 'package:hydit/entities/tag.dart';
+import 'package:hydit/utils/tag_sort.dart';
 
 
 class const TagService({
   required final String name,
   required final String key,
   required final int type,
-  required final Set<Tag> entries,
-}) extends DelegatingSetBase<Tag> {
-
-  @override
-  Set<Tag> get delegate => entries;
+  required final Set<Tag> storage,
+  required final Set<Tag> display,
+}) {
 
   bool get editable => type == 5;
 
-  factory fromMapEntry(MapEntry<String, dynamic> entry, {
-    required TagDisplayType type,
-  }) {
+  factory fromMapEntry(MapEntry<String, dynamic> entry) {
     return TagService(
       name: entry.value['name'],
       key: entry.key,
       type: entry.value['type'],
-      entries: pick(entry.value, '$type', '0')
+      storage: pick(entry.value, 'storage_tags', '0')
           .asListOrEmpty((t) => t.asStringOrThrow())
           .map(Tag.new)
-          .let(TagSortBuilder.new)
-          .namespace()
-          .alphabetical()
-          .sort()
-          .toSet(),
+          .sortNamespaceAlphabeticalToSet(),
+      display: pick(entry.value, 'display_tags', '0')
+          .asListOrEmpty((t) => t.asStringOrThrow())
+          .map(Tag.new)
+          .sortNamespaceAlphabeticalToSet()
     );
   }
+}
+
+
+extension SortToSet on Iterable<Tag> {
+  Set<Tag> sortNamespaceAlphabeticalToSet() => TagSortBuilder(this)
+      .namespace()
+      .alphabetical()
+      .sort()
+      .toSet();
 }

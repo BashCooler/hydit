@@ -59,7 +59,7 @@ class TagSheet extends HookWidget {
           child: SafeArea(
             top: false,
             child: Obx(() {
-              final tags = page.current.tags.value.display;
+              final tags = page.current.tags.value.tags;
 
               if (sheet.showServices.value) {
                 return ServiceList(

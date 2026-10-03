@@ -1,29 +1,28 @@
 import 'package:deep_pick/deep_pick.dart';
+import 'package:hydit/entities/tag.dart';
 
-import 'package:hydit/api/enums.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/entities/service.dart';
 
 
-class const Tags(
-  final Map<String, TagService> storage,
-  final Map<String, TagService> display,
-  final Map<String, List<String>> namespaces,
-) {
+class const Tags({
+  required final Map<String, TagService> tags,
+  required final Map<String, List<String>> namespaces,
+}) {
+  /// Display tags from `all known tags` service.
+  Iterable<Tag> get all => tags['all known tags']!.display;
+
   /// The [map] parameter should be extracted from `file_metadata`
   /// response like so:
   ///
   /// `json -> metadata -> 0` (or other index)
   factory fromMap(Map<String, dynamic> map) {
-    final tags = map['tags'] as Map<String, dynamic>;
-
-    final storage = parseTags(tags, type: .storage);
-    final display = parseTags(tags, type: .display);
+    final tags = pick(map, 'tags').asMapOrThrow<String, dynamic>() //
+        .let(parseTags);
 
     return Tags(
-      storage,
-      display,
-      display['all known tags']!.let(buildNamespaceIndex),
+      tags: tags,
+      namespaces: tags['all known tags']!.namespaces(),
     );
   }
 
@@ -34,29 +33,25 @@ class const Tags(
   factory fromPick(Pick pick) =>
       pick.asMapOrThrow<String, dynamic>().let(Tags.fromMap);
 
-  static Map<String, TagService> parseTags(Map<String, dynamic> tags, {
-    required TagDisplayType type,
-  }) {
+  static Map<String, TagService> parseTags(Map<String, dynamic> tags) {
     return {
       for (final entry in tags.entries)
-        entry.value['name']: TagService.fromMapEntry(entry, type: type),
+        entry.value['name']: TagService.fromMapEntry(entry),
     };
   }
+}
 
-  static Map<String, List<String>> buildNamespaceIndex(TagService all) {
+
+extension BuildNamespaceIndex on TagService {
+  /// Builds the namespace index for this service.
+  Map<String, List<String>> namespaces() {
     final map = <String, List<String>>{};
 
-    for (final tag in all) {
-      final ns = tag.namespace;
-      if (ns != null) {
-        map.putIfAbsent(ns, () => []).add(tag.value);
-      }
+    for (var Tag(namespace: ns, value: v) in display) {
+      if (ns != null) map.putIfAbsent(ns, () => []).add(v);
     }
 
-    for (final values in map.values) {
-      values.sort();
-    }
-
-    return map;
+    return map
+      ..values.forEach((v) => v.sort());
   }
 }

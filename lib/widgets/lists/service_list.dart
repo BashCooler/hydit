@@ -33,8 +33,8 @@ class ServiceList extends StatelessWidget {
                   spacing: 5,
                   mainAxisSize: .min,
                   children: [
-                    ?tags.isNotEmpty
-                        ? Badge(label: Text('${tags.length}'))
+                    ?tags.display.isNotEmpty
+                        ? Badge(label: Text('${tags.display.length}'))
                         : null,
                     const Icon(Icons.chevron_right),
                   ],

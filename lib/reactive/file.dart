@@ -39,7 +39,8 @@ class HydrusFile._(
 
   Repo get repo => Get.find();
 
-  Iterable<Tag> get all => tags.value.display['all known tags'] ?? [];
+  /// Returns display tags from `all known tags` service.
+  Iterable<Tag> get all => tags.value.all;
 
   int get id => meta.id;
 
