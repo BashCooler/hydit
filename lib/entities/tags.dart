@@ -6,11 +6,15 @@ import 'package:hydit/entities/service.dart';
 
 
 class const Tags({
-  required final Map<String, TagService> tags,
+  required final Map<String, TagService> _tags,
   required final Map<String, List<String>> namespaces,
-}) {
+}) extends DelegatingMapBase<String, TagService> {
+
+  @override
+  Map<String, TagService> get delegate => _tags;
+
   /// Display tags from `all known tags` service.
-  Iterable<Tag> get all => tags['all known tags']!.display;
+  Iterable<Tag> get all => _tags['all known tags']!.display;
 
   /// The [map] parameter should be extracted from `file_metadata`
   /// response like so:

@@ -44,7 +44,7 @@ class Repo() {
       final tags = result.getOrThrow();
 
       for (var i = 0; i < chunk.length; i++) {
-        chunk[i].tags.value = tags[i];
+        chunk[i].tags = tags[i];
       }
     }
 

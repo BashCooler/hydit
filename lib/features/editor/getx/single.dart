@@ -19,7 +19,7 @@ class PagedTagManager extends TagManager {
   HydrusFile get file => page.current;
 
   @override
-  Map<String, TagService> get original => file.tags.value.tags;
+  Map<String, TagService> get original => file.tags;
 
   @override
   void remove(Tag tag) {
@@ -38,8 +38,7 @@ class PagedTagManager extends TagManager {
 
   void init([String? service]) {
 
-    final tags = file.tags.value.tags
-        .map((k, v) => MapEntry(k, v.storage));
+    final tags = file.tags.map((k, v) => MapEntry(k, v.storage));
 
     assign(tags);
 

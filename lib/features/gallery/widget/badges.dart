@@ -70,7 +70,7 @@ class BadgesBuilder {
 
   BadgesBuilder addNumerical(String namespace, [String? prefix]) {
     final value = _file
-        .tags.value.namespaces[namespace]?.first
+        .tags.namespaces[namespace]?.first
         .replaceAll(RegExp(r'^0+'), '');
     if (value != null) _badges.add(Badge(label: '${prefix ?? ''}$value'.n));
     return this;

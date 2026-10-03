@@ -11,7 +11,7 @@ import 'file_store.dart';
 
 class HydrusFile._(
   final FileMetadata meta,
-  final Rx<Tags> tags,
+  final Rx<Tags> _tags,
   final Rx<bool> inbox,
 ) {
   /// The [map] parameter should be extracted from `file_metadata`
@@ -39,8 +39,13 @@ class HydrusFile._(
 
   Repo get repo => Get.find();
 
+  /// The [Tags] object of this file.
+  Tags get tags => _tags.value;
+
+  set tags(Tags t) => _tags.value = t;
+
   /// Returns display tags from `all known tags` service.
-  Iterable<Tag> get all => tags.value.all;
+  Iterable<Tag> get all => tags.all;
 
   int get id => meta.id;
 
