@@ -2,12 +2,13 @@ import 'package:get/get.dart';
 
 import 'package:hydit/api/params.dart';
 import 'package:hydit/entities/tag.dart';
-import 'package:hydit/entities/changes.dart';
 import 'package:hydit/entities/service.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/utils/tag_sort.dart';
+
+import '../entities/changes.dart';
 
 
 enum TagState { unchanged, added, removed }

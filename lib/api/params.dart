@@ -1,6 +1,7 @@
 import 'package:hydit/api/enums.dart';
+import 'package:hydit/entities/tag.dart';
 import 'package:hydit/utils/unicode.dart';
-import 'package:hydit/entities/changes.dart';
+import 'package:hydit/features/editor/entities/changes.dart';
 
 
 class const SearchFilesParams({
@@ -24,7 +25,10 @@ class const AddTagsParams(
     'file_ids': ids,
     'service_keys_to_actions_to_tags': {
       for (final change in changes)
-        if (change.isNotEmpty) change.key: change.value,
+        if (change.isNotEmpty) change.key: {
+          "0": change.added.rawList(),
+          "1": change.deleted.rawList(),
+        },
     },
   };
 }
