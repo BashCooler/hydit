@@ -1,7 +1,9 @@
+import 'package:dartx/dartx.dart';
 import 'package:deep_pick/deep_pick.dart';
-import 'package:hydit/entities/tag.dart';
 
+import 'package:hydit/api/models.dart';
 import 'package:hydit/utils/utils.dart';
+import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/service.dart';
 
 
@@ -26,7 +28,16 @@ class const Tags({
 
     return Tags(
       tags: tags,
-      namespaces: tags['all known tags']!.namespaces(),
+      namespaces: tags.namespaces(),
+    );
+  }
+
+  factory fromDto(Map<String, TagServiceDto> tags) {
+    final mapped = tags.mapValues(TagService.fromDto);
+
+    return Tags(
+      tags: mapped,
+      namespaces: mapped.namespaces(),
     );
   }
 
@@ -46,12 +57,14 @@ class const Tags({
 }
 
 
-extension BuildNamespaceIndex on TagService {
+extension BuildNamespaceIndex on Map<String, TagService> {
   /// Builds the namespace index for this service.
   Map<String, List<String>> namespaces() {
     final map = <String, List<String>>{};
 
-    for (var Tag(namespace: ns, value: v) in display) {
+    final all = this['all known tags']!;
+
+    for (var Tag(namespace: ns, value: v) in all.display) {
       if (ns != null) map.putIfAbsent(ns, () => []).add(v);
     }
 

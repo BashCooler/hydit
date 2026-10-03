@@ -4,20 +4,22 @@ part 'models.mapper.dart';
 
 
 @MappableClass(caseStyle: .snakeCase)
-class MetadataEntryDto({
+class FileMetadataEntryDto({
   @MappableField(key: 'file_id')
   required final int id,
   required final String hash,
-  final double width = 0,
-  final double height = 0,
   required final int size,
   required final String mime,
-  final Duration duration = .zero,
   required final String ext,
+  final double width = 0,
+  final double height = 0,
+  final Duration duration = .zero,
+  @MappableField(key: 'is_inbox')
+  required final bool inbox,
   required final Map<String, TagServiceDto> tags,
-}) with MetadataEntryDtoMappable {
-  static final fromMap = MetadataEntryDtoMapper.fromMap;
-  static final fromJson = MetadataEntryDtoMapper.fromJson;
+}) with FileMetadataEntryDtoMappable {
+  static final fromMap = FileMetadataEntryDtoMapper.fromMap;
+  static final fromJson = FileMetadataEntryDtoMapper.fromJson;
 }
 
 

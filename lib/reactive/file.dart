@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:deep_pick/deep_pick.dart';
+import 'package:hydit/api/models.dart';
 
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/tags.dart';
@@ -36,6 +37,12 @@ class HydrusFile._(
 
     return HydrusFile.fromMap(map);
   }
+
+  factory fromDto(FileMetadataEntryDto dto) => HydrusFile._(
+    FileMetadata.fromDto(dto),
+    Tags.fromDto(dto.tags).obs,
+    dto.inbox.obs,
+  );
 
   Repo get repo => Get.find();
 

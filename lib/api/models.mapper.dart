@@ -8,83 +8,97 @@
 
 part of 'models.dart';
 
-class MetadataEntryDtoMapper extends ClassMapperBase<MetadataEntryDto> {
-  MetadataEntryDtoMapper._();
+class FileMetadataEntryDtoMapper extends ClassMapperBase<FileMetadataEntryDto> {
+  FileMetadataEntryDtoMapper._();
 
-  static MetadataEntryDtoMapper? _instance;
-  static MetadataEntryDtoMapper ensureInitialized() {
+  static FileMetadataEntryDtoMapper? _instance;
+  static FileMetadataEntryDtoMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = MetadataEntryDtoMapper._());
+      MapperContainer.globals.use(_instance = FileMetadataEntryDtoMapper._());
       TagServiceDtoMapper.ensureInitialized();
     }
     return _instance!;
   }
 
   @override
-  final String id = 'MetadataEntryDto';
+  final String id = 'FileMetadataEntryDto';
 
-  static int _$id(MetadataEntryDto v) => v.id;
-  static const Field<MetadataEntryDto, int> _f$id = Field(
+  static int _$id(FileMetadataEntryDto v) => v.id;
+  static const Field<FileMetadataEntryDto, int> _f$id = Field(
     'id',
     _$id,
     key: r'file_id',
   );
-  static String _$hash(MetadataEntryDto v) => v.hash;
-  static const Field<MetadataEntryDto, String> _f$hash = Field('hash', _$hash);
-  static double _$width(MetadataEntryDto v) => v.width;
-  static const Field<MetadataEntryDto, double> _f$width = Field(
+  static String _$hash(FileMetadataEntryDto v) => v.hash;
+  static const Field<FileMetadataEntryDto, String> _f$hash = Field(
+    'hash',
+    _$hash,
+  );
+  static int _$size(FileMetadataEntryDto v) => v.size;
+  static const Field<FileMetadataEntryDto, int> _f$size = Field('size', _$size);
+  static String _$mime(FileMetadataEntryDto v) => v.mime;
+  static const Field<FileMetadataEntryDto, String> _f$mime = Field(
+    'mime',
+    _$mime,
+  );
+  static String _$ext(FileMetadataEntryDto v) => v.ext;
+  static const Field<FileMetadataEntryDto, String> _f$ext = Field('ext', _$ext);
+  static double _$width(FileMetadataEntryDto v) => v.width;
+  static const Field<FileMetadataEntryDto, double> _f$width = Field(
     'width',
     _$width,
     opt: true,
     def: 0,
   );
-  static double _$height(MetadataEntryDto v) => v.height;
-  static const Field<MetadataEntryDto, double> _f$height = Field(
+  static double _$height(FileMetadataEntryDto v) => v.height;
+  static const Field<FileMetadataEntryDto, double> _f$height = Field(
     'height',
     _$height,
     opt: true,
     def: 0,
   );
-  static int _$size(MetadataEntryDto v) => v.size;
-  static const Field<MetadataEntryDto, int> _f$size = Field('size', _$size);
-  static String _$mime(MetadataEntryDto v) => v.mime;
-  static const Field<MetadataEntryDto, String> _f$mime = Field('mime', _$mime);
-  static Duration _$duration(MetadataEntryDto v) => v.duration;
-  static const Field<MetadataEntryDto, Duration> _f$duration = Field(
+  static Duration _$duration(FileMetadataEntryDto v) => v.duration;
+  static const Field<FileMetadataEntryDto, Duration> _f$duration = Field(
     'duration',
     _$duration,
     opt: true,
     def: .zero,
   );
-  static String _$ext(MetadataEntryDto v) => v.ext;
-  static const Field<MetadataEntryDto, String> _f$ext = Field('ext', _$ext);
-  static Map<String, TagServiceDto> _$tags(MetadataEntryDto v) => v.tags;
-  static const Field<MetadataEntryDto, Map<String, TagServiceDto>> _f$tags =
+  static bool _$inbox(FileMetadataEntryDto v) => v.inbox;
+  static const Field<FileMetadataEntryDto, bool> _f$inbox = Field(
+    'inbox',
+    _$inbox,
+    key: r'is_inbox',
+  );
+  static Map<String, TagServiceDto> _$tags(FileMetadataEntryDto v) => v.tags;
+  static const Field<FileMetadataEntryDto, Map<String, TagServiceDto>> _f$tags =
       Field('tags', _$tags);
 
   @override
-  final MappableFields<MetadataEntryDto> fields = const {
+  final MappableFields<FileMetadataEntryDto> fields = const {
     #id: _f$id,
     #hash: _f$hash,
-    #width: _f$width,
-    #height: _f$height,
     #size: _f$size,
     #mime: _f$mime,
-    #duration: _f$duration,
     #ext: _f$ext,
+    #width: _f$width,
+    #height: _f$height,
+    #duration: _f$duration,
+    #inbox: _f$inbox,
     #tags: _f$tags,
   };
 
-  static MetadataEntryDto _instantiate(DecodingData data) {
-    return MetadataEntryDto(
+  static FileMetadataEntryDto _instantiate(DecodingData data) {
+    return FileMetadataEntryDto(
       id: data.dec(_f$id),
       hash: data.dec(_f$hash),
-      width: data.dec(_f$width),
-      height: data.dec(_f$height),
       size: data.dec(_f$size),
       mime: data.dec(_f$mime),
-      duration: data.dec(_f$duration),
       ext: data.dec(_f$ext),
+      width: data.dec(_f$width),
+      height: data.dec(_f$height),
+      duration: data.dec(_f$duration),
+      inbox: data.dec(_f$inbox),
       tags: data.dec(_f$tags),
     );
   }
@@ -92,64 +106,72 @@ class MetadataEntryDtoMapper extends ClassMapperBase<MetadataEntryDto> {
   @override
   final Function instantiate = _instantiate;
 
-  static MetadataEntryDto fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<MetadataEntryDto>(map);
+  static FileMetadataEntryDto fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<FileMetadataEntryDto>(map);
   }
 
-  static MetadataEntryDto fromJson(String json) {
-    return ensureInitialized().decodeJson<MetadataEntryDto>(json);
+  static FileMetadataEntryDto fromJson(String json) {
+    return ensureInitialized().decodeJson<FileMetadataEntryDto>(json);
   }
 }
 
-mixin MetadataEntryDtoMappable {
+mixin FileMetadataEntryDtoMappable {
   String toJson() {
-    return MetadataEntryDtoMapper.ensureInitialized()
-        .encodeJson<MetadataEntryDto>(this as MetadataEntryDto);
+    return FileMetadataEntryDtoMapper.ensureInitialized()
+        .encodeJson<FileMetadataEntryDto>(this as FileMetadataEntryDto);
   }
 
   Map<String, dynamic> toMap() {
-    return MetadataEntryDtoMapper.ensureInitialized()
-        .encodeMap<MetadataEntryDto>(this as MetadataEntryDto);
+    return FileMetadataEntryDtoMapper.ensureInitialized()
+        .encodeMap<FileMetadataEntryDto>(this as FileMetadataEntryDto);
   }
 
-  MetadataEntryDtoCopyWith<MetadataEntryDto, MetadataEntryDto, MetadataEntryDto>
+  FileMetadataEntryDtoCopyWith<
+    FileMetadataEntryDto,
+    FileMetadataEntryDto,
+    FileMetadataEntryDto
+  >
   get copyWith =>
-      _MetadataEntryDtoCopyWithImpl<MetadataEntryDto, MetadataEntryDto>(
-        this as MetadataEntryDto,
-        $identity,
-        $identity,
-      );
+      _FileMetadataEntryDtoCopyWithImpl<
+        FileMetadataEntryDto,
+        FileMetadataEntryDto
+      >(this as FileMetadataEntryDto, $identity, $identity);
   @override
   String toString() {
-    return MetadataEntryDtoMapper.ensureInitialized().stringifyValue(
-      this as MetadataEntryDto,
+    return FileMetadataEntryDtoMapper.ensureInitialized().stringifyValue(
+      this as FileMetadataEntryDto,
     );
   }
 
   @override
   bool operator ==(Object other) {
-    return MetadataEntryDtoMapper.ensureInitialized().equalsValue(
-      this as MetadataEntryDto,
+    return FileMetadataEntryDtoMapper.ensureInitialized().equalsValue(
+      this as FileMetadataEntryDto,
       other,
     );
   }
 
   @override
   int get hashCode {
-    return MetadataEntryDtoMapper.ensureInitialized().hashValue(
-      this as MetadataEntryDto,
+    return FileMetadataEntryDtoMapper.ensureInitialized().hashValue(
+      this as FileMetadataEntryDto,
     );
   }
 }
 
-extension MetadataEntryDtoValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, MetadataEntryDto, $Out> {
-  MetadataEntryDtoCopyWith<$R, MetadataEntryDto, $Out>
-  get $asMetadataEntryDto =>
-      $base.as((v, t, t2) => _MetadataEntryDtoCopyWithImpl<$R, $Out>(v, t, t2));
+extension FileMetadataEntryDtoValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, FileMetadataEntryDto, $Out> {
+  FileMetadataEntryDtoCopyWith<$R, FileMetadataEntryDto, $Out>
+  get $asFileMetadataEntryDto => $base.as(
+    (v, t, t2) => _FileMetadataEntryDtoCopyWithImpl<$R, $Out>(v, t, t2),
+  );
 }
 
-abstract class MetadataEntryDtoCopyWith<$R, $In extends MetadataEntryDto, $Out>
+abstract class FileMetadataEntryDtoCopyWith<
+  $R,
+  $In extends FileMetadataEntryDto,
+  $Out
+>
     implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<
     $R,
@@ -161,27 +183,28 @@ abstract class MetadataEntryDtoCopyWith<$R, $In extends MetadataEntryDto, $Out>
   $R call({
     int? id,
     String? hash,
-    double? width,
-    double? height,
     int? size,
     String? mime,
-    Duration? duration,
     String? ext,
+    double? width,
+    double? height,
+    Duration? duration,
+    bool? inbox,
     Map<String, TagServiceDto>? tags,
   });
-  MetadataEntryDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+  FileMetadataEntryDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
 }
 
-class _MetadataEntryDtoCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, MetadataEntryDto, $Out>
-    implements MetadataEntryDtoCopyWith<$R, MetadataEntryDto, $Out> {
-  _MetadataEntryDtoCopyWithImpl(super.value, super.then, super.then2);
+class _FileMetadataEntryDtoCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, FileMetadataEntryDto, $Out>
+    implements FileMetadataEntryDtoCopyWith<$R, FileMetadataEntryDto, $Out> {
+  _FileMetadataEntryDtoCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<MetadataEntryDto> $mapper =
-      MetadataEntryDtoMapper.ensureInitialized();
+  late final ClassMapperBase<FileMetadataEntryDto> $mapper =
+      FileMetadataEntryDtoMapper.ensureInitialized();
   @override
   MapCopyWith<
     $R,
@@ -198,43 +221,46 @@ class _MetadataEntryDtoCopyWithImpl<$R, $Out>
   $R call({
     int? id,
     String? hash,
-    double? width,
-    double? height,
     int? size,
     String? mime,
-    Duration? duration,
     String? ext,
+    double? width,
+    double? height,
+    Duration? duration,
+    bool? inbox,
     Map<String, TagServiceDto>? tags,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
       if (hash != null) #hash: hash,
-      if (width != null) #width: width,
-      if (height != null) #height: height,
       if (size != null) #size: size,
       if (mime != null) #mime: mime,
-      if (duration != null) #duration: duration,
       if (ext != null) #ext: ext,
+      if (width != null) #width: width,
+      if (height != null) #height: height,
+      if (duration != null) #duration: duration,
+      if (inbox != null) #inbox: inbox,
       if (tags != null) #tags: tags,
     }),
   );
   @override
-  MetadataEntryDto $make(CopyWithData data) => MetadataEntryDto(
+  FileMetadataEntryDto $make(CopyWithData data) => FileMetadataEntryDto(
     id: data.get(#id, or: $value.id),
     hash: data.get(#hash, or: $value.hash),
-    width: data.get(#width, or: $value.width),
-    height: data.get(#height, or: $value.height),
     size: data.get(#size, or: $value.size),
     mime: data.get(#mime, or: $value.mime),
-    duration: data.get(#duration, or: $value.duration),
     ext: data.get(#ext, or: $value.ext),
+    width: data.get(#width, or: $value.width),
+    height: data.get(#height, or: $value.height),
+    duration: data.get(#duration, or: $value.duration),
+    inbox: data.get(#inbox, or: $value.inbox),
     tags: data.get(#tags, or: $value.tags),
   );
 
   @override
-  MetadataEntryDtoCopyWith<$R2, MetadataEntryDto, $Out2> $chain<$R2, $Out2>(
-    Then<$Out2, $R2> t,
-  ) => _MetadataEntryDtoCopyWithImpl<$R2, $Out2>($value, $cast, t);
+  FileMetadataEntryDtoCopyWith<$R2, FileMetadataEntryDto, $Out2>
+  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _FileMetadataEntryDtoCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class TagServiceDtoMapper extends ClassMapperBase<TagServiceDto> {

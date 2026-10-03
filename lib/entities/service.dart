@@ -1,4 +1,5 @@
 import 'package:deep_pick/deep_pick.dart';
+import 'package:hydit/api/models.dart';
 
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/utils/tag_sort.dart';
@@ -29,6 +30,16 @@ class const TagService({
           .sortNamespaceAlphabeticalToSet()
     );
   }
+
+  factory fromDto(MapEntry<String, TagServiceDto> dto) => TagService(
+    name: dto.value.name,
+    key: dto.key,
+    type: dto.value.type,
+    storage: dto.value.storageTags['0']!.map(Tag.new)
+        .sortNamespaceAlphabeticalToSet(),
+    display: dto.value.displayTags['0']!.map(Tag.new)
+        .sortNamespaceAlphabeticalToSet(),
+  );
 }
 
 

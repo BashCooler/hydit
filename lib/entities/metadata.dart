@@ -1,5 +1,6 @@
 import 'package:deep_pick/deep_pick.dart';
 import 'package:filesize/filesize.dart';
+import 'package:hydit/api/models.dart';
 
 import 'package:hydit/utils/utils.dart';
 
@@ -27,6 +28,17 @@ class const FileMetadata({
     mime: pick(map, 'mime').asStringOrThrow(),
     duration: pick(map, 'duration').asMillisecondsOrZero(),
     ext: pick(map, 'ext').asStringOrThrow(),
+  );
+
+  factory fromDto(FileMetadataEntryDto dto) => FileMetadata(
+    id: dto.id,
+    hash: dto.hash,
+    width: dto.width,
+    height: dto.height,
+    sizeBytes: dto.size,
+    mime: dto.mime,
+    duration: dto.duration,
+    ext: dto.ext,
   );
 
   /// The [pick] parameter should be extracted from `file_metadata`
