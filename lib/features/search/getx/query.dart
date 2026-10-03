@@ -4,27 +4,19 @@ import 'package:get/get.dart';
 
 import 'package:hydit/api/enums.dart';
 import 'package:hydit/api/params.dart';
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/features/gallery/getx/gallery.dart';
 
 
-class QueryController({required final String tag}) extends GetxController {
+class QueryController({required final String tag}) {
+
+  final options = SearchOptions.load();
 
   this {
-    loadSearchOptions();
-    load();
+    search();
   }
-
-  final _tags = <Tag>[].obs;
-
-  List<Tag> get tags => _tags;
-
-  List<String> get values => _tags.rawList();
-
-  FileSortType _sortType = .importTime;
-
-  bool _sortAsc = false;
 
   Repo get repo => Get.find();
 
@@ -32,90 +24,82 @@ class QueryController({required final String tag}) extends GetxController {
 
   GalleryController get gallery => Get.find(tag: tag);
 
-  Storage get box => Get.find<Storage>();
-
-  static final pattern = RegExp(r'[\[\]]');
+  static final pattern = RegExp(r'[{}]');
 
   @override
-  String toString() => values.toString().replaceAll(pattern, '');
+  String toString() => options.query.toString().replaceAll(pattern, '');
 
-  bool hasTag(Tag tag) => values.contains(tag.raw);
+  bool get isEmpty => options.query.isEmpty;
 
-  void add(String tag) {
-    final t = Tag(tag);
-    if (hasTag(t)) return;
-    if (t.raw.isEmpty) return;
-    _tags.add(t);
-  }
+  void add(String raw) => options.query.addIf(raw.isNotEmpty, Tag(raw));
 
-  void remove(Tag tag) => _tags.remove(tag);
+  void remove(Tag tag) => options.query.remove(tag);
 
-  void clear() => _tags.clear();
+  void clear() => options.query.clear();
 
-  void saveQuery() => box.put('query', _tags.rawList());
-
-  Future<Result<List<int>>> search() {
-    saveQuery();
-
-    final params = SearchFilesParams(
-      tags: _tags.rawList(),
-      fileSortType: _sortType,
-      fileSortAsc: _sortAsc,
-    );
+  Future<void> search() {
+    options.save();
 
     return repo.api
-        .getSearchFiles(params)
+        .getSearchFiles(options.params)
         .run()
         .loading(gallery.loading)
         .tapSuccess(loader.init)
         .tapFailure(Snack.error);
   }
 
-  void load() {
-    final query = box.get('query') as List<String>?;
-    if (query == null || query.isEmpty) return;
-
-    _tags.assignAll(query.map(Tag.new));
+  void setSortType(FileSortType s) {
+    options.sort = s;
     search();
+    options.save();
   }
 
-  // MARK: SEARCH OPTIONS
-
-  static const typeKey = 'sort type';
-  FileSortType get sortType => _sortType;
-
-  set sortType(FileSortType sortType) {
-    _sortType = sortType;
+  void setSortAsc(bool asc) {
+    options.asc = asc;
     search();
-    box.put(typeKey, sortType.name);
+    options.save();
   }
+}
+
+
+class SearchOptions({
+  var FileSortType sort = .importTime,
+  var bool asc = false,
+  required Set<Tag> query,
+}) {
+  final RxSet<Tag> query = query.obs;
+
+  factory load() => SearchStorage.load();
+
+  void save() => SearchStorage.save(this);
+
+  SearchFilesParams get params => SearchFilesParams(
+    tags: query.rawList(),
+    fileSortType: sort,
+    fileSortAsc: asc,
+  );
+}
+
+
+class const SearchStorage._() {
+  static const sortKey = 'sort type';
 
   static const ascKey = 'sort ascending';
-  bool get sortAsc => _sortAsc;
 
-  set sortAsc(bool sortAsc) {
-    _sortAsc = sortAsc;
-    search();
-    box.put(ascKey, sortAsc);
-  }
+  static const queryKey = 'query';
 
-  void loadSearchOptions() {
-    final String? sort = box.get(typeKey);
-    switch (sort) {
-      case null:
-        box.put(typeKey, FileSortType.importTime.name);
-      case _:
-        _sortType = FileSortType
-            .values
-            .firstWhere((e) => e.name == sort);
-    }
+  static Storage get box => Get.find<Storage>();
 
-    final bool? asc = box.get(ascKey);
-    switch (asc) {
-      case null:
-        box.put(ascKey, false);
-      case _:
-        _sortAsc = asc;
-    }
-  }
+  static SearchOptions load() => SearchOptions(
+    sort: box.get<String>(sortKey).let(FileSortType.byName),
+    asc: box.get<bool>(ascKey).or(false),
+    query: {
+      ...?box.get<List<String>>(queryKey)?.map(Tag.new),
+    },
+  );
+
+  static void save(SearchOptions options) => box
+    ..put(sortKey, options.sort.name)
+    ..put(ascKey, options.asc)
+    ..put(queryKey, options.query.rawList());
 }

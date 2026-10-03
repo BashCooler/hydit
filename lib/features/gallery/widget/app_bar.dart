@@ -90,7 +90,7 @@ class QueryInfo extends StatelessWidget {
 
     return Obx(() {
 
-      if (query.values.isEmpty) {
+      if (query.isEmpty) {
         return const SizedBox.shrink();
       }
 

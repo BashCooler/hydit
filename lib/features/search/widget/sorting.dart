@@ -31,14 +31,14 @@ class SortPopUp extends StatelessWidget {
           Shadow(blurRadius: 16),
         ],
       ),
-      onSelected: (value) => query.sortType = value,
+      onSelected: query.setSortType,
       itemBuilder: (BuildContext context) {
         return [
           ...FileSortType.values.map((option) {
             return PopupMenuItem<FileSortType>(
               value: option,
               child: CheckedPopUpChild(
-                checked: query.sortType == option,
+                checked: query.options.sort == option,
                 label: option.name,
               ),
             );
@@ -47,17 +47,17 @@ class SortPopUp extends StatelessWidget {
           const PopupMenuDivider(),
 
           PopupMenuItem(
-            onTap: () => query.sortAsc = true,
+            onTap: () => query.setSortAsc(true),
             child: CheckedPopUpChild(
-              checked: query.sortAsc,
+              checked: query.options.asc,
               label: 'ascending',
             ),
           ),
 
           PopupMenuItem(
-            onTap: () => query.sortAsc = false,
+            onTap: () => query.setSortAsc(false),
             child: CheckedPopUpChild(
-              checked: !query.sortAsc,
+              checked: query.options.asc.not(),
               label: 'descending',
             ),
           ),

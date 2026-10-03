@@ -20,7 +20,9 @@ class Search extends HookWidget {
   QueryController get query => Get.find(tag: tag);
 
   void searchThenBack(String entry) {
-    if (query.tags.isEmpty) query.add(entry);
+    if (query.isEmpty) {
+      query.add(entry);
+    }
     query.search();
     Get.back();
   }
@@ -45,7 +47,7 @@ class Search extends HookWidget {
                 height: 55 * 3,
                 child: Obx(() {
                   return TagList(
-                    tags: query.tags.toList(),
+                    tags: query.options.query.toList(),
                     reverse: true,
                     scrollController: scrollUp,
                     itemBuilder: (context, tag) {

@@ -36,6 +36,11 @@ enum FileSortType {
   final String name;
 
   const FileSortType(this.value, this.name);
+
+  factory byName(String? name) => values.firstWhere(
+    (e) => e.name == name,
+    orElse: () => .importTime,
+  );
 }
 
 

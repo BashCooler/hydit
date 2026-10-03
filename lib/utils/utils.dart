@@ -95,6 +95,11 @@ extension Or<T> on T? {
 }
 
 
+extension ScopedBool on bool {
+  bool not() => !this;
+}
+
+
 extension Range<T> on List<T> {
 
   Iterable<T> range(T from, T to) {
