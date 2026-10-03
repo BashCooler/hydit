@@ -29,12 +29,16 @@ class QueryController({required final String tag}) {
   @override
   String toString() => options.query.toString().replaceAll(pattern, '');
 
+  /// Whether this query has no tags.
   bool get isEmpty => options.query.isEmpty;
 
+  /// Add tag to this query.
   void add(String raw) => options.query.addIf(raw.isNotEmpty, Tag(raw));
 
+  /// Remove [tag] from the query.
   void remove(Tag tag) => options.query.remove(tag);
 
+  /// Remove all tags from the query.
   void clear() => options.query.clear();
 
   Future<void> search() {
