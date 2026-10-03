@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:hydit/api/params.dart';
 import 'package:hydit/services/storage.dart';
 import 'package:hydit/api/enums.dart';
+import 'package:hydit/utils/unicode.dart';
 
 import 'dio.dart';
 
@@ -124,5 +125,13 @@ class HydrusApi with DioClient {
       post(
         '/add_tags/add_tags',
         params: params.toMap(),
+      );
+
+  Future<String> getSiblingsAndParents(List<String> tags) =>
+      get(
+        '/add_tags/get_siblings_and_parents',
+        params: {
+          'tags': tags.encode(),
+        }
       );
 }

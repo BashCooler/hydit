@@ -12,7 +12,7 @@ extension ListStringUnicodeEscape on List<String> {
 }
 
 extension StringUnicodeEscape on String {
-  static RegExp p = RegExp(r'[^\x00-\x7F]');
+  static final p = RegExp(r'[^\x00-\x7F]');
 
   String encode() => replaceAllMapped(p, (m) => '\\u${m.encode()}');
 }
