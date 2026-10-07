@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import 'package:hydit/api/models.dart';
 import 'package:hydit/utils/utils.dart';
+import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/services.dart';
 
 
@@ -23,6 +24,9 @@ class TagRelationService {
 
   TagRelations? get({required String raw, required String key}) =>
       _cache[raw]?[key];
+
+  Tag? ideal({required String raw, required String key}) =>
+      get(raw: raw, key: key)?.ideal.let(Tag.new);
 
   void clear() => _cache.clear();
 }

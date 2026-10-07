@@ -50,6 +50,7 @@ class TagList extends StatelessWidget {
 class TagTile extends StatelessWidget {
   final bool enabled;
   final Tag tag;
+  final Tag? _ideal;
   final Color? background;
   final Widget? trailing;
   final void Function(Tag tag)? onTap;
@@ -59,11 +60,14 @@ class TagTile extends StatelessWidget {
     super.key,
     this.enabled = true,
     required this.tag,
+    this._ideal,
     this.background,
     this.trailing,
     this.onTap,
     this.onLongPress,
   });
+
+  Tag? get ideal => _ideal != null && _ideal != tag ? _ideal : null;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +80,8 @@ class TagTile extends StatelessWidget {
       title: Text.rich(
         TextSpan(
           children: [
-            tag.span,
+            tag.toSpan(),
+            ?ideal?.toSpan(prefix: ' ➔ '),
           ],
         ),
       ),
@@ -109,8 +114,8 @@ class TagCount extends StatelessWidget {
 
 
 extension TagTextSpan on Tag {
-  TextSpan get span => TextSpan(
-    text: pretty,
+  TextSpan toSpan({String? prefix}) => TextSpan(
+    text: prefix == null ? pretty : '$prefix$pretty',
     style: TextStyle(color: color),
   );
 }

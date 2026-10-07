@@ -32,6 +32,9 @@ abstract class TagManager {
   /// Whether selected service is editable
   bool get editable => original[_service.value]!.editable;
 
+  /// The key of currently selected service.
+  String get key => original[service]!.key;
+
   /// Union of original and added tags.
   Set<Tag> get union => { ...initial, ...current };
 

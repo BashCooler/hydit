@@ -4,6 +4,7 @@ import 'package:hydit/utils/utils.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:hydit/entities/tag.dart';
+import 'package:hydit/services/relations.dart';
 import 'package:hydit/widgets/lists/tag_list.dart';
 import 'package:hydit/features/search/getx/tag_search.dart';
 
@@ -22,14 +23,9 @@ class Up extends HookWidget {
     .unchanged => null,
   };
 
-  IconData icon(bool editable, TagState state) {
-    return switch (state) {
-      TagState.removed => Icons.undo,
-      _ => Icons.playlist_remove,
-    };
-  }
-
   TagManager get manager => Get.find(tag: tag);
+
+  TagRelationService get relations => Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +42,10 @@ class Up extends HookWidget {
 
             return TagTile(
               tag: tag,
+              ideal: relations.ideal(
+                raw: tag.raw,
+                key: manager.key,
+              ),
               onTap: manager.editable ? manager.remove : null,
               onLongPress: Tag.toClipboard,
               background: background(state),
@@ -61,7 +61,12 @@ class Up extends HookWidget {
                     ),
 
                   if (manager.editable)
-                    Icon(icon(manager.editable, state)),
+                    Icon(
+                      switch (state) {
+                        .removed => Icons.undo,
+                        _ => Icons.playlist_remove,
+                      },
+                    ),
                 ],
               ),
             );
