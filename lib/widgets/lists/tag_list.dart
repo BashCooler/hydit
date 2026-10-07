@@ -5,10 +5,6 @@ import 'package:hydit/utils/theme.dart';
 import 'package:hydit/entities/tag.dart';
 
 
-/// Parameters [trailing] and [onTap] apply to each [ListTile] in
-/// [ListView].
-///
-/// Default [trailing] is [Tag.count].
 class TagList extends StatelessWidget {
   final List<Tag> tags;
   final ScrollController? scrollController;
