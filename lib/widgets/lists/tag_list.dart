@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
+import 'package:hydit/utils/theme.dart';
 import 'package:hydit/entities/tag.dart';
 
 
@@ -36,6 +37,7 @@ class TagList extends StatelessWidget {
             reverse: reverse,
             itemCount: tags.length,
             controller: scrollController,
+            padding: Insets.listPadding,
             itemBuilder: (context, index) {
               return itemBuilder(context, tags[index]);
             },
@@ -71,21 +73,24 @@ class TagTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      enabled: enabled,
-      onTap: () => onTap?.call(tag),
-      onLongPress: () => onLongPress?.call(tag),
-      tileColor: background,
-      minTileHeight: 55,
-      title: Text.rich(
-        TextSpan(
-          children: [
-            tag.toSpan(),
-            ?ideal?.toSpan(prefix: ' ➔ '),
-          ],
+    return Card(
+      clipBehavior: .hardEdge,
+      child: ListTile(
+        enabled: enabled,
+        onTap: () => onTap?.call(tag),
+        onLongPress: () => onLongPress?.call(tag),
+        tileColor: background,
+        minTileHeight: Sizes.minTileHeight,
+        title: Text.rich(
+          TextSpan(
+            children: [
+              tag.toSpan(),
+              ?ideal?.toSpan(prefix: ' ➔ '),
+            ],
+          ),
         ),
+        trailing: trailing,
       ),
-      trailing: trailing,
     );
   }
 }

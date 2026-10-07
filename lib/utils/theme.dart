@@ -52,7 +52,19 @@ const deletion = Color(0x33f85149);
 
 
 class const Sizes._() {
-  static const double smallList = 55 * 3;
+  static const double minTileHeight = 45;
+
+  // These are computed automatically, do not change by hand
+
+  static const double _actualTileHeight = minTileHeight + 4 * 2;
+  static const double smallList = _actualTileHeight * 3 + Insets.list * 2 - 2;
+}
+
+
+class const Insets._() {
+  static const list = 6.0;
+
+  static const EdgeInsets listPadding = .all(list);
 }
 
 
