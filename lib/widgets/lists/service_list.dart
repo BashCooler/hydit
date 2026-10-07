@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hydit/entities/service.dart';
+import 'package:hydit/utils/theme.dart';
 
 
 class ServiceList extends StatelessWidget {
@@ -20,24 +21,27 @@ class ServiceList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: ListView(
-        padding: .zero,
+        padding: Insets.listPadding,
         controller: controller,
         shrinkWrap: shrinkWrap,
         children: [
           for (final MapEntry(key: name, value: tags) in tags.entries)
             if (name != 'all known tags')
-              ListTile(
-                onTap: () => onTap?.call(name),
-                title: Text(name),
-                trailing: Row(
-                  spacing: 5,
-                  mainAxisSize: .min,
-                  children: [
-                    ?tags.display.isNotEmpty
-                        ? Badge(label: Text('${tags.display.length}'))
-                        : null,
-                    const Icon(Icons.chevron_right),
-                  ],
+              Card(
+                clipBehavior: .hardEdge,
+                child: ListTile(
+                  onTap: () => onTap?.call(name),
+                  title: Text(name),
+                  trailing: Row(
+                    spacing: 5,
+                    mainAxisSize: .min,
+                    children: [
+                      ?tags.display.isNotEmpty
+                          ? Badge(label: Text('${tags.display.length}'))
+                          : null,
+                      const Icon(Icons.chevron_right),
+                    ],
+                  ),
                 ),
               ),
         ],
