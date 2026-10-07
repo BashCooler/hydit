@@ -73,7 +73,7 @@ class Loader({required final String tag, final int chunkSize = 20}) {
 
     if (files == null) return;
 
-    final tags = files.expand((f) => f.tags.all.rawList());
+    final tags = files.expand((f) => f.tags.all.storage.rawList());
 
     await relations.push(tags);
 

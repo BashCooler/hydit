@@ -84,7 +84,7 @@ class ViewerNavBar extends StatelessWidget {
                 ArchiveButton(tag: tag),
                 a.TextButton(
                   onPressed: sheet.open,
-                  child: a.Text(file.all.length, padding: .zero),
+                  child: a.Text(file.all.display.length, padding: .zero),
                 ),
                 sheet.progress > 0.5 && editor
                     ? EditButton(tag: tag)

@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:deep_pick/deep_pick.dart';
 
-import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/tags.dart';
+import 'package:hydit/entities/service.dart';
 import 'package:hydit/entities/metadata.dart';
 import 'package:hydit/services/services.dart';
 
@@ -44,8 +44,8 @@ class HydrusFile._(
 
   set tags(Tags t) => _tags.value = t;
 
-  /// Returns display tags from `all known tags` service.
-  Iterable<Tag> get all => tags.all;
+  /// Return `all known tags` service.
+  TagService get all => tags.all;
 
   int get id => meta.id;
 

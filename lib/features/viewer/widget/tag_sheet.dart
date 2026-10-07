@@ -77,7 +77,7 @@ class TagSheet extends HookWidget {
               }
 
               return TagList(
-                tags: page.current.all.toList(),
+                tags: page.current.all.display.toList(),
                 scrollController: scroll,
                 itemBuilder: (context, tag) {
                   return TagTile(

@@ -14,7 +14,7 @@ class const Tags({
   Map<String, TagService> get delegate => _tags;
 
   /// Display tags from `all known tags` service.
-  Iterable<Tag> get all => _tags['all known tags']!.display;
+  TagService get all => _tags['all known tags']!;
 
   /// The [map] parameter should be extracted from `file_metadata`
   /// response like so:
