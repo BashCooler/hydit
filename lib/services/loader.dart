@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/utils/utils.dart';
+import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/services/services.dart';
@@ -14,6 +15,8 @@ class Loader({required final String tag, final int chunkSize = 20}) {
   FileStore get store => Get.find(tag: tag);
 
   static Repo get repo => Get.find();
+
+  TagRelationService get relations => Get.find();
 
   /// Batch is already loading and new requests should
   /// be rejected.
@@ -33,6 +36,8 @@ class Loader({required final String tag, final int chunkSize = 20}) {
       store.loaded.clear();
       store.cache.clear();
     }
+
+    relations.clear();
 
     loadNextBatch(clear: true);
   }
@@ -68,11 +73,11 @@ class Loader({required final String tag, final int chunkSize = 20}) {
 
     if (files == null) return;
 
-    if (clear) {
-      store.commit(files, clear: clear);
-    } else {
-      store.commit(files);
-    }
+    final tags = files.expand((f) => f.tags.all.rawList());
+
+    await relations.push(tags);
+
+    store.commit(files, clear: clear);
 
     _loading = false;
   }

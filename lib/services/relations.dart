@@ -23,4 +23,6 @@ class TagRelationService {
 
   TagRelations? get({required String raw, required String key}) =>
       _cache[raw]?[key];
+
+  void clear() => _cache.clear();
 }
