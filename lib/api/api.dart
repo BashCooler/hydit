@@ -127,11 +127,11 @@ class HydrusApi with DioClient {
         params: params.toMap(),
       );
 
-  Future<String> getSiblingsAndParents(List<String> tags) =>
+  Future<String> getSiblingsAndParents(Iterable<String> tags) =>
       get(
         '/add_tags/get_siblings_and_parents',
         params: {
-          'tags': tags.encode(),
+          'tags': tags.toList().encode(),
         }
       );
 }

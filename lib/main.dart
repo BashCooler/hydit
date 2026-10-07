@@ -49,13 +49,12 @@ Future<void> enableEdgeToEdge() async {
 
 class GlobalBindings extends Bindings {
   @override
-  void dependencies() {
-    Get
-      ..put<Storage>(HiveStorage())
-      ..put(Repo())
-      ..put(VideoService())
-      ..put(FileCache());
-  }
+  void dependencies() => Get
+    ..put<Storage>(HiveStorage())
+    ..put(Repo())
+    ..put(VideoService())
+    ..put(FileCache())
+    ..put(TagRelationService());
 }
 
 
