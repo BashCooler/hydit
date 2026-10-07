@@ -73,8 +73,13 @@ class TagTile extends StatelessWidget {
       onLongPress: () => onLongPress?.call(tag),
       tileColor: background,
       minTileHeight: 55,
-      title: tag.pretty.n
-        ..color = tag.color,
+      title: Text.rich(
+        TextSpan(
+          children: [
+            tag.span,
+          ],
+        ),
+      ),
       trailing: trailing,
     );
   }
@@ -103,3 +108,9 @@ class TagCount extends StatelessWidget {
 }
 
 
+extension TagTextSpan on Tag {
+  TextSpan get span => TextSpan(
+    text: pretty,
+    style: TextStyle(color: color),
+  );
+}
