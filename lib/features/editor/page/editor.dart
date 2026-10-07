@@ -2,8 +2,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/widgets/common/dialog.dart';
+import 'package:hydit/utils/theme.dart';
 import 'package:hydit/services/services.dart';
+import 'package:hydit/widgets/common/dialog.dart';
 
 import '../getx/base.dart';
 import '../widget/widgets.dart';
@@ -37,7 +38,7 @@ class Editor extends StatelessWidget {
 
                   if (manager.editable)
                     SizedBox(
-                      height: 55 * 3,
+                      height: Sizes.smallList,
                       child: Down(tag: tag),
                     ),
 

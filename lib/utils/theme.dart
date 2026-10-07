@@ -51,6 +51,11 @@ const addition = Color(0x333fb950);
 const deletion = Color(0x33f85149);
 
 
+class const Sizes._() {
+  static const double smallList = 55 * 3;
+}
+
+
 Color colorOf(String? namespace) => switch (namespace) {
   'character' => Color.fromARGB(255, 0, 170, 0),
   'creator' => Color.fromARGB(255, 170, 0, 0),
