@@ -26,5 +26,8 @@ class TagRelationService {
   Tag? ideal({required Tag tag, required String key}) =>
       _cache[tag]?[key]?.ideal;
 
+  List<Tag> ancestors({required Tag tag, required String key}) =>
+      _cache[tag]?[key]?.ancestors ?? .empty();
+
   void clear() => _cache.clear();
 }

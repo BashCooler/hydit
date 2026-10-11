@@ -42,6 +42,13 @@ abstract class TagManager {
 
   Set<Tag> get deletions => initial.difference(current);
 
+  /// Assign initial tags, which will be edited.
+  Map<String, Set<Tag>> initTags();
+
+  /// Remove all tags from this [TagManager] and initialize
+  /// it with tags from [initTags].
+  void init() => assign(initTags());
+
   void assign(Map<String, Set<Tag>> tags) {
     _initial.assignAll(tags);
     _current.assignAll(tags.map((k, v) => MapEntry(k, v.obs)));
@@ -66,7 +73,13 @@ abstract class TagManager {
 
   void addRaw(String raw) => add(Tag(raw));
 
-  void remove(Tag tag);
+  /// Delete or restore the [tag].
+  ///
+  /// DO check if the current service is [editable]
+  /// before applying any changes.
+  ///
+  /// DO check the [tag.raw] is not empty.
+  void toggle(Tag tag);
 
   int count(Tag tag);
 

@@ -27,6 +27,8 @@ class Up extends HookWidget {
 
   TagRelationService get rel => Get.find();
 
+  Tag? ideal(Tag tag) => rel.ideal(tag: tag, key: manager.key);
+
   @override
   Widget build(BuildContext context) {
     final scroll = useScrollController();
@@ -42,8 +44,8 @@ class Up extends HookWidget {
 
             return TagTile(
               tag: tag,
-              ideal: rel.ideal(tag: tag, key: manager.key),
-              onTap: manager.editable ? manager.remove : null,
+              ideal: ideal(tag),
+              onTap: manager.toggle,
               onLongPress: Tag.toClipboard,
               background: background(state),
               trailing: Row(

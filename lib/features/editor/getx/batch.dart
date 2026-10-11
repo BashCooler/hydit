@@ -6,18 +6,18 @@ import 'package:hydit/utils/utils.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/service.dart';
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/editor/getx/base.dart';
 
 import '../entities/changes.dart';
 
 
-class BatchTagManager(FileStore store) extends TagManager {
-  @override
-  final List<HydrusFile> files;
+class BatchTagManager ({
+  @override required final List<HydrusFile> files,
+}) extends TagManager {
 
-  this : files = .unmodifiable(store.files) {
+  this {
     init();
+    service = 'my tags';
   }
 
   final _added = <String, RxSet<Tag>>{};
@@ -30,9 +30,30 @@ class BatchTagManager(FileStore store) extends TagManager {
   Map<String, TagService> get original => files.first.tags;
 
   @override
-  void remove(Tag tag) {
-    if (!editable) return;
-    if (tag.raw.isEmpty) return;
+  bool get unlocked =>
+      super.unlocked && _added.values.expand((s) => s).isEmpty;
+
+  @override
+  Map<String, Set<Tag>> initTags() {
+    final Map<String, Set<Tag>> tags = {};
+
+    for (final file in files) {
+      final original = file.tags.entries;
+
+      for (final MapEntry(key: name, value: service) in original) {
+        tags.putIfAbsent(name, () => {}).addAll(service.storage);
+        _added.putIfAbsent(name, () => <Tag>{}.obs);
+
+        countService(name, service);
+      }
+    }
+
+    return tags;
+  }
+
+  @override
+  void toggle(Tag tag) {
+    if (!editable || tag.raw.isEmpty) return;
 
     final state = this.state(tag);
     final count = this.count(tag);
@@ -96,28 +117,7 @@ class BatchTagManager(FileStore store) extends TagManager {
   }
 
   @override
-  int count(Tag tag) {
-    return _counts[service]?[tag] ?? 0;
-  }
-
-  void init() {
-    final Map<String, Set<Tag>> tags = {};
-
-    for (final file in files) {
-      final original = file.tags.entries;
-
-      for (final MapEntry(key: name, value: service) in original) {
-        tags.putIfAbsent(name, () => {}).addAll(service.storage);
-        _added.putIfAbsent(name, () => <Tag>{}.obs);
-
-        countService(name, service);
-      }
-    }
-
-    assign(tags);
-
-    service = 'my tags';
-  }
+  int count(Tag tag) => _counts[service]?[tag] ?? 0;
 
   void countService(String name, TagService service) {
     final serviceCounts = _counts.putIfAbsent(name, () => {});
@@ -126,10 +126,6 @@ class BatchTagManager(FileStore store) extends TagManager {
       serviceCounts[tag] = (serviceCounts[tag] ?? 0) + 1;
     }
   }
-
-  @override
-  bool get unlocked =>
-      super.unlocked && _added.values.expand((s) => s).isEmpty;
 
   @override
   List<Changes> summarize() {

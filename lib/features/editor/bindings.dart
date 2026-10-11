@@ -102,7 +102,7 @@ class BatchEditorBindings extends Bindings {
     final store = FileStore(ids);
 
     Get.put<TagManager>(
-      BatchTagManager(store),
+      BatchTagManager(files: store.files.toList()),
       tag: tag,
     );
   }
