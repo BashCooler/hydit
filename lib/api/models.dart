@@ -8,7 +8,7 @@ part 'models.mapper.dart';
 @MappableClass()
 class const SiblingsAndParentsDto({
   /// Tag -> service key -> relations
-  required final Map<String, Map<String, TagRelations>> tags,
+  required final Map<Tag, Map<String, TagRelations>> tags,
 }) with SiblingsAndParentsDtoMappable {
   static final fromMap = SiblingsAndParentsDtoMapper.fromMap;
   static final fromJson = SiblingsAndParentsDtoMapper.fromJson;

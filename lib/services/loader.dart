@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/services/services.dart';
@@ -73,7 +72,7 @@ class Loader({required final String tag, final int chunkSize = 20}) {
 
     if (files == null) return;
 
-    final tags = files.expand((f) => f.tags.all.storage.rawList());
+    final tags = files.expand((f) => f.tags.all.storage);
 
     await relations.push(tags);
 

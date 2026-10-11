@@ -25,7 +25,7 @@ class Up extends HookWidget {
 
   TagManager get manager => Get.find(tag: tag);
 
-  TagRelationService get relations => Get.find();
+  TagRelationService get rel => Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +42,7 @@ class Up extends HookWidget {
 
             return TagTile(
               tag: tag,
-              ideal: relations.ideal(
-                raw: tag.raw,
-                key: manager.key,
-              ),
+              ideal: rel.ideal(tag: tag, key: manager.key),
               onTap: manager.editable ? manager.remove : null,
               onLongPress: Tag.toClipboard,
               background: background(state),

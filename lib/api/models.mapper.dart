@@ -24,13 +24,9 @@ class SiblingsAndParentsDtoMapper
   @override
   final String id = 'SiblingsAndParentsDto';
 
-  static Map<String, Map<String, TagRelations>> _$tags(
-    SiblingsAndParentsDto v,
-  ) => v.tags;
-  static const Field<
-    SiblingsAndParentsDto,
-    Map<String, Map<String, TagRelations>>
-  >
+  static Map<Tag, Map<String, TagRelations>> _$tags(SiblingsAndParentsDto v) =>
+      v.tags;
+  static const Field<SiblingsAndParentsDto, Map<Tag, Map<String, TagRelations>>>
   _f$tags = Field('tags', _$tags);
 
   @override
@@ -112,12 +108,12 @@ abstract class SiblingsAndParentsDtoCopyWith<
     implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<
     $R,
-    String,
+    Tag,
     Map<String, TagRelations>,
     ObjectCopyWith<$R, Map<String, TagRelations>, Map<String, TagRelations>>
   >
   get tags;
-  $R call({Map<String, Map<String, TagRelations>>? tags});
+  $R call({Map<Tag, Map<String, TagRelations>>? tags});
   SiblingsAndParentsDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -134,7 +130,7 @@ class _SiblingsAndParentsDtoCopyWithImpl<$R, $Out>
   @override
   MapCopyWith<
     $R,
-    String,
+    Tag,
     Map<String, TagRelations>,
     ObjectCopyWith<$R, Map<String, TagRelations>, Map<String, TagRelations>>
   >
@@ -144,7 +140,7 @@ class _SiblingsAndParentsDtoCopyWithImpl<$R, $Out>
     (v) => call(tags: v),
   );
   @override
-  $R call({Map<String, Map<String, TagRelations>>? tags}) =>
+  $R call({Map<Tag, Map<String, TagRelations>>? tags}) =>
       $apply(FieldCopyWithData({if (tags != null) #tags: tags}));
   @override
   SiblingsAndParentsDto $make(CopyWithData data) =>
