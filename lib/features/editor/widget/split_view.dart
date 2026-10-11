@@ -68,31 +68,10 @@ class Up extends HookWidget {
                       count: manager.count(tag),
                     ),
 
-                  PopupMenuButton(
-                    icon: Badge(
-                      isLabelVisible: anc.isNotEmpty,
-                      child: const Icon(Icons.more_vert),
-                    ),
-                    itemBuilder: (context) => [
-                      if (anc.isNotEmpty)
-                        PopupMenuItem(
-                          child: ''
-                              '${anc.length} ancestor'
-                              '${anc.length > 1 ? 's' : ''}'.n,
-                          onTap: () => showTagSheet(context, anc),
-                        ),
-
-                      PopupMenuItem(
-                        child: const Text('copy tag'),
-                        onTap: () => Tag.toClipboard(tag),
-                      ),
-
-                      if (ideal != null && ideal != tag)
-                        PopupMenuItem(
-                          child: const Text('copy ideal tag'),
-                          onTap: () => Tag.toClipboard(ideal),
-                        ),
-                    ],
+                  TagTilePopup(
+                    tag: tag,
+                    ancestors: anc,
+                    ideal: ideal,
                   ),
                 ],
               ),
@@ -104,8 +83,48 @@ class Up extends HookWidget {
   }
 }
 
+class const TagTilePopup ({
+  super.key,
+  required final Tag tag,
+  final Tag? ideal,
+  final List<Tag> ancestors = const [],
+}) extends StatelessWidget {
 
-void showTagSheet(BuildContext context, List<Tag> ancestors) {
+  @override
+  Widget build(BuildContext context) {
+    final ideal = this.ideal;
+
+    return PopupMenuButton(
+      icon: Badge(
+        isLabelVisible: ancestors.isNotEmpty,
+        child: const Icon(Icons.more_vert),
+      ),
+      itemBuilder: (context) => [
+        if (ancestors.isNotEmpty)
+          PopupMenuItem(
+            child: ''
+                '${ancestors.length} ancestor'
+                '${ancestors.length > 1 ? 's' : ''}'.n,
+            onTap: () => showModalTagSheet(context, ancestors),
+          ),
+
+        PopupMenuItem(
+          child: const Text('copy tag'),
+          onTap: () => Tag.toClipboard(tag),
+        ),
+
+        if (ideal != null && ideal != tag)
+          PopupMenuItem(
+            child: const Text('copy ideal tag'),
+            onTap: () => Tag.toClipboard(ideal),
+          ),
+      ],
+    );
+  }
+}
+
+
+void showModalTagSheet(BuildContext context, List<Tag> ancestors) {
   showModalBottomSheet(
     context: context,
     showDragHandle: true,
@@ -125,7 +144,10 @@ void showTagSheet(BuildContext context, List<Tag> ancestors) {
               shrinkWrap: true,
               scrollController: scrollController,
               itemBuilder: (context, tag) {
-                return TagTile(tag: tag);
+                return TagTile(
+                  tag: tag,
+                  onTap: Tag.toClipboard,
+                );
               },
             ),
           );
