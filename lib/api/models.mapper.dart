@@ -163,6 +163,7 @@ class TagRelationsMapper extends ClassMapperBase<TagRelations> {
   static TagRelationsMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = TagRelationsMapper._());
+      MapperContainer.globals.useAll([TagMapper()]);
     }
     return _instance!;
   }
@@ -170,14 +171,14 @@ class TagRelationsMapper extends ClassMapperBase<TagRelations> {
   @override
   final String id = 'TagRelations';
 
-  static String _$ideal(TagRelations v) => v.ideal;
-  static const Field<TagRelations, String> _f$ideal = Field(
+  static Tag _$ideal(TagRelations v) => v.ideal;
+  static const Field<TagRelations, Tag> _f$ideal = Field(
     'ideal',
     _$ideal,
     key: r'ideal_tag',
   );
-  static List<String> _$ancestors(TagRelations v) => v.ancestors;
-  static const Field<TagRelations, List<String>> _f$ancestors = Field(
+  static List<Tag> _$ancestors(TagRelations v) => v.ancestors;
+  static const Field<TagRelations, List<Tag>> _f$ancestors = Field(
     'ancestors',
     _$ancestors,
   );
@@ -257,8 +258,8 @@ extension TagRelationsValueCopy<$R, $Out>
 
 abstract class TagRelationsCopyWith<$R, $In extends TagRelations, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get ancestors;
-  $R call({String? ideal, List<String>? ancestors});
+  ListCopyWith<$R, Tag, ObjectCopyWith<$R, Tag, Tag>> get ancestors;
+  $R call({Tag? ideal, List<Tag>? ancestors});
   TagRelationsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -271,14 +272,14 @@ class _TagRelationsCopyWithImpl<$R, $Out>
   late final ClassMapperBase<TagRelations> $mapper =
       TagRelationsMapper.ensureInitialized();
   @override
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get ancestors =>
+  ListCopyWith<$R, Tag, ObjectCopyWith<$R, Tag, Tag>> get ancestors =>
       ListCopyWith(
         $value.ancestors,
         (v, t) => ObjectCopyWith(v, $identity, t),
         (v) => call(ancestors: v),
       );
   @override
-  $R call({String? ideal, List<String>? ancestors}) => $apply(
+  $R call({Tag? ideal, List<Tag>? ancestors}) => $apply(
     FieldCopyWithData({
       if (ideal != null) #ideal: ideal,
       if (ancestors != null) #ancestors: ancestors,

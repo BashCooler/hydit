@@ -22,11 +22,8 @@ class TagRelationService {
       .map(SiblingsAndParentsDto.fromJson)
       .map((dto) => _cache.addAll(dto.tags));
 
-  TagRelations? get({required String raw, required String key}) =>
-      _cache[raw]?[key];
-
   Tag? ideal({required String raw, required String key}) =>
-      get(raw: raw, key: key)?.ideal.let(Tag.new);
+      _cache[raw]?[key]?.ideal;
 
   void clear() => _cache.clear();
 }
