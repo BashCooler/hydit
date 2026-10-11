@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/relations.dart';
-import 'package:hydit/widgets/tag/widgets.dart';
+import 'package:hydit/widgets/tag.dart';
 import 'package:hydit/features/search/getx/tag_search.dart';
 
 import '../getx/base.dart';
