@@ -130,7 +130,7 @@ class Loader({required final String tag, final int chunkSize = 20}) {
     _retrying = true;
 
     final ping = await repo.api
-        .getApiVersion()
+        .getVerifyAccessKey()
         .run()
         .tapFailure(Snack.error);
 

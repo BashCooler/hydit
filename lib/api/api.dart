@@ -40,8 +40,6 @@ class HydrusApi with DioClient {
 
   // MARK: ACCESS MANAGEMENT
 
-  Future<String> getApiVersion() => get('/api_version');
-
   Future<String> getVerifyAccessKey() => get('/verify_access_key');
 
   // MARK: SEARCHING AND FETCHING FILES
