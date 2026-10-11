@@ -79,6 +79,7 @@ class Up extends HookWidget {
                           child: ''
                               '${anc.length} ancestor'
                               '${anc.length > 1 ? 's' : ''}'.n,
+                          onTap: () => showTagSheet(context, anc),
                         ),
 
                       PopupMenuItem(
@@ -101,6 +102,37 @@ class Up extends HookWidget {
       ),
     );
   }
+}
+
+
+void showTagSheet(BuildContext context, List<Tag> ancestors) {
+  showModalBottomSheet(
+    context: context,
+    showDragHandle: true,
+    isScrollControlled: true,
+    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+    builder: (context) {
+      return DraggableScrollableSheet(
+        expand: false,
+        minChildSize: 0.25,
+        initialChildSize: 0.5,
+        maxChildSize: 0.5,
+        snap: true,
+        builder: (context, scrollController) {
+          return SafeArea(
+            child: TagList(
+              tags: ancestors,
+              shrinkWrap: true,
+              scrollController: scrollController,
+              itemBuilder: (context, tag) {
+                return TagTile(tag: tag);
+              },
+            ),
+          );
+        },
+      );
+    },
+  );
 }
 
 

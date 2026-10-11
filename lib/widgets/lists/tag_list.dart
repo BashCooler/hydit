@@ -5,19 +5,14 @@ import 'package:hydit/utils/theme.dart';
 import 'package:hydit/entities/tag.dart';
 
 
-class TagList extends StatelessWidget {
-  final List<Tag> tags;
-  final ScrollController? scrollController;
-  final bool reverse;
-  final Widget Function(BuildContext context, Tag tag) itemBuilder;
-
-  const TagList({
-    super.key,
-    this.scrollController,
-    required this.tags,
-    this.reverse = false,
-    required this.itemBuilder,
-  });
+class const TagList({
+  super.key,
+  final ScrollController? scrollController,
+  required final List<Tag> tags,
+  final bool reverse = false,
+  final bool shrinkWrap = false,
+  required final Widget Function(BuildContext context, Tag tag) itemBuilder,
+}) extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +28,7 @@ class TagList extends StatelessWidget {
             reverse: reverse,
             itemCount: tags.length,
             controller: scrollController,
+            shrinkWrap: shrinkWrap,
             padding: Insets.listPadding,
             itemBuilder: (context, index) {
               return itemBuilder(context, tags[index]);
