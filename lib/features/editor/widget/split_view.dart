@@ -48,6 +48,8 @@ class Up extends HookWidget {
 
             final ideal = idealTag(tag);
 
+            final anc = ancestors(tag);
+
             return TagTile(
               tag: tag,
               ideal: ideal,
@@ -66,6 +68,10 @@ class Up extends HookWidget {
                     ),
 
                   PopupMenuButton(
+                    icon: Badge(
+                      isLabelVisible: anc.isNotEmpty,
+                      child: const Icon(Icons.more_vert),
+                    ),
                     itemBuilder: (context) => [
                       PopupMenuItem(
                         child: const Text('copy tag'),
