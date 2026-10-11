@@ -19,38 +19,23 @@ class EditorBottomBar extends StatelessWidget {
 
   TagManager get manager => Get.find(tag: tag);
 
-  /// Select next file.
-  Future<void> next() async {
-    if (!await callback()) return;
-
-    final manager = this.manager as PagedTagManager;
-    manager.page.jumpNext();
-    manager.init();
-  }
-
-  /// Select previous file.
-  Future<void> previous() async {
-    if (!await callback()) return;
-
-    final manager = this.manager as PagedTagManager;
-    manager.page.jumpPrevious();
-    manager.init();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final paged = manager is PagedTagManager;
-
     return Padding(
       padding: const .symmetric(horizontal: 5),
       child: Row(
         children: [
-          if (paged)
-            IconButton(
-              tooltip: 'Previous page',
-              icon: const Icon(Icons.keyboard_arrow_left),
-              onPressed: previous,
-            ),
+          if (manager case PagedTagManager(page: final page) && final manager)
+            if (page.files.length > 1)
+              IconButton(
+                tooltip: 'Previous page',
+                icon: const Icon(Icons.keyboard_arrow_left),
+                onPressed: () async {
+                  if (await callback()) {
+                    manager..page.jumpPrevious()..init();
+                  }
+                },
+              ),
 
           Expanded(child: child),
 
@@ -60,12 +45,17 @@ class EditorBottomBar extends StatelessWidget {
             onPressed: Navigator.of(context).maybePop,
           ),
 
-          if (paged)
-            IconButton(
-              tooltip: 'Next page',
-              icon: const Icon(Icons.keyboard_arrow_right),
-              onPressed: next,
-            ),
+          if (manager case PagedTagManager(page: final page) && final manager)
+            if (page.files.length > 1)
+              IconButton(
+                tooltip: 'Next page',
+                icon: const Icon(Icons.keyboard_arrow_right),
+                onPressed: () async {
+                  if (await callback()) {
+                    manager..page.jumpNext()..init();
+                  }
+                },
+              ),
         ],
       ),
     );
