@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:hydit/entities/tag.dart';
 
-import 'tag_list.dart';
-import 'tag_tile.dart';
+import 'list.dart';
+import 'tile.dart';
 
 
 void showModalTagSheet(BuildContext context, List<Tag> ancestors) {
