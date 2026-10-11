@@ -53,6 +53,7 @@ class TagTile extends StatelessWidget {
   final Widget? trailing;
   final void Function(Tag tag)? onTap;
   final void Function(Tag tag)? onLongPress;
+  final EdgeInsetsGeometry? contentPadding;
 
   const TagTile({
     super.key,
@@ -63,6 +64,7 @@ class TagTile extends StatelessWidget {
     this.trailing,
     this.onTap,
     this.onLongPress,
+    this.contentPadding,
   });
 
   Tag? get ideal => _ideal != null && _ideal != tag ? _ideal : null;
@@ -77,6 +79,7 @@ class TagTile extends StatelessWidget {
         onLongPress: () => onLongPress?.call(tag),
         tileColor: background,
         minTileHeight: Sizes.minTileHeight,
+        contentPadding: contentPadding,
         title: Text.rich(
           TextSpan(
             children: [
@@ -92,25 +95,16 @@ class TagTile extends StatelessWidget {
 }
 
 
-class TagCount extends StatelessWidget {
-  final Tag tag;
-  final int count;
-  final EdgeInsets padding;
-
-  const TagCount({
-    super.key,
-    required this.tag,
-    required this.count,
-    this.padding = const .symmetric(horizontal: 4),
-  });
+class const TagCount ({
+  super.key,
+  required final Tag tag,
+  required final int count,
+}) extends StatelessWidget {
 
   @override
-  Widget build(BuildContext context) {
-    return '$count'.n
-      ..color = tag.color
-      ..fontSize = 14
-      ..n.padding = padding;
-  }
+  Widget build(BuildContext context) => '$count'.n
+    ..color = tag.color
+    ..fontSize = 14;
 }
 
 

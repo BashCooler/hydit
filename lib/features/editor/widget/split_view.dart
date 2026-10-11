@@ -27,7 +27,9 @@ class Up extends HookWidget {
 
   TagRelationService get rel => Get.find();
 
-  Tag? ideal(Tag tag) => rel.ideal(tag: tag, key: manager.key);
+  Tag? idealTag(Tag tag) => rel.ideal(tag: tag, key: manager.key);
+
+  List<Tag> ancestors(Tag tag) => rel.ancestors(tag: tag, key: manager.key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,30 +44,41 @@ class Up extends HookWidget {
           return Obx(() {
             final state = manager.state(tag);
 
+            final bg = background(state);
+
+            final ideal = idealTag(tag);
+
             return TagTile(
               tag: tag,
-              ideal: ideal(tag),
+              ideal: ideal,
+              background: bg,
               onTap: manager.toggle,
               onLongPress: Tag.toClipboard,
-              background: background(state),
+              contentPadding: const .fromLTRB(16, 0, 4, 0),
               trailing: Row(
                 mainAxisSize: .min,
-                spacing: 20,
+                spacing: 8,
                 children: [
                   if (manager.files.length > 1)
                     TagCount(
                       tag: tag,
                       count: manager.count(tag),
-                      padding: .zero,
                     ),
 
-                  if (manager.editable)
-                    Icon(
-                      switch (state) {
-                        .removed => Icons.undo,
-                        _ => Icons.playlist_remove,
-                      },
-                    ),
+                  PopupMenuButton(
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: const Text('copy tag'),
+                        onTap: () => Tag.toClipboard(tag),
+                      ),
+
+                      if (ideal != null && ideal != tag)
+                        PopupMenuItem(
+                          child: const Text('copy ideal tag'),
+                          onTap: () => Tag.toClipboard(ideal),
+                        ),
+                    ],
+                  ),
                 ],
               ),
             );
