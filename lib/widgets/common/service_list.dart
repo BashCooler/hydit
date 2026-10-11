@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:hydit/entities/service.dart';
+
 import 'package:hydit/utils/theme.dart';
+import 'package:hydit/entities/service.dart';
 
 
-class ServiceList extends StatelessWidget {
-  final Map<String, TagService> tags;
-  final ScrollController? controller;
-  final bool shrinkWrap;
-  final void Function(String name)? onTap;
-
-  
-  const ServiceList(this.tags, {
-    super.key,
-    this.controller,
-    this.shrinkWrap = false,
-    this.onTap,
-  });
-
+class const ServiceList(
+  final Map<String, TagService> tags, {
+  super.key,
+  final ScrollController? controller,
+  final bool shrinkWrap = false,
+  final void Function(String name)? onTap,
+}) extends StatelessWidget {
+  //
   @override
   Widget build(BuildContext context) {
     return Material(

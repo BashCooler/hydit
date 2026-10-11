@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hydit/features/viewer/getx/video.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import 'package:hydit/entities/tag.dart';
-import 'package:hydit/widgets/lists/tag_list.dart';
-import 'package:hydit/widgets/lists/service_list.dart';
+import 'package:hydit/widgets/tag/widgets.dart';
+import 'package:hydit/widgets/common/service_list.dart';
 import 'package:hydit/features/editor/bindings.dart';
+import 'package:hydit/features/viewer/getx/video.dart';
 
 import '../getx/page.dart';
 import '../getx/sheet.dart';
