@@ -5,18 +5,13 @@ import '../getx/base.dart';
 import '../getx/single.dart';
 
 
-class EditorBottomBar extends StatelessWidget {
-  final String tag;
-  final Future<bool> Function() callback;
-  final Widget child;
-
-  const EditorBottomBar({
-    super.key,
-    required this.tag,
-    required this.callback,
-    required this.child,
-  });
-
+class const EditorBottomBar({
+  super.key,
+  required final String tag,
+  required final Future<bool> Function() callback,
+  required final Widget child,
+}) extends StatelessWidget {
+  //
   TagManager get manager => Get.find(tag: tag);
 
   @override

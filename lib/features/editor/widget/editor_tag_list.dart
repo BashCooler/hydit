@@ -1,21 +1,20 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:hydit/utils/utils.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import 'package:hydit/utils/utils.dart';
+import 'package:hydit/widgets/tag.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/relations.dart';
-import 'package:hydit/widgets/tag.dart';
-import 'package:hydit/features/search/getx/tag_search.dart';
 
 import '../getx/base.dart';
 
 
-class Up extends HookWidget {
+class EditorTagList extends HookWidget {
   final String tag;
   final List<Tag> tags;
 
-  const Up({super.key, required this.tag, required this.tags});
+  const EditorTagList({super.key, required this.tag, required this.tags});
 
   Color? background(TagState state) => switch (state) {
     .added => addition,
@@ -76,37 +75,6 @@ class Up extends HookWidget {
               ),
             );
           });
-        },
-      ),
-    );
-  }
-}
-
-
-class Down extends HookWidget {
-  final String tag;
-
-  const Down({super.key, required this.tag});
-
-  TagManager get manager => Get.find(tag: tag);
-  TagSearchController get search => Get.find(tag: tag);
-
-  @override
-  Widget build(BuildContext context) {
-    final scroll = useScrollController();
-
-    return Obx(
-      () => TagList(
-        reverse: true,
-        tags: search.suggests.toList(),
-        scrollController: scroll,
-        itemBuilder: (context, tag) {
-          return TagTile(
-            tag: tag,
-            onTap: manager.add,
-            onLongPress: Tag.toClipboard,
-            trailing: const Icon(Icons.add),
-          );
         },
       ),
     );

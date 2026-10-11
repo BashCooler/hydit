@@ -8,7 +8,6 @@ import 'package:hydit/widgets/common/dialog.dart';
 
 import '../getx/base.dart';
 import '../widget/widgets.dart';
-import '../widget/dropdown.dart';
 
 
 class Editor extends StatelessWidget {
@@ -31,7 +30,7 @@ class Editor extends StatelessWidget {
             return TextFieldTapRegion(
               child: Column(
                 children: [
-                  Up(tag: tag, tags: manager.tags),
+                  EditorTagList(tag: tag, tags: manager.tags),
 
                   if (manager.editable)
                     const Divider(height: 1),
@@ -39,7 +38,7 @@ class Editor extends StatelessWidget {
                   if (manager.editable)
                     SizedBox(
                       height: Sizes.smallList,
-                      child: Down(tag: tag),
+                      child: EditorSuggests(tag: tag),
                     ),
 
                   const Divider(height: 1),

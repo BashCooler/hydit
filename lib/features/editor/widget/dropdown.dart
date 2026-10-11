@@ -51,18 +51,13 @@ class ServiceDropdown extends StatelessWidget {
 }
 
 
-class DropdownTrailing extends StatelessWidget {
-  final String tag;
-  final int count;
-  final String service;
-
-  const DropdownTrailing({
-    super.key,
-    required this.tag,
-    required this.count,
-    required this.service,
-  });
-
+class const DropdownTrailing({
+  super.key,
+  required final String tag,
+  required final int count,
+  required final String service,
+}) extends StatelessWidget {
+  //
   @override
   Widget build(BuildContext context) {
     return Row(
