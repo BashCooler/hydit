@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:niku/namespace.dart' as n;
 import 'package:flutter/material.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -73,6 +74,13 @@ class Up extends HookWidget {
                       child: const Icon(Icons.more_vert),
                     ),
                     itemBuilder: (context) => [
+                      if (anc.isNotEmpty)
+                        PopupMenuItem(
+                          child: ''
+                              '${anc.length} ancestor'
+                              '${anc.length > 1 ? 's' : ''}'.n,
+                        ),
+
                       PopupMenuItem(
                         child: const Text('copy tag'),
                         onTap: () => Tag.toClipboard(tag),
