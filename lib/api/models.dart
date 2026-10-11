@@ -17,7 +17,7 @@ class const SiblingsAndParentsDto({
 class TagRelations({
   @MappableField(key: 'ideal_tag')
   required final String ideal,
-  required final List<String> descendants,
+  required final List<String> ancestors,
 }) with TagRelationsMappable {
   static final fromMap = TagRelationsMapper.fromMap;
   static final fromJson = TagRelationsMapper.fromJson;

@@ -176,22 +176,22 @@ class TagRelationsMapper extends ClassMapperBase<TagRelations> {
     _$ideal,
     key: r'ideal_tag',
   );
-  static List<String> _$descendants(TagRelations v) => v.descendants;
-  static const Field<TagRelations, List<String>> _f$descendants = Field(
-    'descendants',
-    _$descendants,
+  static List<String> _$ancestors(TagRelations v) => v.ancestors;
+  static const Field<TagRelations, List<String>> _f$ancestors = Field(
+    'ancestors',
+    _$ancestors,
   );
 
   @override
   final MappableFields<TagRelations> fields = const {
     #ideal: _f$ideal,
-    #descendants: _f$descendants,
+    #ancestors: _f$ancestors,
   };
 
   static TagRelations _instantiate(DecodingData data) {
     return TagRelations(
       ideal: data.dec(_f$ideal),
-      descendants: data.dec(_f$descendants),
+      ancestors: data.dec(_f$ancestors),
     );
   }
 
@@ -257,8 +257,8 @@ extension TagRelationsValueCopy<$R, $Out>
 
 abstract class TagRelationsCopyWith<$R, $In extends TagRelations, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get descendants;
-  $R call({String? ideal, List<String>? descendants});
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get ancestors;
+  $R call({String? ideal, List<String>? ancestors});
   TagRelationsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -271,23 +271,23 @@ class _TagRelationsCopyWithImpl<$R, $Out>
   late final ClassMapperBase<TagRelations> $mapper =
       TagRelationsMapper.ensureInitialized();
   @override
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>
-  get descendants => ListCopyWith(
-    $value.descendants,
-    (v, t) => ObjectCopyWith(v, $identity, t),
-    (v) => call(descendants: v),
-  );
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get ancestors =>
+      ListCopyWith(
+        $value.ancestors,
+        (v, t) => ObjectCopyWith(v, $identity, t),
+        (v) => call(ancestors: v),
+      );
   @override
-  $R call({String? ideal, List<String>? descendants}) => $apply(
+  $R call({String? ideal, List<String>? ancestors}) => $apply(
     FieldCopyWithData({
       if (ideal != null) #ideal: ideal,
-      if (descendants != null) #descendants: descendants,
+      if (ancestors != null) #ancestors: ancestors,
     }),
   );
   @override
   TagRelations $make(CopyWithData data) => TagRelations(
     ideal: data.get(#ideal, or: $value.ideal),
-    descendants: data.get(#descendants, or: $value.descendants),
+    ancestors: data.get(#ancestors, or: $value.ancestors),
   );
 
   @override
