@@ -18,6 +18,8 @@ class Repo() {
 
   FileCache get cache => Get.find();
 
+  TagRelationService get relations => Get.find();
+
   String buildUrl(int id, {bool thumbnail = false}) => ""
       "${api.url}/get_files/"
       "${thumbnail ? "thumbnail" : "file"}"
@@ -46,6 +48,12 @@ class Repo() {
       for (var i = 0; i < chunk.length; i++) {
         chunk[i].tags = tags[i];
       }
+
+      final load = tags.expand((t) => t.all.storage);
+
+      final update = await relations.push(load);
+
+      if (update is Failure) return update;
     }
 
     return Success(null);
