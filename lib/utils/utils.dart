@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 export 'theme.dart';
-export 'url.dart';
 export 'package:dartx/dartx.dart' show IterableChunked;
 
 
