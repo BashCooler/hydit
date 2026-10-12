@@ -1,17 +1,17 @@
 import 'package:deep_pick/deep_pick.dart';
-import 'package:hydit/entities/tag.dart';
+import 'package:collection/collection.dart';
 
 import 'package:hydit/utils/utils.dart';
+import 'package:hydit/entities/tag.dart';
 import 'package:hydit/entities/service.dart';
 
 
 class const Tags({
   required final Map<String, TagService> _tags,
   required final Map<String, List<String>> namespaces,
-}) extends DelegatingMapBase<String, TagService> {
+}) extends DelegatingMap<String, TagService> {
 
-  @override
-  Map<String, TagService> get delegate => _tags;
+  this : super(_tags);
 
   /// Display tags from `all known tags` service.
   TagService get all => _tags['all known tags']!;
