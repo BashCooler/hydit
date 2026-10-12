@@ -29,15 +29,15 @@ class Token with CancellationToken, CompletionToken {
 }
 
 
-class Unit {
-  const Unit._();
-}
+class const Unit._();
 
 const unit = Unit._();
 
 
-sealed class Result<T> {
-  const Result();
+sealed class const Result<T>() {
+  /// Unwrap [Success] data or throw
+  /// the error caught by [Failure].
+  T bind();
 
   T? getOrNull();
 
@@ -63,6 +63,9 @@ class Success<T> extends Result<T> {
   final T data;
 
   const Success(this.data);
+
+  @override
+  T bind() => data;
 
   @override
   T? getOrNull() => data;
@@ -107,6 +110,9 @@ class Failure<T> extends Result<T> {
   String toString() => e.toString();
 
   @override
+  T bind() => throw e;
+
+  @override
   T? getOrNull() => null;
 
   @override
@@ -138,6 +144,8 @@ class Failure<T> extends Result<T> {
 
 
 extension AsyncOperations<T> on Future<Result<T>> {
+
+  Future<T> bind() async => (await this).bind();
 
   Future<T?> getOrNull() async => (await this).getOrNull();
 
