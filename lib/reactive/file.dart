@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
-import 'package:deep_pick/deep_pick.dart';
 
+import 'package:hydit/api/models.dart';
 import 'package:hydit/entities/tags.dart';
-import 'package:hydit/entities/service.dart';
 import 'package:hydit/entities/metadata.dart';
 import 'package:hydit/services/services.dart';
 
@@ -14,28 +13,11 @@ class HydrusFile._(
   final Rx<Tags> _tags,
   final Rx<bool> inbox,
 ) {
-  /// The [map] parameter should be extracted from `file_metadata`
-  /// response like so:
-  ///
-  /// `json -> metadata -> 0` (or other index)
-  factory fromMap(Map<String, dynamic> map) {
-
-    final meta = FileMetadata.fromMap(map);
-    final tags = Tags.fromMap(map);
-    final inbox = pick(map, 'is_inbox').asBoolOrThrow();
-
-    return HydrusFile._(meta, tags.obs, inbox.obs);
-  }
-
-  /// The [pick] parameter should be extracted from `file_metadata`
-  /// response like so:
-  ///
-  /// `pick(json, 'metadata', 0)` (or other index)
-  factory fromPick(Pick pick) {
-    final map = pick.asMapOrThrow<String, dynamic>();
-
-    return HydrusFile.fromMap(map);
-  }
+  factory fromDto(FileMetadataDto dto) => HydrusFile._(
+    FileMetadata.fromDto(dto),
+    Tags.fromDto(dto).obs,
+    dto.inbox.obs,
+  );
 
   Repo get repo => Get.find();
 

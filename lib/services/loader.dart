@@ -2,6 +2,7 @@ import 'dart:math' hide log;
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hydit/api/models.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
@@ -87,8 +88,8 @@ class Loader({required final String tag, final int chunkSize = 20}) {
     return repo.api
         .getFileMetadata(ids)
         .run()
-        .pick('metadata')
-        .asListOrThrow(HydrusFile.fromPick);
+        .map(FileMetadataResponseDto.fromJson)
+        .mapElements(HydrusFile.fromDto);
   }
 
   Future<Result<void>> ensureLoaded(Iterable<int> ids,

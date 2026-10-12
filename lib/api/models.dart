@@ -1,6 +1,7 @@
 @MappableLib(caseStyle: .snakeCase)
 library;
 
+import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'package:hydit/entities/tag.dart';
@@ -41,7 +42,9 @@ class TagRelations({
 @MappableClass()
 class FileMetadataResponseDto({
   required final List<FileMetadataDto> metadata,
-}) with FileMetadataResponseDtoMappable {
+}) extends DelegatingList<FileMetadataDto>
+    with FileMetadataResponseDtoMappable {
+  this : super(metadata);
   static final fromMap = FileMetadataResponseDtoMapper.fromMap;
   static final fromJson = FileMetadataResponseDtoMapper.fromJson;
 }
@@ -49,11 +52,10 @@ class FileMetadataResponseDto({
 
 /// Put this [Map]'s keys inside it's values which are also of
 /// type [Map].
-class const IncludeKeys() extends MappingHook {
+class const IncludeKeysSetNameAsKeyHook() extends MappingHook {
   @override
-  Object? beforeDecode(dynamic value) {
-    return value..forEach((k, v) => v['key'] = k);
-  }
+  Object? beforeDecode(dynamic value) =>
+      value.map((k, v) => MapEntry(v['name'], v..['key'] = k));
 }
 
 
@@ -70,8 +72,8 @@ class FileMetadataDto({
   final Duration duration = .zero,
   @MappableField(key: 'is_inbox')
   required final bool inbox,
-  @MappableField(hook: IncludeKeys())
-  required final Map<String, TagServiceDto> tags,
+  @MappableField(hook: IncludeKeysSetNameAsKeyHook())
+  required final Map<String, TagService> tags,
 }) with FileMetadataDtoMappable;
 
 
@@ -92,7 +94,7 @@ class const PickZeroAndSortHook() extends MappingHook {
 
 
 @MappableClass(includeCustomMappers: TagMapper.single)
-class TagServiceDto({
+class TagService({
   required final String name,
   required final String key,
   required final int type,
@@ -100,6 +102,11 @@ class TagServiceDto({
   required final Set<Tag> storage,
   @MappableField(key: 'display_tags', hook: PickZeroAndSortHook())
   required final Set<Tag> display,
-}) with TagServiceDtoMappable {
+}) with TagServiceMappable {
   bool get editable => type == 5;
+}
+
+
+extension AllTags on Map<String, TagService> {
+  TagService get all => this['all known tags']!;
 }

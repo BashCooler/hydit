@@ -448,7 +448,7 @@ class FileMetadataDtoMapper extends ClassMapperBase<FileMetadataDto> {
   static FileMetadataDtoMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = FileMetadataDtoMapper._());
-      TagServiceDtoMapper.ensureInitialized();
+      TagServiceMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -497,9 +497,12 @@ class FileMetadataDtoMapper extends ClassMapperBase<FileMetadataDto> {
     _$inbox,
     key: r'is_inbox',
   );
-  static Map<String, TagServiceDto> _$tags(FileMetadataDto v) => v.tags;
-  static const Field<FileMetadataDto, Map<String, TagServiceDto>> _f$tags =
-      Field('tags', _$tags, hook: IncludeKeys());
+  static Map<String, TagService> _$tags(FileMetadataDto v) => v.tags;
+  static const Field<FileMetadataDto, Map<String, TagService>> _f$tags = Field(
+    'tags',
+    _$tags,
+    hook: IncludeKeysSetNameAsKeyHook(),
+  );
 
   @override
   final MappableFields<FileMetadataDto> fields = const {
@@ -595,8 +598,8 @@ abstract class FileMetadataDtoCopyWith<$R, $In extends FileMetadataDto, $Out>
   MapCopyWith<
     $R,
     String,
-    TagServiceDto,
-    TagServiceDtoCopyWith<$R, TagServiceDto, TagServiceDto>
+    TagService,
+    TagServiceCopyWith<$R, TagService, TagService>
   >
   get tags;
   $R call({
@@ -609,7 +612,7 @@ abstract class FileMetadataDtoCopyWith<$R, $In extends FileMetadataDto, $Out>
     double? height,
     Duration? duration,
     bool? inbox,
-    Map<String, TagServiceDto>? tags,
+    Map<String, TagService>? tags,
   });
   FileMetadataDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
@@ -628,8 +631,8 @@ class _FileMetadataDtoCopyWithImpl<$R, $Out>
   MapCopyWith<
     $R,
     String,
-    TagServiceDto,
-    TagServiceDtoCopyWith<$R, TagServiceDto, TagServiceDto>
+    TagService,
+    TagServiceCopyWith<$R, TagService, TagService>
   >
   get tags => MapCopyWith(
     $value.tags,
@@ -647,7 +650,7 @@ class _FileMetadataDtoCopyWithImpl<$R, $Out>
     double? height,
     Duration? duration,
     bool? inbox,
-    Map<String, TagServiceDto>? tags,
+    Map<String, TagService>? tags,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
@@ -682,36 +685,36 @@ class _FileMetadataDtoCopyWithImpl<$R, $Out>
   ) => _FileMetadataDtoCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
-class TagServiceDtoMapper extends ClassMapperBase<TagServiceDto> {
-  TagServiceDtoMapper._();
+class TagServiceMapper extends ClassMapperBase<TagService> {
+  TagServiceMapper._();
 
-  static TagServiceDtoMapper? _instance;
-  static TagServiceDtoMapper ensureInitialized() {
+  static TagServiceMapper? _instance;
+  static TagServiceMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = TagServiceDtoMapper._());
+      MapperContainer.globals.use(_instance = TagServiceMapper._());
       MapperContainer.globals.useAll(TagMapper.single);
     }
     return _instance!;
   }
 
   @override
-  final String id = 'TagServiceDto';
+  final String id = 'TagService';
 
-  static String _$name(TagServiceDto v) => v.name;
-  static const Field<TagServiceDto, String> _f$name = Field('name', _$name);
-  static String _$key(TagServiceDto v) => v.key;
-  static const Field<TagServiceDto, String> _f$key = Field('key', _$key);
-  static int _$type(TagServiceDto v) => v.type;
-  static const Field<TagServiceDto, int> _f$type = Field('type', _$type);
-  static Set<Tag> _$storage(TagServiceDto v) => v.storage;
-  static const Field<TagServiceDto, Set<Tag>> _f$storage = Field(
+  static String _$name(TagService v) => v.name;
+  static const Field<TagService, String> _f$name = Field('name', _$name);
+  static String _$key(TagService v) => v.key;
+  static const Field<TagService, String> _f$key = Field('key', _$key);
+  static int _$type(TagService v) => v.type;
+  static const Field<TagService, int> _f$type = Field('type', _$type);
+  static Set<Tag> _$storage(TagService v) => v.storage;
+  static const Field<TagService, Set<Tag>> _f$storage = Field(
     'storage',
     _$storage,
     key: r'storage_tags',
     hook: PickZeroAndSortHook(),
   );
-  static Set<Tag> _$display(TagServiceDto v) => v.display;
-  static const Field<TagServiceDto, Set<Tag>> _f$display = Field(
+  static Set<Tag> _$display(TagService v) => v.display;
+  static const Field<TagService, Set<Tag>> _f$display = Field(
     'display',
     _$display,
     key: r'display_tags',
@@ -719,7 +722,7 @@ class TagServiceDtoMapper extends ClassMapperBase<TagServiceDto> {
   );
 
   @override
-  final MappableFields<TagServiceDto> fields = const {
+  final MappableFields<TagService> fields = const {
     #name: _f$name,
     #key: _f$key,
     #type: _f$type,
@@ -727,8 +730,8 @@ class TagServiceDtoMapper extends ClassMapperBase<TagServiceDto> {
     #display: _f$display,
   };
 
-  static TagServiceDto _instantiate(DecodingData data) {
-    return TagServiceDto(
+  static TagService _instantiate(DecodingData data) {
+    return TagService(
       name: data.dec(_f$name),
       key: data.dec(_f$key),
       type: data.dec(_f$type),
@@ -740,64 +743,62 @@ class TagServiceDtoMapper extends ClassMapperBase<TagServiceDto> {
   @override
   final Function instantiate = _instantiate;
 
-  static TagServiceDto fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<TagServiceDto>(map);
+  static TagService fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<TagService>(map);
   }
 
-  static TagServiceDto fromJson(String json) {
-    return ensureInitialized().decodeJson<TagServiceDto>(json);
+  static TagService fromJson(String json) {
+    return ensureInitialized().decodeJson<TagService>(json);
   }
 }
 
-mixin TagServiceDtoMappable {
+mixin TagServiceMappable {
   String toJson() {
-    return TagServiceDtoMapper.ensureInitialized().encodeJson<TagServiceDto>(
-      this as TagServiceDto,
+    return TagServiceMapper.ensureInitialized().encodeJson<TagService>(
+      this as TagService,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return TagServiceDtoMapper.ensureInitialized().encodeMap<TagServiceDto>(
-      this as TagServiceDto,
+    return TagServiceMapper.ensureInitialized().encodeMap<TagService>(
+      this as TagService,
     );
   }
 
-  TagServiceDtoCopyWith<TagServiceDto, TagServiceDto, TagServiceDto>
-  get copyWith => _TagServiceDtoCopyWithImpl<TagServiceDto, TagServiceDto>(
-    this as TagServiceDto,
-    $identity,
-    $identity,
-  );
+  TagServiceCopyWith<TagService, TagService, TagService> get copyWith =>
+      _TagServiceCopyWithImpl<TagService, TagService>(
+        this as TagService,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
-    return TagServiceDtoMapper.ensureInitialized().stringifyValue(
-      this as TagServiceDto,
+    return TagServiceMapper.ensureInitialized().stringifyValue(
+      this as TagService,
     );
   }
 
   @override
   bool operator ==(Object other) {
-    return TagServiceDtoMapper.ensureInitialized().equalsValue(
-      this as TagServiceDto,
+    return TagServiceMapper.ensureInitialized().equalsValue(
+      this as TagService,
       other,
     );
   }
 
   @override
   int get hashCode {
-    return TagServiceDtoMapper.ensureInitialized().hashValue(
-      this as TagServiceDto,
-    );
+    return TagServiceMapper.ensureInitialized().hashValue(this as TagService);
   }
 }
 
-extension TagServiceDtoValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, TagServiceDto, $Out> {
-  TagServiceDtoCopyWith<$R, TagServiceDto, $Out> get $asTagServiceDto =>
-      $base.as((v, t, t2) => _TagServiceDtoCopyWithImpl<$R, $Out>(v, t, t2));
+extension TagServiceValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, TagService, $Out> {
+  TagServiceCopyWith<$R, TagService, $Out> get $asTagService =>
+      $base.as((v, t, t2) => _TagServiceCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
-abstract class TagServiceDtoCopyWith<$R, $In extends TagServiceDto, $Out>
+abstract class TagServiceCopyWith<$R, $In extends TagService, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({
     String? name,
@@ -806,17 +807,17 @@ abstract class TagServiceDtoCopyWith<$R, $In extends TagServiceDto, $Out>
     Set<Tag>? storage,
     Set<Tag>? display,
   });
-  TagServiceDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+  TagServiceCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _TagServiceDtoCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, TagServiceDto, $Out>
-    implements TagServiceDtoCopyWith<$R, TagServiceDto, $Out> {
-  _TagServiceDtoCopyWithImpl(super.value, super.then, super.then2);
+class _TagServiceCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, TagService, $Out>
+    implements TagServiceCopyWith<$R, TagService, $Out> {
+  _TagServiceCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<TagServiceDto> $mapper =
-      TagServiceDtoMapper.ensureInitialized();
+  late final ClassMapperBase<TagService> $mapper =
+      TagServiceMapper.ensureInitialized();
   @override
   $R call({
     String? name,
@@ -834,7 +835,7 @@ class _TagServiceDtoCopyWithImpl<$R, $Out>
     }),
   );
   @override
-  TagServiceDto $make(CopyWithData data) => TagServiceDto(
+  TagService $make(CopyWithData data) => TagService(
     name: data.get(#name, or: $value.name),
     key: data.get(#key, or: $value.key),
     type: data.get(#type, or: $value.type),
@@ -843,8 +844,8 @@ class _TagServiceDtoCopyWithImpl<$R, $Out>
   );
 
   @override
-  TagServiceDtoCopyWith<$R2, TagServiceDto, $Out2> $chain<$R2, $Out2>(
+  TagServiceCopyWith<$R2, TagService, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
-  ) => _TagServiceDtoCopyWithImpl<$R2, $Out2>($value, $cast, t);
+  ) => _TagServiceCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
