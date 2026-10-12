@@ -1,6 +1,10 @@
+@MappableLib(caseStyle: .snakeCase)
+library;
+
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'package:hydit/entities/tag.dart';
+import 'package:hydit/utils/tag_sort.dart';
 
 part 'models.mapper.dart';
 
@@ -21,19 +25,81 @@ class const TagMapper() extends SimpleMapper<Tag> {
 
   @override
   String encode(Tag self) => self.raw;
+
+  static const single = [TagMapper()];
 }
 
 
-@MappableClass(
-  includeCustomMappers: [
-    TagMapper(),
-  ],
-)
+@MappableClass(includeCustomMappers: TagMapper.single)
 class TagRelations({
   @MappableField(key: 'ideal_tag')
   required final Tag ideal,
   required final List<Tag> ancestors,
-}) with TagRelationsMappable {
-  static final fromMap = TagRelationsMapper.fromMap;
-  static final fromJson = TagRelationsMapper.fromJson;
+}) with TagRelationsMappable;
+
+
+@MappableClass()
+class FileMetadataResponseDto({
+  required final List<FileMetadataDto> metadata,
+}) with FileMetadataResponseDtoMappable {
+  static final fromMap = FileMetadataResponseDtoMapper.fromMap;
+  static final fromJson = FileMetadataResponseDtoMapper.fromJson;
+}
+
+
+/// Put this [Map]'s keys inside it's values which are also of
+/// type [Map].
+class const IncludeKeys() extends MappingHook {
+  @override
+  Object? beforeDecode(dynamic value) {
+    return value..forEach((k, v) => v['key'] = k);
+  }
+}
+
+
+@MappableClass()
+class FileMetadataDto({
+  @MappableField(key: 'file_id')
+  required final int id,
+  required final String hash,
+  required final int size,
+  required final String mime,
+  required final String ext,
+  final double width = 0,
+  final double height = 0,
+  final Duration duration = .zero,
+  @MappableField(key: 'is_inbox')
+  required final bool inbox,
+  @MappableField(hook: IncludeKeys())
+  required final Map<String, TagServiceDto> tags,
+}) with FileMetadataDtoMappable;
+
+
+/// Pick `0` from [Map] as [Iterable], sort tags by namespace and
+/// alphabetically, return [Set] of tags.
+class const PickZeroAndSortHook() extends MappingHook {
+  @override
+  List<dynamic> beforeDecode(dynamic value) => value['0'] ?? const [];
+
+  @override
+  Set<Tag> afterDecode(dynamic value) =>
+      TagSortBuilder(value as Iterable<Tag>)
+          .namespace()
+          .alphabetical()
+          .sort()
+          .toSet();
+}
+
+
+@MappableClass(includeCustomMappers: TagMapper.single)
+class TagServiceDto({
+  required final String name,
+  required final String key,
+  required final int type,
+  @MappableField(key: 'storage_tags', hook: PickZeroAndSortHook())
+  required final Set<Tag> storage,
+  @MappableField(key: 'display_tags', hook: PickZeroAndSortHook())
+  required final Set<Tag> display,
+}) with TagServiceDtoMappable {
+  bool get editable => type == 5;
 }
