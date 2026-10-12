@@ -32,7 +32,7 @@ class const ServiceList(
                     mainAxisSize: .min,
                     children: [
                       ?tags.display.isNotEmpty
-                          ? Badge(label: Text('${tags.display.length}'))
+                          ? Badge(label: Text('${tags.storage.length}'))
                           : null,
                       const Icon(Icons.chevron_right),
                     ],
