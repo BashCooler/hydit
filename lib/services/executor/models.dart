@@ -52,6 +52,13 @@ sealed class Result<T> {
   Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T data) f);
 }
 
+
+extension MapElements<T> on Result<Iterable<T>> {
+  Result<Iterable<R>> mapElements<R>(R Function(T v) toElement) =>
+      map((i) => i.map(toElement));
+}
+
+
 class Success<T> extends Result<T> {
   final T data;
 
@@ -155,4 +162,10 @@ extension AsyncOperations<T> on Future<Result<T>> {
 
     return (await this).tapFailure(f);
   }
+}
+
+
+extension AsyncTapElements<T> on Future<Result<Iterable<T>>> {
+  Future<Result<Iterable<R>>> mapElements<R>(R Function(T v) toElement) async =>
+      (await this).mapElements(toElement);
 }
