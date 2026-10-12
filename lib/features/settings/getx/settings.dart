@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/api/api.dart';
-import 'package:hydit/utils/utils.dart';
+import 'package:hydit/utils/url.dart';
 import 'package:hydit/services/services.dart';
 
 
