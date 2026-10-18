@@ -2,9 +2,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
+import 'package:hydit/api/models.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/entities/tag.dart';
-import 'package:hydit/entities/service.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/features/editor/getx/base.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:hydit/api/models.dart';
 import 'package:hydit/utils/theme.dart';
-import 'package:hydit/entities/service.dart';
 
 
 class const ServiceList(

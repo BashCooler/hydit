@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 
+import 'package:hydit/api/models.dart';
 import 'package:hydit/api/params.dart';
 import 'package:hydit/entities/tag.dart';
-import 'package:hydit/entities/service.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/services/repo.dart';

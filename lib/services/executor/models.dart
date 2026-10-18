@@ -54,8 +54,8 @@ sealed class Result<T> {
 
 
 extension MapElements<T> on Result<Iterable<T>> {
-  Result<Iterable<R>> mapElements<R>(R Function(T v) toElement) =>
-      map((i) => i.map(toElement));
+  Result<List<R>> mapElements<R>(R Function(T v) toElement) =>
+      map((i) => i.map(toElement).toList());
 }
 
 
@@ -166,6 +166,6 @@ extension AsyncOperations<T> on Future<Result<T>> {
 
 
 extension AsyncTapElements<T> on Future<Result<Iterable<T>>> {
-  Future<Result<Iterable<R>>> mapElements<R>(R Function(T v) toElement) async =>
+  Future<Result<List<R>>> mapElements<R>(R Function(T v) toElement) async =>
       (await this).mapElements(toElement);
 }
