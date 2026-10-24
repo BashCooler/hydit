@@ -19,17 +19,6 @@ class Repo() {
 
   TagRelationService get relations => Get.find();
 
-  String buildUrl(int id, {bool thumbnail = false}) => ""
-      "${api.url}/get_files/"
-      "${thumbnail ? "thumbnail" : "file"}"
-      "?file_id=$id"
-      "&Hydrus-Client-API-Access-Key=${api.key}";
-
-  String render(int id) => ""
-      "${api.url}/get_files/render"
-      "?file_id=$id"
-      "&Hydrus-Client-API-Access-Key=${api.key}";
-
   Future<Result<void>> update(List<HydrusFile> files) async {
 
     for (final chunk in files.chunked(20)) {

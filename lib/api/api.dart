@@ -138,4 +138,9 @@ class HydrusApi with DioClient {
 
     return PendingFile(bytes, name: meta.hash, mime: meta.mime);
   }
+
+  String getFileUrl(int id, {FileUrlType type = .file}) => ''
+      '$url/get_files/$type'
+      '?file_id=$id'
+      '&Hydrus-Client-API-Access-Key=$key';
 }

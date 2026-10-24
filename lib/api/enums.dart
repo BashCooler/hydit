@@ -48,3 +48,13 @@ enum TagDisplayType {
   storage,
   display,
 }
+
+
+enum FileUrlType(final String path) {
+  file('file'),
+  thumbnail('thumbnail'),
+  render('render');
+
+  @override
+  String toString() => path;
+}

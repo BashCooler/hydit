@@ -31,17 +31,22 @@ class HydrusFile._(
 
   int get id => meta.id;
 
-  String get url => switch (meta.mime) {
-    'image/jxl' when meta.duration == .zero => repo.render(id),
-    _ => repo.buildUrl(id),
-  };
+  /// The url to the file itself.
+  String get url => repo.api.getFileUrl(
+    id,
+    type: switch (meta.mime) {
+      'image/jxl' when meta.duration == .zero => .render,
+      _ => .file,
+    },
+  );
 
-  String get thumbnailUrl => repo.buildUrl(id, thumbnail: true);
+  /// The url to the file's thumbnail itself.
+  String get thumbnailUrl => repo.api.getFileUrl(id, type: .thumbnail);
 
   bool get isInbox => inbox.value;
 
   @override
-  String toString() => 'HydrusFile ${meta.id}';
+  String toString() => 'HydrusFile $id';
 
   final _removed = false.obs;
 
