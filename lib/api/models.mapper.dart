@@ -24,16 +24,16 @@ class SiblingsAndParentsDtoMapper
   @override
   final String id = 'SiblingsAndParentsDto';
 
-  static Map<Tag, Map<String, TagRelations>> _$tags(SiblingsAndParentsDto v) =>
-      v.tags;
+  static Map<Tag, Map<String, TagRelations>> _$value(SiblingsAndParentsDto v) =>
+      v.value;
   static const Field<SiblingsAndParentsDto, Map<Tag, Map<String, TagRelations>>>
-  _f$tags = Field('tags', _$tags);
+  _f$value = Field('value', _$value, key: r'tags');
 
   @override
-  final MappableFields<SiblingsAndParentsDto> fields = const {#tags: _f$tags};
+  final MappableFields<SiblingsAndParentsDto> fields = const {#value: _f$value};
 
   static SiblingsAndParentsDto _instantiate(DecodingData data) {
-    return SiblingsAndParentsDto(tags: data.dec(_f$tags));
+    return SiblingsAndParentsDto(value: data.dec(_f$value));
   }
 
   @override
@@ -112,8 +112,8 @@ abstract class SiblingsAndParentsDtoCopyWith<
     Map<String, TagRelations>,
     ObjectCopyWith<$R, Map<String, TagRelations>, Map<String, TagRelations>>
   >
-  get tags;
-  $R call({Map<Tag, Map<String, TagRelations>>? tags});
+  get value;
+  $R call({Map<Tag, Map<String, TagRelations>>? value});
   SiblingsAndParentsDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -134,17 +134,17 @@ class _SiblingsAndParentsDtoCopyWithImpl<$R, $Out>
     Map<String, TagRelations>,
     ObjectCopyWith<$R, Map<String, TagRelations>, Map<String, TagRelations>>
   >
-  get tags => MapCopyWith(
-    $value.tags,
+  get value => MapCopyWith(
+    $value.value,
     (v, t) => ObjectCopyWith(v, $identity, t),
-    (v) => call(tags: v),
+    (v) => call(value: v),
   );
   @override
-  $R call({Map<Tag, Map<String, TagRelations>>? tags}) =>
-      $apply(FieldCopyWithData({if (tags != null) #tags: tags}));
+  $R call({Map<Tag, Map<String, TagRelations>>? value}) =>
+      $apply(FieldCopyWithData({if (value != null) #value: value}));
   @override
   SiblingsAndParentsDto $make(CopyWithData data) =>
-      SiblingsAndParentsDto(tags: data.get(#tags, or: $value.tags));
+      SiblingsAndParentsDto(value: data.get(#value, or: $value.value));
 
   @override
   SiblingsAndParentsDtoCopyWith<$R2, SiblingsAndParentsDto, $Out2>
@@ -311,18 +311,17 @@ class FileMetadataResponseDtoMapper
   @override
   final String id = 'FileMetadataResponseDto';
 
-  static List<FileMetadataDto> _$metadata(FileMetadataResponseDto v) =>
-      v.metadata;
-  static const Field<FileMetadataResponseDto, List<FileMetadataDto>>
-  _f$metadata = Field('metadata', _$metadata);
+  static List<FileMetadataDto> _$value(FileMetadataResponseDto v) => v.value;
+  static const Field<FileMetadataResponseDto, List<FileMetadataDto>> _f$value =
+      Field('value', _$value, key: r'metadata');
 
   @override
   final MappableFields<FileMetadataResponseDto> fields = const {
-    #metadata: _f$metadata,
+    #value: _f$value,
   };
 
   static FileMetadataResponseDto _instantiate(DecodingData data) {
-    return FileMetadataResponseDto(metadata: data.dec(_f$metadata));
+    return FileMetadataResponseDto(value: data.dec(_f$value));
   }
 
   @override
@@ -400,8 +399,8 @@ abstract class FileMetadataResponseDtoCopyWith<
     FileMetadataDto,
     FileMetadataDtoCopyWith<$R, FileMetadataDto, FileMetadataDto>
   >
-  get metadata;
-  $R call({List<FileMetadataDto>? metadata});
+  get value;
+  $R call({List<FileMetadataDto>? value});
   FileMetadataResponseDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -422,18 +421,17 @@ class _FileMetadataResponseDtoCopyWithImpl<$R, $Out>
     FileMetadataDto,
     FileMetadataDtoCopyWith<$R, FileMetadataDto, FileMetadataDto>
   >
-  get metadata => ListCopyWith(
-    $value.metadata,
+  get value => ListCopyWith(
+    $value.value,
     (v, t) => v.copyWith.$chain(t),
-    (v) => call(metadata: v),
+    (v) => call(value: v),
   );
   @override
-  $R call({List<FileMetadataDto>? metadata}) =>
-      $apply(FieldCopyWithData({if (metadata != null) #metadata: metadata}));
+  $R call({List<FileMetadataDto>? value}) =>
+      $apply(FieldCopyWithData({if (value != null) #value: value}));
   @override
-  FileMetadataResponseDto $make(CopyWithData data) => FileMetadataResponseDto(
-    metadata: data.get(#metadata, or: $value.metadata),
-  );
+  FileMetadataResponseDto $make(CopyWithData data) =>
+      FileMetadataResponseDto(value: data.get(#value, or: $value.value));
 
   @override
   FileMetadataResponseDtoCopyWith<$R2, FileMetadataResponseDto, $Out2>

@@ -10,11 +10,14 @@ import 'package:hydit/utils/tag_sort.dart';
 part 'models.mapper.dart';
 
 
+/// Tag -> service key -> relations
 @MappableClass()
 class const SiblingsAndParentsDto({
-  /// Tag -> service key -> relations
-  required final Map<Tag, Map<String, TagRelations>> tags,
-}) with SiblingsAndParentsDtoMappable {
+  @MappableField(key: 'tags')
+  required final Map<Tag, Map<String, TagRelations>> value,
+}) extends DelegatingMap<Tag, Map<String, TagRelations>>
+    with SiblingsAndParentsDtoMappable {
+  this : super(value);
   static final fromMap = SiblingsAndParentsDtoMapper.fromMap;
   static final fromJson = SiblingsAndParentsDtoMapper.fromJson;
 }
@@ -32,7 +35,7 @@ class const TagMapper() extends SimpleMapper<Tag> {
 
 
 @MappableClass(includeCustomMappers: TagMapper.single)
-class TagRelations({
+class const TagRelations({
   @MappableField(key: 'ideal_tag')
   required final Tag ideal,
   required final List<Tag> ancestors,
@@ -40,11 +43,12 @@ class TagRelations({
 
 
 @MappableClass()
-class FileMetadataResponseDto({
-  required final List<FileMetadataDto> metadata,
+class const FileMetadataResponseDto({
+  @MappableField(key: 'metadata')
+  required final List<FileMetadataDto> value,
 }) extends DelegatingList<FileMetadataDto>
     with FileMetadataResponseDtoMappable {
-  this : super(metadata);
+  this : super(value);
   static final fromMap = FileMetadataResponseDtoMapper.fromMap;
   static final fromJson = FileMetadataResponseDtoMapper.fromJson;
 }
@@ -60,7 +64,7 @@ class const IncludeKeysSetNameAsKeyHook() extends MappingHook {
 
 
 @MappableClass()
-class FileMetadataDto({
+class const FileMetadataDto({
   @MappableField(key: 'file_id')
   required final int id,
   required final String hash,
@@ -94,7 +98,7 @@ class const PickZeroAndSortHook() extends MappingHook {
 
 
 @MappableClass(includeCustomMappers: TagMapper.single)
-class TagService({
+class const TagService({
   required final String name,
   required final String key,
   required final int type,

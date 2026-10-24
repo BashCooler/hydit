@@ -20,7 +20,7 @@ class TagRelationService {
       .map((t) => t.raw)
       .let(repo.api.getSiblingsAndParents)
       .run()
-      .map((dto) => _cache.addAll(dto.tags));
+      .map(_cache.addAll);
 
   Tag? ideal({required Tag tag, required String key}) =>
       _cache[tag]?[key]?.ideal;
