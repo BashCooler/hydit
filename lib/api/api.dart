@@ -65,13 +65,12 @@ class HydrusApi with DioClient {
 
   // MARK: FILES
 
-  Future<Uint8List> getFile(int fileId, {bool download = false}) =>
+  Future<Uint8List> getFile(int id) =>
       get<Uint8List>(
         '/get_files/file',
         file: true,
         params: {
-          'file_id': fileId,
-          'download': download,
+          'file_id': id,
         },
       );
 
