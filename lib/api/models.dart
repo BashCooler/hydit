@@ -4,6 +4,8 @@
 )
 library;
 
+import 'dart:typed_data';
+
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
@@ -138,3 +140,15 @@ class const TagRelations({
   required final Tag ideal,
   required final List<Tag> ancestors,
 }) with TagRelationsMappable;
+
+
+class PendingFile (final Uint8List bytes, {
+  required final String name,
+  required final String mime,
+}) {
+  Map<String, dynamic> toMap() => {
+    "bytes": bytes,
+    "name": name,
+    "type": mime,
+  };
+}

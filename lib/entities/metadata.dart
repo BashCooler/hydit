@@ -25,7 +25,6 @@ class const FileMetadata({
     ext: dto.ext,
   );
 
-  String get fileName => '$hash$ext';
   String get type => mime.split('/').first;
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
   double get aspectRatio => width/height;

@@ -1,4 +1,6 @@
 import 'package:flutter/services.dart';
+
+import 'package:hydit/api/models.dart';
 import 'package:hydit/services/executor.dart';
 
 
@@ -20,18 +22,6 @@ class const Native._() {
   /// Save file to local downloads folder.
   ///
   /// Will only work on Android 10+.
-  static Future<Result<void>> saveFile(
-      Uint8List bytes,
-      String fileName,
-      String mimeType,
-  ) {
-    final arguments = {
-      "bytes": bytes,
-      "fileName": fileName,
-      "mimeType": mimeType,
-    };
-    return _channel
-        .invokeListMethod("saveFile", arguments)
-        .run();
-  }
+  static Future<Result<void>> saveFile(PendingFile file) =>
+      _channel.invokeListMethod("saveFile", file.toMap()).run();
 }

@@ -53,8 +53,8 @@ class MainActivity : FlutterActivity() {
 
     private fun saveFile(call: MethodCall, result: MethodChannel.Result) {
         val bytes = call.argument<ByteArray>("bytes")
-        val filename = call.argument<String>("fileName")
-        val mimeType = call.argument<String>("mimeType")
+        val filename = call.argument<String>("name")
+        val mimeType = call.argument<String>("type")
 
         if (bytes == null || filename == null || mimeType == null) {
             result.error(

@@ -13,7 +13,7 @@ import 'models.dart';
 
 
 class HydrusApi with DioClient {
-  static const int version = 94;
+  static const int version = 96;
 
   HydrusApi({
     required Uri uri,
@@ -66,7 +66,7 @@ class HydrusApi with DioClient {
 
   // MARK: FILES
 
-  Future<Uint8List> getFile(int id) =>
+  Future<Uint8List> getFileAsBytes(int id) =>
       get<Uint8List>(
         '/get_files/file',
         file: true,
@@ -128,4 +128,14 @@ class HydrusApi with DioClient {
           'tags': tags.toList().encode(),
         },
       ).then(SiblingsAndParentsDto.fromJson);
+
+  // MARK: EXTRAS
+
+  Future<PendingFile> getFile(int id) async {
+    final bytes = await getFileAsBytes(id);
+
+    final meta = await getFileMetadata([id]).then((r) => r.first);
+
+    return PendingFile(bytes, name: meta.hash, mime: meta.mime);
+  }
 }

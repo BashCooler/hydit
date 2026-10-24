@@ -7,7 +7,6 @@ import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/cache.dart';
 import 'package:hydit/entities/tags.dart';
-import 'package:hydit/entities/metadata.dart';
 import 'package:hydit/services/services.dart';
 
 
@@ -58,22 +57,6 @@ class Repo() {
     return Success(null);
   }
 
-  Future<Result<void>> download(int id) async {
-
-    final bytes = await api.getFile(id).run();
-
-    if (bytes is Failure) return bytes;
-
-    final metadata = await api
-        .getFileMetadata([id])
-        .run()
-        .map((v) => FileMetadata.fromDto(v.first));
-
-    if (metadata is Failure) return metadata;
-
-    final meta = metadata.getOrThrow();
-
-    return Native
-        .saveFile(bytes.getOrThrow(), meta.fileName, meta.mime);
-  }
+  Future<Result<void>> download(int id) =>
+      api.getFile(id).run().map(Native.saveFile);
 }
