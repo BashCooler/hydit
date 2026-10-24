@@ -1,15 +1,12 @@
 import 'package:flutter/services.dart';
-import 'package:deep_pick/deep_pick.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:hydit/utils/utils.dart';
 
 
-class Tag extends Equatable {
-  final String raw;
-  final int count;
+class Tag(final String raw) extends Equatable {
 
-  late final int idx = raw.indexOf(':');
+  final int idx = raw.indexOf(':');
 
   late final String value = idx == -1 ? raw : raw.substring(idx + 1);
 
@@ -17,26 +14,7 @@ class Tag extends Equatable {
 
   late final String pretty = raw.replaceFirst(_pattern, '').trim();
 
-  Tag(this.raw, {this.count = 0});
-
   Color get color => colorOf(namespace);
-
-  /// The [map] parameter should be extracted from `search_tags`
-  /// response like so:
-  ///
-  /// `json -> tags -> 0` (or other index)
-  factory Tag.fromMap(Map<String, dynamic> map) =>
-      Tag(map['value'], count: map['count']);
-
-  /// The [pick] parameter should be extracted from `search_tags`
-  /// response like so:
-  ///
-  /// `pick(json, 'tags', 0)` (or other index)
-  factory Tag.fromPick(Pick pick) {
-    final map = pick.asMapOrThrow<String, dynamic>();
-
-    return Tag.fromMap(map);
-  }
 
   static const Set<String> namespaces = {
     'system',

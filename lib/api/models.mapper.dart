@@ -8,289 +8,232 @@
 
 part of 'models.dart';
 
-class SiblingsAndParentsDtoMapper
-    extends ClassMapperBase<SiblingsAndParentsDto> {
-  SiblingsAndParentsDtoMapper._();
+class SearchTagsDtoMapper extends ClassMapperBase<SearchTagsDto> {
+  SearchTagsDtoMapper._();
 
-  static SiblingsAndParentsDtoMapper? _instance;
-  static SiblingsAndParentsDtoMapper ensureInitialized() {
+  static SearchTagsDtoMapper? _instance;
+  static SearchTagsDtoMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = SiblingsAndParentsDtoMapper._());
-      TagRelationsMapper.ensureInitialized();
+      MapperContainer.globals.use(_instance = SearchTagsDtoMapper._());
+      TagDtoMapper.ensureInitialized();
     }
     return _instance!;
   }
 
   @override
-  final String id = 'SiblingsAndParentsDto';
+  final String id = 'SearchTagsDto';
 
-  static Map<Tag, Map<String, TagRelations>> _$value(SiblingsAndParentsDto v) =>
-      v.value;
-  static const Field<SiblingsAndParentsDto, Map<Tag, Map<String, TagRelations>>>
-  _f$value = Field('value', _$value, key: r'tags');
+  static List<TagDto> _$value(SearchTagsDto v) => v.value;
+  static const Field<SearchTagsDto, List<TagDto>> _f$value = Field(
+    'value',
+    _$value,
+    key: r'tags',
+  );
 
   @override
-  final MappableFields<SiblingsAndParentsDto> fields = const {#value: _f$value};
+  final MappableFields<SearchTagsDto> fields = const {#value: _f$value};
 
-  static SiblingsAndParentsDto _instantiate(DecodingData data) {
-    return SiblingsAndParentsDto(value: data.dec(_f$value));
+  static SearchTagsDto _instantiate(DecodingData data) {
+    return SearchTagsDto(value: data.dec(_f$value));
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static SiblingsAndParentsDto fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SiblingsAndParentsDto>(map);
+  static SearchTagsDto fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<SearchTagsDto>(map);
   }
 
-  static SiblingsAndParentsDto fromJson(String json) {
-    return ensureInitialized().decodeJson<SiblingsAndParentsDto>(json);
+  static SearchTagsDto fromJson(String json) {
+    return ensureInitialized().decodeJson<SearchTagsDto>(json);
   }
 }
 
-mixin SiblingsAndParentsDtoMappable {
+mixin SearchTagsDtoMappable {
   String toJson() {
-    return SiblingsAndParentsDtoMapper.ensureInitialized()
-        .encodeJson<SiblingsAndParentsDto>(this as SiblingsAndParentsDto);
+    return SearchTagsDtoMapper.ensureInitialized().encodeJson<SearchTagsDto>(
+      this as SearchTagsDto,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return SiblingsAndParentsDtoMapper.ensureInitialized()
-        .encodeMap<SiblingsAndParentsDto>(this as SiblingsAndParentsDto);
+    return SearchTagsDtoMapper.ensureInitialized().encodeMap<SearchTagsDto>(
+      this as SearchTagsDto,
+    );
   }
 
-  SiblingsAndParentsDtoCopyWith<
-    SiblingsAndParentsDto,
-    SiblingsAndParentsDto,
-    SiblingsAndParentsDto
-  >
-  get copyWith =>
-      _SiblingsAndParentsDtoCopyWithImpl<
-        SiblingsAndParentsDto,
-        SiblingsAndParentsDto
-      >(this as SiblingsAndParentsDto, $identity, $identity);
+  SearchTagsDtoCopyWith<SearchTagsDto, SearchTagsDto, SearchTagsDto>
+  get copyWith => _SearchTagsDtoCopyWithImpl<SearchTagsDto, SearchTagsDto>(
+    this as SearchTagsDto,
+    $identity,
+    $identity,
+  );
   @override
   String toString() {
-    return SiblingsAndParentsDtoMapper.ensureInitialized().stringifyValue(
-      this as SiblingsAndParentsDto,
+    return SearchTagsDtoMapper.ensureInitialized().stringifyValue(
+      this as SearchTagsDto,
     );
   }
 
   @override
   bool operator ==(Object other) {
-    return SiblingsAndParentsDtoMapper.ensureInitialized().equalsValue(
-      this as SiblingsAndParentsDto,
+    return SearchTagsDtoMapper.ensureInitialized().equalsValue(
+      this as SearchTagsDto,
       other,
     );
   }
 
   @override
   int get hashCode {
-    return SiblingsAndParentsDtoMapper.ensureInitialized().hashValue(
-      this as SiblingsAndParentsDto,
+    return SearchTagsDtoMapper.ensureInitialized().hashValue(
+      this as SearchTagsDto,
     );
   }
 }
 
-extension SiblingsAndParentsDtoValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, SiblingsAndParentsDto, $Out> {
-  SiblingsAndParentsDtoCopyWith<$R, SiblingsAndParentsDto, $Out>
-  get $asSiblingsAndParentsDto => $base.as(
-    (v, t, t2) => _SiblingsAndParentsDtoCopyWithImpl<$R, $Out>(v, t, t2),
-  );
+extension SearchTagsDtoValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, SearchTagsDto, $Out> {
+  SearchTagsDtoCopyWith<$R, SearchTagsDto, $Out> get $asSearchTagsDto =>
+      $base.as((v, t, t2) => _SearchTagsDtoCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
-abstract class SiblingsAndParentsDtoCopyWith<
-  $R,
-  $In extends SiblingsAndParentsDto,
-  $Out
->
+abstract class SearchTagsDtoCopyWith<$R, $In extends SearchTagsDto, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  MapCopyWith<
-    $R,
-    Tag,
-    Map<String, TagRelations>,
-    ObjectCopyWith<$R, Map<String, TagRelations>, Map<String, TagRelations>>
-  >
-  get value;
-  $R call({Map<Tag, Map<String, TagRelations>>? value});
-  SiblingsAndParentsDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-    Then<$Out2, $R2> t,
-  );
+  ListCopyWith<$R, TagDto, TagDtoCopyWith<$R, TagDto, TagDto>> get value;
+  $R call({List<TagDto>? value});
+  SearchTagsDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _SiblingsAndParentsDtoCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, SiblingsAndParentsDto, $Out>
-    implements SiblingsAndParentsDtoCopyWith<$R, SiblingsAndParentsDto, $Out> {
-  _SiblingsAndParentsDtoCopyWithImpl(super.value, super.then, super.then2);
+class _SearchTagsDtoCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, SearchTagsDto, $Out>
+    implements SearchTagsDtoCopyWith<$R, SearchTagsDto, $Out> {
+  _SearchTagsDtoCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<SiblingsAndParentsDto> $mapper =
-      SiblingsAndParentsDtoMapper.ensureInitialized();
+  late final ClassMapperBase<SearchTagsDto> $mapper =
+      SearchTagsDtoMapper.ensureInitialized();
   @override
-  MapCopyWith<
-    $R,
-    Tag,
-    Map<String, TagRelations>,
-    ObjectCopyWith<$R, Map<String, TagRelations>, Map<String, TagRelations>>
-  >
-  get value => MapCopyWith(
-    $value.value,
-    (v, t) => ObjectCopyWith(v, $identity, t),
-    (v) => call(value: v),
-  );
+  ListCopyWith<$R, TagDto, TagDtoCopyWith<$R, TagDto, TagDto>> get value =>
+      ListCopyWith(
+        $value.value,
+        (v, t) => v.copyWith.$chain(t),
+        (v) => call(value: v),
+      );
   @override
-  $R call({Map<Tag, Map<String, TagRelations>>? value}) =>
+  $R call({List<TagDto>? value}) =>
       $apply(FieldCopyWithData({if (value != null) #value: value}));
   @override
-  SiblingsAndParentsDto $make(CopyWithData data) =>
-      SiblingsAndParentsDto(value: data.get(#value, or: $value.value));
+  SearchTagsDto $make(CopyWithData data) =>
+      SearchTagsDto(value: data.get(#value, or: $value.value));
 
   @override
-  SiblingsAndParentsDtoCopyWith<$R2, SiblingsAndParentsDto, $Out2>
-  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _SiblingsAndParentsDtoCopyWithImpl<$R2, $Out2>($value, $cast, t);
+  SearchTagsDtoCopyWith<$R2, SearchTagsDto, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  ) => _SearchTagsDtoCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
-class TagRelationsMapper extends ClassMapperBase<TagRelations> {
-  TagRelationsMapper._();
+class TagDtoMapper extends ClassMapperBase<TagDto> {
+  TagDtoMapper._();
 
-  static TagRelationsMapper? _instance;
-  static TagRelationsMapper ensureInitialized() {
+  static TagDtoMapper? _instance;
+  static TagDtoMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = TagRelationsMapper._());
-      MapperContainer.globals.useAll(TagMapper.single);
+      MapperContainer.globals.use(_instance = TagDtoMapper._());
     }
     return _instance!;
   }
 
   @override
-  final String id = 'TagRelations';
+  final String id = 'TagDto';
 
-  static Tag _$ideal(TagRelations v) => v.ideal;
-  static const Field<TagRelations, Tag> _f$ideal = Field(
-    'ideal',
-    _$ideal,
-    key: r'ideal_tag',
+  static String _$raw(TagDto v) => v.raw;
+  static const Field<TagDto, String> _f$raw = Field(
+    'raw',
+    _$raw,
+    key: r'value',
   );
-  static List<Tag> _$ancestors(TagRelations v) => v.ancestors;
-  static const Field<TagRelations, List<Tag>> _f$ancestors = Field(
-    'ancestors',
-    _$ancestors,
-  );
+  static int _$count(TagDto v) => v.count;
+  static const Field<TagDto, int> _f$count = Field('count', _$count);
 
   @override
-  final MappableFields<TagRelations> fields = const {
-    #ideal: _f$ideal,
-    #ancestors: _f$ancestors,
-  };
+  final MappableFields<TagDto> fields = const {#raw: _f$raw, #count: _f$count};
 
-  static TagRelations _instantiate(DecodingData data) {
-    return TagRelations(
-      ideal: data.dec(_f$ideal),
-      ancestors: data.dec(_f$ancestors),
-    );
+  static TagDto _instantiate(DecodingData data) {
+    return TagDto(raw: data.dec(_f$raw), count: data.dec(_f$count));
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static TagRelations fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<TagRelations>(map);
+  static TagDto fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<TagDto>(map);
   }
 
-  static TagRelations fromJson(String json) {
-    return ensureInitialized().decodeJson<TagRelations>(json);
+  static TagDto fromJson(String json) {
+    return ensureInitialized().decodeJson<TagDto>(json);
   }
 }
 
-mixin TagRelationsMappable {
+mixin TagDtoMappable {
   String toJson() {
-    return TagRelationsMapper.ensureInitialized().encodeJson<TagRelations>(
-      this as TagRelations,
-    );
+    return TagDtoMapper.ensureInitialized().encodeJson<TagDto>(this as TagDto);
   }
 
   Map<String, dynamic> toMap() {
-    return TagRelationsMapper.ensureInitialized().encodeMap<TagRelations>(
-      this as TagRelations,
-    );
+    return TagDtoMapper.ensureInitialized().encodeMap<TagDto>(this as TagDto);
   }
 
-  TagRelationsCopyWith<TagRelations, TagRelations, TagRelations> get copyWith =>
-      _TagRelationsCopyWithImpl<TagRelations, TagRelations>(
-        this as TagRelations,
-        $identity,
-        $identity,
-      );
+  TagDtoCopyWith<TagDto, TagDto, TagDto> get copyWith =>
+      _TagDtoCopyWithImpl<TagDto, TagDto>(this as TagDto, $identity, $identity);
   @override
   String toString() {
-    return TagRelationsMapper.ensureInitialized().stringifyValue(
-      this as TagRelations,
-    );
+    return TagDtoMapper.ensureInitialized().stringifyValue(this as TagDto);
   }
 
   @override
   bool operator ==(Object other) {
-    return TagRelationsMapper.ensureInitialized().equalsValue(
-      this as TagRelations,
-      other,
-    );
+    return TagDtoMapper.ensureInitialized().equalsValue(this as TagDto, other);
   }
 
   @override
   int get hashCode {
-    return TagRelationsMapper.ensureInitialized().hashValue(
-      this as TagRelations,
-    );
+    return TagDtoMapper.ensureInitialized().hashValue(this as TagDto);
   }
 }
 
-extension TagRelationsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, TagRelations, $Out> {
-  TagRelationsCopyWith<$R, TagRelations, $Out> get $asTagRelations =>
-      $base.as((v, t, t2) => _TagRelationsCopyWithImpl<$R, $Out>(v, t, t2));
+extension TagDtoValueCopy<$R, $Out> on ObjectCopyWith<$R, TagDto, $Out> {
+  TagDtoCopyWith<$R, TagDto, $Out> get $asTagDto =>
+      $base.as((v, t, t2) => _TagDtoCopyWithImpl<$R, $Out>(v, t, t2));
 }
 
-abstract class TagRelationsCopyWith<$R, $In extends TagRelations, $Out>
+abstract class TagDtoCopyWith<$R, $In extends TagDto, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, Tag, ObjectCopyWith<$R, Tag, Tag>> get ancestors;
-  $R call({Tag? ideal, List<Tag>? ancestors});
-  TagRelationsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+  $R call({String? raw, int? count});
+  TagDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _TagRelationsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, TagRelations, $Out>
-    implements TagRelationsCopyWith<$R, TagRelations, $Out> {
-  _TagRelationsCopyWithImpl(super.value, super.then, super.then2);
+class _TagDtoCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, TagDto, $Out>
+    implements TagDtoCopyWith<$R, TagDto, $Out> {
+  _TagDtoCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<TagRelations> $mapper =
-      TagRelationsMapper.ensureInitialized();
+  late final ClassMapperBase<TagDto> $mapper = TagDtoMapper.ensureInitialized();
   @override
-  ListCopyWith<$R, Tag, ObjectCopyWith<$R, Tag, Tag>> get ancestors =>
-      ListCopyWith(
-        $value.ancestors,
-        (v, t) => ObjectCopyWith(v, $identity, t),
-        (v) => call(ancestors: v),
-      );
-  @override
-  $R call({Tag? ideal, List<Tag>? ancestors}) => $apply(
+  $R call({String? raw, int? count}) => $apply(
     FieldCopyWithData({
-      if (ideal != null) #ideal: ideal,
-      if (ancestors != null) #ancestors: ancestors,
+      if (raw != null) #raw: raw,
+      if (count != null) #count: count,
     }),
   );
   @override
-  TagRelations $make(CopyWithData data) => TagRelations(
-    ideal: data.get(#ideal, or: $value.ideal),
-    ancestors: data.get(#ancestors, or: $value.ancestors),
+  TagDto $make(CopyWithData data) => TagDto(
+    raw: data.get(#raw, or: $value.raw),
+    count: data.get(#count, or: $value.count),
   );
 
   @override
-  TagRelationsCopyWith<$R2, TagRelations, $Out2> $chain<$R2, $Out2>(
-    Then<$Out2, $R2> t,
-  ) => _TagRelationsCopyWithImpl<$R2, $Out2>($value, $cast, t);
+  TagDtoCopyWith<$R2, TagDto, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _TagDtoCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
 class FileMetadataResponseDtoMapper
@@ -845,5 +788,290 @@ class _TagServiceCopyWithImpl<$R, $Out>
   TagServiceCopyWith<$R2, TagService, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   ) => _TagServiceCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+
+class SiblingsAndParentsDtoMapper
+    extends ClassMapperBase<SiblingsAndParentsDto> {
+  SiblingsAndParentsDtoMapper._();
+
+  static SiblingsAndParentsDtoMapper? _instance;
+  static SiblingsAndParentsDtoMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = SiblingsAndParentsDtoMapper._());
+      TagRelationsMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'SiblingsAndParentsDto';
+
+  static Map<Tag, Map<String, TagRelations>> _$value(SiblingsAndParentsDto v) =>
+      v.value;
+  static const Field<SiblingsAndParentsDto, Map<Tag, Map<String, TagRelations>>>
+  _f$value = Field('value', _$value, key: r'tags');
+
+  @override
+  final MappableFields<SiblingsAndParentsDto> fields = const {#value: _f$value};
+
+  static SiblingsAndParentsDto _instantiate(DecodingData data) {
+    return SiblingsAndParentsDto(value: data.dec(_f$value));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static SiblingsAndParentsDto fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<SiblingsAndParentsDto>(map);
+  }
+
+  static SiblingsAndParentsDto fromJson(String json) {
+    return ensureInitialized().decodeJson<SiblingsAndParentsDto>(json);
+  }
+}
+
+mixin SiblingsAndParentsDtoMappable {
+  String toJson() {
+    return SiblingsAndParentsDtoMapper.ensureInitialized()
+        .encodeJson<SiblingsAndParentsDto>(this as SiblingsAndParentsDto);
+  }
+
+  Map<String, dynamic> toMap() {
+    return SiblingsAndParentsDtoMapper.ensureInitialized()
+        .encodeMap<SiblingsAndParentsDto>(this as SiblingsAndParentsDto);
+  }
+
+  SiblingsAndParentsDtoCopyWith<
+    SiblingsAndParentsDto,
+    SiblingsAndParentsDto,
+    SiblingsAndParentsDto
+  >
+  get copyWith =>
+      _SiblingsAndParentsDtoCopyWithImpl<
+        SiblingsAndParentsDto,
+        SiblingsAndParentsDto
+      >(this as SiblingsAndParentsDto, $identity, $identity);
+  @override
+  String toString() {
+    return SiblingsAndParentsDtoMapper.ensureInitialized().stringifyValue(
+      this as SiblingsAndParentsDto,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return SiblingsAndParentsDtoMapper.ensureInitialized().equalsValue(
+      this as SiblingsAndParentsDto,
+      other,
+    );
+  }
+
+  @override
+  int get hashCode {
+    return SiblingsAndParentsDtoMapper.ensureInitialized().hashValue(
+      this as SiblingsAndParentsDto,
+    );
+  }
+}
+
+extension SiblingsAndParentsDtoValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, SiblingsAndParentsDto, $Out> {
+  SiblingsAndParentsDtoCopyWith<$R, SiblingsAndParentsDto, $Out>
+  get $asSiblingsAndParentsDto => $base.as(
+    (v, t, t2) => _SiblingsAndParentsDtoCopyWithImpl<$R, $Out>(v, t, t2),
+  );
+}
+
+abstract class SiblingsAndParentsDtoCopyWith<
+  $R,
+  $In extends SiblingsAndParentsDto,
+  $Out
+>
+    implements ClassCopyWith<$R, $In, $Out> {
+  MapCopyWith<
+    $R,
+    Tag,
+    Map<String, TagRelations>,
+    ObjectCopyWith<$R, Map<String, TagRelations>, Map<String, TagRelations>>
+  >
+  get value;
+  $R call({Map<Tag, Map<String, TagRelations>>? value});
+  SiblingsAndParentsDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  );
+}
+
+class _SiblingsAndParentsDtoCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, SiblingsAndParentsDto, $Out>
+    implements SiblingsAndParentsDtoCopyWith<$R, SiblingsAndParentsDto, $Out> {
+  _SiblingsAndParentsDtoCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<SiblingsAndParentsDto> $mapper =
+      SiblingsAndParentsDtoMapper.ensureInitialized();
+  @override
+  MapCopyWith<
+    $R,
+    Tag,
+    Map<String, TagRelations>,
+    ObjectCopyWith<$R, Map<String, TagRelations>, Map<String, TagRelations>>
+  >
+  get value => MapCopyWith(
+    $value.value,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(value: v),
+  );
+  @override
+  $R call({Map<Tag, Map<String, TagRelations>>? value}) =>
+      $apply(FieldCopyWithData({if (value != null) #value: value}));
+  @override
+  SiblingsAndParentsDto $make(CopyWithData data) =>
+      SiblingsAndParentsDto(value: data.get(#value, or: $value.value));
+
+  @override
+  SiblingsAndParentsDtoCopyWith<$R2, SiblingsAndParentsDto, $Out2>
+  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _SiblingsAndParentsDtoCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+
+class TagRelationsMapper extends ClassMapperBase<TagRelations> {
+  TagRelationsMapper._();
+
+  static TagRelationsMapper? _instance;
+  static TagRelationsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = TagRelationsMapper._());
+      MapperContainer.globals.useAll(TagMapper.single);
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'TagRelations';
+
+  static Tag _$ideal(TagRelations v) => v.ideal;
+  static const Field<TagRelations, Tag> _f$ideal = Field(
+    'ideal',
+    _$ideal,
+    key: r'ideal_tag',
+  );
+  static List<Tag> _$ancestors(TagRelations v) => v.ancestors;
+  static const Field<TagRelations, List<Tag>> _f$ancestors = Field(
+    'ancestors',
+    _$ancestors,
+  );
+
+  @override
+  final MappableFields<TagRelations> fields = const {
+    #ideal: _f$ideal,
+    #ancestors: _f$ancestors,
+  };
+
+  static TagRelations _instantiate(DecodingData data) {
+    return TagRelations(
+      ideal: data.dec(_f$ideal),
+      ancestors: data.dec(_f$ancestors),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static TagRelations fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<TagRelations>(map);
+  }
+
+  static TagRelations fromJson(String json) {
+    return ensureInitialized().decodeJson<TagRelations>(json);
+  }
+}
+
+mixin TagRelationsMappable {
+  String toJson() {
+    return TagRelationsMapper.ensureInitialized().encodeJson<TagRelations>(
+      this as TagRelations,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return TagRelationsMapper.ensureInitialized().encodeMap<TagRelations>(
+      this as TagRelations,
+    );
+  }
+
+  TagRelationsCopyWith<TagRelations, TagRelations, TagRelations> get copyWith =>
+      _TagRelationsCopyWithImpl<TagRelations, TagRelations>(
+        this as TagRelations,
+        $identity,
+        $identity,
+      );
+  @override
+  String toString() {
+    return TagRelationsMapper.ensureInitialized().stringifyValue(
+      this as TagRelations,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return TagRelationsMapper.ensureInitialized().equalsValue(
+      this as TagRelations,
+      other,
+    );
+  }
+
+  @override
+  int get hashCode {
+    return TagRelationsMapper.ensureInitialized().hashValue(
+      this as TagRelations,
+    );
+  }
+}
+
+extension TagRelationsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, TagRelations, $Out> {
+  TagRelationsCopyWith<$R, TagRelations, $Out> get $asTagRelations =>
+      $base.as((v, t, t2) => _TagRelationsCopyWithImpl<$R, $Out>(v, t, t2));
+}
+
+abstract class TagRelationsCopyWith<$R, $In extends TagRelations, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, Tag, ObjectCopyWith<$R, Tag, Tag>> get ancestors;
+  $R call({Tag? ideal, List<Tag>? ancestors});
+  TagRelationsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _TagRelationsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, TagRelations, $Out>
+    implements TagRelationsCopyWith<$R, TagRelations, $Out> {
+  _TagRelationsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<TagRelations> $mapper =
+      TagRelationsMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, Tag, ObjectCopyWith<$R, Tag, Tag>> get ancestors =>
+      ListCopyWith(
+        $value.ancestors,
+        (v, t) => ObjectCopyWith(v, $identity, t),
+        (v) => call(ancestors: v),
+      );
+  @override
+  $R call({Tag? ideal, List<Tag>? ancestors}) => $apply(
+    FieldCopyWithData({
+      if (ideal != null) #ideal: ideal,
+      if (ancestors != null) #ancestors: ancestors,
+    }),
+  );
+  @override
+  TagRelations $make(CopyWithData data) => TagRelations(
+    ideal: data.get(#ideal, or: $value.ideal),
+    ancestors: data.get(#ancestors, or: $value.ancestors),
+  );
+
+  @override
+  TagRelationsCopyWith<$R2, TagRelations, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  ) => _TagRelationsCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 

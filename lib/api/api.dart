@@ -101,10 +101,10 @@ class HydrusApi with DioClient {
 
   // MARK: TAGS
 
-  Future<String> getSearchTags(String tag, {
+  Future<SearchTagsDto> getSearchTags(String tag, {
     TagDisplayType tagDisplayType = .storage,
   }) =>
-      get(
+      get<String>(
         '/add_tags/search_tags',
         params: {
           'search': tag,
@@ -113,7 +113,7 @@ class HydrusApi with DioClient {
             .display => 'display',
           },
         },
-      );
+      ).then(SearchTagsDto.fromJson);
 
   Future<void> postAddTags(AddTagsParams params) =>
       post(
