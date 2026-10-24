@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 import 'package:hydit/api/api.dart';
-import 'package:hydit/api/models.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/cache.dart';
@@ -39,7 +38,6 @@ class Repo() {
       final result = await api
           .getFileMetadata(chunk.ids)
           .run()
-          .map(FileMetadataResponseDto.fromJson)
           .mapElements(Tags.fromDto);
 
       if (result is Failure) return result;
@@ -69,7 +67,6 @@ class Repo() {
     final metadata = await api
         .getFileMetadata([id])
         .run()
-        .map(FileMetadataResponseDto.fromJson)
         .map((v) => FileMetadata.fromDto(v.first));
 
     if (metadata is Failure) return metadata;

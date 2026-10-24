@@ -9,6 +9,7 @@ import 'package:hydit/api/enums.dart';
 import 'package:hydit/utils/unicode.dart';
 
 import 'dio.dart';
+import 'models.dart';
 
 
 class HydrusApi with DioClient {
@@ -54,14 +55,14 @@ class HydrusApi with DioClient {
         .then((l) => l.cast<int>());
   }
 
-  Future<String> getFileMetadata(List<int> ids) =>
-      get(
+  Future<FileMetadataResponseDto> getFileMetadata(List<int> ids) =>
+      get<String>(
         '/get_files/file_metadata',
         params: {
           'file_ids': ids,
           'include_services_object': false,
         },
-      );
+      ).then(FileMetadataResponseDto.fromJson);
 
   // MARK: FILES
 
