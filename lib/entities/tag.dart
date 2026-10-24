@@ -1,10 +1,9 @@
 import 'package:flutter/services.dart';
-import 'package:equatable/equatable.dart';
 
 import 'package:hydit/utils/utils.dart';
 
 
-class Tag(final String raw) extends Equatable {
+class Tag(final String raw) {
 
   final int idx = raw.indexOf(':');
 
@@ -31,7 +30,11 @@ class Tag(final String raw) extends Equatable {
   String toString() => raw;
 
   @override
-  List<Object?> get props => [raw];
+  bool operator ==(Object other) =>
+      identical(this, other) || other is Tag && raw == other.raw;
+
+  @override
+  int get hashCode => raw.hashCode;
 
   static void toClipboard(Tag t) =>
       Clipboard.setData(ClipboardData(text: t.raw));

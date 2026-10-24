@@ -71,7 +71,6 @@ dependencies:
 
   # Other packages
   filesize: ^2.0.1
-  equatable: ^2.0.8
   niku: ^2.4.3
   package_info_plus: ^10.1.0
   pub_semver: ^2.2.0

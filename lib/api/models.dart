@@ -1,4 +1,7 @@
-@MappableLib(caseStyle: .snakeCase)
+@MappableLib(
+  caseStyle: .snakeCase,
+  generateMethods: GenerateMethods.decode,
+)
 library;
 
 import 'package:collection/collection.dart';
