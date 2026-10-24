@@ -26,6 +26,17 @@ class const TagMapper() extends SimpleMapper<Tag> {
 }
 
 
+class const DurationMapper() extends SimpleMapper<Duration> {
+  @override
+  Duration decode(Object value) => Duration(milliseconds: value as int);
+
+  @override
+  int encode(Duration self) => self.inMilliseconds;
+
+  static const single = [DurationMapper()];
+}
+
+
 @MappableClass()
 class SearchTagsDto({
   @MappableField(key: 'tags')
@@ -68,7 +79,7 @@ class const IncludeKeysSetNameAsKeyHook() extends MappingHook {
 }
 
 
-@MappableClass()
+@MappableClass(includeCustomMappers: DurationMapper.single)
 class const FileMetadataDto({
   @MappableField(key: 'file_id')
   required final int id,

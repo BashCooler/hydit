@@ -147,6 +147,7 @@ class FileMetadataDtoMapper extends ClassMapperBase<FileMetadataDto> {
   static FileMetadataDtoMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = FileMetadataDtoMapper._());
+      MapperContainer.globals.useAll(DurationMapper.single);
       TagServiceMapper.ensureInitialized();
     }
     return _instance!;
