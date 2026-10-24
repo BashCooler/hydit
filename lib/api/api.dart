@@ -54,16 +54,12 @@ class HydrusApi with DioClient {
         .then((l) => l.cast<int>());
   }
 
-  Future<String> getFileMetadata(List<int> ids, {
-    bool onlyReturnBasicInformation = false,
-    bool includeServicesObject = false,
-  }) =>
+  Future<String> getFileMetadata(List<int> ids) =>
       get(
         '/get_files/file_metadata',
         params: {
           'file_ids': ids,
-          'only_return_basic_information': onlyReturnBasicInformation,
-          'include_services_object': includeServicesObject,
+          'include_services_object': false,
         },
       );
 

@@ -67,7 +67,7 @@ class Repo() {
     if (bytes is Failure) return bytes;
 
     final metadata = await api
-        .getFileMetadata([id], onlyReturnBasicInformation: true)
+        .getFileMetadata([id])
         .run()
         .map(FileMetadataResponseDto.fromJson)
         .map((v) => FileMetadata.fromDto(v.first));
