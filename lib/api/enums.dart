@@ -46,11 +46,5 @@ enum FileSortType {
 
 enum TagDisplayType {
   storage,
-  display;
-
-  @override
-  String toString() => switch (this) {
-    .storage => 'storage_tags',
-    .display => 'display_tags',
-  };
+  display,
 }
