@@ -35,8 +35,8 @@ class EditorTagList extends HookWidget {
     final scroll = useScrollController();
 
     return Expanded(
-      child: TagList(
-        tags: tags,
+      child: GenericListView(
+        items: tags,
         scrollController: scroll,
         reverse: true,
         itemBuilder: (context, tag) {

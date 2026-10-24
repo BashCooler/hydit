@@ -47,8 +47,8 @@ class Search extends HookWidget {
               SizedBox(
                 height: Sizes.smallList,
                 child: Obx(() {
-                  return TagList(
-                    tags: query.options.query.toList(),
+                  return GenericListView(
+                    items: query.options.query.toList(),
                     reverse: true,
                     scrollController: scrollUp,
                     itemBuilder: (context, tag) {
@@ -66,9 +66,9 @@ class Search extends HookWidget {
 
               Expanded(
                 child: Obx(
-                  () => TagList(
+                  () => GenericListView(
                     reverse: true,
-                    tags: search.suggests.toList(),
+                    items: search.suggests.toList(),
                     scrollController: scrollDown,
                     itemBuilder: (context, tag) {
                       return TagTile(

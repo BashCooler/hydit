@@ -55,9 +55,9 @@ class const EditorSuggests({
     final scroll = useScrollController();
 
     return Obx(
-      () => TagList(
+      () => GenericListView(
         reverse: true,
-        tags: search.suggests.toList(),
+        items: search.suggests.toList(),
         scrollController: scroll,
         itemBuilder: (context, tag) {
           return TagTile(

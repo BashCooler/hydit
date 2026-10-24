@@ -21,8 +21,8 @@ void showModalTagSheet(BuildContext context, List<Tag> ancestors) {
         snap: true,
         builder: (context, scrollController) {
           return SafeArea(
-            child: TagList(
-              tags: ancestors,
+            child: GenericListView(
+              items: ancestors,
               shrinkWrap: true,
               scrollController: scrollController,
               itemBuilder: (context, tag) {

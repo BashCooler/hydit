@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:hydit/utils/theme.dart';
-import 'package:hydit/entities/tag.dart';
 
 
-class const TagList({
+class const GenericListView<T>({
   super.key,
   final ScrollController? scrollController,
-  required final List<Tag> tags,
+  required final List<T> items,
   final bool reverse = false,
   final bool shrinkWrap = false,
-  required final Widget Function(BuildContext context, Tag tag) itemBuilder,
+  required final Widget Function(BuildContext context, T item) itemBuilder,
 }) extends StatelessWidget {
   //
   @override
@@ -25,12 +24,12 @@ class const TagList({
           controller: scrollController,
           child: ListView.builder(
             reverse: reverse,
-            itemCount: tags.length,
+            itemCount: items.length,
             controller: scrollController,
             shrinkWrap: shrinkWrap,
             padding: Insets.listPadding,
             itemBuilder: (context, index) {
-              return itemBuilder(context, tags[index]);
+              return itemBuilder(context, items[index]);
             },
           ),
         ),
