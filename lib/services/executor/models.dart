@@ -29,9 +29,7 @@ class Token with CancellationToken, CompletionToken {
 }
 
 
-class Unit {
-  const Unit._();
-}
+class const Unit._();
 
 const unit = Unit._();
 
@@ -162,6 +160,12 @@ extension AsyncOperations<T> on Future<Result<T>> {
 
     return (await this).tapFailure(f);
   }
+}
+
+
+extension MapElementsOfFuture<T> on Future<Iterable<T>> {
+  Future<List<R>> mapElements<R>(R Function(T v) toElement) async =>
+      (await this).map(toElement).toList();
 }
 
 
