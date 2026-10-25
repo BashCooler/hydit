@@ -156,10 +156,4 @@ class const TagRelations({
 class PendingFile (final Uint8List bytes, {
   required final String name,
   required final String mime,
-}) {
-  Map<String, dynamic> toMap() => {
-    "bytes": bytes,
-    "name": name,
-    "type": mime,
-  };
-}
+});

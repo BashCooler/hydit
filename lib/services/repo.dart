@@ -47,5 +47,5 @@ class Repo() {
   }
 
   Future<Result<void>> download(int id) =>
-      api.getFile(id).run().map(Native.saveFile);
+      api.getFile(id).then(Native.saveFile).run();
 }

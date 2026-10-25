@@ -22,6 +22,15 @@ class const Native._() {
   /// Save file to local downloads folder.
   ///
   /// Will only work on Android 10+.
-  static Future<Result<void>> saveFile(PendingFile file) =>
-      _channel.invokeListMethod("saveFile", file.toMap()).run();
+  ///
+  /// Throws [PlatformException].
+  static Future<void> saveFile(PendingFile file) =>
+      _channel.invokeMethod(
+        "saveFile",
+        {
+          "bytes": file.bytes,
+          "name": file.name,
+          "type": file.mime,
+        },
+      );
 }
