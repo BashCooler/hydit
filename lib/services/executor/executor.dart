@@ -1,16 +1,11 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
-import 'package:flutter/services.dart';
-
 import 'package:hydit/utils/utils.dart';
 
 import 'models.dart';
 
 
 extension SafeExecuteAsync<T> on Future<T> {
-  /// Safely runs an [action], handles [DioException] and
-  /// [PlatformException].
   Future<Result<T>> run() async {
     try {
       return Success(await this);
