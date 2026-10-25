@@ -7,6 +7,7 @@ import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/services/repo.dart';
 import 'package:hydit/utils/tag_sort.dart';
+import 'package:hydit/utils/utils.dart';
 
 import '../entities/changes.dart';
 
@@ -160,8 +161,8 @@ abstract class TagManager {
 
   /// Send changes to Hydrus and update local files
   /// metadata.
-  Future<Result<void>> save() => repo.api
-      .postAddTags(AddTagsParams(files.ids, summarize()))
+  Future<Result<void>> save() => AddTagsParams(files.ids, summarize())
+      .let(repo.api.postAddTags)
       .run()
       .flatMap((_) => repo.update(files));
 }
