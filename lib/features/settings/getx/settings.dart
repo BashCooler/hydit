@@ -60,13 +60,9 @@ class SettingsController() extends GetxController {
     box.put('url', url);
     box.put('key', key);
 
-    Native
-        .savePreferences(url, key)
-        .tapFailure(Snack.error);
-
     repo.api.load();
 
-    return access;
+    return Native.savePreferences(url, key).run();
   }
 
   void setUrl(String url) {
