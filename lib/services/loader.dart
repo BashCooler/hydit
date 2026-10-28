@@ -87,7 +87,8 @@ class Loader({required final String tag, final int chunkSize = 20}) {
     return repo.api
         .getFileMetadata(ids)
         .run()
-        .mapElements(HydrusFile.fromDto);
+        .mapElements(HydrusFile.fromDto)
+        .toList();
   }
 
   Future<Result<void>> ensureLoaded(Iterable<int> ids,

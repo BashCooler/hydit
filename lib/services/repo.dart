@@ -26,7 +26,8 @@ class Repo() {
       final result = await api
           .getFileMetadata(chunk.ids)
           .run()
-          .mapElements(Tags.fromDto);
+          .mapElements(Tags.fromDto)
+          .toList();
 
       if (result is Failure) return result;
 
