@@ -51,9 +51,9 @@ class SettingsController() extends GetxController {
   Future<Result<void>> save() async {
     final url = buildUrl();
 
-    final access = await parseUrl(url)
-        .map((uri) => HydrusApi(uri: uri, key: key))
-        .flatMap((api) => api.getVerifyAccessKey().run());
+    final access = await parseUrl(url).flatMap(
+      (uri) => HydrusApi(uri: uri, key: key).getVerifyAccessKey().run(),
+    );
 
     if (access is Failure) return access;
 
