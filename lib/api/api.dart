@@ -75,25 +75,16 @@ class HydrusApi with DioClient {
         },
       );
 
-  Future<void> deleteFiles(List<int> ids) =>
+  /// Combined archive, unarchive and delete request.
+  Future<void> editFiles(List<int> ids, {
+    required AddFilesAction action,
+  }) =>
       post(
-        '/add_files/delete_files',
-        params: {
-          'file_ids': ids,
+        switch (action) {
+          .archive => '/add_files/archive_files',
+          .inbox => '/add_files/unarchive_files',
+          .delete => '/add_files/delete_files',
         },
-      );
-
-  Future<void> archiveFiles(List<int> ids) =>
-      post(
-        '/add_files/archive_files',
-        params: {
-          'file_ids': ids,
-        },
-      );
-
-  Future<void> unarchiveFiles(List<int> ids) =>
-      post(
-        '/add_files/unarchive_files',
         params: {
           'file_ids': ids,
         },

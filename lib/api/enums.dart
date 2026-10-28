@@ -58,3 +58,10 @@ enum FileUrlType(final String path) {
   @override
   String toString() => path;
 }
+
+
+enum AddFilesAction {
+  archive,
+  inbox,
+  delete,
+}

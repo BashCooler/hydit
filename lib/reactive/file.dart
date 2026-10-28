@@ -69,18 +69,15 @@ class HydrusFile._(
 
   Future<Result<void>> download() => repo.download(id);
 
+  Future<Result<void>>? _togglingInbox;
+
   /// Move inboxed file to archive or move archived file to
   /// the inbox.
-  Future<Result<void>> toggleInbox() => switch (isInbox) {
-    true => repo.api
-        .archiveFiles([id])
-        .run()
-        .tapSuccess((_) => inbox.value = false),
-    false => repo.api
-        .unarchiveFiles([id])
-        .run()
-        .tapSuccess((_) => inbox.value = true),
-  };
+  Future<Result<void>> toggleInbox() => _togglingInbox ??= repo.api
+      .editFiles([id], action: isInbox ? .archive : .inbox)
+      .run()
+      .tapSuccess((_) => inbox.toggle())
+      .whenComplete(() => _togglingInbox = null);
 }
 
 

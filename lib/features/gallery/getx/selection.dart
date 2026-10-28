@@ -158,7 +158,7 @@ class SelectionController({required final String tag}) {
       title: 'Delete files?'.n,
       loadingTitle: 'Deleting...'.n,
       onApply: () =>
-          repo.api.deleteFiles(ids).match(
+          repo.api.editFiles(ids, action: .delete).match(
             ok: (v) {
               Get.back();
               files.cache.remove(ids);
@@ -171,40 +171,30 @@ class SelectionController({required final String tag}) {
 
   // MARK: ARCHIVE
 
-  void archive() {
+  void archive() => setArchived(true);
+
+  void inbox() => setArchived(false);
+
+  Future<void> setArchived(bool archive) {
     final ids = this.ids.toList();
 
     final loaded = files.cache.withIds(ids);
 
-    LoadingDialog.show(
-      icon: const Icon(Icons.archive_outlined),
-      title: 'Archive files?'.n,
+    return LoadingDialog.show(
+      icon: archive
+          ? const Icon(Icons.archive_outlined)
+          : const Icon(Icons.mail_outline),
+      title: archive
+          ? const Text('Archive files?')
+          : const Text('Inbox files'),
       onApply: () =>
-          repo.api.archiveFiles(ids).match(
+          repo.api.editFiles(
+            ids,
+            action: archive ? .archive : .inbox,
+          ).match(
             ok: (v) {
               for (final file in loaded) {
-                file.inbox.value = false;
-              }
-              Get.back();
-            },
-            err: Snack.error,
-          ),
-    );
-  }
-
-  void inbox() {
-    final ids = this.ids.toList();
-
-    final loaded = files.cache.withIds(ids);
-
-    LoadingDialog.show(
-      icon: const Icon(Icons.mail_outline),
-      title: 'Inbox files?'.n,
-      onApply: () =>
-          repo.api.unarchiveFiles(ids).match(
-            ok: (v) {
-              for (final file in loaded) {
-                file.inbox.value = true;
+                file.inbox.value = archive.not();
               }
               Get.back();
             },

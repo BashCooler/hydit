@@ -100,7 +100,7 @@ class PageGetxController({
       }
 
       return repo.api
-          .deleteFiles(ids)
+          .editFiles(ids, action: .delete)
           .run()
           .tapFailure(Snack.error);
     }
