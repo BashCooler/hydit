@@ -55,7 +55,7 @@ class Failure<T> extends Result<T> {
 
   const Failure(this.e);
 
-  factory Failure.from(Failure failure) => Failure(failure.e);
+  factory from(Failure failure) => Failure(failure.e);
 
   @override
   String toString() => e.toString();
@@ -64,18 +64,14 @@ class Failure<T> extends Result<T> {
   T? getOrNull() => null;
 
   @override
-  T getOrThrow() {
-    throw StateError('An attempt to unwrap a Failure');
-  }
+  T getOrThrow() => throw e;
 
   @override
-  Result<T> tapSuccess(void Function(T v) f) {
-    return this;
-  }
+  Result<T> tapSuccess(void Function(T v) f) => this;
 
   @override
   Result<T> tapFailure(void Function(Object e) f) {
-    f(this);
+    f(e);
     return this;
   }
 
