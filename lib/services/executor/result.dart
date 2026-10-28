@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'extensions.dart';
+
 
 sealed class Result<T> {
   const Result();
@@ -8,30 +10,30 @@ sealed class Result<T> {
 
   T getOrThrow();
 
-  Result<T> tapSuccess(void Function(T data) f);
+  Result<T> tapSuccess(void Function(T v) f);
 
   Result<T> tapFailure(void Function(Object e) f);
 
-  Result<R> map<R>(R Function(T data) f);
+  Result<R> map<R>(R Function(T v) f);
 
-  Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T data) f);
+  Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T v) f);
 }
 
 
 class Success<T> extends Result<T> {
-  final T data;
+  final T v;
 
-  const Success(this.data);
-
-  @override
-  T? getOrNull() => data;
+  const Success(this.v);
 
   @override
-  T getOrThrow() => data;
+  T? getOrNull() => v;
 
   @override
-  Result<T> tapSuccess(void Function(T data) f) {
-    f(data);
+  T getOrThrow() => v;
+
+  @override
+  Result<T> tapSuccess(void Function(T v) f) {
+    f(v);
     return this;
   }
 
@@ -39,11 +41,11 @@ class Success<T> extends Result<T> {
   Result<T> tapFailure(void Function(Object e) f) => this;
 
   @override
-  Result<R> map<R>(R Function(T data) f) => Success(f(data));
+  Result<R> map<R>(R Function(T v) f) => f(v).toSuccess();
 
   @override
-  Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T data) f) async {
-    return await f(data);
+  Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T v) f) async {
+    return await f(v);
   }
 }
 
@@ -67,7 +69,7 @@ class Failure<T> extends Result<T> {
   }
 
   @override
-  Result<T> tapSuccess(void Function(T data) f) {
+  Result<T> tapSuccess(void Function(T v) f) {
     return this;
   }
 
@@ -78,12 +80,12 @@ class Failure<T> extends Result<T> {
   }
 
   @override
-  Result<R> map<R>(R Function(T data) f) {
+  Result<R> map<R>(R Function(T v) f) {
     return Failure<R>.from(this);
   }
 
   @override
-  Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T data) f) async {
+  Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T v) f) async {
     return Failure<R>.from(this);
   }
 }

@@ -30,12 +30,12 @@ extension AsyncResult<T> on Future<Result<T>> {
 
   Future<T> getOrThrow() => then((r) => r.getOrThrow());
 
-  Future<Result<R>> map<R>(R Function(T data) f) => then((r) => r.map(f));
+  Future<Result<R>> map<R>(R Function(T v) f) => then((r) => r.map(f));
 
   Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T v) f) =>
       then((r) => r.flatMap(f));
 
-  Future<Result<T>> tapSuccess(void Function(T data) f) =>
+  Future<Result<T>> tapSuccess(void Function(T v) f) =>
       then((r) => r.tapSuccess(f));
 
   Future<Result<T>> tapFailure(void Function(Object e) f) =>
