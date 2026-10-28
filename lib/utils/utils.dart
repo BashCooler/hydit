@@ -78,11 +78,11 @@ class Wrapper extends StatelessWidget {
 extension ScopeFunctions<T> on T {
 
   R let<R>(R Function(T it) toElement) {
-    return toElement.call(this);
+    return toElement(this);
   }
 
   T also(void Function(T it) action) {
-    action.call(this);
+    action(this);
     return this;
   }
 }

@@ -35,6 +35,8 @@ extension AsyncResult<T> on Future<Result<T>> {
   Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T v) f) =>
       then((r) => r.flatMap(f));
 
+  Future<Result<T>> tap(void Function(Result<T> r) f) => then((r) => r.tap(f));
+
   Future<Result<T>> tapSuccess(void Function(T v) f) =>
       then((r) => r.tapSuccess(f));
 
