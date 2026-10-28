@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:get/get.dart';
 
 import 'package:hydit/api/enums.dart';
@@ -40,12 +38,14 @@ class QueryController({
   /// Remove all tags from the query.
   void clear() => options.query.clear();
 
-  Future<void> search() {
+  Future<void> search() async {
     options.save();
+
+    if (options.query.isEmpty) return;
 
     beforeSearch?.call();
 
-    return repo.api
+    await repo.api
         .getSearchFiles(options.params)
         .run()
         .tapSuccess(onResults)
