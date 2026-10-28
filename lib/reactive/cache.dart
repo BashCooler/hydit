@@ -20,6 +20,11 @@ class FileCache {
 
   void clear() => cache.clear();
 
+  List<HydrusFile> withIds(List<int> ids) => ids
+      .map((id) => cache[id])
+      .whereType<HydrusFile>()
+      .toList();
+
   /// Remove files with provided [ids].
   ///
   /// Use [getOffAll] when deleting the last file to

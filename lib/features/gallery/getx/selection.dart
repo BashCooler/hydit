@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:niku/extra/primitive.dart';
 
-import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/widgets/common/dialog.dart';
@@ -112,30 +111,6 @@ class SelectionController({required final String tag}) {
     );
   }
 
-  // MARK: DELETE
-
-  void delete() {
-
-    void onSuccess(void value) {
-      Get.back();
-      files.cache.remove(ids.toList());
-      clear();
-    }
-
-    Future<Result<void>> onApply() => repo.api
-        .deleteFiles(ids.toList())
-        .run()
-        .tapSuccess(onSuccess)
-        .tapFailure(Snack.error);
-
-    LoadingDialog.show(
-      icon: const Icon(Icons.delete_forever),
-      title: 'Delete files?'.n,
-      loadingTitle: 'Deleting...'.n,
-      onApply: onApply,
-    );
-  }
-
   // MARK: DOWNLOAD
 
   Future<Result<void>> download({double delay = 0}) async {
@@ -173,55 +148,68 @@ class SelectionController({required final String tag}) {
     return Success(null);
   }
 
+  // MARK: DELETE
+
+  void delete() {
+    final ids = this.ids.toList();
+
+    LoadingDialog.show(
+      icon: const Icon(Icons.delete_forever),
+      title: 'Delete files?'.n,
+      loadingTitle: 'Deleting...'.n,
+      onApply: () =>
+          repo.api.deleteFiles(ids).match(
+            ok: (v) {
+              Get.back();
+              files.cache.remove(ids);
+              clear();
+            },
+            err: Snack.error,
+          ),
+    );
+  }
+
   // MARK: ARCHIVE
 
   void archive() {
-    final loaded = ids
-        .map((id) => files.cache[id])
-        .whereType<HydrusFile>();
+    final ids = this.ids.toList();
 
-    void onSuccess(void data) {
-      for (final file in loaded) {
-        file.inbox.value = false;
-      }
-      Get.back();
-    }
-
-    Future<Result<void>> onApply() => repo.api
-        .archiveFiles(ids.toList())
-        .run()
-        .tapSuccess(onSuccess)
-        .tapFailure(Snack.error);
+    final loaded = files.cache.withIds(ids);
 
     LoadingDialog.show(
       icon: const Icon(Icons.archive_outlined),
       title: 'Archive files?'.n,
-      onApply: onApply,
+      onApply: () =>
+          repo.api.archiveFiles(ids).match(
+            ok: (v) {
+              for (final file in loaded) {
+                file.inbox.value = false;
+              }
+              Get.back();
+            },
+            err: Snack.error,
+          ),
     );
   }
 
   void inbox() {
-    final loaded = ids
-        .map((id) => files.cache[id])
-        .whereType<HydrusFile>();
+    final ids = this.ids.toList();
 
-    void onSuccess(void data) {
-      for (final file in loaded) {
-        file.inbox.value = true;
-      }
-      Get.back();
-    }
-
-    Future<Result<void>> onApply() => repo.api
-        .unarchiveFiles(ids.toList())
-        .run()
-        .tapSuccess(onSuccess)
-        .tapFailure(Snack.error);
+    final loaded = files.cache.withIds(ids);
 
     LoadingDialog.show(
       icon: const Icon(Icons.mail_outline),
       title: 'Inbox files?'.n,
-      onApply: onApply,
+      onApply: () =>
+          repo.api.unarchiveFiles(ids).match(
+            ok: (v) {
+              for (final file in loaded) {
+                file.inbox.value = true;
+              }
+              Get.back();
+            },
+            err: Snack.error,
+          ),
     );
   }
 }
