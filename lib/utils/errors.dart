@@ -68,6 +68,7 @@ final class const HydrusConnectionError(final DioException e) extends AppError {
     ),
     .connectionError => 'Connection refused',
     .connectionTimeout => 'Connection timeout',
+    .unknown when e.error is ArgumentError => 'Argument error',
     _ => 'Unknown error',
   };
 
@@ -82,6 +83,7 @@ final class const HydrusConnectionError(final DioException e) extends AppError {
       _ => 'No running Hydrus client found',
     },
     .connectionTimeout => 'No response from Hydrus',
+    .unknown when e.error is ArgumentError => 'No host provided',
     _ => e.toString(),
   };
 }
