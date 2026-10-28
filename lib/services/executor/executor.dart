@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:hydit/utils/utils.dart';
 
-import 'models.dart';
+import 'result.dart';
 
 
 extension SafeExecuteAsync<T> on Future<T> {

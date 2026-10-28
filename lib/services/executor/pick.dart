@@ -1,6 +1,7 @@
 import 'package:deep_pick/deep_pick.dart';
 
-import 'models.dart';
+import 'extensions.dart';
+import 'result.dart';
 
 
 extension PickExtension on String {
