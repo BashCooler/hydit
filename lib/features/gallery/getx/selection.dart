@@ -62,14 +62,7 @@ class SelectionController({required final String tag}) {
 
   // MARK: EDIT
 
-  void edit() {
-    switch (ids.length) {
-      case 1:
-        _openPagedEditor();
-      case > 1:
-        _openBatchEditor();
-    }
-  }
+  void edit() => ids.length > 1 ? _openBatchEditor() : _openPagedEditor();
 
   void _openPagedEditor() {
 
@@ -128,14 +121,10 @@ class SelectionController({required final String tag}) {
 
     for (final id in ids) {
 
-      final download = await repo
-          .download(id)
-          .tapSuccess((_) => progress.value++)
-          .delay(delay);
-
-      if (download is Failure) {
-        token.cancel();
-      }
+      final download = await repo.download(id).delay(delay).match(
+        ok: (v) => progress.value++,
+        err: (e) => token.cancel(),
+      );
 
       if (token.cancelled) {
         Get.back();
