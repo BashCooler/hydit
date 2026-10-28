@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'package:hydit/services/loader.dart';
+import 'package:hydit/features/gallery/getx/loader.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/getx/query.dart';
 
@@ -21,8 +21,9 @@ class GalleryBindings extends Bindings {
 
   @override
   void dependencies() {
+    final gallery = GalleryController();
 
-    Get.put(GalleryController(), tag: tag);
+    Get.put(gallery, tag: tag);
 
     Get.lazyPut(
       () => SelectionController(tag: tag),
@@ -32,8 +33,17 @@ class GalleryBindings extends Bindings {
     Get.put(FileStore(ids), tag: tag);
 
     if (search) {
-      Get.put(Loader(tag: tag), tag: tag);
-      Get.put(QueryController(tag: tag), tag: tag);
+      final loader = Loader(tag: tag);
+
+      Get.put(loader, tag: tag);
+
+      final query = QueryController(
+        onResults: loader.init,
+        beforeSearch: () => gallery.loading.value = true,
+        afterSearch: () => gallery.loading.value = false,
+      );
+
+      Get.put(query, tag: tag);
     }
   }
 }

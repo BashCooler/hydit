@@ -11,6 +11,7 @@ import 'package:hydit/features/editor/bindings.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
 import 'gallery.dart';
+import 'loader.dart';
 
 
 class SelectionController({required final String tag}) {

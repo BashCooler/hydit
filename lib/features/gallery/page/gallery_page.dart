@@ -2,13 +2,13 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/services/loader.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/widgets/common/swipeable.dart';
 import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/viewer/bindings.dart';
 import 'package:hydit/features/viewer/page/viewer_page.dart';
 
+import '../getx/loader.dart';
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
 import '../widget/widgets.dart';

@@ -5,12 +5,15 @@ import 'package:get/get.dart';
 import 'package:hydit/api/enums.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/services.dart';
-import 'package:hydit/features/gallery/getx/gallery.dart';
 
 import '../reactive/options.dart';
 
 
-class QueryController({required final String tag}) {
+class QueryController({
+  final void Function()? beforeSearch,
+  final void Function()? afterSearch,
+  required final void Function(List<int> ids) onResults,
+}) {
 
   final options = SearchOptions.load();
 
@@ -19,10 +22,6 @@ class QueryController({required final String tag}) {
   }
 
   Repo get repo => Get.find();
-
-  Loader get loader => Get.find(tag: tag);
-
-  GalleryController get gallery => Get.find(tag: tag);
 
   static final pattern = RegExp(r'[{}]');
 
@@ -44,12 +43,14 @@ class QueryController({required final String tag}) {
   Future<void> search() {
     options.save();
 
+    beforeSearch?.call();
+
     return repo.api
         .getSearchFiles(options.params)
         .run()
-        .loading(gallery.loading)
-        .tapSuccess(loader.init)
-        .tapFailure(Snack.error);
+        .tapSuccess(onResults)
+        .tapFailure(Snack.error)
+        .tap((_) => afterSearch?.call());
   }
 
   void setSortType(FileSortType s) {

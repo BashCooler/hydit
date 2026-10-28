@@ -2,11 +2,11 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/utils/utils.dart';
-import 'package:hydit/services/loader.dart';
 import 'package:hydit/widgets/common/switcher.dart';
 import 'package:hydit/widgets/systems/acrylic.dart' as a;
 import 'package:hydit/features/search/page/search.dart';
 
+import '../getx/loader.dart';
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
 
