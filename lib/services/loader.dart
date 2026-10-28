@@ -116,7 +116,7 @@ class Loader({required final String tag, final int chunkSize = 20}) {
     return unit.toSuccess();
   }
 
-  void _fail(Failure failure) {
+  void _fail(_) {
     // Add for the grid to rebuild then update state
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _failed.value = true);

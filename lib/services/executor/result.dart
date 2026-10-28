@@ -10,7 +10,7 @@ sealed class Result<T> {
 
   Result<T> tapSuccess(void Function(T data) f);
 
-  Result<T> tapFailure(void Function(Failure<T> failure) f);
+  Result<T> tapFailure(void Function(Object e) f);
 
   Result<R> map<R>(R Function(T data) f);
 
@@ -36,9 +36,7 @@ class Success<T> extends Result<T> {
   }
 
   @override
-  Result<T> tapFailure(void Function(Failure<T> failure) f) {
-    return this;
-  }
+  Result<T> tapFailure(void Function(Object e) f) => this;
 
   @override
   Result<R> map<R>(R Function(T data) f) => Success(f(data));
@@ -74,7 +72,7 @@ class Failure<T> extends Result<T> {
   }
 
   @override
-  Result<T> tapFailure(void Function(Failure<T> failure) f) {
+  Result<T> tapFailure(void Function(Object e) f) {
     f(this);
     return this;
   }

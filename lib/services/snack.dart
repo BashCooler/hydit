@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/services/services.dart';
 import 'package:hydit/utils/errors.dart';
 
 
@@ -11,8 +10,8 @@ class const Snack._() {
     snackBar(const Icon(Icons.check), title, message);
   }
 
-  static void error(Failure f) {
-    final e = AppError.from(f.e);
+  static void error(Object error) {
+    final e = AppError.from(error);
     snackBar(const Icon(Icons.clear), e.title, e.message);
   }
 

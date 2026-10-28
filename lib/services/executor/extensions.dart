@@ -38,6 +38,6 @@ extension AsyncResult<T> on Future<Result<T>> {
   Future<Result<T>> tapSuccess(FutureOr<void> Function(T data) f) =>
       then((r) => r.tapSuccess(f));
 
-  Future<Result<T>> tapFailure(FutureOr<void> Function(Failure<T> failure) f) =>
+  Future<Result<T>> tapFailure(FutureOr<void> Function(Object e) f) =>
       then((r) => r.tapFailure(f));
 }
