@@ -49,22 +49,11 @@ class BatchTagManager ({
   void toggle(Tag tag) {
     if (!editable || tag.raw.isEmpty) return;
 
-    final state = this.state(tag);
-    final count = this.count(tag);
-
-    if (count == files.length) {
-
-      switch (state) {
-        case .removed:
-          current.add(tag);
-        case _:
-          current.remove(tag);
-      }
-
-      return;
+    if (count(tag) == files.length) {
+      return super.toggle(tag);
     }
 
-    switch (state) {
+    switch (state(tag)) {
       case .removed:
         current.add(tag);
       case .unchanged:
