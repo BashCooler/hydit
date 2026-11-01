@@ -8,8 +8,6 @@ import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/features/editor/getx/base.dart';
 
-import '../entities/changes.dart';
-
 
 class BatchTagManager ({
   @override required final List<HydrusFile> files,
@@ -21,6 +19,7 @@ class BatchTagManager ({
   }
 
   final _added = <String, RxSet<Tag>>{};
+
   Set<Tag> get added => _added[service]!;
 
   /// Service name -> tag -> count.
@@ -128,30 +127,9 @@ class BatchTagManager ({
   }
 
   @override
-  List<Changes> summarize() {
-    final changes = super.summarize();
-
-    for (final MapEntry(key: name, value: tagsToAdd) in _added.entries) {
-      if (tagsToAdd.isEmpty) continue;
-
-      final change = Changes(
-        key: original[name]!.key,
-        added: tagsToAdd,
-        deleted: {},
-      );
-
-      changes.add(change);
-    }
-
-    return changes;
-  }
-
-  @override
-  (int, int) diff(String service) {
-    final (add, del) = super.diff(service);
-
-    final added = _added[service]!;
-
-    return (add + added.length, del);
-  }
+  Set<Tag> additions(String service) =>
+      {
+        ...super.additions(service),
+        ..._added[service]!,
+      };
 }

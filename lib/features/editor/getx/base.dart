@@ -116,20 +116,32 @@ abstract class TagManager {
     return true;
   }
 
+  Set<Tag> additions(String service) {
+    final current = _current[service]!;
+    final initial = _initial[service]!;
+
+    return current.difference(initial);
+  }
+
+  Set<Tag> deletions(String service) {
+    final current = _current[service]!;
+    final initial = _initial[service]!;
+
+    return initial.difference(current);
+  }
+
   /// Generate [Changes]s.
   List<Changes> summarize() {
     final changes = <Changes>[];
 
-    for (final MapEntry(key: name, value: service) in _initial.entries) {
-      final current = _current[name]!;
-
-      final add = current.difference(service);
-      final del = service.difference(current);
+    for (final service in _initial.keys) {
+      final add = additions(service);
+      final del = deletions(service);
 
       if (add.isEmpty && del.isEmpty) continue;
 
       final diff = Changes(
-        key: original[name]!.key,
+        key: original[service]!.key,
         added: add,
         deleted: del,
       );
@@ -142,13 +154,10 @@ abstract class TagManager {
 
   /// Number of additions and deletions.
   (int, int) diff(String service) {
-    final initial = _initial[service]!;
-    final current = _current[service]!;
+    final add = additions(service);
+    final del = deletions(service);
 
-    final add = current.difference(initial).length;
-    final del = initial.difference(current).length;
-
-    return (add, del);
+    return (add.length, del.length);
   }
 
   /// Send changes to Hydrus and update local files
