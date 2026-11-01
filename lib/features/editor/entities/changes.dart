@@ -3,9 +3,9 @@ import 'package:hydit/entities/tag.dart';
 
 class const Changes({
   required final String key,
-  required final Set<Tag> added,
-  required final Set<Tag> deleted,
+  required final Set<Tag> add,
+  required final Set<Tag> del,
 }) {
   bool get isNotEmpty =>
-      added.isNotEmpty || deleted.isNotEmpty;
+      add.isNotEmpty || del.isNotEmpty;
 }

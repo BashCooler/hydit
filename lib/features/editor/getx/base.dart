@@ -36,6 +36,9 @@ abstract class TagManager {
   /// The key of currently selected service.
   String get key => original[service]!.key;
 
+  /// The key of [service].
+  String keyOf(String service) => original[service]!.key;
+
   /// Union of original and added tags.
   Set<Tag> get union => { ...initial, ...current };
 
@@ -130,28 +133,6 @@ abstract class TagManager {
     return initial.difference(current);
   }
 
-  /// Generate [Changes]s.
-  List<Changes> summarize() {
-    final changes = <Changes>[];
-
-    for (final service in _initial.keys) {
-      final add = additions(service);
-      final del = deletions(service);
-
-      if (add.isEmpty && del.isEmpty) continue;
-
-      final diff = Changes(
-        key: original[service]!.key,
-        added: add,
-        deleted: del,
-      );
-
-      changes.add(diff);
-    }
-
-    return changes;
-  }
-
   /// Number of additions and deletions.
   (int, int) diff(String service) {
     final add = additions(service);
@@ -160,9 +141,21 @@ abstract class TagManager {
     return (add.length, del.length);
   }
 
+  /// Generate [Changes]s.
+  Iterable<Changes> get _changes sync* {
+    for (final service in _initial.keys) {
+      final add = additions(service);
+      final del = deletions(service);
+
+      if (add.isEmpty && del.isEmpty) continue;
+
+      yield Changes(key: keyOf(service), add: add, del: del);
+    }
+  }
+
   /// Send changes to Hydrus and update local files
   /// metadata.
-  Future<Result<void>> save() => AddTagsParams(files.ids, summarize())
+  Future<Result<void>> save() => AddTagsParams(files.ids, _changes)
       .let(repo.api.postAddTags)
       .run()
       .flatMap((_) => repo.update(files));

@@ -17,18 +17,21 @@ class const SearchFilesParams({
 }
 
 
-class const AddTagsParams(
+class AddTagsParams(
   final List<int> ids, //
-  final List<Changes> changes,
+  Iterable<Changes> changes,
 ) {
+  final List<Changes> changes = changes.toList();
+
   Map<String, dynamic> toMap() => {
     'file_ids': ids,
     'service_keys_to_actions_to_tags': {
       for (final change in changes)
-        if (change.isNotEmpty) change.key: {
-          "0": change.added.rawList(),
-          "1": change.deleted.rawList(),
-        },
+        if (change.isNotEmpty)
+          change.key: {
+            "0": change.add.rawList(),
+            "1": change.del.rawList(),
+          },
     },
   };
 }
