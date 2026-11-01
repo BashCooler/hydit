@@ -1,12 +1,11 @@
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import 'package:hydit/api/models.dart';
-import 'package:hydit/utils/utils.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/features/editor/getx/base.dart';
+
+import 'base.dart';
+import '../widget/toggle_dialog.dart';
 
 
 class BatchTagManager ({
@@ -69,29 +68,16 @@ class BatchTagManager ({
       case .removed:
         current.add(tag);
       case .unchanged:
-        Get.dialog(
-          transitionDuration: 150.ms,
-          AlertDialog(
-            icon: const Icon(Symbols.arrow_split),
-            actionsAlignment: .center,
-            title: const Text('Add or delete tag?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  added.add(tag);
-                  Get.back();
-                },
-                child: const Text('Add'),
-              ),
-              TextButton(
-                onPressed: () {
-                  current.remove(tag);
-                  Get.back();
-                },
-                child: const Text('Delete'),
-              ),
-            ],
-          ),
+        showToggleDialog(
+          tag,
+          onAdd: () {
+            added.add(tag);
+            Get.back();
+          },
+          onDel: () {
+            current.remove(tag);
+            Get.back();
+          },
         );
       case .added when initial.contains(tag):
         added.remove(tag);
