@@ -1,7 +1,4 @@
-import 'package:deep_pick/deep_pick.dart';
-
 import 'package:hydit/api/models.dart';
-import 'package:hydit/utils/utils.dart';
 
 
 class const FileMetadata({
@@ -28,14 +25,4 @@ class const FileMetadata({
   String get type => mime.split('/').first;
   String get res => '${width.toStringAsFixed(0)}x${height.toStringAsFixed(0)}';
   double get aspectRatio => width/height;
-}
-
-
-extension AsTypeOr on Pick {
-
-  double asDoubleOr(double value) => asDoubleOrNull() ?? value;
-
-  int asIntOr(int value) => asIntOrNull() ?? value;
-
-  Duration asMillisecondsOrZero() => asIntOr(0).ms;
 }
