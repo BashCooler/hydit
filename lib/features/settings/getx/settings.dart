@@ -41,7 +41,7 @@ class SettingsController() extends GetxController {
     super.onClose();
   }
 
-  String buildUrl() => '${protocol.scheme}$host';
+  String get url => '${protocol.scheme}$host';
 
   void load() {
     setUrl(box.get('url') ?? '');
@@ -49,10 +49,10 @@ class SettingsController() extends GetxController {
   }
 
   Future<Result<void>> save() async {
-    final url = buildUrl();
+    final url = this.url;
 
-    final access = await parseUrl(url).flatMap(
-      (uri) => HydrusApi(uri: uri, key: key).getVerifyAccessKey().run(),
+    final access = await url.validateUrl().flatMap(
+      (url) => HydrusApi(url: url, key: key).getVerifyAccessKey().run(),
     );
 
     if (access is Failure) return access;

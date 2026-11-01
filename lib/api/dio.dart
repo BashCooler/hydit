@@ -9,9 +9,9 @@ mixin class DioClient {
   String get url => dio.options.baseUrl;
   String get key => dio.options.headers['Hydrus-Client-API-Access-Key'];
 
-  void update(Uri uri, String key) {
+  void update(String url, String key) {
     dio.options
-      ..baseUrl = uri.replace(path: '').toString()
+      ..baseUrl = url
       ..headers['Hydrus-Client-API-Access-Key'] = key;
   }
 

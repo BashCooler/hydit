@@ -16,10 +16,10 @@ class HydrusApi with DioClient {
   static const int version = 96;
 
   HydrusApi({
-    required Uri uri,
+    required String url,
     required String key,
   }) {
-    update(uri, key);
+    update(url, key);
   }
 
   /// Create an instance of [HydrusApi] with settings
@@ -36,7 +36,7 @@ class HydrusApi with DioClient {
     final key = box.get('key') ?? '';
     final url = box.get('url') ?? '';
 
-    update(Uri.parse(url), key);
+    update(url, key);
   }
 
   // MARK: ACCESS MANAGEMENT

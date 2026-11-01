@@ -77,7 +77,7 @@ void main() {
     };
 
     for (final MapEntry(key: url, value: isValid) in urls.entries) {
-      final result = parseUrl(url) is Success;
+      final result = url.validateUrl() is Success;
 
       expect(result, equals(isValid), reason: url);
     }
