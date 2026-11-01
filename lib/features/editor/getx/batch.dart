@@ -70,14 +70,9 @@ class BatchTagManager ({
       case .unchanged:
         showToggleDialog(
           tag,
-          onAdd: () {
-            added.add(tag);
-            Get.back();
-          },
-          onDel: () {
-            current.remove(tag);
-            Get.back();
-          },
+          onAdd: added.add,
+          onDel: current.remove,
+          onAny: Get.back,
         );
       case .added when initial.contains(tag):
         added.remove(tag);
