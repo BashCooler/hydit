@@ -9,8 +9,6 @@ import 'package:hydit/services/repo.dart';
 import 'package:hydit/utils/tag_sort.dart';
 import 'package:hydit/utils/utils.dart';
 
-import '../entities/changes.dart';
-
 
 enum TagState { unchanged, added, removed }
 
@@ -144,12 +142,12 @@ abstract class TagManager {
   /// Generate [Changes]s.
   Iterable<Changes> get _changes sync* {
     for (final service in _initial.keys) {
-      final add = additions(service);
-      final del = deletions(service);
+      final add = additions(service).rawList();
+      final del = deletions(service).rawList();
 
       if (add.isEmpty && del.isEmpty) continue;
 
-      yield Changes(key: keyOf(service), add: add, del: del);
+      yield Changes(keyOf(service), add: add, del: del);
     }
   }
 

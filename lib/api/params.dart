@@ -1,7 +1,6 @@
-import 'package:hydit/api/enums.dart';
-import 'package:hydit/entities/tag.dart';
 import 'package:hydit/utils/unicode.dart';
-import 'package:hydit/features/editor/entities/changes.dart';
+
+import 'enums.dart';
 
 
 class const SearchFilesParams({
@@ -17,6 +16,14 @@ class const SearchFilesParams({
 }
 
 
+class const Changes(final String key, {
+  required final List<String> del,
+  required final List<String> add,
+}) {
+  bool get isNotEmpty => add.isNotEmpty || del.isNotEmpty;
+}
+
+
 class AddTagsParams(
   final List<int> ids, //
   Iterable<Changes> changes,
@@ -29,8 +36,8 @@ class AddTagsParams(
       for (final change in changes)
         if (change.isNotEmpty)
           change.key: {
-            "0": change.add.rawList(),
-            "1": change.del.rawList(),
+            "0": change.add,
+            "1": change.del,
           },
     },
   };
