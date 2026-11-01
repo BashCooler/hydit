@@ -147,11 +147,11 @@ class BatchTagManager ({
   }
 
   @override
-  ({int add, int del}) diff([String? service]) {
-    final diff = super.diff(service);
+  (int, int) diff(String service) {
+    final (add, del) = super.diff(service);
 
-    final add = _added[service ?? this.service]!;
+    final added = _added[service]!;
 
-    return (add: diff.add + add.length, del: diff.del);
+    return (add + added.length, del);
   }
 }

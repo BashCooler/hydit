@@ -39,10 +39,6 @@ abstract class TagManager {
   /// Union of original and added tags.
   Set<Tag> get union => { ...initial, ...current };
 
-  Set<Tag> get additions => current.difference(initial);
-
-  Set<Tag> get deletions => initial.difference(current);
-
   /// Assign initial tags, which will be edited.
   Map<String, Set<Tag>> initTags();
 
@@ -145,18 +141,14 @@ abstract class TagManager {
   }
 
   /// Number of additions and deletions.
-  ({int add, int del}) diff([String? service]) {
-    if (service == null) {
-      return (add: additions.length, del: deletions.length);
-    }
-
+  (int, int) diff(String service) {
     final initial = _initial[service]!;
     final current = _current[service]!;
 
     final add = current.difference(initial).length;
     final del = initial.difference(current).length;
 
-    return (add: add, del: del);
+    return (add, del);
   }
 
   /// Send changes to Hydrus and update local files
