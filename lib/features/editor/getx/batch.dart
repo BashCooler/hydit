@@ -31,18 +31,15 @@ class BatchTagManager ({
   Map<String, Set<Tag>> get initTags {
     final Map<String, Set<Tag>> tags = {};
 
-    for (final file in files) {
-      final original = file.tags.entries;
+    final services = files.expand((f) => f.tags.values);
 
-      for (final MapEntry(key: name, value: service) in original) {
-        tags.putIfAbsent(name, () => {}).addAll(service.storage);
-        _added.putIfAbsent(name, () => <Tag>{}.obs);
-
-        countService(name, service);
-      }
+    for (final TagService(:name, :storage) in services) {
+      tags.putIfAbsent(name, () => {}).addAll(storage);
+      countService(name, storage);
     }
 
-    return tags;
+    return tags
+      ..forEach((k, _) => _added[k] = <Tag>{}.obs);
   }
 
   @override
@@ -82,11 +79,11 @@ class BatchTagManager ({
   @override
   int count(Tag tag) => _counts[service]?[tag] ?? 0;
 
-  void countService(String name, TagService service) {
-    final serviceCounts = _counts.putIfAbsent(name, () => {});
+  void countService(String name, Set<Tag> storage) {
+    final counts = _counts.putIfAbsent(name, () => {});
 
-    for (final tag in service.storage) {
-      serviceCounts[tag] = (serviceCounts[tag] ?? 0) + 1;
+    for (final tag in storage) {
+      counts[tag] = (counts[tag] ?? 0) + 1;
     }
   }
 
