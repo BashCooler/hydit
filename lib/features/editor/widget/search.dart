@@ -32,7 +32,8 @@ class const EditorTagSearchBar({
       actions: TagActions(
         onClear: tagSearch.clear,
         onInsert: () {
-          manager.addRaw(tagSearch.text);
+          final tag = Tag(tagSearch.text);
+          manager.add(tag);
           tagSearch.clear();
         },
       ),

@@ -25,7 +25,7 @@ class PagedTagManager({
   Map<String, TagService> get original => file.tags;
 
   @override
-  Map<String, Set<Tag>> initTags() =>
+  Map<String, Set<Tag>> get initTags =>
       file.tags.map((k, v) => MapEntry(k, v.storage));
 
   @override

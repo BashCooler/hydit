@@ -29,7 +29,7 @@ class BatchTagManager ({
   Map<String, TagService> get original => files.first.tags;
 
   @override
-  Map<String, Set<Tag>> initTags() {
+  Map<String, Set<Tag>> get initTags {
     final Map<String, Set<Tag>> tags = {};
 
     for (final file in files) {
@@ -104,11 +104,9 @@ class BatchTagManager ({
   TagState state(Tag tag) {
     final state = super.state(tag);
 
-    if (state == .unchanged && added.contains(tag)) {
-      return .added;
-    }
-
-    return state;
+    return state == .unchanged && added.contains(tag)
+        ? .added
+        : state;
   }
 
   @override

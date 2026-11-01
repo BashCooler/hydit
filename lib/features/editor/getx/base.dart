@@ -38,16 +38,15 @@ abstract class TagManager {
   String keyOf(String service) => original[service]!.key;
 
   /// Union of original and added tags.
-  Set<Tag> get union => { ...initial, ...current };
+  Set<Tag> get _union => { ...initial, ...current };
 
-  /// Assign initial tags, which will be edited.
-  Map<String, Set<Tag>> initTags();
+  /// Tags assigned to this manager on init.
+  Map<String, Set<Tag>> get initTags;
 
   /// Remove all tags from this [TagManager] and initialize
   /// it with tags from [initTags].
-  void init() => assign(initTags());
-
-  void assign(Map<String, Set<Tag>> tags) {
+  void init() {
+    final tags = initTags;
     _initial.assignAll(tags);
     _current.assignAll(tags.map((k, v) => MapEntry(k, v.obs)));
   }
@@ -64,12 +63,8 @@ abstract class TagManager {
   Iterable<String> get services => _initial.keys;
 
   void add(Tag tag) {
-    if (!editable) return;
-    if (tag.raw.isEmpty) return;
-    current.add(tag);
+    if (editable && tag.raw.isNotEmpty) current.add(tag);
   }
-
-  void addRaw(String raw) => add(Tag(raw));
 
   /// Delete or restore the [tag].
   ///
@@ -85,7 +80,7 @@ abstract class TagManager {
   int length(String service) => _current[service]!.length;
 
   /// Sorted tags to show in UI
-  List<Tag> get tags => TagSortBuilder(union)
+  List<Tag> get tags => TagSortBuilder(_union)
       .state(initial)
       .namespace()
       .alphabetical()
