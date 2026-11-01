@@ -29,12 +29,5 @@ class PagedTagManager({
       file.tags.map((k, v) => MapEntry(k, v.storage));
 
   @override
-  void toggle(Tag tag) {
-    if (!editable || tag.raw.isEmpty) return;
-
-    state(tag) == .removed ? current.add(tag) : current.remove(tag);
-  }
-
-  @override
   int count(Tag tag) => 1;
 }

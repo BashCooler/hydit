@@ -67,12 +67,11 @@ abstract class TagManager {
   }
 
   /// Delete or restore the [tag].
-  ///
-  /// DO check if the current service is [editable]
-  /// before applying any changes.
-  ///
-  /// DO check the [tag.raw] is not empty.
-  void toggle(Tag tag);
+  void toggle(Tag tag) {
+    if (!editable || tag.raw.isEmpty) return;
+
+    state(tag) == .removed ? current.add(tag) : current.remove(tag);
+  }
 
   int count(Tag tag);
 
