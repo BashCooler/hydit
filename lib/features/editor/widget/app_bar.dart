@@ -65,7 +65,7 @@ class Info extends StatelessWidget {
             children: [
               '${manager.current.length} tags'.n
                 ..fontSize = 16,
-              Diff(tag: tag),
+              Diff(tag: tag, service: manager.service),
             ],
           ),
           'Editing $count file${count > 1 ? 's' : ''}'.n

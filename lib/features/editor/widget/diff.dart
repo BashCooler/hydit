@@ -7,9 +7,9 @@ import '../getx/base.dart';
 
 class Diff extends StatelessWidget {
   final String tag;
-  final String? service;
+  final String service;
 
-  const Diff({super.key, required this.tag, this.service});
+  const Diff({super.key, required this.tag, required this.service});
 
   static const additions = Color(0xFF3fb950);
   static const deletions = Color(0xFFf85149);
