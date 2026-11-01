@@ -101,21 +101,8 @@ abstract class TagManager {
     return .removed;
   }
 
-  bool equal(Set<Tag> a, Set<Tag> b) {
-    return a.length == b.length && a.difference(b).isEmpty;
-  }
-
   /// No changes, editor can be safely closed.
-  bool get unlocked {
-
-    for (final name in services) {
-      final a = _initial[name]!;
-      final b = _current[name]!;
-      if (!equal(a, b)) return false;
-    }
-
-    return true;
-  }
+  bool get unlocked => _changes.isEmpty;
 
   Set<Tag> additions(String service) {
     final current = _current[service]!;

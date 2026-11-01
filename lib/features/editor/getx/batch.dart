@@ -29,10 +29,6 @@ class BatchTagManager ({
   Map<String, TagService> get original => files.first.tags;
 
   @override
-  bool get unlocked =>
-      super.unlocked && _added.values.expand((s) => s).isEmpty;
-
-  @override
   Map<String, Set<Tag>> initTags() {
     final Map<String, Set<Tag>> tags = {};
 
