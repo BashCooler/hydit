@@ -1,21 +1,14 @@
-import 'dart:async';
-
 import 'package:get/get.dart';
 
 import 'package:hydit/api/api.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/reactive/cache.dart';
 import 'package:hydit/entities/tags.dart';
 import 'package:hydit/services/services.dart';
 
 
 class Repo() {
-  final HydrusApi api;
-
-  this : api = HydrusApi.load();
-
-  FileCache get cache => Get.find();
+  final HydrusApi api = Get.find<Storage>().api();
 
   TagRelationService get relations => Get.find();
 

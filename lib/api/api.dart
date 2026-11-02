@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:get/get.dart';
-
-import 'package:hydit/api/params.dart';
-import 'package:hydit/services/storage.dart';
-import 'package:hydit/api/enums.dart';
 import 'package:hydit/utils/unicode.dart';
 
 import 'dio.dart';
+import 'enums.dart';
+import 'params.dart';
 import 'models.dart';
 
 
@@ -19,23 +16,6 @@ class HydrusApi with DioClient {
     required String url,
     required String key,
   }) {
-    update(url, key);
-  }
-
-  /// Create an instance of [HydrusApi] with settings
-  /// from [Storage].
-  HydrusApi.load() {
-    load();
-  }
-
-  /// Update api URL and access key with
-  /// settings from [Storage].
-  void load() {
-    final box = Get.find<Storage>();
-
-    final key = box.get('key') ?? '';
-    final url = box.get('url') ?? '';
-
     update(url, key);
   }
 

@@ -1,10 +1,16 @@
 import 'package:hive_ce_flutter/adapters.dart';
+import 'package:hydit/api/api.dart';
 
 
 abstract class const Storage() {
   T? get<T>(String key);
 
   void put<T>(String key, T value);
+
+  HydrusApi api() => HydrusApi(
+    url: get('url') ?? '',
+    key: get('key') ?? '',
+  );
 }
 
 

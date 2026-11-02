@@ -60,7 +60,7 @@ class SettingsController() extends GetxController {
     box.put('url', url);
     box.put('key', key);
 
-    repo.api.load();
+    repo.api.update(url, key);
 
     return Native.savePreferences(url, key).run();
   }
