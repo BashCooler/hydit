@@ -41,7 +41,7 @@ class QueryController({
   Future<void> search() async {
     options.save();
 
-    if (options.query.isEmpty) return;
+    if (repo.api.url.isEmpty) return;
 
     beforeSearch?.call();
 
