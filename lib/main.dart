@@ -7,6 +7,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/cache.dart';
@@ -28,6 +29,7 @@ void main() async {
   await HiveStorage.init();
 
   await enableEdgeToEdge();
+  await FlutterDisplayMode.setHighRefreshRate();
   await Permission.notification.request();
 
   timeDilation = 1.0;
