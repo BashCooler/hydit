@@ -1,7 +1,5 @@
-import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
-
-import 'package:hydit/utils/unicode.dart';
 
 import 'dio.dart';
 import 'enums.dart';
@@ -96,7 +94,7 @@ class HydrusApi with DioClient {
       get<String>(
         '/add_tags/get_siblings_and_parents',
         params: {
-          'tags': tags.toList().encode(),
+          'tags': tags.encode(),
         },
       ).then(SiblingsAndParentsDto.fromJson);
 
@@ -114,4 +112,9 @@ class HydrusApi with DioClient {
       '$url/get_files/$type'
       '?file_id=$id'
       '&Hydrus-Client-API-Access-Key=$key';
+}
+
+
+extension Encode on Iterable<String> {
+  String encode() => jsonEncode(toList());
 }
