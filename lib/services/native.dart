@@ -34,3 +34,8 @@ class const Native._() {
         },
       );
 }
+
+
+extension SaveFile on Future<PendingFile> {
+  Future<void> save() => then(Native.saveFile);
+}

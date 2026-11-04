@@ -10,5 +10,5 @@ class Repo() {
   TagRelationService get relations => Get.find();
 
   Future<Result<void>> download(int id) =>
-      api.getFile(id).then(Native.saveFile).run();
+      api.getFile(id).save().run();
 }
