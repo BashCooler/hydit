@@ -24,7 +24,10 @@ class HydrusFile._(
   /// The [Tags] object of this file.
   Tags get tags => _tags.value;
 
-  set tags(Tags t) => _tags.value = t;
+  set metadata(FileMetadataDto dto) {
+    _tags.value = Tags.fromDto(dto);
+    inbox.value = dto.inbox;
+  }
 
   /// Return `all known tags` service.
   TagService get all => tags.all;

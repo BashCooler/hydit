@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 
 import 'package:hydit/api/api.dart';
+import 'package:hydit/api/models.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/entities/tags.dart';
 import 'package:hydit/services/services.dart';
 
 
@@ -18,19 +18,17 @@ class Repo() {
 
       final result = await api
           .getFileMetadata(chunk.ids)
-          .run()
-          .mapElements(Tags.fromDto)
-          .toList();
+          .run();
 
       if (result is Failure) return result;
 
-      final tags = result.getOrThrow();
+      final metadata = result.getOrThrow();
 
       for (var i = 0; i < chunk.length; i++) {
-        chunk[i].tags = tags[i];
+        chunk[i].metadata = metadata[i];
       }
 
-      final load = tags.expand((t) => t.all.storage);
+      final load = metadata.expand((dto) => dto.tags.all.storage);
 
       final update = await relations.push(load);
 
