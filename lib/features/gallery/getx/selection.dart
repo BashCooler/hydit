@@ -120,11 +120,14 @@ class SelectionController({required final String tag}) {
     );
 
     for (final id in ids) {
-
-      final download = await repo.download(id).delay(delay).match(
-        ok: (v) => progress.value++,
-        err: (e) => token.cancel(),
-      );
+      //
+      final download = await repo.api
+          .getFile(id)
+          .save()
+          .run()
+          .delay(delay)
+          .tapSuccess((_) => progress.value++)
+          .tapFailure((_) => token.cancel());
 
       if (token.cancelled) {
         Get.back();

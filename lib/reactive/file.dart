@@ -70,7 +70,7 @@ class HydrusFile._(
     _removed.value = true;
   }
 
-  Future<Result<void>> download() => repo.download(id);
+  Future<Result<void>> download() => repo.api.getFile(id).save().run();
 
   Future<Result<void>>? _togglingInbox;
 
