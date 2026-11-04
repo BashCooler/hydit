@@ -58,14 +58,14 @@ final class const UrlError(final UrlErrorCode code) extends AppError {
 
 final class const HydrusConnectionError(final DioException e) extends AppError {
 
-  String? get response => e.response?.data;
+  dynamic get response => e.response?.data;
 
   @override
   String get title => switch (e.type) {
-    .badResponse => response.tryOr(
-      (v) => v.pick('exception_type').asStringOrThrow().format(),
-      or: 'Bad response',
-    ),
+    .badResponse => switch (response) {
+      {'exception_type': final String type} => type.format(),
+      _ => 'Bad response',
+    },
     .connectionError => 'Connection refused',
     .connectionTimeout => 'Connection timeout',
     .unknown when e.error is ArgumentError => 'Argument error',
@@ -74,10 +74,10 @@ final class const HydrusConnectionError(final DioException e) extends AppError {
 
   @override
   String get message => switch (e.type) {
-    .badResponse => response.tryOr(
-      (v) => v.pick('error').asStringOrThrow().replaceAll('!', ''),
-      or: 'The received response does not look like a valid Hydrus response',
-    ),
+    .badResponse => switch (response) {
+      {'error': final String error} => error.replaceAll('!', ''),
+      _ => 'The received response does not look like a valid Hydrus response',
+    },
     .connectionError => switch (e.error) {
       SocketException(osError: OSError(errorCode: 101)) => 'No internet connection',
       _ => 'No running Hydrus client found',

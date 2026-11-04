@@ -25,26 +25,6 @@ extension SafeExecuteAsync<T> on Future<T> {
 }
 
 
-extension TryOr<T> on T? {
-
-  R tryOr<R>(R Function(T v) f, {
-    required R or,
-  }) {
-    final v = this;
-
-    if (v == null) {
-      return or;
-    }
-
-    try {
-      return f(v);
-    } catch (e) {
-      return or;
-    }
-  }
-}
-
-
 extension Loading<T> on Future<T> {
 
   /// Toggles [loading] on, then awaits for a composable
