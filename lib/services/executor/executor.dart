@@ -7,7 +7,7 @@ import 'package:hydit/utils/utils.dart';
 import 'result.dart';
 
 
-extension SafeExecuteAsync<T> on FutureOr<T> {
+extension SafeExecuteAsync<T> on Future<T> {
   Future<Result<T>> run() async {
     try {
       return Success(await this);

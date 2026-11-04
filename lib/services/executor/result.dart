@@ -51,7 +51,13 @@ class Success<T> extends Result<T> {
   Result<R> map<R>(R Function(T v) f) => f(v).toSuccess();
 
   @override
-  Future<Result<R>> mapCatching<R>(FutureOr<R> Function(T v) f) => f(v).run();
+  Future<Result<R>> mapCatching<R>(FutureOr<R> Function(T v) f) async {
+    try {
+      return Success(await f(v));
+    } catch (e) {
+      return Failure(e);
+    }
+  }
 
   @override
   Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T v) f) async {
