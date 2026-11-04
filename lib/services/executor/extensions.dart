@@ -43,6 +43,9 @@ extension AsyncResult<T> on Future<Result<T>> {
   Future<Result<T>> tapSuccess(void Function(T v) f) =>
       then((r) => r.tapSuccess(f));
 
+  Future<Result<T>> tapSuccessCatching(FutureOr<void> Function(T v) f) =>
+      then((r) => r.tapSuccessCatching(f));
+
   Future<Result<T>> tapFailure(void Function(Object e) f) =>
       then((r) => r.tapFailure(f));
 }

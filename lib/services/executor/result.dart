@@ -16,6 +16,8 @@ sealed class Result<T> {
 
   Result<T> tapSuccess(void Function(T v) f);
 
+  Future<Result<T>> tapSuccessCatching(FutureOr<void> Function(T v) f);
+
   Result<T> tapFailure(void Function(Object e) f);
 
   Result<R> map<R>(R Function(T v) f);
@@ -41,6 +43,16 @@ class Success<T> extends Result<T> {
   Result<T> tapSuccess(void Function(T v) f) {
     f(v);
     return this;
+  }
+
+  @override
+  Future<Result<T>> tapSuccessCatching(FutureOr<void> Function(T v) f) async {
+    try {
+      await f(v);
+      return this;
+    } catch (e) {
+      return Failure(e);
+    }
   }
 
   @override
@@ -83,6 +95,11 @@ class Failure<T> extends Result<T> {
 
   @override
   Result<T> tapSuccess(void Function(T v) f) => this;
+
+  @override
+  Future<Result<T>> tapSuccessCatching(FutureOr<void> Function(T v) f) async {
+    return Failure.from(this);
+  }
 
   @override
   Result<T> tapFailure(void Function(Object e) f) {
