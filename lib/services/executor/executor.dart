@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:hydit/services/executor/extensions.dart';
 import 'package:hydit/utils/utils.dart';
@@ -58,6 +59,16 @@ extension Loading<T> on Future<T> {
       return await this;
     } finally {
       loading.value = false;
+    }
+  }
+
+  Future<T> measure() async {
+    final watch = Stopwatch()
+      ..start();
+    try {
+      return await this;
+    } finally {
+      log(watch.elapsedMilliseconds.toString());
     }
   }
 }
