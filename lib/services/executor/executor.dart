@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:hydit/utils/utils.dart';
-
 import 'extensions.dart';
 import 'result.dart';
 
@@ -32,7 +30,7 @@ extension SafeExecuteAsync<T> on Future<T> {
 }
 
 
-extension Loading<T> on Future<T> {
+extension FutureUtils<T> on Future<T> {
 
   /// Toggles [loading] on, then awaits for a composable
   /// function to complete, then toggles [loading] off.
@@ -58,18 +56,9 @@ extension Loading<T> on Future<T> {
       log(watch.elapsedMilliseconds.toString());
     }
   }
-}
 
-
-extension Delay<T> on Future<Result<T>> {
-
-  Future<Result<T>> delay(double seconds) async {
-
-    final wait = await Future.wait<Result<T>?>([
-      this,
-      Future.delayed(seconds.s),
-    ]);
-
-    return wait.first!;
-  }
+  Future<T> withMinDuration(Duration d) => Future.wait([
+    this,
+    Future.delayed(d),
+  ]).then((r) => r.first);
 }

@@ -125,7 +125,7 @@ class SelectionController({required final String tag}) {
           .getFile(id)
           .save()
           .run()
-          .delay(delay)
+          .withMinDuration(delay.s)
           .tapSuccess((_) => progress.value++)
           .tapFailure((_) => token.cancel());
 
