@@ -16,10 +16,6 @@ import '../widget/text_field.dart';
 class Settings extends HookWidget {
   const Settings({super.key});
 
-  void showSaved(void result) {
-    Snack.success('Success', 'Successfully saved key and url');
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -82,11 +78,10 @@ class Settings extends HookWidget {
                 child: Icon(Icons.save, size: 32),
               ),
               enabled: !saving.value,
-              onTap: () => settings
-                  .save()
-                  .loading(saving)
-                  .tapSuccess(showSaved)
-                  .tapFailure(Snack.error),
+              onTap: () => settings.save().loading(saving).match(
+                ok: (msg) => Snack.success('Success', msg),
+                err: Snack.error,
+              ),
             ),
 
             const VersionTile(),

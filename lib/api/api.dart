@@ -21,7 +21,8 @@ class Api with DioClient {
 
   // MARK: ACCESS MANAGEMENT
 
-  Future<String> getVerifyAccessKey() => get('/verify_access_key');
+  Future<Map<String, dynamic>> getVerifyAccessKey() =>
+      get('/verify_access_key');
 
   // MARK: SEARCHING AND FETCHING FILES
 

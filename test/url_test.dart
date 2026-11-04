@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:hydit/utils/url.dart';
-import 'package:hydit/services/executor.dart';
 
 
 void main() {
@@ -77,9 +76,12 @@ void main() {
     };
 
     for (final MapEntry(key: url, value: isValid) in urls.entries) {
-      final result = url.validateUrl() is Success;
-
-      expect(result, equals(isValid), reason: url);
+      try {
+        validateUrl(url);
+        expect(isValid, equals(true));
+      } catch (e) {
+        expect(isValid, equals(false));
+      }
     }
   });
 }

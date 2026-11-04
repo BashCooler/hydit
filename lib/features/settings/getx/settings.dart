@@ -47,21 +47,29 @@ class SettingsController() extends GetxController {
     key = box.get('key') ?? '';
   }
 
-  Future<Result<void>> save() async {
-    final url = this.url;
+  Future<Result<String>> save() async {
+    return runCatching(
+      () => validateUrl(url),
+    ).mapCatching(
+      (url) async {
+        final access = await Api(url: url, key: key)
+            .getVerifyAccessKey();
 
-    final access = await url.validateUrl().mapCatching(
-      (url) => Api(url: url, key: key).getVerifyAccessKey(),
+        box.put('url', url);
+        box.put('key', key);
+
+        await Native.savePreferences(url, key);
+
+        api.update(url, key);
+
+        return access;
+      },
+    ).map(
+      (r) => switch (r) {
+        {'human_description': final String msg} => msg,
+        _ => 'Successfully saved key and url',
+      },
     );
-
-    if (access is Failure) return access;
-
-    box.put('url', url);
-    box.put('key', key);
-
-    api.update(url, key);
-
-    return Native.savePreferences(url, key).run();
   }
 
   void setUrl(String url) {
