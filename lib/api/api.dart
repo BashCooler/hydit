@@ -82,7 +82,7 @@ class Api with DioClient {
   // MARK: TAGS
 
   Future<SearchTagsDto> getSearchTags(String tag, {
-    TagDisplayType tagDisplayType = .storage,
+    TagDisplayType tagDisplayType = .display,
   }) =>
       get<String>(
         '/add_tags/search_tags',

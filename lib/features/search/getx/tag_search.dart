@@ -39,10 +39,7 @@ class TagSearchController extends GetxController {
   Future<void> fetch(String q) async {
     final int id = ++_requestId;
 
-    final tags = await api
-        .getSearchTags(q, tagDisplayType: .display)
-        .run()
-        .getOrNull();
+    final tags = await api.getSearchTags(q).run().getOrNull();
 
     if (id != _requestId || tags == null) return;
 
