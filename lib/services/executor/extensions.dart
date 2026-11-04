@@ -48,4 +48,9 @@ extension AsyncResult<T> on Future<Result<T>> {
 
   Future<Result<T>> tapFailure(void Function(Object e) f) =>
       then((r) => r.tapFailure(f));
+
+  Future<Result<T>> match({
+    required void Function(T v) ok,
+    required void Function(Object e) err,
+  }) => then((r) => r.match(ok: ok, err: err));
 }

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:hydit/services/executor/extensions.dart';
 import 'package:hydit/utils/utils.dart';
 
+import 'extensions.dart';
 import 'result.dart';
 
 
@@ -25,12 +25,10 @@ extension SafeExecuteAsync<T> on Future<T> {
     }
   }
 
-  Future<Result<T>> match({
+  Future<Result<T>> runMatch({
     required void Function(T v) ok,
     required void Function(Object e) err,
-  }) {
-    return run().tapSuccess(ok).tapFailure(err);
-  }
+  }) => run().match(ok: ok, err: err);
 }
 
 

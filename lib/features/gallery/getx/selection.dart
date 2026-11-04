@@ -150,7 +150,7 @@ class SelectionController({required final String tag}) {
       title: 'Delete files?'.n,
       loadingTitle: 'Deleting...'.n,
       onApply: () =>
-          api.editFiles(ids, action: .delete).match(
+          api.editFiles(ids, action: .delete).runMatch(
             ok: (v) {
               Get.back();
               files.cache.remove(ids);
@@ -183,7 +183,7 @@ class SelectionController({required final String tag}) {
           api.editFiles(
             ids,
             action: archive ? .archive : .inbox,
-          ).match(
+          ).runMatch(
             ok: (v) {
               for (final file in loaded) {
                 file.inbox.value = archive.not();

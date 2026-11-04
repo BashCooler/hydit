@@ -25,6 +25,11 @@ sealed class Result<T> {
   Future<Result<R>> mapCatching<R>(FutureOr<R> Function(T v) f);
 
   Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T v) f);
+
+  Future<Result<T>> match({
+    required void Function(T v) ok,
+    required void Function(Object e) err,
+  });
 }
 
 
@@ -74,6 +79,12 @@ class Success<T> extends Result<T> {
   Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T v) f) async {
     return f(v);
   }
+
+  @override
+  Future<Result<T>> match({
+    required void Function(T v) ok,
+    required void Function(Object e) err,
+  }) async => tapSuccess(ok);
 }
 
 
@@ -119,4 +130,10 @@ class Failure<T> extends Result<T> {
   Future<Result<R>> flatMap<R>(FutureOr<Result<R>> Function(T v) f) async {
     return Failure.from(this);
   }
+
+  @override
+  Future<Result<T>> match({
+    required void Function(T v) ok,
+    required void Function(Object e) err,
+  }) async => tapFailure(err);
 }
