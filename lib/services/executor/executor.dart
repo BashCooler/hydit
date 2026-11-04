@@ -7,6 +7,15 @@ import 'package:hydit/utils/utils.dart';
 import 'result.dart';
 
 
+Future<Result<T>> runCatching<T>(FutureOr<T> Function() f) async {
+  try {
+    return Success(await f());
+  } catch (e) {
+    return Failure(e);
+  }
+}
+
+
 extension SafeExecuteAsync<T> on Future<T> {
   Future<Result<T>> run() async {
     try {
