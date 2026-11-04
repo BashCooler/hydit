@@ -9,10 +9,10 @@ import 'params.dart';
 import 'models.dart';
 
 
-class HydrusApi with DioClient {
+class Api with DioClient {
   static const int version = 96;
 
-  HydrusApi({
+  Api({
     required String url,
     required String key,
   }) {

@@ -7,7 +7,7 @@ abstract class const Storage() {
 
   void put<T>(String key, T value);
 
-  HydrusApi api() => HydrusApi(
+  Api api() => Api(
     url: get('url') ?? '',
     key: get('key') ?? '',
   );

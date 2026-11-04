@@ -52,7 +52,7 @@ class SettingsController() extends GetxController {
     final url = this.url;
 
     final access = await url.validateUrl().mapCatching(
-      (url) => HydrusApi(url: url, key: key).getVerifyAccessKey(),
+      (url) => Api(url: url, key: key).getVerifyAccessKey(),
     );
 
     if (access is Failure) return access;

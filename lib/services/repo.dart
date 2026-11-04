@@ -4,5 +4,5 @@ import 'package:hydit/api/api.dart';
 
 
 class Repo() {
-  HydrusApi get api => Get.find();
+  Api get api => Get.find();
 }
