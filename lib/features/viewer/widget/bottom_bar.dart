@@ -138,8 +138,6 @@ class ArchiveButton extends StatelessWidget {
 
   const ArchiveButton({super.key, required this.tag});
 
-  Repo get repo => Get.find();
-
   PageGetxController get page => Get.find(tag: tag);
 
   @override

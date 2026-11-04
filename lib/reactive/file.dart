@@ -19,7 +19,7 @@ class HydrusFile._(
     dto.inbox.obs,
   );
 
-  Repo get repo => Get.find();
+  Api get api => Get.find();
 
   /// The [Tags] object of this file.
   Tags get tags => _tags.value;
@@ -35,7 +35,7 @@ class HydrusFile._(
   int get id => meta.id;
 
   /// The url to the file itself.
-  String get url => repo.api.getFileUrl(
+  String get url => api.getFileUrl(
     id,
     type: switch (meta.mime) {
       'image/jxl' when meta.duration == .zero => .render,
@@ -44,7 +44,7 @@ class HydrusFile._(
   );
 
   /// The url to the file's thumbnail itself.
-  String get thumbnailUrl => repo.api.getFileUrl(id, type: .thumbnail);
+  String get thumbnailUrl => api.getFileUrl(id, type: .thumbnail);
 
   bool get isInbox => inbox.value;
 
@@ -70,13 +70,13 @@ class HydrusFile._(
     _removed.value = true;
   }
 
-  Future<Result<void>> download() => repo.api.getFile(id).save().run();
+  Future<Result<void>> download() => api.getFile(id).save().run();
 
   Future<Result<void>>? _togglingInbox;
 
   /// Move inboxed file to archive or move archived file to
   /// the inbox.
-  Future<Result<void>> toggleInbox() => _togglingInbox ??= repo.api
+  Future<Result<void>> toggleInbox() => _togglingInbox ??= api
       .editFiles([id], action: isInbox ? .archive : .inbox)
       .run()
       .tapSuccess((_) => inbox.toggle())

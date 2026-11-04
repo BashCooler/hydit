@@ -59,7 +59,6 @@ class GlobalBindings extends Bindings {
   void dependencies() => Get
     ..put(storage)
     ..put(api)
-    ..put(Repo())
     ..put(VideoService())
     ..put(FileCache())
     ..put(TagRelationService());

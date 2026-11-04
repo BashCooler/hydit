@@ -4,7 +4,7 @@ import 'package:expressive_refresh/expressive_refresh.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 
 import 'package:hydit/utils/theme.dart';
-import 'package:hydit/services/repo.dart';
+import 'package:hydit/services/services.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/widgets/common/images.dart';
 
@@ -40,7 +40,7 @@ class GalleryGridView extends StatelessWidget {
     crossAxisSpacing: 5,
   );
 
-  Repo get repo => Get.find();
+  Api get api => Get.find();
 
   FileStore get files => Get.find(tag: tag);
 

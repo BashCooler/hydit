@@ -14,7 +14,7 @@ class FileCache {
   /// notified on file deletion.
   final deleted = <int>[].rx;
 
-  Repo get repo => Get.find();
+  Api get api => Get.find();
 
   TagRelationService get relations => Get.find();
 
@@ -32,7 +32,7 @@ class FileCache {
       .toList();
 
   Future<void> update(List<int> ids) async {
-    await for (final chunk in repo.api.getFileMetadataChunks(ids)) {
+    await for (final chunk in api.getFileMetadataChunks(ids)) {
       for (final dto in chunk) {
         cache[dto.id]?.metadata = dto;
       }

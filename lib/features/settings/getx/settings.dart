@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/api/api.dart';
 import 'package:hydit/utils/url.dart';
 import 'package:hydit/services/services.dart';
 
@@ -30,7 +29,7 @@ class SettingsController() extends GetxController {
     load();
   }
 
-  Repo get repo => Get.find();
+  Api get api => Get.find();
 
   Storage get box => Get.find<Storage>();
 
@@ -60,7 +59,7 @@ class SettingsController() extends GetxController {
     box.put('url', url);
     box.put('key', key);
 
-    repo.api.update(url, key);
+    api.update(url, key);
 
     return Native.savePreferences(url, key).run();
   }

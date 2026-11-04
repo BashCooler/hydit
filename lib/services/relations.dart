@@ -10,7 +10,7 @@ class TagRelationService {
   /// Tag -> service key -> relations.
   final _cache = <Tag, Map<String, TagRelations>>{};
 
-  Repo get repo => Get.find();
+  Api get api => Get.find();
 
   bool isNew(Tag t) => _cache.containsKey(t).not();
 
@@ -18,7 +18,7 @@ class TagRelationService {
       .toSet()
       .where(isNew)
       .map((t) => t.raw)
-      .let(repo.api.getSiblingsAndParents)
+      .let(api.getSiblingsAndParents)
       .run()
       .map(_cache.addAll);
 

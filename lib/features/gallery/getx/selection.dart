@@ -22,7 +22,7 @@ class SelectionController({required final String tag}) {
 
   GalleryController get gallery => Get.find(tag: tag);
 
-  Repo get repo => Get.find();
+  Api get api => Get.find();
 
   // MARK: SELECTION
 
@@ -121,7 +121,7 @@ class SelectionController({required final String tag}) {
 
     for (final id in ids) {
       //
-      final download = await repo.api
+      final download = await api
           .getFile(id)
           .save()
           .run()
@@ -150,7 +150,7 @@ class SelectionController({required final String tag}) {
       title: 'Delete files?'.n,
       loadingTitle: 'Deleting...'.n,
       onApply: () =>
-          repo.api.editFiles(ids, action: .delete).match(
+          api.editFiles(ids, action: .delete).match(
             ok: (v) {
               Get.back();
               files.cache.remove(ids);
@@ -180,7 +180,7 @@ class SelectionController({required final String tag}) {
           ? const Text('Archive files?')
           : const Text('Inbox files'),
       onApply: () =>
-          repo.api.editFiles(
+          api.editFiles(
             ids,
             action: archive ? .archive : .inbox,
           ).match(

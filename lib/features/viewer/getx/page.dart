@@ -31,7 +31,7 @@ class PageGetxController({
   /// Currently selected file.
   HydrusFile get current => files[i];
 
-  Repo get repo => Get.find();
+  Api get api => Get.find();
 
   FileCache get cache => Get.find();
 
@@ -99,7 +99,7 @@ class PageGetxController({
         await previousPage();
       }
 
-      return repo.api
+      return api
           .editFiles(ids, action: .delete)
           .run()
           .tapFailure(Snack.error);

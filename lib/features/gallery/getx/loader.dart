@@ -13,7 +13,7 @@ class Loader({required final String tag, final int chunkSize = 20}) {
 
   FileStore get store => Get.find(tag: tag);
 
-  static Repo get repo => Get.find();
+  Api get api => Get.find();
 
   TagRelationService get relations => Get.find();
 
@@ -81,10 +81,10 @@ class Loader({required final String tag, final int chunkSize = 20}) {
     _loading = false;
   }
 
-  static Future<Result<List<HydrusFile>>> load(List<int> ids, {
+  Future<Result<List<HydrusFile>>> load(List<int> ids, {
     bool clear = false,
   }) {
-    return repo.api
+    return api
         .getFileMetadata(ids)
         .run()
         .mapElements(HydrusFile.fromDto)
@@ -129,7 +129,7 @@ class Loader({required final String tag, final int chunkSize = 20}) {
 
     _retrying = true;
 
-    final ping = await repo.api
+    final ping = await api
         .getVerifyAccessKey()
         .run()
         .tapFailure(Snack.error);

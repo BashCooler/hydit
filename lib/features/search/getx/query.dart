@@ -19,7 +19,7 @@ class QueryController({
     search();
   }
 
-  Repo get repo => Get.find();
+  Api get api => Get.find();
 
   static final pattern = RegExp(r'[{}]');
 
@@ -41,11 +41,11 @@ class QueryController({
   Future<void> search() async {
     options.save();
 
-    if (repo.api.url.isEmpty) return;
+    if (api.url.isEmpty) return;
 
     beforeSearch?.call();
 
-    await repo.api
+    await api
         .getSearchFiles(options.params)
         .run()
         .tapSuccess(onResults)

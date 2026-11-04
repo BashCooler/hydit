@@ -5,8 +5,7 @@ import 'package:hydit/api/params.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/reactive/cache.dart';
 import 'package:hydit/reactive/file.dart';
-import 'package:hydit/services/executor.dart';
-import 'package:hydit/services/repo.dart';
+import 'package:hydit/services/services.dart';
 import 'package:hydit/utils/tag_sort.dart';
 import 'package:hydit/utils/utils.dart';
 
@@ -16,7 +15,7 @@ enum TagState { unchanged, added, removed }
 
 abstract class TagManager {
   //
-  Repo get repo => Get.find();
+  Api get api => Get.find();
 
   FileCache get cache => Get.find();
 
@@ -139,7 +138,7 @@ abstract class TagManager {
   /// Send changes to Hydrus and update local files
   /// metadata.
   Future<Result<void>> save() => AddTagsParams(files.ids, _changes)
-      .let(repo.api.postAddTags)
+      .let(api.postAddTags)
       .run()
       .mapCatching((_) => cache.update(files.ids));
 }

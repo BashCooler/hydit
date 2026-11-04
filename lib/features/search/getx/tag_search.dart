@@ -14,7 +14,7 @@ class TagSearchController extends GetxController {
 
   bool get suggestsVisible => _suggestVisible.value;
 
-  Repo get repo => Get.find();
+  Api get api => Get.find();
 
   String get text => controller.text;
 
@@ -39,7 +39,7 @@ class TagSearchController extends GetxController {
   Future<void> fetch(String q) async {
     final int id = ++_requestId;
 
-    final tags = await repo.api
+    final tags = await api
         .getSearchTags(q, tagDisplayType: .display)
         .run()
         .getOrNull();
