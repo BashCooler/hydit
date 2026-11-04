@@ -42,7 +42,6 @@ dependencies:
   # Network and parsing
   dio: ^5.9.2
   url_launcher: ^6.3.2
-  deep_pick: ^1.1.0
   dart_mappable: ^4.10.0
 
   # Video player
