@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:dartx/dartx.dart';
+
 import 'dio.dart';
 import 'enums.dart';
 import 'params.dart';
@@ -41,6 +43,14 @@ class HydrusApi with DioClient {
           'include_services_object': false,
         },
       ).then(FileMetadataResponseDto.fromJson);
+
+  Stream<FileMetadataResponseDto> getFileMetadataChunks(List<int> ids, {
+    int size = 20,
+  }) async* {
+    for (final chunk in ids.chunked(size)) {
+      yield await getFileMetadata(chunk);
+    }
+  }
 
   // MARK: FILES
 
