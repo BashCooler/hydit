@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 
+import 'package:hydit/api/models.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
+import 'package:hydit/services/services.dart';
 
 
 class FileCache {
@@ -11,6 +13,10 @@ class FileCache {
   /// Subscribe to this [Rx] with [Worker] to get
   /// notified on file deletion.
   final deleted = <int>[].rx;
+
+  Repo get repo => Get.find();
+
+  TagRelationService get relations => Get.find();
 
   HydrusFile? operator [](int id) => cache[id];
 
@@ -24,6 +30,15 @@ class FileCache {
       .map((id) => cache[id])
       .whereType<HydrusFile>()
       .toList();
+
+  Future<void> update(List<int> ids) async {
+    await for (final chunk in repo.api.getFileMetadataChunks(ids)) {
+      for (final dto in chunk) {
+        cache[dto.id]?.metadata = dto;
+      }
+      await relations.push(chunk.expand((dto) => dto.tags.all.storage));
+    }
+  }
 
   /// Remove files with provided [ids].
   ///

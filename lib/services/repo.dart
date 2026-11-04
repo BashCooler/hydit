@@ -1,9 +1,6 @@
 import 'package:get/get.dart';
 
 import 'package:hydit/api/api.dart';
-import 'package:hydit/api/models.dart';
-import 'package:hydit/utils/utils.dart';
-import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/services.dart';
 
 
@@ -11,32 +8,6 @@ class Repo() {
   final HydrusApi api = Get.find<Storage>().api();
 
   TagRelationService get relations => Get.find();
-
-  Future<Result<void>> update(List<HydrusFile> files) async {
-
-    for (final chunk in files.chunked(20)) {
-
-      final result = await api
-          .getFileMetadata(chunk.ids)
-          .run();
-
-      if (result is Failure) return result;
-
-      final metadata = result.getOrThrow();
-
-      for (var i = 0; i < chunk.length; i++) {
-        chunk[i].metadata = metadata[i];
-      }
-
-      final load = metadata.expand((dto) => dto.tags.all.storage);
-
-      final update = await relations.push(load);
-
-      if (update is Failure) return update;
-    }
-
-    return Success(null);
-  }
 
   Future<Result<void>> download(int id) =>
       api.getFile(id).then(Native.saveFile).run();

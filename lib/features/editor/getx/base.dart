@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hydit/api/models.dart';
 import 'package:hydit/api/params.dart';
 import 'package:hydit/entities/tag.dart';
+import 'package:hydit/reactive/cache.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/services/executor.dart';
 import 'package:hydit/services/repo.dart';
@@ -14,7 +15,10 @@ enum TagState { unchanged, added, removed }
 
 
 abstract class TagManager {
+  //
   Repo get repo => Get.find();
+
+  FileCache get cache => Get.find();
 
   final _initial = <String, Set<Tag>>{};
   final _current = <String, RxSet<Tag>>{}.obs;
@@ -137,5 +141,5 @@ abstract class TagManager {
   Future<Result<void>> save() => AddTagsParams(files.ids, _changes)
       .let(repo.api.postAddTags)
       .run()
-      .flatMap((_) => repo.update(files));
+      .mapCatching((_) => cache.update(files.ids));
 }
