@@ -50,9 +50,15 @@ Future<void> enableEdgeToEdge() async {
 
 
 class GlobalBindings extends Bindings {
+  //
+  final Storage storage = HiveStorage();
+
+  late final api = storage.api();
+
   @override
   void dependencies() => Get
-    ..put<Storage>(HiveStorage())
+    ..put(storage)
+    ..put(api)
     ..put(Repo())
     ..put(VideoService())
     ..put(FileCache())
