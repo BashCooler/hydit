@@ -20,8 +20,6 @@ mixin LoaderState {
   /// Loader is in failed  state and locked until
   /// successful call of [retry].
   bool get failed => _failed.value;
-
-  bool _retrying = false;
 }
 
 
@@ -142,14 +140,14 @@ class Loader({required final String tag, final int chunkSize = 20})
   }
 
   void retry() async {
-    if (_retrying || !_failed.value) return;
+    if (_loading || !_failed.value) return;
 
-    _retrying = true;
+    _loading = true;
 
     await api.getVerifyAccessKey().run()
         .tapSuccess(_recover)
         .tapFailure(Snack.error);
 
-    _retrying = false;
+    _loading = false;
   }
 }
