@@ -1,8 +1,9 @@
-import 'dart:math' hide log;
+import 'dart:math' show min;
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
+import 'package:hydit/api/models.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/reactive/file_store.dart';
@@ -52,7 +53,7 @@ class Loader({required final String tag, final int chunkSize = 20})
     if (index < store.length - chunkSize) {
       return;
     }
-    _loadNextBatch();
+    if (!failed) _loadNextBatch();
   }
 
   /// Load next batch of files.
@@ -60,6 +61,7 @@ class Loader({required final String tag, final int chunkSize = 20})
   /// If [clear] is true clears [FileStore] without flicker.
   void _loadNextBatch({bool clear = false}) async {
     if (_loading) return;
+
     if (failed) return retry();
 
     final start = clear ? 0 : store.length;
@@ -71,28 +73,31 @@ class Loader({required final String tag, final int chunkSize = 20})
 
     _loading = true;
 
-    final files = await _load(batch)
-        .tapFailure(Snack.error)
-        .tapFailure(_fail)
-        .getOrNull();
-
-    if (files == null) return;
-
-    final tags = files.expand((f) => f.tags.all.storage);
-
-    await relations.push(tags).run();
-
-    store.commit(files, clear: clear);
+    await _load(batch, clear: clear);
 
     _loading = false;
   }
 
-  Future<Result<List<HydrusFile>>> _load(List<int> ids) {
-    return api
-        .getFileMetadata(ids)
-        .run()
-        .mapElements(HydrusFile.fromDto)
-        .toList();
+  Future<Result<void>> _load(List<int> ids, {
+    bool clear = false,
+  }) {
+    return runCatching(
+      () => api.getFileMetadata(ids),
+    ).tapSuccessCatching(
+      (dto) async {
+        final tags = dto.expand((m) => m.tags.all.storage);
+        await relations.push(tags);
+      },
+    ).match(
+      ok: (dto) {
+        final files = dto.map(HydrusFile.fromDto);
+        store.commit(files, clear: clear);
+      },
+      err: (e) {
+        Snack.error(e);
+        _fail(e);
+      },
+    );
   }
 
   Future<Result<void>> ensureLoaded(Iterable<int> ids,
@@ -112,7 +117,7 @@ class Loader({required final String tag, final int chunkSize = 20})
         return files;
       }
 
-      store.commit(files.getOrThrow());
+      // TODO store.commit(files.getOrThrow());
 
       if (token.cancelled) break;
     }

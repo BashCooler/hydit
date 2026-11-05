@@ -14,7 +14,7 @@ import '../getx/gallery.dart';
 
 class GalleryGridView extends StatelessWidget {
   final String tag;
-  final RefreshCallback? onRefresh;
+  final Future<void> Function()? onRefresh;
   final void Function(int id, int index)? onTap;
   final void Function(int id, int index)? onLongPress;
   final void Function(int index)? onBuild;
