@@ -74,7 +74,7 @@ class Loader({required final String tag, final int chunkSize = 20}) {
 
     final tags = files.expand((f) => f.tags.all.storage);
 
-    await relations.push(tags);
+    await relations.push(tags).run();
 
     store.commit(files, clear: clear);
 

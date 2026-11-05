@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 import 'package:hydit/api/models.dart';
@@ -14,13 +15,15 @@ class TagRelationService {
 
   bool isNew(Tag t) => _cache.containsKey(t).not();
 
-  Future<Result<void>> push(Iterable<Tag> tags) => tags
+  /// Add sibling and parent relationships of [tags].
+  ///
+  /// Throws [DioException].
+  Future<void> push(Iterable<Tag> tags) => tags
       .toSet()
       .where(isNew)
       .map((t) => t.raw)
       .let(api.getSiblingsAndParents)
-      .run()
-      .map(_cache.addAll);
+      .then(_cache.addAll);
 
   Tag? ideal({required Tag tag, required String key}) =>
       _cache[tag]?[key]?.ideal;
