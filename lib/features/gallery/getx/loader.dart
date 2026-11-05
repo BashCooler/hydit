@@ -131,26 +131,25 @@ class Loader({required final String tag, final int chunkSize = 20})
         .addPostFrameCallback((_) => _failed.value = true);
   }
 
+  /// Turn off failed state, then update the grid.
+  void _recover(_) {
+    _failed.value = false;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadNextBatch();
+      _loading = false;
+    });
+  }
+
   void retry() async {
     if (_retrying || !_failed.value) return;
 
     _retrying = true;
 
-    final ping = await api
-        .getVerifyAccessKey()
-        .run()
+    await api.getVerifyAccessKey().run()
+        .tapSuccess(_recover)
         .tapFailure(Snack.error);
 
     _retrying = false;
-
-    if (ping is Failure) return;
-
-    _failed.value = false;
-
-    // Turn off failed state, then update the grid
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadNextBatch();
-      _loading = false;
-    });
   }
 }
