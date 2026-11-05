@@ -9,23 +9,29 @@ import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/services/services.dart';
 
 
-class Loader({required final String tag, final int chunkSize = 20}) {
-
-  FileStore get store => Get.find(tag: tag);
-
-  Api get api => Get.find();
-
-  TagRelationService get relations => Get.find();
-
+mixin LoaderState {
   /// Batch is already loading and new requests should
   /// be rejected.
   var _loading = false;
 
   final _failed = false.obs;
 
-  /// Load failed and this [Loader] is locked until successful
-  /// [retry].
+  /// Loader is in failed  state and locked until
+  /// successful call of [retry].
   bool get failed => _failed.value;
+
+  bool _retrying = false;
+}
+
+
+class Loader({required final String tag, final int chunkSize = 20})
+    with LoaderState {
+
+  FileStore get store => Get.find(tag: tag);
+
+  Api get api => Get.find();
+
+  TagRelationService get relations => Get.find();
 
   /// Clear existing files and load new files.
   void init(Iterable<int> ids) {
@@ -119,8 +125,6 @@ class Loader({required final String tag, final int chunkSize = 20}) {
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _failed.value = true);
   }
-
-  bool _retrying = false;
 
   void retry() async {
     if (_retrying || !_failed.value) return;
