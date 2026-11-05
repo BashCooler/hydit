@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 import 'package:hydit/api/models.dart';
@@ -31,6 +32,9 @@ class FileCache {
       .whereType<HydrusFile>()
       .toList();
 
+  /// Update metadata of files with [ids].
+  ///
+  /// Throws [DioException].
   Future<void> update(List<int> ids) async {
     await for (final chunk in api.getFileMetadataChunks(ids)) {
       for (final dto in chunk) {
