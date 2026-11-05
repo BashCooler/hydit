@@ -38,7 +38,7 @@ class Loader({required final String tag, final int chunkSize = 20}) {
 
     relations.clear();
 
-    loadNextBatch(clear: true);
+    _loadNextBatch(clear: true);
   }
 
   /// Load next batch of files if needed.
@@ -46,13 +46,13 @@ class Loader({required final String tag, final int chunkSize = 20}) {
     if (index < store.length - chunkSize) {
       return;
     }
-    loadNextBatch();
+    _loadNextBatch();
   }
 
   /// Load next batch of files.
   ///
   /// If [clear] is true clears [FileStore] without flicker.
-  void loadNextBatch({bool clear = false}) async {
+  void _loadNextBatch({bool clear = false}) async {
     if (_loading) return;
     if (failed) return retry();
 
@@ -65,7 +65,7 @@ class Loader({required final String tag, final int chunkSize = 20}) {
 
     _loading = true;
 
-    final files = await load(batch)
+    final files = await _load(batch)
         .tapFailure(Snack.error)
         .tapFailure(_fail)
         .getOrNull();
@@ -81,9 +81,7 @@ class Loader({required final String tag, final int chunkSize = 20}) {
     _loading = false;
   }
 
-  Future<Result<List<HydrusFile>>> load(List<int> ids, {
-    bool clear = false,
-  }) {
+  Future<Result<List<HydrusFile>>> _load(List<int> ids) {
     return api
         .getFileMetadata(ids)
         .run()
@@ -100,7 +98,7 @@ class Loader({required final String tag, final int chunkSize = 20}) {
 
     for (final chunk in chunks) {
 
-      final files = await load(chunk)
+      final files = await _load(chunk)
           .tapFailure(Snack.error)
           .tapFailure(_fail);
 
@@ -142,16 +140,8 @@ class Loader({required final String tag, final int chunkSize = 20}) {
 
     // Turn off failed state, then update the grid
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      loadNextBatch();
+      _loadNextBatch();
       _loading = false;
     });
   }
-}
-
-extension ToMap on Iterable<HydrusFile> {
-  /// The ids to files [Map].
-  Map<int, HydrusFile> toMap() => Map.fromIterable(
-    this,
-    key: (file) => file.id,
-  );
 }
