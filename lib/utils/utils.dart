@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 export 'theme.dart';
+export 'package:dart_scope_functions/dart_scope_functions.dart';
 export 'package:dartx/dartx.dart' show IterableChunked;
 
 
@@ -72,19 +73,6 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) => condition
       ? builder(child)
       : child;
-}
-
-
-extension ScopeFunctions<T> on T {
-
-  R let<R>(R Function(T it) toElement) {
-    return toElement(this);
-  }
-
-  T also(void Function(T it) action) {
-    action(this);
-    return this;
-  }
 }
 
 
