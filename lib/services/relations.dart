@@ -18,10 +18,11 @@ class TagRelationService {
   /// Add sibling and parent relationships of [tags].
   ///
   /// Throws [DioException].
-  Future<void> push(Iterable<Tag> tags) => tags
+  Future<void>? push(Iterable<Tag> tags) => tags
       .toSet()
       .where(isNew)
-      .map((t) => t.raw)
+      .takeIf((it) => it.isNotEmpty)
+      ?.map((t) => t.raw)
       .let(api.getSiblingsAndParents)
       .then(_cache.addAll);
 
