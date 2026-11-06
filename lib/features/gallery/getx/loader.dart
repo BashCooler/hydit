@@ -17,9 +17,12 @@ mixin LoaderState {
 
   final _failed = false.obs;
 
-  /// Loader is in failed  state and locked until
+  /// Is in failed  state and locked until
   /// successful call of [retry].
   bool get failed => _failed.value;
+
+  /// Is not in failed state.
+  bool get ok => !_failed.value;
 }
 
 
@@ -51,7 +54,7 @@ class Loader({required final String tag, final int chunkSize = 20})
     if (index < store.length - chunkSize) {
       return;
     }
-    if (!failed) _loadNextBatch();
+    if (ok) _loadNextBatch();
   }
 
   /// Load next batch of files.
@@ -69,16 +72,13 @@ class Loader({required final String tag, final int chunkSize = 20})
 
     if (batch.isEmpty) return;
 
-    _loading = true;
-
     await _load(batch, clear: clear);
-
-    _loading = false;
   }
 
   Future<Result<void>> _load(List<int> ids, {
     bool clear = false,
   }) {
+    _loading = true;
     return runCatching(
       () => api.getFileMetadata(ids),
     ).tapSuccessCatching(
@@ -95,6 +95,8 @@ class Loader({required final String tag, final int chunkSize = 20})
         Snack.error(e);
         _fail(e);
       },
+    ).tap(
+      (_) => _loading = false,
     );
   }
 
@@ -116,20 +118,16 @@ class Loader({required final String tag, final int chunkSize = 20})
     return unit.toSuccess();
   }
 
+  /// Wait for the grid to rebuild then set failed state.
   void _fail(_) {
-    // Add for the grid to rebuild then update state
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _failed.value = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _failed.value = true);
   }
 
   /// Turn off failed state, then update the grid.
   void _recover(_) {
     _failed.value = false;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadNextBatch();
-      _loading = false;
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadNextBatch());
   }
 
   void retry() async {

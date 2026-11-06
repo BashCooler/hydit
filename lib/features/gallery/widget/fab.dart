@@ -34,7 +34,7 @@ class GalleryFAB extends StatelessWidget {
     return Obx(() {
       return SequencedSwitcher(
         visible: selection.off && gallery.badges,
-        showFirst: !loader.failed,
+        showFirst: loader.ok,
         first: a.FAB(
           icon: const Icon(Icons.search),
           onTap: () => Get.to(
