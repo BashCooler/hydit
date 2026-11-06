@@ -89,7 +89,7 @@ class SelectionController({required final String tag}) {
     );
 
     final result = await loader
-        .ensureLoaded(ids, token)
+        .ensureLoaded(ids, token: token)
         .tapFailure(Snack.error);
 
     Get.back();

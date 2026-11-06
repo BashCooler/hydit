@@ -98,24 +98,17 @@ class Loader({required final String tag, final int chunkSize = 20})
     );
   }
 
-  Future<Result<void>> ensureLoaded(Iterable<int> ids,
-      CancellationToken token) async {
-
+  Future<Result<void>> ensureLoaded(Iterable<int> ids, {
+    required CancellationToken token,
+  }) async {
     final chunks = ids
         .where((id) => store.cache[id] == null)
         .chunked(chunkSize);
 
     for (final chunk in chunks) {
+      final load = await _load(chunk);
 
-      final files = await _load(chunk)
-          .tapFailure(Snack.error)
-          .tapFailure(_fail);
-
-      if (files is Failure) {
-        return files;
-      }
-
-      // TODO store.commit(files.getOrThrow());
+      if (load is Failure) return load;
 
       if (token.cancelled) break;
     }
