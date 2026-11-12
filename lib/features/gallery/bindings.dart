@@ -26,7 +26,10 @@ class GalleryBindings extends Bindings {
     Get.put(gallery, tag: tag);
 
     Get.lazyPut(
-      () => SelectionController(tag: tag),
+      () => SelectionController(
+        tag: tag,
+        enabled: () => !gallery.loading.value,
+      ),
       tag: tag,
     );
 

@@ -9,18 +9,18 @@ import 'package:hydit/widgets/common/dialog.dart';
 import 'package:hydit/features/editor/bindings.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
-import 'gallery.dart';
 import 'loader.dart';
 
 
-class SelectionController({required final String tag}) {
+class SelectionController({
+  required final String tag,
+  required final bool Function() enabled,
+}) {
   final ids = <int>{}.obs;
 
   Loader get loader => Get.find(tag: tag);
 
   FileStore get files => Get.find(tag: tag);
-
-  GalleryController get gallery => Get.find(tag: tag);
 
   Api get api => Get.find();
 
@@ -40,11 +40,10 @@ class SelectionController({required final String tag}) {
         .let((it) => it.length > 2);
   }
 
-  void select(int id, int index) {
-    if (!gallery.loading.value) {
-      ids.contains(id) ? ids.remove(id) : ids.add(id);
-    }
-  }
+  void select(int id, int index) =>
+      enabled()
+          ? ids.contains(id) ? ids.remove(id) : ids.add(id)
+          : null;
 
   bool isSelected(int id) => ids.contains(id);
 
