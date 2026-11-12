@@ -14,13 +14,12 @@ import 'loader.dart';
 
 class SelectionController({
   required final String tag,
+  required final FileStore store,
   required final bool Function() enabled,
 }) {
   final ids = <int>{}.obs;
 
   Loader get loader => Get.find(tag: tag);
-
-  FileStore get files => Get.find(tag: tag);
 
   Api get api => Get.find();
 
@@ -30,12 +29,12 @@ class SelectionController({
 
   bool get off => ids.isEmpty;
 
-  bool get selectedAll => ids.length == files.ids.length;
+  bool get selectedAll => ids.length == store.ids.length;
 
   bool get selectedRange {
     if (ids.length != 2) return false;
 
-    return files.ids
+    return store.ids
         .range(ids.first, ids.last)
         .let((it) => it.length > 2);
   }
@@ -52,12 +51,12 @@ class SelectionController({
   void selectRange() {
     assert(ids.length == 2);
 
-    files.ids
+    store.ids
         .range(ids.first, ids.last)
         .also(ids.assignAll);
   }
 
-  void selectAll() => ids.assignAll(files.ids);
+  void selectAll() => ids.assignAll(store.ids);
 
   // MARK: EDIT
 
@@ -66,8 +65,8 @@ class SelectionController({
   void _openPagedEditor() {
 
     final page = PageGetxController(
-      files: files,
-      initial: files.ids.indexOf(ids.first),
+      files: store,
+      initial: store.ids.indexOf(ids.first),
     );
 
     EditorPage.paged(
@@ -84,7 +83,7 @@ class SelectionController({
       title: 'Loading metadata...'.n,
       token: token,
       full: ids.length,
-      progress: () => files.length,
+      progress: () => store.length,
     );
 
     final result = await loader
@@ -152,7 +151,7 @@ class SelectionController({
           api.editFiles(ids, action: .delete).runMatch(
             ok: (v) {
               Get.back();
-              files.cache.remove(ids);
+              store.cache.remove(ids);
               clear();
             },
             err: Snack.error,
@@ -169,7 +168,7 @@ class SelectionController({
   Future<void> setArchived(bool archive) {
     final ids = this.ids.toList();
 
-    final loaded = files.cache.withIds(ids);
+    final loaded = store.cache.withIds(ids);
 
     return LoadingDialog.show(
       icon: archive

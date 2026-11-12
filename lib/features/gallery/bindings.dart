@@ -25,15 +25,16 @@ class GalleryBindings extends Bindings {
 
     Get.put(gallery, tag: tag);
 
+    final store = FileStore(ids);
+
     Get.lazyPut(
       () => SelectionController(
         tag: tag,
+        store: store,
         enabled: () => !gallery.loading.value,
       ),
       tag: tag,
     );
-
-    final store = FileStore(ids);
 
     Get.put(store, tag: tag);
 
