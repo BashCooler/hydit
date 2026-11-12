@@ -30,10 +30,12 @@ class GalleryBindings extends Bindings {
       tag: tag,
     );
 
-    Get.put(FileStore(ids), tag: tag);
+    final store = FileStore(ids);
+
+    Get.put(store, tag: tag);
 
     if (search) {
-      final loader = Loader(tag: tag);
+      final loader = Loader(store: store);
 
       Get.put(loader, tag: tag);
 

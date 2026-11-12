@@ -26,10 +26,8 @@ mixin LoaderState {
 }
 
 
-class Loader({required final String tag, final int chunkSize = 20})
+class Loader({required final FileStore store, final int chunkSize = 20})
     with LoaderState {
-
-  FileStore get store => Get.find(tag: tag);
 
   Api get api => Get.find();
 
