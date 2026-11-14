@@ -8,34 +8,34 @@ import 'getx/gallery.dart';
 import 'getx/selection.dart';
 
 
-class GalleryBindings extends Bindings {
-  final String tag;
-  final bool search;
-  final List<int> ids;
+class GalleryBindings.fileStore({
+  required final String tag,
+  required final bool search,
+  required final FileStore store,
+}) extends Bindings {
+  //
+  factory({
+    required String tag,
+    required bool search,
+    List<int> ids = const [],
+  }) => GalleryBindings.fileStore(
+    tag: tag,
+    search: search,
+    store: FileStore(ids),
+  );
 
-  GalleryBindings({
-    required this.tag,
-    required this.search,
-    this.ids = const [],
-  });
+  final gallery = GalleryController();
+
+  late final selection = SelectionController(
+    tag: tag,
+    store: store,
+    enabled: () => !gallery.loading.value,
+  );
 
   @override
   void dependencies() {
-    final gallery = GalleryController();
-
     Get.put(gallery, tag: tag);
-
-    final store = FileStore(ids);
-
-    Get.lazyPut(
-      () => SelectionController(
-        tag: tag,
-        store: store,
-        enabled: () => !gallery.loading.value,
-      ),
-      tag: tag,
-    );
-
+    Get.lazyPut(() => selection, tag: tag);
     Get.put(store, tag: tag);
 
     if (search) {
