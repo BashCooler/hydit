@@ -14,11 +14,11 @@ class GalleryBindings.fileStore({
   required final FileStore store,
 }) extends Bindings {
   //
-  factory({
+  new({
     required String tag,
     required bool search,
     List<int> ids = const [],
-  }) => GalleryBindings.fileStore(
+  }) : this.fileStore(
     tag: tag,
     search: search,
     store: FileStore(ids),
