@@ -7,6 +7,7 @@ import 'package:hydit/services/services.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/widgets/common/dialog.dart';
 import 'package:hydit/features/editor/bindings.dart';
+import 'package:hydit/features/editor/page/editor.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 
 import 'loader.dart';
@@ -62,18 +63,26 @@ class SelectionController({
 
   void edit() => ids.length > 1 ? _openBatchEditor() : _openPagedEditor();
 
-  void _openPagedEditor() {
+  void _openPagedEditor() async {
 
     final page = PageGetxController(
       files: store,
       initial: store.ids.indexOf(ids.first),
     );
 
-    EditorPage.paged(
+    final bindings = EditorBindings.paged(
       page: page,
       service: 'my tags',
-      onClose: clear,
     );
+
+    await Get.to(
+      () => Editor(bindings: bindings),
+      curve: Curves.easeInOutCubic,
+      opaque: false,
+      binding: bindings,
+    );
+
+    clear();
   }
 
   void _openBatchEditor() async {
@@ -96,10 +105,18 @@ class SelectionController({
       return;
     }
 
-    EditorPage.batch(
-      ids: ids.toList(),
-      onClose: clear,
+    final bindings = EditorBindings.batch(
+      files: store.cache.withIds(ids),
     );
+
+    await Get.to(
+      () => Editor(bindings: bindings),
+      curve: Curves.easeInOutCubic,
+      opaque: false,
+      binding: bindings,
+    );
+
+    clear();
   }
 
   // MARK: DOWNLOAD

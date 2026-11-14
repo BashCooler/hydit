@@ -27,7 +27,7 @@ class FileCache {
 
   void clear() => cache.clear();
 
-  List<HydrusFile> withIds(List<int> ids) => ids
+  List<HydrusFile> withIds(Iterable<int> ids) => ids
       .map((id) => cache[id])
       .whereType<HydrusFile>()
       .toList();

@@ -6,6 +6,7 @@ import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/widgets/tag.dart';
 import 'package:hydit/features/editor/bindings.dart';
+import 'package:hydit/features/editor/page/editor.dart';
 import 'package:hydit/features/viewer/getx/video.dart';
 
 import '../getx/page.dart';
@@ -64,13 +65,23 @@ class TagSheet extends HookWidget {
                 return ServiceList(
                   tags,
                   controller: scroll,
-                  onTap: (name) {
-                    EditorPage.paged(
+                  onTap: (name) async {
+
+                    final bindings = EditorBindings.paged(
                       page: page,
                       service: name,
-                      beforePush: video.player.pause,
-                      onClose: video.reload,
                     );
+
+                    video.player.pause();
+
+                    await Get.to(
+                      () => Editor(bindings: bindings),
+                      curve: Curves.easeInOutCubic,
+                      opaque: false,
+                      binding: bindings,
+                    );
+
+                    video.reload();
                   },
                 );
               }

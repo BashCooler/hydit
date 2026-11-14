@@ -5,57 +5,63 @@ import 'package:niku/namespace.dart' as n;
 import 'package:hydit/utils/theme.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/widgets/common/dialog.dart';
+import 'package:hydit/widgets/common/swipeable.dart';
+import 'package:hydit/features/editor/bindings.dart';
 
 import '../getx/base.dart';
 import '../widget/widgets.dart';
 
 
 class Editor extends StatelessWidget {
-  final String tag;
+  final EditorBindings bindings;
 
-  const Editor({super.key, required this.tag});
+  const Editor({super.key, required this.bindings});
 
-  TagManager get manager => Get.find(tag: tag);
+  String get tag => bindings.tag;
+
+  TagManager get manager => bindings.manager;
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: onLeave,
-      child: Scaffold(
-        appBar: EditorAppBar(tag: tag),
-        body: SafeArea(
-          child: Obx(() {
+    return SwipeablePage(
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: onLeave,
+        child: Scaffold(
+          appBar: EditorAppBar(tag: tag),
+          body: SafeArea(
+            child: Obx(() {
 
-            return TextFieldTapRegion(
-              child: Column(
-                children: [
-                  EditorTagList(tag: tag, tags: manager.tags),
+              return TextFieldTapRegion(
+                child: Column(
+                  children: [
+                    EditorTagList(tag: tag, tags: manager.tags),
 
-                  if (manager.editable)
+                    if (manager.editable)
+                      const Divider(height: 1),
+
+                    if (manager.editable)
+                      SizedBox(
+                        height: Sizes.smallList,
+                        child: EditorSuggests(tag: tag),
+                      ),
+
                     const Divider(height: 1),
 
-                  if (manager.editable)
-                    SizedBox(
-                      height: Sizes.smallList,
-                      child: EditorSuggests(tag: tag),
-                    ),
-
-                  const Divider(height: 1),
-
-                  EditorTagSearchBar(tag: tag),
-                ],
-              ),
-            );
-          }),
-        ),
-        floatingActionButtonLocation: .endFloat,
-        bottomNavigationBar: SafeArea(
-          maintainBottomViewPadding: true,
-          child: EditorBottomBar(
-            tag: tag,
-            callback: confirmPendingChanges,
-            child: ServiceDropdown(tag: tag),
+                    EditorTagSearchBar(tag: tag),
+                  ],
+                ),
+              );
+            }),
+          ),
+          floatingActionButtonLocation: .endFloat,
+          bottomNavigationBar: SafeArea(
+            maintainBottomViewPadding: true,
+            child: EditorBottomBar(
+              tag: tag,
+              callback: confirmPendingChanges,
+              child: ServiceDropdown(tag: tag),
+            ),
           ),
         ),
       ),
