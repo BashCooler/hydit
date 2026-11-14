@@ -5,6 +5,7 @@ import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
+import 'package:hydit/widgets/common/utils.dart';
 import 'package:hydit/widgets/systems/gradient.dart';
 
 import '../getx/ui.dart';
@@ -39,7 +40,9 @@ class const Viewer ({
         closeOrBack();
       },
       child: Scaffold(
-        appBar: ViewerAppBar(tag: tag),
+        appBar: EmptyAppBar(
+          child: ViewerAppBar(tag: tag),
+        ),
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
@@ -57,8 +60,7 @@ class const Viewer ({
 }
 
 
-class ViewerAppBar extends StatelessWidget
-    implements PreferredSizeWidget {
+class ViewerAppBar extends StatelessWidget {
 
   final String tag;
 
@@ -76,9 +78,6 @@ class ViewerAppBar extends StatelessWidget
       ),
     );
   });
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
 
