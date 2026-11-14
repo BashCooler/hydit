@@ -1,52 +1,32 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:hydit/features/search/getx/query.dart';
-import 'package:hydit/features/gallery/getx/selection.dart';
 
-
-class InboxTile extends StatelessWidget {
-  final String tag;
-
-  const InboxTile({super.key, required this.tag});
-
-  QueryController get query => Get.find(tag: tag);
-  SelectionController get selection => Get.find(tag: tag);
-
+class const InboxTile({
+  super.key,
+  final void Function()? onTap,
+}) extends StatelessWidget {
+  //
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: const Icon(Icons.mail_outline),
       title: const Text("Inbox"),
-      onTap: () {
-        selection.clear();
-        query
-          ..clear()
-          ..add('system:inbox')
-          ..search();
-        Get.back();
-      },
+      onTap: onTap,
     );
   }
 }
 
-
-class SettingsTile extends StatelessWidget {
-  final String tag;
-
-  const SettingsTile({super.key, required this.tag});
-
-  SelectionController get selection => Get.find(tag: tag);
-
+class const SettingsTile ({
+  super.key,
+  required final void Function()? onTap,
+}) extends StatelessWidget {
+  //
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: const Icon(Icons.settings),
       title: const Text('Settings'),
-      onTap: () {
-        selection.clear();
-        Get.toNamed('/settings');
-      },
+      onTap: onTap,
     );
   }
 }

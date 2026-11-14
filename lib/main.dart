@@ -14,7 +14,7 @@ import 'package:hydit/reactive/cache.dart';
 import 'package:hydit/services/services.dart';
 
 import 'package:hydit/features/gallery/bindings.dart';
-import 'package:hydit/features/gallery/getx/selection.dart';
+import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/gallery/page/gallery_page.dart';
 import 'package:hydit/features/settings/page/settings_page.dart';
 
@@ -65,13 +65,14 @@ class GlobalBindings extends Bindings {
 }
 
 
-class App extends StatelessWidget {
-  const App({super.key});
-
+class const App({super.key}) extends StatelessWidget {
+  //
   @override
   Widget build(BuildContext context) {
-    final tag = 'Gallery'.unique();
+    //
     final drawerKey = GlobalKey<InnerDrawerState>();
+
+    final bindings = GalleryBindings(search: true);
 
     return GetMaterialApp(
       title: 'Hydit',
@@ -85,12 +86,9 @@ class App extends StatelessWidget {
         GetPage(
           name: '/',
           curve: Curves.easeInOutCubic,
-          binding: GalleryBindings(
-            tag: tag,
-            search: true,
-          ),
+          binding: bindings,
           page: () => GalleryShell(
-            tag: tag,
+            bindings: bindings,
             drawerKey: drawerKey,
           ),
         ),
@@ -107,25 +105,35 @@ class App extends StatelessWidget {
 
 
 class GalleryShell extends StatelessWidget {
-  final String tag;
+  final GalleryBindings bindings;
   final GlobalKey<InnerDrawerState> drawerKey;
 
   const GalleryShell({
     super.key,
-    required this.tag,
+    required this.bindings,
     required this.drawerKey,
   });
 
   bool dialog() {
-    final SelectionController selection = Get.find(tag: tag);
-
-    switch (selection.on) {
-      case true:
-        selection.clear();
-        return false;
-      case false:
-        return true;
+    if (bindings.selection.off) {
+      return true;
     }
+    bindings.selection.clear();
+    return false;
+  }
+
+  void showInbox() {
+    bindings.selection.clear();
+    Get.find<QueryController>(tag: bindings.tag)
+      ..clear()
+      ..add('system:inbox')
+      ..search();
+    Get.back();
+  }
+
+  void toSettings() {
+    bindings.selection.clear();
+    Get.toNamed('/settings');
   }
 
   @override
@@ -135,12 +143,12 @@ class GalleryShell extends StatelessWidget {
       dialog: dialog,
       sidebar: Sidebar(
         tiles: [
-          InboxTile(tag: tag),
-          SettingsTile(tag: tag),
+          InboxTile(onTap: showInbox),
+          SettingsTile(onTap: toSettings),
         ],
       ),
       child: Gallery(
-        tag: tag,
+        bindings: bindings,
         editor: true,
         swipeGesture: false,
         trailing: OnGradientIconButton(

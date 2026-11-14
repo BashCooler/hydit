@@ -1,25 +1,25 @@
 import 'package:get/get.dart';
 
-import 'package:hydit/features/gallery/getx/loader.dart';
+import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/getx/query.dart';
+import 'package:hydit/features/gallery/getx/loader.dart';
 
 import 'getx/gallery.dart';
 import 'getx/selection.dart';
 
 
 class GalleryBindings.fileStore({
-  required final String tag,
   required final bool search,
   required final FileStore store,
 }) extends Bindings {
   //
+  final tag = 'Gallery'.unique();
+
   new({
-    required String tag,
     required bool search,
     List<int> ids = const [],
   }) : this.fileStore(
-    tag: tag,
     search: search,
     store: FileStore(ids),
   );
