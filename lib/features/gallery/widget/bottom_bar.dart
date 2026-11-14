@@ -6,9 +6,14 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/reactive/file_store.dart';
+import 'package:hydit/widgets/common/dialog.dart';
 import 'package:hydit/widgets/systems/acrylic.dart' as a;
 import 'package:hydit/widgets/systems/gradient.dart';
+import 'package:hydit/features/viewer/getx/page.dart';
+import 'package:hydit/features/editor/bindings.dart';
+import 'package:hydit/features/editor/page/editor.dart';
 
+import '../getx/loader.dart';
 import '../getx/selection.dart';
 
 
@@ -59,11 +64,7 @@ class SelectionBottomBar extends StatelessWidget {
               a.Pill(
                 children: [
                   SelectAllButton(tag: tag),
-                  IconButton(
-                    tooltip: 'Edit tags',
-                    icon: const Icon(Symbols.edit_square),
-                    onPressed: selection.edit,
-                  ),
+                  EditButton(tag: tag),
                   SelectRangeButton(tag: tag),
                   a.More([
                     PopupMenuItem(
@@ -108,6 +109,82 @@ class SelectionBottomBar extends StatelessWidget {
       ),
     );
   });
+}
+
+
+class EditButton extends StatelessWidget {
+  final String tag;
+
+  const EditButton({super.key, required this.tag});
+
+  SelectionController get selection => Get.find(tag: tag);
+
+  FileStore get store => Get.find(tag: tag);
+
+  Loader get loader => Get.find(tag: tag);
+
+  void edit() => selection.ids.length > 1 ? toBatchEditor() : toPagedEditor();
+
+  void toPagedEditor() {
+    //
+    final page = PageGetxController(
+      files: store,
+      initial: store.ids.indexOf(selection.ids.first),
+    );
+
+    final bindings = EditorBindings.paged(
+      page: page,
+      service: 'my tags',
+    );
+
+    to(
+      () => Editor(bindings: bindings),
+      binding: bindings,
+      onClose: selection.clear,
+    );
+  }
+
+  void toBatchEditor() async {
+    final token = CancellationToken();
+
+    final ids = selection.ids;
+
+    ProgressDialog.show(
+      title: 'Loading metadata...'.n,
+      token: token,
+      full: ids.length,
+      progress: () => store.length,
+    );
+
+    final result = await loader
+        .ensureLoaded(ids, token: token)
+        .tapFailure(Snack.error);
+
+    Get.back();
+
+    if (result is Failure || token.cancelled) {
+      return;
+    }
+
+    final bindings = EditorBindings.batch(
+      files: store.cache.withIds(ids),
+    );
+
+    to(
+      () => Editor(bindings: bindings),
+      binding: bindings,
+      onClose: selection.clear,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: 'Edit tags',
+      icon: const Icon(Symbols.edit_square),
+      onPressed: edit,
+    );
+  }
 }
 
 

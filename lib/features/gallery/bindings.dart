@@ -27,7 +27,6 @@ class GalleryBindings.fileStore({
   final gallery = GalleryController();
 
   late final selection = SelectionController(
-    tag: tag,
     store: store,
     enabled: () => !gallery.loading.value,
   );

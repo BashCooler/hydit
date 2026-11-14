@@ -6,21 +6,13 @@ import 'package:niku/extra/primitive.dart';
 import 'package:hydit/services/services.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/widgets/common/dialog.dart';
-import 'package:hydit/features/editor/bindings.dart';
-import 'package:hydit/features/editor/page/editor.dart';
-import 'package:hydit/features/viewer/getx/page.dart';
-
-import 'loader.dart';
 
 
 class SelectionController({
-  required final String tag,
   required final FileStore store,
   required final bool Function() enabled,
 }) {
   final ids = <int>{}.obs;
-
-  Loader get loader => Get.find(tag: tag);
 
   Api get api => Get.find();
 
@@ -58,60 +50,6 @@ class SelectionController({
   }
 
   void selectAll() => ids.assignAll(store.ids);
-
-  // MARK: EDIT
-
-  void edit() => ids.length > 1 ? _openBatchEditor() : _openPagedEditor();
-
-  void _openPagedEditor() {
-    //
-    final page = PageGetxController(
-      files: store,
-      initial: store.ids.indexOf(ids.first),
-    );
-
-    final bindings = EditorBindings.paged(
-      page: page,
-      service: 'my tags',
-    );
-
-    to(
-      () => Editor(bindings: bindings),
-      binding: bindings,
-      onClose: clear,
-    );
-  }
-
-  void _openBatchEditor() async {
-    final token = CancellationToken();
-
-    ProgressDialog.show(
-      title: 'Loading metadata...'.n,
-      token: token,
-      full: ids.length,
-      progress: () => store.length,
-    );
-
-    final result = await loader
-        .ensureLoaded(ids, token: token)
-        .tapFailure(Snack.error);
-
-    Get.back();
-
-    if (result is Failure || token.cancelled) {
-      return;
-    }
-
-    final bindings = EditorBindings.batch(
-      files: store.cache.withIds(ids),
-    );
-
-    to(
-      () => Editor(bindings: bindings),
-      binding: bindings,
-      onClose: clear,
-    );
-  }
 
   // MARK: DOWNLOAD
 
