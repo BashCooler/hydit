@@ -1,7 +1,8 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 export 'theme.dart';
+export 'get.dart';
+
 export 'package:dart_scope_functions/dart_scope_functions.dart';
 export 'package:dartx/dartx.dart' show IterableChunked;
 
@@ -18,41 +19,6 @@ Future<void> sleep(Duration duration) => Future.delayed(duration);
 extension Unique on String {
   String unique() {
     return '$this-${DateTime.now().microsecondsSinceEpoch}';
-  }
-}
-
-
-S? maybeFind<S>({String? tag}) {
-  return Get.isRegistered<S>(tag: tag)
-      ? Get.find<S>(tag: tag)
-      : null;
-}
-
-
-extension on GetInterface {
-  bool isNotRegistered<S>({String? tag}) =>
-      !isRegistered<S>(tag: tag);
-}
-
-
-class If<T> extends StatelessWidget {
-  final String? tag;
-  final Widget child;
-  final Widget fallback;
-
-  const If({
-    super.key,
-    this.tag,
-    required this.child,
-    this.fallback = const SizedBox.shrink(),
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (Get.isNotRegistered<T>(tag: tag)) {
-      return fallback;
-    }
-    return child;
   }
 }
 
@@ -100,9 +66,4 @@ extension Range<T> on List<T> {
       a < b ? b + 1 : a + 1,
     );
   }
-}
-
-
-extension ToRx<T> on T {
-  Rx<T> get rx => Rx<T>(this);
 }
