@@ -1,5 +1,6 @@
 library;
 
+export 'app_bar.dart';
 export 'bottom_bar.dart';
 export 'image_view.dart';
 export 'physics.dart';

@@ -6,7 +6,6 @@ import 'package:preload_page_view/preload_page_view.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/widgets/common/utils.dart';
-import 'package:hydit/widgets/systems/gradient.dart';
 
 import '../getx/ui.dart';
 import '../getx/page.dart';
@@ -41,7 +40,7 @@ class const Viewer ({
       },
       child: Scaffold(
         appBar: EmptyAppBar(
-          child: ViewerAppBar(tag: tag),
+          child: Obx(() => ViewerAppBar(visible: ui.visible.value)),
         ),
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
@@ -58,28 +57,6 @@ class const Viewer ({
     );
   }
 }
-
-
-class ViewerAppBar extends StatelessWidget {
-
-  final String tag;
-
-  const ViewerAppBar({super.key, required this.tag});
-
-  UiController get ui => Get.find(tag: tag);
-
-  @override
-  Widget build(BuildContext context) => Obx(() {
-    return Opacity(
-      opacity: ui.visible.value ? 1 : 0,
-      child: GradientAppBar(
-        enabled: false,
-        automaticallyImplyLeading: false,
-      ),
-    );
-  });
-}
-
 
 
 class Pages extends StatelessWidget {
