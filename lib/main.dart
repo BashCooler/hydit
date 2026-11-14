@@ -15,6 +15,7 @@ import 'package:hydit/services/services.dart';
 
 import 'package:hydit/features/gallery/bindings.dart';
 import 'package:hydit/features/search/getx/query.dart';
+import 'package:hydit/features/search/widget/sorting.dart';
 import 'package:hydit/features/gallery/getx/loader.dart';
 import 'package:hydit/features/gallery/widget/widgets.dart';
 import 'package:hydit/features/gallery/page/gallery_page.dart';
@@ -153,13 +154,16 @@ class GalleryShell extends StatelessWidget {
         bindings: bindings,
         editor: true,
         swipeGesture: false,
+        appBarInfo: QueryInfo(query: Get.find<QueryController>(tag: bindings.tag)),
         fab: GalleryFAB(tag: bindings.tag),
         trailing: OnGradientIconButton(
           Symbols.dock_to_left,
           tooltip: 'Sidebar',
           onPressed: () => drawerKey.currentState!.toggle(),
         ),
+        menuButton: SortPopUp(query: Get.find<QueryController>(tag: bindings.tag)),
         onTileBuild: Get.find<Loader>(tag: bindings.tag).next,
+        onRefresh: Get.find<QueryController>(tag: bindings.tag).search,
       ),
     );
   }

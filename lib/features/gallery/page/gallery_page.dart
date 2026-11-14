@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/widgets/common/swipeable.dart';
-import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/viewer/bindings.dart';
 import 'package:hydit/features/viewer/page/viewer_page.dart';
 
@@ -18,9 +17,12 @@ class const Gallery({
   required final GalleryBindings bindings,
   final bool swipeGesture = true,
   required final bool editor,
-  final Widget? trailing,
+  final Widget? appBarInfo,
   final Widget? fab,
+  final Widget? trailing,
+  final Widget? menuButton,
   final void Function(int index)? onTileBuild,
+  final Future<void> Function()? onRefresh,
 }) extends StatelessWidget {
   //
   String get tag => bindings.tag;
@@ -30,8 +32,6 @@ class const Gallery({
   GalleryController get gallery => bindings.gallery;
 
   SelectionController get selection => bindings.selection;
-
-  QueryController? get query => maybeFind(tag: tag);
 
   void onTileTap(int id, int index) {
     if (gallery.loading.value) return;
@@ -76,13 +76,15 @@ class const Gallery({
         resizeToAvoidBottomInset: false,
         appBar: GalleryAppBar(
           tag: tag,
+          info: appBarInfo,
           trailing: trailing,
+          menuButton: menuButton,
           onTap: gallery.animateUp,
         ),
         body: GalleryGridView(
           tag: tag,
           allowRefresh: (_) => selection.off,
-          onRefresh: query?.search,
+          onRefresh: onRefresh,
           onTap: onTileTap,
           onLongPress: editor ? selection.select : null,
           onBuild: onTileBuild,

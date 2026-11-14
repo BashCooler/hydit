@@ -2,11 +2,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:niku/namespace.dart' as n;
 
-import 'package:hydit/utils/utils.dart';
 import 'package:hydit/widgets/systems/gradient.dart';
 import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/features/search/getx/query.dart';
-import 'package:hydit/features/search/widget/sorting.dart';
 
 import '../getx/selection.dart';
 
@@ -16,13 +14,17 @@ class GalleryAppBar extends StatelessWidget
 
   final String tag;
   final void Function()? onTap;
+  final Widget? info;
   final Widget? trailing;
+  final Widget? menuButton;
 
   const GalleryAppBar({
     super.key,
     required this.tag,
     this.onTap,
+    this.info,
     this.trailing,
+    this.menuButton,
   });
 
   SelectionController get selection => Get.find(tag: tag);
@@ -37,15 +39,19 @@ class GalleryAppBar extends StatelessWidget
           crossAxisAlignment: .start,
           children: [
             TagCount(tag: tag),
-            QueryInfo(tag: tag),
+            ?info,
           ],
         ),
       ),
       actions: [
-        Obx(() => selection.off
-            ? SortPopUp(tag: tag)
-            : const SizedBox.shrink(),
-        ),
+        Obx(() {
+          if (selection.off) {
+            if (menuButton case Widget() && final menu) {
+              return menu;
+            }
+          }
+          return const SizedBox.shrink();
+        }),
         ?trailing,
       ],
     );
@@ -73,23 +79,15 @@ class TagCount extends StatelessWidget {
 }
 
 
-class QueryInfo extends StatelessWidget {
-  final String tag;
-
-  const QueryInfo({super.key, required this.tag});
-
-  QueryController? get query => maybeFind(tag: tag);
-
+class const QueryInfo({
+  super.key,
+  required final QueryController query,
+}) extends StatelessWidget {
+  //
   @override
   Widget build(BuildContext context) {
-    final query = this.query;
-
-    if (query == null) {
-      return SizedBox.shrink();
-    }
-
     return Obx(() {
-
+      //
       if (query.isEmpty) {
         return const SizedBox.shrink();
       }

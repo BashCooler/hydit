@@ -8,21 +8,13 @@ import 'package:hydit/utils/utils.dart';
 import '../getx/query.dart';
 
 
-class SortPopUp extends StatelessWidget {
-  final String tag;
-
-  const SortPopUp({super.key, required this.tag});
-
-  QueryController? get query => maybeFind(tag: tag);
-
+class const SortPopUp({
+  super.key,
+  required final QueryController query,
+}) extends StatelessWidget {
+  //
   @override
   Widget build(BuildContext context) {
-    final query = this.query;
-
-    if (query == null) {
-      return const SizedBox.shrink();
-    }
-
     return PopupMenuButton<FileSortType>(
       icon: const Icon(
         Symbols.sort,
