@@ -35,7 +35,7 @@ class Gallery extends StatelessWidget {
   Loader? get loader => maybeFind(tag: tag);
   QueryController? get query => maybeFind(tag: tag);
 
-  Future<void> onTileTap(int id, int index) async {
+  void onTileTap(int id, int index) {
     if (gallery.loading.value) return;
 
     if (selection.on) {
@@ -49,13 +49,12 @@ class Gallery extends StatelessWidget {
 
     final tag = 'Viewer'.unique();
 
-    gallery.hide();
-
-    await Get.to(
+    to(
       () => Viewer(tag: tag),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
-      opaque: false,
+      onOpen: gallery.hide,
+      onClose: gallery.show,
       binding: ViewerBindings(
         tag: tag,
         files: files,
@@ -67,8 +66,6 @@ class Gallery extends StatelessWidget {
         'delete': editor,
       }
     );
-
-    gallery.show();
   }
 
   @override

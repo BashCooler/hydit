@@ -63,8 +63,8 @@ class SelectionController({
 
   void edit() => ids.length > 1 ? _openBatchEditor() : _openPagedEditor();
 
-  void _openPagedEditor() async {
-
+  void _openPagedEditor() {
+    //
     final page = PageGetxController(
       files: store,
       initial: store.ids.indexOf(ids.first),
@@ -75,14 +75,11 @@ class SelectionController({
       service: 'my tags',
     );
 
-    await Get.to(
+    to(
       () => Editor(bindings: bindings),
-      curve: Curves.easeInOutCubic,
-      opaque: false,
       binding: bindings,
+      onClose: clear,
     );
-
-    clear();
   }
 
   void _openBatchEditor() async {
@@ -109,14 +106,11 @@ class SelectionController({
       files: store.cache.withIds(ids),
     );
 
-    await Get.to(
+    to(
       () => Editor(bindings: bindings),
-      curve: Curves.easeInOutCubic,
-      opaque: false,
       binding: bindings,
+      onClose: clear,
     );
-
-    clear();
   }
 
   // MARK: DOWNLOAD

@@ -38,14 +38,12 @@ class PreviewGrid extends StatelessWidget {
 
     final tag = 'Gallery'.unique();
 
-    Get.to(
+    to(
       () => Gallery(
         tag: tag,
         editor: false,
         swipeGesture: true,
       ),
-      curve: Curves.easeInOutCubic,
-      opaque: false,
       binding: GalleryBindings(
         tag: tag,
         ids: manager.files.ids,
@@ -96,11 +94,10 @@ class PreviewGrid extends StatelessWidget {
 
     final tag = 'Viewer'.unique();
 
-    Get.to(
+    to(
       () => Viewer(tag: tag),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
-      opaque: false,
       binding: ViewerBindings(
         tag: tag,
         files: files,

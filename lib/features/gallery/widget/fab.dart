@@ -37,7 +37,7 @@ class GalleryFAB extends StatelessWidget {
         showFirst: loader.ok,
         first: a.FAB(
           icon: const Icon(Icons.search),
-          onTap: () => Get.to(
+          onTap: () => to(
             () => Search(tag: tag),
             curve: Curves.easeInOutCubic,
             opaque: false,

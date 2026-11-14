@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
-import 'package:hydit/entities/tag.dart';
+import 'package:hydit/utils/get.dart';
 import 'package:hydit/widgets/tag.dart';
+import 'package:hydit/entities/tag.dart';
 import 'package:hydit/features/editor/bindings.dart';
 import 'package:hydit/features/editor/page/editor.dart';
-import 'package:hydit/features/viewer/getx/video.dart';
 
 import '../getx/page.dart';
+import '../getx/video.dart';
 import '../getx/sheet.dart';
 import '../getx/gesture.dart';
 
@@ -37,6 +38,21 @@ class TagSheet extends HookWidget {
     SheetController.openedFactor,
   ];
 
+  void toEditor(String name) {
+    //
+    final bindings = EditorBindings.paged(
+      page: page,
+      service: name,
+    );
+
+    to(
+      () => Editor(bindings: bindings),
+      binding: bindings,
+      onOpen: video.player.pause,
+      onClose: video.reload,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final scroll = useScrollController();
@@ -59,30 +75,12 @@ class TagSheet extends HookWidget {
           child: SafeArea(
             top: false,
             child: Obx(() {
-              final tags = page.current.tags;
-
+              //
               if (sheet.showServices.value) {
                 return ServiceList(
-                  tags,
+                  page.current.tags,
                   controller: scroll,
-                  onTap: (name) async {
-
-                    final bindings = EditorBindings.paged(
-                      page: page,
-                      service: name,
-                    );
-
-                    video.player.pause();
-
-                    await Get.to(
-                      () => Editor(bindings: bindings),
-                      curve: Curves.easeInOutCubic,
-                      opaque: false,
-                      binding: bindings,
-                    );
-
-                    video.reload();
-                  },
+                  onTap: toEditor,
                 );
               }
 
