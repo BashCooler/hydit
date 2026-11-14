@@ -1,30 +1,30 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:dismissible_page/dismissible_page.dart';
-import 'package:hydit/features/viewer/getx/ui.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 import 'package:hydit/utils/utils.dart';
 import 'package:hydit/reactive/file.dart';
 import 'package:hydit/widgets/systems/gradient.dart';
 
+import '../getx/ui.dart';
 import '../getx/page.dart';
 import '../getx/sheet.dart';
 import '../getx/gesture.dart';
+import '../bindings.dart';
 import '../widget/widgets.dart';
 
 
-class Viewer extends StatelessWidget {
-  final String tag;
+class const Viewer ({
+  super.key,
+  required final ViewerBindings bindings,
+}) extends StatelessWidget {
+  //
+  String get tag => bindings.tag;
 
-  const Viewer({
-    super.key,
-    required this.tag,
-  });
+  SheetController get sheet => bindings.sheet;
 
-  SheetController get sheet => Get.find(tag: tag);
-
-  UiController get ui => Get.find(tag: tag);
+  UiController get ui => bindings.ui;
 
   void closeOrBack() => sheet.progress.value > 0.5
       ? sheet.close()

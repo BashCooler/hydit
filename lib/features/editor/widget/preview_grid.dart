@@ -90,22 +90,20 @@ class PreviewGrid extends StatelessWidget {
   }
 
   void openPreview(HydrusFile file) {
-    final files = FileStore([file.id]);
-
-    final tag = 'Viewer'.unique();
+    //
+    final bindings = ViewerBindings(
+      files: FileStore([file.id]),
+      index: 0,
+    );
 
     to(
-      () => Viewer(tag: tag),
+      () => Viewer(bindings: bindings),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
-      binding: ViewerBindings(
-        tag: tag,
-        files: files,
-        index: 0,
-      ),
+      binding: bindings,
       arguments: {
         'heroPrefix': 'Preview ',
-      }
+      },
     );
   }
 }

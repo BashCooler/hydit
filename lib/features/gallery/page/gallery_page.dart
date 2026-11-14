@@ -47,20 +47,19 @@ class Gallery extends StatelessWidget {
 
     if (file.removing) return;
 
-    final tag = 'Viewer'.unique();
+    final bindings = ViewerBindings(
+      files: files,
+      index: index,
+      grid: gallery.grid,
+    );
 
     to(
-      () => Viewer(tag: tag),
+      () => Viewer(bindings: bindings),
       transition: .fadeIn,
       curve: Curves.easeInCubic,
       onOpen: gallery.hide,
       onClose: gallery.show,
-      binding: ViewerBindings(
-        tag: tag,
-        files: files,
-        index: index,
-        grid: gallery.grid,
-      ),
+      binding: bindings,
       arguments: {
         'editor': editor,
         'delete': editor,
