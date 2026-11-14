@@ -23,7 +23,11 @@ class GalleryController() extends GetxController {
     super.onClose();
   }
 
-  void scrollUp() {
+  void jumpUp() {
+    if (scroll.hasClients) scroll.jumpTo(0);
+  }
+
+  void animateUp() {
     scroll.animateTo(0, duration: 500.ms, curve: Curves.easeInCubic);
   }
 

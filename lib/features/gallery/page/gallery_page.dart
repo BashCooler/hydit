@@ -84,7 +84,7 @@ class Gallery extends StatelessWidget {
         appBar: GalleryAppBar(
           tag: tag,
           trailing: trailing,
-          onTap: gallery.scrollUp,
+          onTap: gallery.animateUp,
         ),
         body: GalleryGridView(
           tag: tag,

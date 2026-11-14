@@ -44,7 +44,10 @@ class GalleryBindings.fileStore({
 
       final query = QueryController(
         onResults: loader.init,
-        beforeSearch: () => gallery.loading.value = true,
+        beforeSearch: () {
+          gallery.loading.value = true;
+          gallery.jumpUp();
+        },
         afterSearch: () => gallery.loading.value = false,
       );
 
