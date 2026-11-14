@@ -8,26 +8,21 @@ import 'package:hydit/features/viewer/bindings.dart';
 import 'package:hydit/features/viewer/page/viewer_page.dart';
 
 import '../bindings.dart';
-import '../getx/loader.dart';
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
 import '../widget/widgets.dart';
 
 
-class Gallery extends StatelessWidget {
-  final GalleryBindings bindings;
-  final bool editor;
-  final bool swipeGesture;
-  final Widget? trailing;
-
-  const Gallery({
-    super.key,
-    required this.bindings,
-    this.swipeGesture = true,
-    required this.editor,
-    this.trailing,
-  });
-
+class const Gallery({
+  super.key,
+  required final GalleryBindings bindings,
+  final bool swipeGesture = true,
+  required final bool editor,
+  final Widget? trailing,
+  final Widget? fab,
+  final void Function(int index)? onTileBuild,
+}) extends StatelessWidget {
+  //
   String get tag => bindings.tag;
 
   FileStore get store => bindings.store;
@@ -35,8 +30,6 @@ class Gallery extends StatelessWidget {
   GalleryController get gallery => bindings.gallery;
 
   SelectionController get selection => bindings.selection;
-
-  Loader? get loader => maybeFind(tag: tag);
 
   QueryController? get query => maybeFind(tag: tag);
 
@@ -92,9 +85,9 @@ class Gallery extends StatelessWidget {
           onRefresh: query?.search,
           onTap: onTileTap,
           onLongPress: editor ? selection.select : null,
-          onBuild: loader?.next,
+          onBuild: onTileBuild,
         ),
-        floatingActionButton: GalleryFAB(tag: tag),
+        floatingActionButton: fab,
         bottomNavigationBar: SelectionBottomBar(tag: tag),
       ),
     );

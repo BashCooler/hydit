@@ -15,6 +15,8 @@ import 'package:hydit/services/services.dart';
 
 import 'package:hydit/features/gallery/bindings.dart';
 import 'package:hydit/features/search/getx/query.dart';
+import 'package:hydit/features/gallery/getx/loader.dart';
+import 'package:hydit/features/gallery/widget/widgets.dart';
 import 'package:hydit/features/gallery/page/gallery_page.dart';
 import 'package:hydit/features/settings/page/settings_page.dart';
 
@@ -151,11 +153,13 @@ class GalleryShell extends StatelessWidget {
         bindings: bindings,
         editor: true,
         swipeGesture: false,
+        fab: GalleryFAB(tag: bindings.tag),
         trailing: OnGradientIconButton(
           Symbols.dock_to_left,
           tooltip: 'Sidebar',
           onPressed: () => drawerKey.currentState!.toggle(),
         ),
+        onTileBuild: Get.find<Loader>(tag: bindings.tag).next,
       ),
     );
   }
