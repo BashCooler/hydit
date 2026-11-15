@@ -6,6 +6,7 @@ import 'package:hydit/widgets/common/switcher.dart';
 import 'package:hydit/widgets/systems/acrylic.dart' as a;
 import 'package:hydit/features/search/page/search.dart';
 
+import '../bindings.dart';
 import '../getx/loader.dart';
 import '../getx/gallery.dart';
 import '../getx/selection.dart';
@@ -13,16 +14,18 @@ import '../getx/selection.dart';
 typedef FAB = FloatingActionButton;
 
 
-class GalleryFAB extends StatelessWidget {
-  final String tag;
+class const GalleryFAB({
+  super.key,
+  required final GallerySession session,
+}) extends StatelessWidget {
+  //
+  GalleryBindings get bindings => session.bindings;
 
-  const GalleryFAB({super.key, required this.tag});
+  GalleryController get gallery => bindings.gallery;
 
-  GalleryController get gallery => Get.find(tag: tag);
+  SelectionController get selection => bindings.selection;
 
-  SelectionController get selection => Get.find(tag: tag);
-
-  Loader get loader => Get.find(tag: tag);
+  Loader get loader => session.loader;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,7 @@ class GalleryFAB extends StatelessWidget {
         first: a.FAB(
           icon: const Icon(Icons.search),
           onTap: () => to(
-            () => Search(tag: tag),
+            () => Search(query: session.query),
             curve: Curves.easeInOutCubic,
             opaque: false,
           ),

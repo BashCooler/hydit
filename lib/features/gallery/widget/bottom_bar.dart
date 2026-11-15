@@ -9,6 +9,7 @@ import 'package:hydit/reactive/file_store.dart';
 import 'package:hydit/widgets/common/dialog.dart';
 import 'package:hydit/widgets/systems/acrylic.dart' as a;
 import 'package:hydit/widgets/systems/gradient.dart';
+import 'package:hydit/features/gallery/bindings.dart';
 import 'package:hydit/features/viewer/getx/page.dart';
 import 'package:hydit/features/editor/bindings.dart';
 import 'package:hydit/features/editor/page/editor.dart';
@@ -19,17 +20,20 @@ import '../getx/selection.dart';
 
 class SelectionBottomBar extends StatelessWidget {
   final String tag;
+  final Widget? editButton;
   final void Function(int index)? onEdit;
   final void Function(FileStore files, List<int> ids)? onBatchEdit;
 
   const SelectionBottomBar({
     super.key,
     required this.tag,
+    this.editButton,
     this.onEdit,
     this.onBatchEdit,
   });
 
   FileStore get files => Get.find(tag: tag);
+
   SelectionController get selection => Get.find(tag: tag);
 
   void download({double delay = 0}) {
@@ -64,7 +68,7 @@ class SelectionBottomBar extends StatelessWidget {
               a.Pill(
                 children: [
                   SelectAllButton(tag: tag),
-                  EditButton(tag: tag),
+                  ?editButton,
                   SelectRangeButton(tag: tag),
                   a.More([
                     PopupMenuItem(
@@ -113,15 +117,18 @@ class SelectionBottomBar extends StatelessWidget {
 
 
 class EditButton extends StatelessWidget {
-  final String tag;
+  final GalleryBindings bindings;
+  final Loader loader;
 
-  const EditButton({super.key, required this.tag});
+  const EditButton({
+    super.key,
+    required this.bindings,
+    required this.loader,
+  });
 
-  SelectionController get selection => Get.find(tag: tag);
+  SelectionController get selection => bindings.selection;
 
-  FileStore get store => Get.find(tag: tag);
-
-  Loader get loader => Get.find(tag: tag);
+  FileStore get store => bindings.store;
 
   void edit() => selection.ids.length > 1 ? toBatchEditor() : toPagedEditor();
 

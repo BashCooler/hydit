@@ -3,14 +3,13 @@ import 'package:get/get.dart';
 import 'package:hydit/api/enums.dart';
 import 'package:hydit/entities/tag.dart';
 import 'package:hydit/services/services.dart';
+import 'package:hydit/features/gallery/bindings.dart';
 
 import '../reactive/options.dart';
 
 
 class QueryController({
-  final void Function()? beforeSearch,
-  final void Function()? afterSearch,
-  required final void Function(List<int> ids) onResults,
+  required final GallerySession session,
 }) {
 
   final options = SearchOptions.load();
@@ -20,6 +19,8 @@ class QueryController({
   }
 
   Api get api => Get.find();
+
+  GalleryBindings get bindings => session.bindings;
 
   static final pattern = RegExp(r'[{}]');
 
@@ -38,19 +39,25 @@ class QueryController({
   /// Remove all tags from the query.
   void clear() => options.query.clear();
 
-  Future<void> search() async {
+  Future<void> search({
+    bool jumpUp = false,
+    bool animateUp = false,
+  }) async {
     options.save();
 
-    if (api.url.isEmpty) return;
+    if (api.url.isEmpty || session.loading.value) return;
 
-    beforeSearch?.call();
+    session.loading.value = true;
 
-    await api
-        .getSearchFiles(options.params)
-        .run()
-        .tapSuccess(onResults)
-        .tapFailure(Snack.error)
-        .tap((_) => afterSearch?.call());
+    if (jumpUp) bindings.gallery.jumpUp();
+    if (animateUp) bindings.gallery.animateUp();
+
+    await api.getSearchFiles(options.params).runMatch(
+      ok: session.loader.init,
+      err: Snack.error,
+    );
+
+    session.loading.value = false;
   }
 
   void setSortType(FileSortType s) {

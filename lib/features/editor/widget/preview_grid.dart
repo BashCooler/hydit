@@ -36,10 +36,7 @@ class PreviewGrid extends StatelessWidget {
   void previewGallery() {
     final manager = this.manager as BatchTagManager;
 
-    final bindings = GalleryBindings(
-      ids: manager.files.ids,
-      search: false,
-    );
+    final bindings = GalleryBindings(ids: manager.files.ids);
 
     to(
       () => Gallery(

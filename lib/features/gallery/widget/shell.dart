@@ -5,25 +5,25 @@ import 'package:flutter_inner_drawer/inner_drawer.dart';
 
 import 'package:hydit/widgets/drawer.dart';
 import 'package:hydit/widgets/systems/gradient.dart';
-import 'package:hydit/features/search/getx/query.dart';
 import 'package:hydit/features/search/widget/sorting.dart';
 
 import '../bindings.dart';
-import '../getx/loader.dart';
 import '../page/gallery_page.dart';
 
 import 'widgets.dart';
 
 
 class GalleryShell extends StatelessWidget {
-  final GalleryBindings bindings;
+  final GallerySession session;
   final GlobalKey<InnerDrawerState> drawerKey;
 
   const GalleryShell({
     super.key,
-    required this.bindings,
+    required this.session,
     required this.drawerKey,
   });
+
+  GalleryBindings get bindings => session.bindings;
 
   bool dialog() {
     if (bindings.selection.off) {
@@ -35,7 +35,7 @@ class GalleryShell extends StatelessWidget {
 
   void showInbox() {
     bindings.selection.clear();
-    Get.find<QueryController>(tag: bindings.tag)
+    session.query
       ..clear()
       ..add('system:inbox')
       ..search();
@@ -49,11 +49,6 @@ class GalleryShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //
-    final query = Get.find<QueryController>(tag: bindings.tag);
-
-    final loader = Get.find<Loader>(tag: bindings.tag);
-
     return AppShell(
       drawerKey: drawerKey,
       dialog: dialog,
@@ -67,16 +62,21 @@ class GalleryShell extends StatelessWidget {
         bindings: bindings,
         editor: true,
         swipeGesture: false,
-        appBarInfo: QueryInfo(query: query),
-        fab: GalleryFAB(tag: bindings.tag),
+        loading: session.loading,
+        appBarInfo: QueryInfo(query: session.query),
+        fab: GalleryFAB(session: session),
         trailing: OnGradientIconButton(
           Symbols.dock_to_left,
           tooltip: 'Sidebar',
           onPressed: () => drawerKey.currentState!.toggle(),
         ),
-        menuButton: SortPopUp(query: query),
-        onTileBuild: loader.next,
-        onRefresh: query.search,
+        menuButton: SortPopUp(query: session.query),
+        editButton: EditButton(
+          bindings: bindings,
+          loader: session.loader,
+        ),
+        onTileBuild: session.loader.next,
+        onRefresh: session.query.search,
       ),
     );
   }

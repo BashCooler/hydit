@@ -13,13 +13,11 @@ import '../widget/search.dart';
 import '../widget/tag_actions.dart';
 
 
-class Search extends HookWidget {
-  final String tag;
-
-  const Search({super.key, required this.tag});
-
-  QueryController get query => Get.find(tag: tag);
-
+class const Search({
+  super.key,
+  required final QueryController query,
+}) extends HookWidget {
+  //
   void searchThenBack(String entry) {
     if (query.isEmpty) {
       query.add(entry);

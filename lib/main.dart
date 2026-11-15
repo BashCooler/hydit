@@ -67,7 +67,7 @@ class const App({super.key}) extends StatelessWidget {
     //
     final drawerKey = GlobalKey<InnerDrawerState>();
 
-    final bindings = GalleryBindings(search: true);
+    final session = GallerySession();
 
     return GetMaterialApp(
       title: 'Hydit',
@@ -81,9 +81,9 @@ class const App({super.key}) extends StatelessWidget {
         GetPage(
           name: '/',
           curve: Curves.easeInOutCubic,
-          binding: bindings,
+          binding: session.bindings,
           page: () => GalleryShell(
-            bindings: bindings,
+            session: session,
             drawerKey: drawerKey,
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hydit/utils/utils.dart';
@@ -15,12 +16,14 @@ import '../widget/widgets.dart';
 class const Gallery({
   super.key,
   required final GalleryBindings bindings,
+  final RxBool? loading,
   final bool swipeGesture = true,
   required final bool editor,
   final Widget? appBarInfo,
   final Widget? fab,
   final Widget? trailing,
   final Widget? menuButton,
+  final Widget? editButton,
   final void Function(int index)? onTileBuild,
   final Future<void> Function()? onRefresh,
 }) extends StatelessWidget {
@@ -34,7 +37,7 @@ class const Gallery({
   SelectionController get selection => bindings.selection;
 
   void onTileTap(int id, int index) {
-    if (gallery.loading.value) return;
+    if (loading?.value ?? false) return;
 
     if (selection.on) {
       selection.select(id, index);
@@ -90,7 +93,10 @@ class const Gallery({
           onBuild: onTileBuild,
         ),
         floatingActionButton: fab,
-        bottomNavigationBar: SelectionBottomBar(tag: tag),
+        bottomNavigationBar: SelectionBottomBar(
+          tag: tag,
+          editButton: editButton,
+        ),
       ),
     );
   }
