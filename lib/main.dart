@@ -141,6 +141,11 @@ class GalleryShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //
+    final query = Get.find<QueryController>(tag: bindings.tag);
+
+    final loader = Get.find<Loader>(tag: bindings.tag);
+
     return AppShell(
       drawerKey: drawerKey,
       dialog: dialog,
@@ -154,16 +159,16 @@ class GalleryShell extends StatelessWidget {
         bindings: bindings,
         editor: true,
         swipeGesture: false,
-        appBarInfo: QueryInfo(query: Get.find<QueryController>(tag: bindings.tag)),
+        appBarInfo: QueryInfo(query: query),
         fab: GalleryFAB(tag: bindings.tag),
         trailing: OnGradientIconButton(
           Symbols.dock_to_left,
           tooltip: 'Sidebar',
           onPressed: () => drawerKey.currentState!.toggle(),
         ),
-        menuButton: SortPopUp(query: Get.find<QueryController>(tag: bindings.tag)),
-        onTileBuild: Get.find<Loader>(tag: bindings.tag).next,
-        onRefresh: Get.find<QueryController>(tag: bindings.tag).search,
+        menuButton: SortPopUp(query: query),
+        onTileBuild: loader.next,
+        onRefresh: query.search,
       ),
     );
   }
