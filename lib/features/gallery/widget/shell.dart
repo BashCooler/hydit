@@ -76,7 +76,9 @@ class GalleryShell extends StatelessWidget {
           loader: session.loader,
         ),
         onTileBuild: session.loader.next,
-        onRefresh: session.query.search,
+        onRefresh: () {
+          return session.query.search(jumpUp: false);
+        },
       ),
     );
   }

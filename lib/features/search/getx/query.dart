@@ -39,10 +39,7 @@ class QueryController({
   /// Remove all tags from the query.
   void clear() => options.query.clear();
 
-  Future<void> search({
-    bool jumpUp = false,
-    bool animateUp = false,
-  }) async {
+  Future<void> search({bool jumpUp = true}) async {
     options.save();
 
     if (api.url.isEmpty || session.loading.value) return;
@@ -50,7 +47,6 @@ class QueryController({
     session.loading.value = true;
 
     if (jumpUp) bindings.gallery.jumpUp();
-    if (animateUp) bindings.gallery.animateUp();
 
     await api.getSearchFiles(options.params).runMatch(
       ok: session.loader.init,
