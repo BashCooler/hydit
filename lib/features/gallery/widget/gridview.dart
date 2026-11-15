@@ -56,15 +56,6 @@ class GalleryGridView extends StatelessWidget {
           return onRefresh != null && allowRefresh(notification);
         },
         onRefresh: onRefresh ?? () async {},
-        onStatusChange: (status) {
-          switch (status) {
-            case .done:
-            case .canceled:
-              gallery.loading.value = false;
-            case _:
-              gallery.loading.value = true;
-          }
-        },
         child: Obx(() {
 
           return Scrollbar(
