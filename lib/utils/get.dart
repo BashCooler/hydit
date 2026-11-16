@@ -31,34 +31,55 @@ Future<T?>? to<T>(dynamic page, {
 }
 
 
-class Action<T> {
+abstract mixin class const ActionBase<T>() {
+  int get length;
+
+  void invoke(T value);
+
+  void add(void Function(T) callback);
+
+  void remove(void Function(T) callback);
+
+  void dispose();
+
+  ActionBase<T> operator +(void Function(T) callback) {
+    add(callback);
+    return this;
+  }
+
+  ActionBase<T> operator -(void Function(T) callback) {
+    remove(callback);
+    return this;
+  }
+}
+
+
+class Action<T> with ActionBase<T> {
+  //
   final _subscriptions = <void Function(T)>{};
 
+  @override
   int get length => _subscriptions.length;
 
-  Action<T> operator +(void Function(T) listener) {
-    add(listener);
-    return this;
-  }
-
-  Action<T> operator -(void Function(T) listener) {
-    remove(listener);
-    return this;
-  }
-
+  @override
   void invoke(T value) {
     for (final callback in _subscriptions) {
       callback(value);
     }
   }
 
-  void add(void Function(T) listener) {
-    _subscriptions.add(listener);
+  @override
+  void add(void Function(T) callback) {
+    _subscriptions.add(callback);
   }
 
-  void remove(void Function(T) listener) {
-    _subscriptions.remove(listener);
+  @override
+  void remove(void Function(T) callback) {
+    _subscriptions.remove(callback);
   }
 
-  void clear() => _subscriptions.clear();
+  @override
+  void dispose() {
+    _subscriptions.clear();
+  }
 }

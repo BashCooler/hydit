@@ -29,7 +29,7 @@ void main() => test('Test actions', () {
 
   expect(action.length, equals(2));
 
-  action.clear();
+  action.dispose();
 
   expect(action.length, 0);
 });
