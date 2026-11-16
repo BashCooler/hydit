@@ -34,3 +34,36 @@ Future<T?>? to<T>(dynamic page, {
     onClose?.call();
   }
 }
+
+
+class Action<T> {
+  final _subscriptions = <void Function(T)>{};
+
+  int get length => _subscriptions.length;
+
+  Action<T> operator +(void Function(T) listener) {
+    add(listener);
+    return this;
+  }
+
+  Action<T> operator -(void Function(T) listener) {
+    remove(listener);
+    return this;
+  }
+
+  void invoke(T value) {
+    for (final callback in _subscriptions) {
+      callback(value);
+    }
+  }
+
+  void add(void Function(T) listener) {
+    _subscriptions.add(listener);
+  }
+
+  void remove(void Function(T) listener) {
+    _subscriptions.remove(listener);
+  }
+
+  void clear() => _subscriptions.clear();
+}
