@@ -12,7 +12,6 @@ import 'package:hydit/features/viewer/page/viewer_page.dart';
 import 'package:hydit/widgets/common/images.dart';
 
 import '../getx/base.dart';
-import '../getx/batch.dart';
 
 
 class PreviewGrid extends StatelessWidget {

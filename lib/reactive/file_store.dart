@@ -22,17 +22,15 @@ class FileStore(List<int> ids) extends GetxController {
   /// Loaded files from this store.
   Iterable<HydrusFile> get files => loaded.map((id) => cache[id]!);
 
-  late final Worker worker;
-
   @override
   void onInit() {
-    worker = ever(cache.deleted, remove);
+    cache.deleted + remove;
     super.onInit();
   }
 
   @override
   void onClose() {
-    worker.dispose();
+    cache.deleted - remove;
     super.onClose();
   }
 

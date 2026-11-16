@@ -6,11 +6,6 @@ S? maybeFind<S>({String? tag}) =>
     Get.isRegistered<S>(tag: tag) ? Get.find<S>(tag: tag) : null;
 
 
-extension ToRx<T> on T {
-  Rx<T> get rx => Rx<T>(this);
-}
-
-
 Future<T?>? to<T>(dynamic page, {
   bool opaque = false,
   Transition? transition,

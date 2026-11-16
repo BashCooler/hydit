@@ -11,9 +11,7 @@ class FileCache {
 
   final cache = <int, HydrusFile>{};
 
-  /// Subscribe to this [Rx] with [Worker] to get
-  /// notified on file deletion.
-  final deleted = <int>[].rx;
+  final deleted = Action<List<int>>();
 
   Api get api => Get.find();
 
@@ -69,7 +67,7 @@ class FileCache {
 
     await sleep(deletionDuration + 100.ms);
 
-    deleted.value = ids;
+    deleted.invoke(ids);
 
     for (final file in toRemove) {
       cache.remove(file.id);
