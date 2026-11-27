@@ -42,25 +42,10 @@ class Settings extends HookWidget {
               controller: settings.urlController,
             ),
 
-            SegmentedButton<Protocol>(
-              segments: const [
-                ButtonSegment(
-                  value: .http,
-                  icon: Icon(Icons.http),
-                  label: Text('HTTP'),
-                ),
-                ButtonSegment(
-                  value: .https,
-                  icon: Icon(Icons.security),
-                  label: Text('HTTPS'),
-                ),
-              ],
-              selected: {
-                settings.protocol,
-              },
-              onSelectionChanged: saving.value
-                  ? null
-                  : (protocol) => settings.protocol = protocol.first,
+            ProtocolSelector(
+              initial: settings.protocol,
+              onChange: (p) => settings.protocol = p,
+              enabled: saving.value.not(),
             ),
 
             SettingsTextField(
@@ -87,6 +72,42 @@ class Settings extends HookWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+
+class const ProtocolSelector({
+  super.key,
+  required final Protocol initial,
+  required final void Function(Protocol p) onChange,
+  final bool enabled = true,
+}) extends HookWidget {
+  //
+  @override
+  Widget build(BuildContext context) {
+    //
+    final protocol = useState(initial);
+
+    return SegmentedButton<Protocol>(
+      segments: const [
+        ButtonSegment(
+          value: .http,
+          icon: Icon(Icons.http),
+          label: Text('HTTP'),
+        ),
+        ButtonSegment(
+          value: .https,
+          icon: Icon(Icons.security),
+          label: Text('HTTPS'),
+        ),
+      ],
+      selected: {
+        protocol.value,
+      },
+      onSelectionChanged: enabled
+          ? (selected) => protocol.value = selected.first.also(onChange)
+          : null,
     );
   }
 }
