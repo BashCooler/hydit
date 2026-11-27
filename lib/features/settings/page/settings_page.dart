@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hydit/utils/utils.dart';
 import 'package:niku/namespace.dart' as n;
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -98,8 +97,7 @@ class VersionTile extends HookWidget {
 
   static Future<void> checkForUpdates() async {
 
-    final release = await UpdateService
-        .latestRelease()
+    final release = await UpdateService.latestRelease()
         .tapFailure(Snack.error)
         .getOrNull();
 
@@ -126,7 +124,9 @@ class VersionTile extends HookWidget {
   @override
   Widget build(BuildContext context) {
 
-    final version = UpdateService.current().let(useFuture);
+    final future = useMemoized(UpdateService.current);
+
+    final version = useFuture(future, initialData: 'v0.0.0');
 
     final checking = useState(false);
 
@@ -136,9 +136,7 @@ class VersionTile extends HookWidget {
         padding: .all(8),
         child: FaIcon(FontAwesomeIcons.github, size: 32),
       ),
-      title: version.hasData
-          ? 'v${version.data}'.n
-          : Skeletonizer(child: 'v.0.0.0'.n),
+      title: 'v${version.data}'.n,
       subtitle: 'Check for updates'.n,
       onTap: () => checkForUpdates().loading(checking),
     );
