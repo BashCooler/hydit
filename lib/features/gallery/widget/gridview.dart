@@ -60,6 +60,7 @@ class GalleryGridView extends StatelessWidget {
 
           return Scrollbar(
             controller: gallery.scroll,
+            interactive: false,
             child: GridView.builder(
               padding: .fromLTRB(
                 8,
